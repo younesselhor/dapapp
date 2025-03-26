@@ -1,0 +1,13 @@
+img {
+  transition: transform 0.2s ease-in-out;
+}
+
+img:hover {
+  transform: scale(1.05);
+}
+.text-gray-600 {
+  color: #f2614c;
+}
+.p-4 {
+  padding: calc(var(--spacing)* 30);
+}

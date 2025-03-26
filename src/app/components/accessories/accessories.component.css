@@ -1,0 +1,44 @@
+/* Reset styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Main container */
+.container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  padding: 20px;
+}
+
+/* Row styling */
+.row {
+  display: flex;
+  width: 100%;
+}
+
+/* Column styles */
+.col-6 {
+  width: 50%;
+  padding: 10px;
+}
+
+/* Nested row inside col-6 */
+.nested-row {
+  display: flex;
+  gap: 10px; /* Space between images */
+}
+
+/* Image columns */
+.col-3 {
+  width: 30%;
+}
+
+.col-6 img,
+.col-3 img {
+  width: 100%;
+  height: auto;
+  display: block;
+}

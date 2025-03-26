@@ -1,0 +1,28 @@
+
+
+<!-- product-card.component.html -->
+<div class="product-card" [ngClass]="{'uae-card': plateData.country === 'UNITED ARAB EMIRATES', 'ksa-card': plateData.country === 'SAUDI ARABIA', 'kuwait-card': plateData.country === 'KUWAIT'}">
+  <div class="plate-container">
+    <div class="license-plate">
+      <div class="plate-top">
+        <div class="plate-number">{{ plateData.number }}</div>
+        <div class="plate-letter">{{ plateData.letter }}</div>
+      </div>
+      <div class="plate-bottom">
+        <div class="plate-number-arabic">{{ plateData.numberArabic }}</div>
+        <div class="plate-letter-arabic">{{ plateData.letterArabic }}</div>
+      </div>
+    </div>
+    <div class="country-badge">
+      <span class="country-code">{{ plateData.countryCode }}</span>
+    </div>
+  </div>
+
+  <div class="product-info">
+    <div class="info-label">Plate</div>
+    <div class="info-value">{{ plateData.country }}</div>
+    <div class="price">{{ plateData.price }} {{ plateData.currency }}</div>
+    <button class="view-btn">View Plate</button>
+  </div>
+</div>
+

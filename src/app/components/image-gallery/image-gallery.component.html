@@ -1,0 +1,86 @@
+
+
+<div class="flex flex-col p-4">
+  <!-- Breadcrumb -->
+  <div class="text-sm text-gray-600 mb-4">
+    <a class="hover:text-blue-500">Home</a> >
+    <a class="hover:text-blue-500">Riding Gear</a> >
+    <span class="text-gray-800">Gloves</span>
+  </div>
+
+  <!-- Main Content Layout -->
+  <div class="flex gap-8">
+    <!-- Left Side: Images -->
+    <div class="flex flex-col gap-2">
+      <img
+        *ngFor="let img of images"
+        [src]="img"
+        class="w-16 h-16 object-cover cursor-pointer border-2 border-gray-300 hover:border-blue-500"
+        [class.border-red-500]="selectedImage === img"
+        (click)="selectImage(img)"
+        alt="Thumbnail"
+      />
+    </div>
+
+    <!-- Center: Large Image -->
+    <div class="flex-1 flex justify-center">
+      <img
+        [src]="selectedImage"
+        class="max-w-[500px] max-h-[500px] object-cover border-2 border-gray-300 rounded-lg"
+        alt="Selected"
+      />
+    </div>
+
+    <!-- Right Side: Product Details -->
+    <div class="flex-1">
+      <h1 class="text-2xl font-bold">BILT Sprint Gloves</h1>
+      <p class="text-gray-600">Item Number: P340662</p>
+      <div class="flex items-center mt-2">
+        <span class="text-yellow-500">★★★★★</span>
+        <span class="text-gray-600 ml-2">(288 Reviews)</span>
+      </div>
+      <p class="text-2xl font-bold mt-4">SAR 49.99 <span class="text-gray-500 line-through">SAR 3499</span></p>
+
+      <!-- Color Selection -->
+      <div class="mt-4">
+        <p class="text-black-600">Color: Black</p>
+        <div class="flex gap-2 mt-1">
+          <span
+            *ngFor="let size of sizes"
+            (click)="selectSize(size)"
+            [class.bg-blue-500]="selectedSize === size"
+            [class.text-white]="selectedSize === size"
+            class="px-4 py-2 cursor-pointer hover:bg-blue-500 hover:text-white border border-gray-300"
+          >
+            {{ size }}
+          </span>
+        </div>
+        <span class="text-red-500 mt-2 inline-block">View Size Chart</span>
+      </div>
+
+      <!-- Quantity Selector -->
+      <div class="flex flex-col items-start space-y-2 mt-4">
+        <label class="text-gray-700 font-medium">Quantity</label>
+        <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden">
+          <button class="px-3 py-2 bg-transparent text-gray-600 hover:bg-gray-300" (click)="decreaseQuantity()">−</button>
+          <input type="text" class="w-12 text-center border-x border-gray-300 outline-none" [value]="quantity" readonly>
+          <button class="px-3 py-2 bg-transparent text-gray-600 hover:bg-gray-300" (click)="increaseQuantity()">+</button>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="mt-6 flex gap-4">
+        <button class="w-10 h-10 flex items-center justify-center border border-gray-300 rounded-md text-gray-500 hover:bg-gray-100 transition duration-300">
+          <i class="far fa-heart"></i>
+        </button>
+        <button class="px-6 py-2 border-2 border-red-500 text-red-500 rounded-md font-medium hover:bg-red-500 hover:text-white transition duration-300">
+          Add to cart
+        </button>
+        <button class="px-6 py-2 bg-red-500 text-white rounded-md font-medium hover:bg-red-600 transition duration-300">
+          Buy Now
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+

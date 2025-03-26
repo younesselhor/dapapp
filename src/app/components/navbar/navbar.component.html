@@ -1,0 +1,58 @@
+<nav class="navbar">
+  <div class="logo" routerLink="/">DabApp</div>
+  <!-- Hamburger Menu -->
+  <div class="menu-toggle" (click)="toggleMenu()">
+    <i [class]="menuOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bars'"></i>
+  </div>
+
+  <ul class="nav-links" [class.active]="menuOpen">
+    <li><a (click)="toggleSubMenuHome()" [class.active]="showSubMenuHome">Home</a></li>
+    <li><a>Marketplace</a></li>
+    <li>
+      <a (click)="toggleSubMenu()" [class.active]="showSubMenu">Used Parts</a>
+    </li>
+    <li  >Services</li>
+    <li><a>Guide</a></li>
+
+    <!-- Profile Button inside the menu for mobile -->
+     @if(menuOpen){
+    <li class="profile-mobile">
+      <button>Ahmed <i class="fa-solid fa-user"></i></button>
+    </li>
+  }
+  </ul>
+
+  <!-- Profile Button for desktop -->
+  <div class="user-actions">
+    <div class="profile">
+      <button>Ahmed <i class="fa-solid fa-user"></i></button>
+    </div>
+  </div>
+</nav>
+
+<!-- Sub-Navbar -->
+@if(showSubMenu) {
+<div class="sub-navbar">
+  <ul>
+    <li><a>Motorcycles</a></li>
+    <li><a>Spare Parts</a></li>
+    <li><a routerLink="plates">Plates</a></li>
+  </ul>
+</div>
+}
+@if(showSubMenuHome) {
+  <div class="sub-navbar">
+    <ul>
+      <li><a>Helmets</a></li>
+      <li><a>Riding Gear</a></li>
+      <li><a routerLink="accessories">Accessories</a></li>
+      <li><a >Tires</a></li>
+      <li><a >Aftermarket</a></li>
+      <li><a > Section 1</a></li>
+      <li><a > Section 2</a></li>
+      <li><a > Section 3</a></li>
+
+
+    </ul>
+  </div>
+  }

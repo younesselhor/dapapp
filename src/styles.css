@@ -1,1 +1,68 @@
+@import "tailwindcss";
 /* You can add global styles to this file, and also import other style files */
+/* app.component.css */
+.main-container {
+  margin-top: 60px; /* Account for navbar */
+  padding: 0 20px;
+}
+
+.location-sell {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+}
+
+.location {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 500;
+}
+
+.location i {
+  color: #f44336;
+}
+
+.sell-btn {
+  background: #f44336;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.categories {
+  display: flex;
+  gap: 20px;
+  padding: 15px 0;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 20px;
+}
+
+.category {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  padding: 5px 0;
+}
+
+.category.active {
+  color: #f44336;
+  border-bottom: 2px solid #f44336;
+}
+
+.content-container {
+  display: flex;
+  gap: 50px;
+      justify-content: space-around;
+}
+
+@media (max-width: 992px) {
+  .content-container {
+    flex-direction: column;
+  }
+}

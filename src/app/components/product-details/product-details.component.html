@@ -1,0 +1,215 @@
+<app-image-gallery></app-image-gallery>
+<!-- product-details.component.html -->
+<section class="padding">
+  <div class="product-container">
+    <h1 class="main-title">Product Details</h1>
+    <h2 class="product-name">BILT Sprint Gloves</h2>
+
+    <div class="tabs">
+      <div class="tab active">Product Details</div>
+      <div class="tab">Part numbers</div>
+      <div class="tab">Sizing & Fit</div>
+    </div>
+
+    <div class="details-section">
+      <div class="details-column">
+        <h2>Features:</h2>
+        <ul>
+          <li>Perforated finger and back of hand for added air flow</li>
+          <li>Pre-curved sport fit</li>
+          <li>Molded, vented air-flow hard knuckle and finger sliders</li>
+          <li>Unlined for a closer, more precise fit</li>
+          <li>Pull-through hook and loop wrist closure</li>
+        </ul>
+      </div>
+      <div class="details-column">
+        <h2>Materials:</h2>
+        <ul>
+          <li>Full leather construction</li>
+          <li>Suede reinforced overlays at palm</li>
+          <li>Suede overlays at index, middle finger and grip</li>
+          <li>Contrasting, high tensile external stitching</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="padding">
+  <div style="display: flex; align-items: center; justify-content: space-between;">
+    <div style="flex: 1; margin-right: 20px; max-width: 500px;">
+      <h2>BILT For Summer Heat</h2>
+      <p>
+        The Sprint Gloves from BILT are an aggressive, short cuff glove that are
+        ready to transport you from apex to apex in the warmer months. Perforation
+        along the back of the hand and fingers increase airflow. The unlined, full
+        leather construction balances protection with uninterrupted communication
+        between rider and machine.
+      </p>
+    </div>
+    <div>
+      <img src="/membership_benefits5.png" alt="youness" style="max-width: 100%; height: auto;">
+    </div>
+  </div>
+
+  <div style="display: flex; align-items: center; justify-content: space-between;">
+    <div style="flex: 1;">
+      <img src="/membership_benefits5.png" alt="youness" style="max-width: 100%; height: auto;">
+    </div>
+    <div style="margin-left: 20px; max-width: 500px;">
+      <h2>BILT To Protect</h2>
+      <p>
+        Suede overlays add reinforcement at the palm and grip at the control
+        interface the forward portion of the palm, index, and middle fingers.
+        Molded TPR knuckle and finger sliders are also vented to boost airflow
+        further. Ready for the torquiest machines, a hook and loop closure
+        wraps the wrist and delivers a snug, secure fit.
+      </p>
+    </div>
+  </div>
+
+  <!-- Adjusted Last Two Images -->
+  <div style="display: flex; align-items: flex-start; gap: 20px; margin-top: 30px;">
+    <div style="flex: 1; max-height: 300px; overflow: hidden;">
+      <img src="/membership_benefits5.png" style="width: 100%; height: 100%; object-fit: cover;">
+    </div>
+    <div style="flex: 2; max-height: 300px; overflow: hidden;">
+      <img src="/membership_benefits5.png" style="width: 100%; height: 100%; object-fit: cover;">
+    </div>
+  </div>
+</section>
+
+<section class="padding bg-white py-8">
+  <div class="product-container max-w-6xl mx-auto px-4">
+    <!-- Header -->
+    <h1 class="main-title text-2xl font-bold text-gray-900 mb-1">Reviews & Questions</h1>
+    <h2 class="product-name text-lg text-gray-600 mb-6">BILT Sprint Gloves</h2>
+
+    <!-- Tabs -->
+    <div class="tabs flex space-x-6 border-b border-gray-200 mb-6">
+      <div class="tab pb-3 font-medium text-gray-900 border-b-2 border-blue-600">268 Customer Reviews</div>
+      <div class="tab pb-3 font-medium text-gray-500 hover:text-gray-700">4 Questions & 7 Answers</div>
+    </div>
+
+    <!-- Customer Photos -->
+    <div class="mb-8">
+      <h3 class="text-lg font-medium text-gray-900 mb-4">13 Customer Photos</h3>
+      <!-- Photo gallery component would go here -->
+    </div>
+
+    <!-- Ratings Section -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Left Column - Overall Rating -->
+      <div class="overall-rating">
+        <h3 class="text-lg font-medium text-gray-900 mb-2">268 Ratings</h3>
+        <div class="flex items-baseline mb-2">
+          <span class="text-3xl font-bold mr-2">3.9</span>
+          <span class="text-gray-600">out of 5 stars</span>
+        </div>
+        <button class="text-blue-600 hover:text-blue-800 font-medium">
+          Write a review.
+        </button>
+      </div>
+
+      <!-- Middle Column - Star Distribution -->
+      <div class="star-distribution">
+        <h3 class="text-lg font-medium text-gray-900 mb-4">268 Ratings</h3>
+        <div *ngFor="let rating of [5,4,3,2,1]" class="flex items-center mb-2">
+          <div class="w-8 text-right mr-2">
+            <span class="text-gray-900 font-medium">{{rating}}</span>
+            <span class="text-yellow-400 ml-1">★</span>
+          </div>
+          <div class="flex-1 bg-gray-200 rounded-full h-2">
+            <div class="bg-yellow-400 h-2 rounded-full" [style.width.%]="getPercentage(rating)"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="max-w-2xl mx-auto">
+        <div class="space-y-4">
+          <div *ngFor="let rating of ratings">
+            <p class="font-semibold">{{ rating.label }}: {{ rating.value }} / 5.0</p>
+            <div class="relative w-full h-2 bg-gray-300 rounded-full">
+              <div class="absolute top-0 left-0 h-2 bg-blue-900 rounded-full"
+                   [style.width]="(rating.value / 5) * 100 + '%'">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6">
+          <p class="font-semibold">Fit</p>
+          <div class="flex items-center justify-between text-sm text-gray-500">
+            <span>Small</span>
+            <span>Large</span>
+          </div>
+          <input type="range" min="1" max="5" step="0.1" [(ngModel)]="fitValue"
+                 class="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-blue-900">
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+<section class="bg-white py-8">
+  <div class="max-w-6xl mx-auto px-4">
+    <!-- Reviews Header -->
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-xl font-bold text-gray-900">1-10 of 268 Reviews</h2>
+      <div class="flex space-x-4">
+        <select class="border rounded px-3 py-1 text-gray-700">
+          <option>Most Recent</option>
+          <option>Highest Rated</option>
+          <option>Lowest Rated</option>
+        </select>
+        <input type="text" placeholder="Search reviews..." class="border rounded px-3 py-1">
+        <select class="border rounded px-3 py-1 text-gray-700">
+          <option>Star Ratings</option>
+
+        </select>
+        <select class="border rounded px-3 py-1 text-gray-700">
+          <option>Media</option>
+
+        </select>
+        <select class="border rounded px-3 py-1 text-gray-700">
+          <option>Reviewer</option>
+
+        </select>
+      </div>
+    </div>
+    <!-- <div class="min-h-screen bg-gray-100 p-6"> -->
+
+       <div class="max-w-2xl mx-auto mt-8">
+      <app-comment></app-comment>
+
+
+    </div>
+
+  </div>
+</section>
+ <!-- Pagination -->
+ <div class="flex justify-center gap-2 my-8">
+  <span class="px-4 py-2 bg-newsletter-red rounded color-orange">1</span>
+  <a class="px-4 py-2 text-gray-600 hover:bg-gray-200 rounded">2</a>
+  <a class="px-4 py-2 text-gray-600 hover:bg-gray-200 rounded">3</a>
+  <a class="px-4 py-2 text-gray-600 hover:bg-gray-200 rounded">4</a>
+  <a class="px-4 py-2 text-gray-600 hover:bg-gray-200 rounded">5</a>
+  <span class="px-4 py-2 text-gray-600">...</span>
+  <a class="px-4 py-2 text-gray-600 hover:bg-gray-200 rounded">14</a>
+</div>
+
+<!-- Newsletter Section -->
+ <app-newsletter-signup></app-newsletter-signup>
+<!-- <div class="bg-newsletter-red color-orange py-16 px-6 text-center">
+  <h2 class="text-4xl font-bold mb-4">BE A DAPABB MEMBER!</h2>
+  <p class="text-xl mb-8">Be the first to know about killer deals, new releases, & more!</p>
+  <div class="flex flex-col md:flex-row justify-center items-center gap-4 max-w-2xl mx-auto">
+      <p class="text-lg">Sign up for news and resources</p>
+      <div class="flex-1 min-w-[300px]">
+          <input type="email" placeholder="youremail@gmail.com" class="w-full px-4 py-3 rounded text-gray-700">
+          <button class="bg-[#002A3A] text-white px-8 py-3 rounded hover:bg-opacity-90">Sign Up</button>
+
+      </div>
+  </div>
+  <p class="mt-4 text-sm">Unsubscribe at any time.</p>
+</div> -->
+
