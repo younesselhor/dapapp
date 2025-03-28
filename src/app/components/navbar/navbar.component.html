@@ -1,58 +1,29 @@
-<nav class="navbar">
-  <div class="logo" routerLink="/">DabApp</div>
-  <!-- Hamburger Menu -->
-  <div class="menu-toggle" (click)="toggleMenu()">
-    <i [class]="menuOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bars'"></i>
-  </div>
-
-  <ul class="nav-links" [class.active]="menuOpen">
-    <li><a (click)="toggleSubMenuHome()" [class.active]="showSubMenuHome">Home</a></li>
-    <li><a>Marketplace</a></li>
-    <li>
-      <a (click)="toggleSubMenu()" [class.active]="showSubMenu">Used Parts</a>
-    </li>
-    <li  >Services</li>
-    <li><a>Guide</a></li>
-
-    <!-- Profile Button inside the menu for mobile -->
-     @if(menuOpen){
-    <li class="profile-mobile">
-      <button>Ahmed <i class="fa-solid fa-user"></i></button>
-    </li>
-  }
+<!-- navbar.component.html -->
+<nav class="bg-gray-900 text-white p-4 flex justify-between items-center">
+  <div class="text-xl font-bold">DabApp</div>
+  <ul class="flex space-x-4">
+    <li><a routerLink="accessories" (click)="changeSection('home')" class="hover:text-gray-300">Home</a></li>
+    <li><a class="hover:text-gray-300">Marketplace</a></li>
+    <li><a routerLink="accessories" (click)="changeSection('usedParts')" class="hover:text-gray-300">Used Parts</a></li>
+    <li><a  class="hover:text-gray-300">Services</a></li>
+    <li><a  class="hover:text-gray-300">Guide</a></li>
   </ul>
-
-  <!-- Profile Button for desktop -->
-  <div class="user-actions">
-    <div class="profile">
-      <button>Ahmed <i class="fa-solid fa-user"></i></button>
-    </div>
-  </div>
+  <button class="bg-red-500 px-4 py-2 rounded-lg">Sell an item</button>
 </nav>
 
-<!-- Sub-Navbar -->
-@if(showSubMenu) {
-<div class="sub-navbar">
-  <ul>
-    <li><a>Motorcycles</a></li>
-    <li><a>Spare Parts</a></li>
-    <li><a routerLink="plates">Plates</a></li>
-  </ul>
-</div>
-}
-@if(showSubMenuHome) {
-  <div class="sub-navbar">
-    <ul>
-      <li><a>Helmets</a></li>
-      <li><a>Riding Gear</a></li>
-      <li><a routerLink="accessories">Accessories</a></li>
-      <li><a >Tires</a></li>
-      <li><a >Aftermarket</a></li>
-      <li><a > Section 1</a></li>
-      <li><a > Section 2</a></li>
-      <li><a > Section 3</a></li>
-
-
-    </ul>
+<div class="sub-navbar flex justify-between items-center">
+  <div class="flex items-center space-x-2 relative">
+    <span class="text-green-400">
+      <i class="pi pi-map-marker"></i>
+    </span>
+    <!-- <p-select [options]="cities" [(ngModel)]="selectedCity" optionLabel="name" placeholder="Select a City" class="w-full md:w-56" /> -->
   </div>
+@if(subNavItems() && subNavItems().length){
+  <ul>
+  @for(item of subNavItems(); track item.id) {
+        <li><a routerLink="{{item.path}}" class="hover:text-gray-300">{{ item.name }}</a></li>
   }
+</ul>
+<button class="bg-red-500 px-4 py-2 rounded-lg">Sell an item</button>
+}
+</div>
