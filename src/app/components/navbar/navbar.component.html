@@ -2,28 +2,29 @@
 <nav class="bg-gray-900 text-white p-4 flex justify-between items-center">
   <div class="text-xl font-bold">DabApp</div>
   <ul class="flex space-x-4">
-    <li><a routerLink="accessories" (click)="changeSection('home')" class="hover:text-gray-300">Home</a></li>
+    <li><a (click)="changeSection('home')" class="hover:text-gray-300">Home</a></li>
     <li><a class="hover:text-gray-300">Marketplace</a></li>
-    <li><a routerLink="accessories" (click)="changeSection('usedParts')" class="hover:text-gray-300">Used Parts</a></li>
+    <li><a  (click)="changeSection('usedParts')" class="hover:text-gray-300">Used Parts</a></li>
     <li><a  class="hover:text-gray-300">Services</a></li>
     <li><a  class="hover:text-gray-300">Guide</a></li>
   </ul>
-  <button class="bg-red-500 px-4 py-2 rounded-lg">Sell an item</button>
+  <button class="bg-white text-gray-900 px-4 py-2 rounded-lg"> {{ userName }} <span class="pi pi-user" style="color: slateblue"></span></button>
 </nav>
 
 <div class="sub-navbar flex justify-between items-center">
-  <div class="flex items-center space-x-2 relative">
-    <span class="text-green-400">
-      <i class="pi pi-map-marker"></i>
-    </span>
-    <!-- <p-select [options]="cities" [(ngModel)]="selectedCity" optionLabel="name" placeholder="Select a City" class="w-full md:w-56" /> -->
-  </div>
+
 @if(subNavItems() && subNavItems().length){
+  <div class="flex items-center space-x-2 relative">
+    <!-- <span class="text-green-600"> -->
+      <i class="pi pi-map-marker" style="color: green"></i>
+    <!-- </span> -->
+    <p-select [options]="cities" [(ngModel)]="selectedCity" optionLabel="name" placeholder="Select a City" class="w-full md:w-56" />
+  </div>
   <ul>
   @for(item of subNavItems(); track item.id) {
         <li><a routerLink="{{item.path}}" class="hover:text-gray-300">{{ item.name }}</a></li>
   }
 </ul>
-<button class="bg-red-500 px-4 py-2 rounded-lg">Sell an item</button>
+<button class="bg-red-500 text-white px-4 py-2 rounded-lg">Sell an item</button>
 }
 </div>
