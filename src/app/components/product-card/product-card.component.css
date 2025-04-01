@@ -1,6 +1,6 @@
 /* product-card.component.css */
 .product-card {
-  border-radius: 8px;
+  border-radius: 4px;
   overflow: hidden;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   background-color: white;
@@ -56,8 +56,9 @@
   justify-content: center;
   padding: 0 10px;
   font-weight: bold;
-  font-size: 28px;
+  font-size: 27px;
   width: 50%;
+  border-bottom: 1px solid black;
 }
 
 .plate-letter, .plate-letter-arabic {
@@ -65,9 +66,9 @@
 }
 
 .country-badge {
-  position: absolute;
-  right: 20px;
-  top: 20px;
+  position: relative;
+  /* right: 20px;
+  top: 20px; */
   height: 120px;
   width: 40px;
   display: flex;
@@ -79,6 +80,13 @@
   writing-mode: vertical-rl;
   text-orientation: mixed;
   font-weight: bold;
+  /* border: 2px solid black; */
+  border-top: 2px solid #000;
+  border-right: 2px solid #000;
+  border-bottom: 2px solid #000;
+  border-left: none;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
 }
 
 .ksa-card .country-badge {
