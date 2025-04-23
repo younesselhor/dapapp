@@ -2,6 +2,9 @@
 @import "primeicons/primeicons.css";
 /* You can add global styles to this file, and also import other style files */
 /* app.component.css */
+body {
+  font-family: 'Manrope', sans-serif;
+}
 .main-container {
   margin-top: 60px; /* Account for navbar */
   padding: 0 20px;

@@ -1,30 +1,64 @@
 <!-- navbar.component.html -->
 <nav class="bg-gray-900 text-white p-4 flex justify-between items-center">
-  <div class="text-xl font-bold">DabApp</div>
+
+
+
+<img routerLink="/home" src="/pictures/mainLogo.png" alt="Dab" />
+
+  @if(isLoggedIn){
   <ul class="flex space-x-4">
-    <li><a (click)="changeSection('home')" class="hover:text-gray-300">Home</a></li>
-    <li><a class="hover:text-gray-300">Marketplace</a></li>
-    <li><a  (click)="changeSection('usedParts')" class="hover:text-gray-300">Used Parts</a></li>
-    <li><a  class="hover:text-gray-300">Services</a></li>
-    <li><a  class="hover:text-gray-300">Guide</a></li>
+    <li><a (click)="selectMenu('home')" class="hover:text-gray-300">Home</a></li>
+    <li><a (click)="selectMenu('marketplace')" class="hover:text-gray-300">Marketplace</a></li>
+    <li><a (click)="selectMenu('usedParts')" class="hover:text-gray-300">Used Parts</a></li>
+    <li><a (click)="selectMenu('services')" class="hover:text-gray-300">Services</a></li>
+    <li><a (click)="selectMenu('guide')" class="hover:text-gray-300">Guide</a></li>
+    <li><a (click)="selectMenu('contact-us')" class="hover:text-gray-300">Contact Us</a></li>
+    <li><a (click)="selectMenu('about-us')" class="hover:text-gray-300">About Us</a></li>
   </ul>
-  <button class="bg-white text-gray-900 px-4 py-2 rounded-lg"> {{ userName }} <span class="pi pi-user" style="color: slateblue"></span></button>
-</nav>
 
-<div class="sub-navbar flex justify-between items-center">
 
-@if(subNavItems() && subNavItems().length){
-  <div class="flex items-center space-x-2 relative">
-    <!-- <span class="text-green-600"> -->
-      <i class="pi pi-map-marker" style="color: green"></i>
-    <!-- </span> -->
-    <p-select [options]="cities" [(ngModel)]="selectedCity" optionLabel="name" placeholder="Select a City" class="w-full md:w-56" />
+  <div class="relative">
+    <button
+      (click)="toggleDropdown()"
+      style="background-color: #fff;"
+      class="bg-white px-4 py-2 rounded-lg text-black flex items-center gap-2"
+    >
+      {{userName}} <i class="fa-regular fa-user"></i>
+    </button>
+
+    <!-- Dropdown Menu -->
+    @if(showDropdown) {
+      <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50">
+        <div class="py-1">
+          <a
+            href="#"
+            class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+            (click)="navigateToProfile(); $event.preventDefault()"
+          >
+            Profile
+          </a>
+          <a
+            href="#"
+            class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+            (click)="logout(); $event.preventDefault()"
+          >
+            Logout
+          </a>
+        </div>
+      </div>
+    }
   </div>
-  <ul>
-  @for(item of subNavItems(); track item.id) {
-        <li><a routerLink="{{item.path}}" class="hover:text-gray-300">{{ item.name }}</a></li>
-  }
-</ul>
-<button class="bg-red-500 text-white px-4 py-2 rounded-lg">Sell an item</button>
 }
-</div>
+@else {
+  <ul class="flex space-x-4">
+    <li><a routerLink="/home" class="hover:text-gray-300">Home</a></li>
+    <li><a routerLink="/motorcycles" class="hover:text-gray-300">Motorcycles</a></li>
+    <li><a routerLink="/spareparts" class="hover:text-gray-300">Spare Parts</a></li>
+    <li><a routerLink="/plates" class="hover:text-gray-300">Plates</a></li>
+  </ul>
+
+  <button routerLink="/login" style="background-color: #F03D24;" class="bg-white px-4 py-2 rounded-lg">Sign In</button>
+}
+
+
+</nav>

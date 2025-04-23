@@ -1,5 +1,7 @@
 
-<app-navbar></app-navbar>
+<!-- <app-navbar></app-navbar> -->
+<app-navbar (menuSelected)="handleMenuSelection($event)"></app-navbar>
+<app-sub-nav [selectedMenu]="selectedMenu"></app-sub-nav>
 <router-outlet></router-outlet>
 <app-footer></app-footer>
 <!-- <div class="main-container">

@@ -1,9 +1,9 @@
 
 
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink, RouterModule } from '@angular/router';
+import { Router, RouterLink, RouterModule } from '@angular/router';
 import { SelectModule } from 'primeng/select';
 import { DropdownModule } from 'primeng/dropdown';
 
@@ -36,7 +36,7 @@ interface IsubNavItems{
   imports: [
     CommonModule,
     RouterModule,
-    RouterLink,
+
     FormsModule,
     SelectModule,
     DropdownModule
@@ -45,135 +45,60 @@ interface IsubNavItems{
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent implements OnInit {
-// menu: menu_item[] = [
-// {
-//   name: 'Home',
-//   path: '',
-//   sub_menu:[
-//     {
-//       name:'Helmets',
-//       path: 'helmets'
-//     },
-//     {
-//       name:'Riding Gear ',
-//       path: 'ridinggear '
-//     },
-//     {
-//       name:'Accessories',
-//       path: 'accessories'
-//     },
-//     {
-//       name:'Tires',
-//       path: 'tires'
-//     },
-//     {
-//       name:'Aftermarket',
-//       path: 'aftermarket'
-//     },
-//     {
-//       name:'Section 1',
-//       path: 'Section'
-//     },
-//     {
-//       name:'Section 2',
-//       path: 'Section2'
-//     },
-//     {
-//       name:'Section 3',
-//       path: 'Section3'
-//     }
-//   ]
-// },
-// {
-//   name:'Marketplace',
-//   path: 'marketplace'
-// },
-// {
-//   name : 'Used Parts',
-//   path: 'usedparts',
-//   sub_menu:[
-//     {
-//       name:'Motorcycles',
-//       path: 'motorcycles'
-//     },
-//     {
-//       name:'Spare Parts',
-//       path: 'spareparts',
+  @Output() menuSelected = new EventEmitter<string>();
 
-//     },
-//     {
-//       name:'Plates',
-//       path: 'plates'
-//     }
-//   ]
-// },
-// {
-//   name: 'Services',
-//   path: 'services'
-// },
-// {
-//   name:'Guide',
-//   path: 'guide'
-// }
-// ];
+  selectMenu(menu: string) {
+    this.menuSelected.emit(menu);
+  }
 
-//  showSubMenu: boolean = false;
-//  showSubMenuHome: boolean = false;
-//  menuOpen = false;
-
-//   toggleSubMenu() {
-//     this.showSubMenu = !this.showSubMenu;
-//     this.showSubMenuHome = false;
-
-//   }
-//   toggleSubMenuHome() {
-//     this.showSubMenuHome = !this.showSubMenuHome;
-//     this.showSubMenu = false;
-
-//   }
-
-//   toggleMenu() {
-//     this.menuOpen = !this.menuOpen;
-//   }
 subNavItems = signal<{id:number, name: string, path:string}[]>([]);
-// subNavItems : IsubNavItems []= [
-//   {id: 1, name: 'Helmets', path:'Helmets'},
-//   {id: 2, name: 'Riding Gear', path:'Helmets'},
-//   {id: 3, name: 'Accessories', path:'Helmets'},
-//   {id: 4, name: 'Tires', path:'Helmets'},
-//   {id: 5, name: 'Aftermarket', path:'Helmets'},
-//   {id: 6, name: 'Section 1', path:'Helmets'},
-//   {id: 7, name: 'Section 2', path:'Helmets'},
-//   {id: 8, name: 'Section 3', path:'Helmets'}
-// ];
-// cities : ICity [] = [
-//   { name: 'Riyadh', code: 'RYD' },
-//   { name: 'Jeddah', code: 'JED' },
-//   { name: 'Dammam', code: 'DAM' }
-// ];
 
-// selectedCity: any;
-userName: string = 'Ahmed';
+userName: string = '';
 cities: ICity[] | undefined;
+showDropdown = false;
 
     selectedCity: ICity | undefined;
 
-    ngOnInit() {
-        this.cities = [
+
+
+isLoggedIn = false;
+
+constructor(private router: Router) {}
+ngOnInit() {
+  this.cities = [
           { name: 'Riyadh', code: 'RYD' },
           { name: 'Jeddah', code: 'JED' },
           { name: 'Dammam', code: 'DAM' }
         ];
-    }
 
-changeSection(section: string) {
-  if (section === 'home') {
-    this.subNavItems.set([{id:1,name:'Helmets', path:'Helmets'},{ id:2,name:'Riding Gear', path:'RidingGear'}, {id:3,name:'Accessories', path:'accessories'}, {id:4,name:'Tires', path:'Tires'}, {id:5,name:'Aftermarket', path:'Aftermarket'}, {id:6,name:'Section 1', path:'Section'}, {id:7,name:'Section 2', path:'Section'}, {id:8,name:'Section 3', path:'Section'}]);
-  } else if (section === 'usedParts') {
-    this.subNavItems.set([{id:1,name:'Motorcycles', path:'Helmets'}, {id:2,name:'Spare Parts', path:'Helmets'}, {id:3,name:'Plates', path:'plates'}]);
-  } else {
-    this.subNavItems.set([]);
+
+  const token = localStorage.getItem('token');
+  const user = localStorage.getItem('user');
+
+  if (token && user) {
+    this.isLoggedIn = true;
+    this.userName = JSON.parse(user).first_name;
+    console.log('user',this.userName);
+  }else{
+    console.log( 'not logged in');
   }
+}
+
+navigateToProfile(): void {
+  this.showDropdown = false;
+  // Navigate to profile page
+  this.router.navigate(['/account']);
+}
+
+toggleDropdown(): void {
+  this.showDropdown = !this.showDropdown;
+}
+
+logout() {
+  localStorage.clear();
+  this.isLoggedIn = false;
+  localStorage.removeItem('token');
+  this.router.navigate(['/login']);
 }
 }
 

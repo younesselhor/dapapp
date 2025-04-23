@@ -1,0 +1,347 @@
+<!-- login.component.html
+<div class="min-h-screen flex items-center justify-center bg-gray-700">
+  <div class="bg-white p-6 rounded-lg shadow-md w-80 text-center">
+    <img src="assets/logo.png" alt="DabApp" class="mx-auto mb-2 w-12" />
+    <h1 class="text-xl font-semibold">DabApp</h1>
+    <p class="text-sm text-gray-500 mb-4">
+      Please Sign in or create an account<br />
+      <span class="text-xs">To be able to sell or view information, you will need to have a Dabapp account</span>
+    </p>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <input
+        type="text"
+        formControlName="identifier"
+        placeholder="Phone Number or Email"
+        class="w-full mb-2 p-2 border rounded"
+      />
+      <small *ngIf="loginForm.get('identifier')?.invalid && loginForm.get('identifier')?.touched" class="text-red-500">
+        Wrong Number
+      </small>
+
+      <input
+        type="password"
+        formControlName="password"
+        placeholder="Enter password"
+        class="w-full mb-4 p-2 border rounded"
+      />
+
+      <div
+        *ngIf="loginError"
+        class="bg-red-100 text-red-800 border border-red-300 p-2 rounded text-sm mb-3 text-left"
+      >
+        <p><strong>Incorrect email or password.</strong> Please try again.</p>
+        <p class="text-xs">Double-check your input or reset your password if you’ve forgotten it.</p>
+        <a href="#" class="text-red-500 underline text-xs">Forgot Password?</a>
+      </div>
+
+<div class="space-y-2 mt-4">
+
+<button
+type="submit"
+class="w-full mb-2 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg"
+>
+Sign in
+</button>
+
+<button
+type="button"
+class="w-full bg-gray-800 hover:bg-gray-900 text-white font-semibold py-2 px-4 rounded-lg mb-2"
+>
+Sign Up
+</button>
+
+
+
+<button
+type="button"
+class="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-lg"
+>
+Cancel
+</button>
+</div>
+    </form>
+  </div>
+</div> -->
+<!-- <div class="min-h-screen bg-gray-600 flex items-center justify-center px-4">
+  <div class="bg-white rounded-xl shadow-lg w-full max-w-sm p-6">
+
+    <div class="flex flex-col items-center mb-6">
+      <img src="logo.png" alt="DabApp Logo" class="w-16 h-14 mb-2" />
+
+    </div>
+
+
+    <div class="text-center mb-6">
+      <h2 class="text-base font-medium text-gray-800">Please Sign in or create an account</h2>
+      <p class="text-sm text-gray-500 mt-1">
+        To be able to sell or view information, you will<br />
+        need to have a Dabapp account
+      </p>
+    </div>
+
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700">Phone Number or Email</label>
+        <input
+          type="text"
+          class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+          placeholder="+966"
+          formControlName="identifier"
+          required
+        />
+
+        <p *ngIf="loginForm.get('identifier')?.invalid && loginForm.get('identifier')?.touched"  class="text-sm text-red-600 mt-1">Wrong Number</p>
+      </div>
+
+      <div class="mb-6">
+        <label class="block text-sm font-medium text-gray-700">Password</label>
+        <input
+          type="password"
+          class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+          placeholder="Enter password"
+          formControlName="password"
+          required
+        />
+
+        <div
+        *ngIf="loginError"
+        class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mt-4 text-sm">
+          <strong class="font-medium">Incorrect email or password.</strong> Please try again.<br />
+          <span class="block mt-1">Double-check your email and password, or reset it if forgotten.</span>
+          <a href="#" class="text-red-500 font-semibold block mt-2">Forgot Password?</a>
+        </div>
+      </div>
+
+
+      <div class="space-y-2">
+        <button
+          type="submit"
+          class="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg"
+        >
+          Sign in
+        </button>
+
+        <button
+          type="button"
+          class="w-full bg-gray-800 hover:bg-gray-900 text-white font-semibold py-2 px-4 rounded-lg"
+        >
+          Sign Up
+        </button>
+
+        <button
+          type="button"
+          class="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-lg"
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
+
+  </div>
+</div> -->
+
+
+
+<div class="min-h-screen bg-gray-600 flex items-center justify-center px-4">
+  <div class="bg-white rounded-xl shadow-lg w-full max-w-sm p-6">
+    <!-- Logo -->
+    <div class="flex flex-col items-center mb-6">
+      <img src="/pictures/dabapplogo.svg" alt="Dab" class="w-12 h-12 mb-2" />
+    </div>
+
+    <!-- Headings -->
+    <div class="text-center mb-6">
+      <h2 class="text-base font-medium text-gray-800">Please Sign in or create an account</h2>
+      <p class="text-sm text-gray-500 mt-1">
+        To be able to sell or view information, you will<br />
+        need to have a Dabapp account
+      </p>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700">Phone Number or Email</label>
+        <input
+          type="text"
+          class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+          placeholder="+966"
+          formControlName="login"
+          required
+        />
+        <p *ngIf="loginForm.get('login')?.invalid && loginForm.get('login')?.touched" class="text-sm text-red-600 mt-1">
+          Please enter a valid phone number or email
+        </p>
+      </div>
+
+      <div class="mb-6">
+        <label class="block text-sm font-medium text-gray-700">Password</label>
+        <input
+          type="password"
+          class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+          placeholder="Enter password"
+          formControlName="password"
+          required
+        />
+        @if(loginForm.get('password')?.invalid && loginForm.get('password')?.touched){
+        <p  class="text-sm text-red-600 mt-1">
+          Password must be at least 6 characters
+        </p>
+      }
+      @if(loginError){
+
+        <div class="bg-red-100 border border-red-400  px-4 py-3 rounded-lg mt-4 text-sm">
+          <strong class="font-medium">Incorrect email or password.<br/></strong> Please try again.<br />
+          <span class="block mt-1">That doesn't look right. Doublecheck your email and password, or
+            reset your password if you’ve
+            forgotten it.</span>
+          <a href="#" class="text-red-500 font-semibold block mt-2">Forgot Password?</a>
+        </div>
+      }
+      </div>
+
+      <!-- Buttons -->
+      <div class="space-y-2">
+        <button
+          type="submit"
+          [disabled]="loginForm.invalid"
+          class="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg"
+        >
+          Sign in
+        </button>
+
+        <button
+          type="button"
+          class="w-full bg-gray-800 hover:bg-gray-900 text-white font-semibold py-2 px-4 rounded-lg"
+        >
+          Sign Up
+        </button>
+
+        <button
+          type="button"
+          class="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-lg"
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- OTP Modal -->
+   @if(showOTPModal) {
+  <div  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-xl shadow-lg w-full max-w-sm p-6">
+      <div class="text-center mb-6">
+        <h2 class="text-lg font-semibold text-gray-800">DabApp</h2>
+        <p class="text-sm text-gray-600 mt-2">Please check your phone</p>
+        <p class="text-sm text-gray-600">We've sent a code to {{ phoneNumber }}</p>
+      </div>
+
+      <form [formGroup]="otpForm" (ngSubmit)="verifyOTP()">
+        <div class="mb-6">
+          <label class="block text-sm font-medium text-gray-700 mb-2">OTP</label>
+          <div class="flex justify-between ">
+            <input
+              id="digit1"
+              type="text"
+              maxlength="1"
+              class="w-16 h-14 text-center border border-blue-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+              formControlName="digit1"
+              (input)="onOTPInputChange($event, 'digit2')"
+            >
+            <input
+              id="digit2"
+              type="text"
+              maxlength="1"
+              class="w-16 h-14 text-center border border-blue-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+              formControlName="digit2"
+              (input)="onOTPInputChange($event, 'digit3')"
+            >
+            <input
+              id="digit3"
+              type="text"
+              maxlength="1"
+              class="w-16 h-14 text-center border border-blue-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+              formControlName="digit3"
+              (input)="onOTPInputChange($event, 'digit4')"
+            >
+            <input
+              id="digit4"
+              type="text"
+              maxlength="1"
+              class="w-16 h-14 text-center border border-blue-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+              formControlName="digit4"
+              (input)="onOTPInputChange($event, 'digit5')"
+            >
+            <!-- <input
+              id="digit5"
+              type="text"
+              maxlength="1"
+              class="w-16 h-14 text-center border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+              formControlName="digit5"
+            > -->
+          </div>
+
+        @if(otpExpired) {
+          <div class="mt-4 text-center">
+            <p class="text-sm text-red-600">OTP Expired!</p>
+
+          <button type="button" [disabled]="!otpResendEnabled"
+
+          class="text-sm text-blue-600" (click)="resendOTP()">
+             Resend
+           </button>
+          </div>
+        }
+
+        @if(!otpResendEnabled){
+
+         <p class="mt-4 text-center">Didn't get a code ? Click to resend</p>
+          <div class="mt-4 text-center">
+
+
+            <button
+              type="button"
+
+              [disabled]="!otpResendEnabled"
+              [class.text-gray-400]="!otpResendEnabled"
+              [class.text-red-500]="otpResendEnabled"
+              class="text-sm font-semibold focus:outline-none"
+            >
+              <!-- Resend OTP  -->
+              Otp will expire in :  {{ !otpResendEnabled ?   resendCountdown   : '' }}
+            </button>
+
+          </div>
+        }
+          @if(otpForm.invalid && otpForm.touched){
+          <p *ngIf="" class="text-sm text-red-600 mt-2 text-center">
+            Please enter the complete OTP
+          </p>
+
+        }
+        </div>
+
+        <div class="flex space-x-3">
+          <button
+            type="button"
+            (click)="closeOTPModal()"
+            class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-lg border border-gray-500"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg border border-gray-500 "
+          >
+            Verify
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+  <!-- End of OTP Modal -->
+</div>

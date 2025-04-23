@@ -1,0 +1,20 @@
+<div class="border-b mb-6">
+  <nav class="flex space-x-6">
+    <span
+      *ngFor="let tab of tabs"
+      (click)="activeTab = tab"
+      class="cursor-pointer py-2 border-b-2"
+      [ngClass]="{
+        'border-blue-600 text-blue-600': activeTab === tab,
+        'border-transparent text-gray-600 hover:text-blue-600': activeTab !== tab
+      }"
+    >
+      {{ tab }}
+    </span>
+  </nav>
+</div>
+
+<div>
+  <!-- <app-home-tab *ngIf="activeTab === 'Home'"></app-home-tab> -->
+  <!-- Add other tab components here -->
+</div>
