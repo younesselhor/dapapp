@@ -1,12 +1,13 @@
+
 <div class="border-b mb-6">
-  <nav class="flex space-x-6">
+  <nav class="flex space-x-6 overflow-x-auto">
     <span
       *ngFor="let tab of tabs"
-      (click)="activeTab = tab"
-      class="cursor-pointer py-2 border-b-2"
+      (click)="setActiveTab(tab)"
+      class="cursor-pointer py-2 px-1 border-b-2 whitespace-nowrap"
       [ngClass]="{
-        'border-blue-600 text-blue-600': activeTab === tab,
-        'border-transparent text-gray-600 hover:text-blue-600': activeTab !== tab
+        'border-red-600 text-red-600': activeTab === tab,
+        'border-transparent text-gray-600 hover:text-red-600': activeTab !== tab
       }"
     >
       {{ tab }}
@@ -14,7 +15,13 @@
   </nav>
 </div>
 
-<div>
-  <!-- <app-home-tab *ngIf="activeTab === 'Home'"></app-home-tab> -->
-  <!-- Add other tab components here -->
+<div [ngSwitch]="activeTab">
+  <app-profile-card *ngSwitchCase="'Home'"></app-profile-card>
+  <!-- <app-home-tab *ngSwitchCase="'Home'"></app-home-tab>
+  <app-settings-tab *ngSwitchCase="'Settings'"></app-settings-tab>
+  <app-orders-tab *ngSwitchCase="'Orders'"></app-orders-tab>
+  <app-payment-info-tab *ngSwitchCase="'Payment Information'"></app-payment-info-tab>
+  <app-addresses-tab *ngSwitchCase="'Addresses'"></app-addresses-tab>
+  <app-garage-tab *ngSwitchCase="'My Garage'"></app-garage-tab>
+  <app-wishlist-tab *ngSwitchCase="'Wishlist'"></app-wishlist-tab> -->
 </div>

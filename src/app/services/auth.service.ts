@@ -1,48 +1,11 @@
-// // import { Injectable } from '@angular/core';
 
-// // @Injectable({
-// //   providedIn: 'root'
-// // })
-// // export class AuthService {
-
-// //   constructor() { }
-// // }
-
-
-// import { Injectable, signal } from '@angular/core';
-// import { HttpClient } from '@angular/common/http';
-// import { map, Observable } from 'rxjs';
-// import { LoginResponse, UserInterface } from '../interfaces/user-interface';
-
-// @Injectable({
-//   providedIn: 'root',
-// })
-// export class AuthService {
-//   currentUserSignal = signal<UserInterface | undefined | null>(undefined);
-//   // private apiUrl = 'https://your-api.com/api/auth/login'; // 👈 update this
-
-//   constructor(private http: HttpClient) {}
-
-//   // login(credentials: { email: string; password: string }): Observable<UserInterface> {
-//   //   return this.http.post<UserInterface>(this.apiUrl, credentials);
-//   // }
-
-//   login(identifier: string, password: string): Observable<boolean> {
-//     return this.http.get<UserInterface[]>('/data/user.json').pipe(
-//       map(users => {
-//         const user = users.find(u => u.email === identifier && u.token === password);
-//         return !!user;
-//       })
-//     );
-//   }
-// }
-
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';
-import {  OtpLoginResponse, UserInterface } from '../interfaces/user-interface';
-// import { User } from '../models/user.model';
+import {  LoginRequest, MeResponse, OtpLoginResponse, RegistrationRequest, RegistrationResponse, UserInterface } from '../interfaces/user-interface';
+import { CookieService } from 'ngx-cookie-service';
+import { isPlatformBrowser } from '@angular/common';
 
 export interface IUserRegister{
   firstName: string
@@ -63,51 +26,47 @@ export class AuthService {
   // private loginUrl = 'http://127.0.0.1:8000/api/'; // 👈 update this
   baseUrl = 'https://phpstack-1447596-5436406.cloudwaysapps.com/api/';
 
+  private loggedIn = new BehaviorSubject<boolean>(this.hasToken());
+
+  isLoggedIn$ = this.loggedIn.asObservable();
+  router: any;
+
+  constructor(private http: HttpClient ,
+     private cookieService: CookieService,
+    @Inject(PLATFORM_ID) private platformId: Object) {}
 
 
-  constructor(private http: HttpClient) {}
-
-  // login(phoneOrEmail: string, password: string): Observable<any> {
-  //   // Mock login API - replace with real API call
-  //   if (phoneOrEmail === '+966.43994319' && password === 'password') {
-  //     return of({ success: true }).pipe(
-  //       delay(800),
-  //       tap(() => {
-  //         this.verificationPhoneNumber = phoneOrEmail;
-  //         this.currentUserSubject.next({ phoneOrEmail });
-  //       })
-  //     );
-  //   } else {
-  //     return throwError(() => new Error('Incorrect email or password. Please try again.'));
-  //   }
-  // }
-  login(login: UserInterface[] ): Observable<UserInterface> {
+  login(login: LoginRequest): Observable<UserInterface> {
     return this.http.post<UserInterface>(this.baseUrl + 'login', login)
-    // .pipe(
-    //   tap((user) => {
-    //     if (user.success) {
-    //       this.verificationPhoneNumber = login.login;
-    //       this.currentUserSubject.next({ phoneOrEmail: login.login });
-    //     } else {
-    //       throw new Error('Login failed');
-    //     }
-    //   })
-    // );
+    .pipe(
+      tap((response: UserInterface)=>{
+        if(response.token) {
+          this.saveToken(response.token);
+          this.currentUserSubject.next(response);
+        }
+
+      })
+    );
 
   }
 
-  register(registerUser : UserInterface[]): Observable<UserInterface>{
-    return this.http.post<UserInterface>(this.baseUrl + 'register', registerUser);
+  register(registerUser: RegistrationRequest): Observable<RegistrationResponse> {
+    return this.http.post<RegistrationResponse>(this.baseUrl + 'register', registerUser);
   }
-// otplogin(otp : OtpResponse[]): Observable<OtpResponse[]> {
-// return this.http.post<OtpResponse[]>(this.baseUrl + 'verify-otp', otp);
-// }
+
 otplogin(otp :{login : string,otp:string}) :Observable<OtpLoginResponse> {
   return this.http.post<OtpLoginResponse>(this.baseUrl + 'verify-otp', otp);
   }
+
+  getProfile(): Observable<MeResponse> {
+    return this.http.get<MeResponse>(this.baseUrl + 'me');
+  }
   sendVerificationCode(): Observable<any> {
-    // Mock API to send verification code
     return of({ success: true }).pipe(delay(500));
+  }
+
+  logout(): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(this.baseUrl + 'logout', {});
   }
 
   verifyCode(code: string): Observable<any> {
@@ -126,6 +85,25 @@ otplogin(otp :{login : string,otp:string}) :Observable<OtpLoginResponse> {
       return throwError(() => new Error('Invalid verification code.'));
     }
   }
+  saveToken(token: string): void {
+    if (isPlatformBrowser(this.platformId)) {
+      this.cookieService.set('token', token, {
+        expires: 7,
+        secure: true,
+        sameSite: 'Lax'
+      });
+    }
+  }
+
+
+    getToken(): string {
+    if (isPlatformBrowser(this.platformId)) {
+      const token = this.cookieService.get('token');
+      return token || '';
+    }
+    return '';
+  }
+
 
   getVerificationPhoneNumber(): string {
     return this.verificationPhoneNumber;
@@ -135,9 +113,15 @@ otplogin(otp :{login : string,otp:string}) :Observable<OtpLoginResponse> {
     this.verificationPhoneNumber = phone;
   }
 
-  logout(): void {
-    this.currentUserSubject.next(null);
+
+
+  setLoggedIn(value: boolean) {
+    this.loggedIn.next(value);
   }
 
+  private hasToken(): boolean {
+    const token = this.getToken();
+    return !!token;
+  }
 
 }

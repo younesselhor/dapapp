@@ -23,7 +23,7 @@
       style="background-color: #fff;"
       class="bg-white px-4 py-2 rounded-lg text-black flex items-center gap-2"
     >
-      {{userName}} <i class="fa-regular fa-user"></i>
+    {{ userName }} <i class="fa-regular fa-user"></i>
     </button>
 
     <!-- Dropdown Menu -->
@@ -31,14 +31,14 @@
       <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50">
         <div class="py-1">
           <a
-            href="#"
+
             class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
             (click)="navigateToProfile(); $event.preventDefault()"
           >
             Profile
           </a>
           <a
-            href="#"
+
             class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
             (click)="logout(); $event.preventDefault()"
           >

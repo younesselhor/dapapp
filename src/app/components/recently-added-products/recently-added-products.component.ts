@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, Inject, PLATFORM_ID } from '@angular/core';
 
 
 interface Product {
@@ -155,25 +155,12 @@ export class RecentlyAddedProductsComponent {
   totalSlides: number = this.recentProducts.length;
   dotsArray: number[] = [];
 
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
   // Computed property for CSS transform
   get currentSlidePosition(): number {
     return (this.currentSlide * 100) / this.slidesToShow;
   }
 
-  ngOnInit(): void {
-    this.updateSlidesToShow();
-    this.updateDotsArray();
-
-    // Handle resize event to make slider responsive
-    window.addEventListener('resize', () => {
-      this.updateSlidesToShow();
-      this.updateDotsArray();
-      // Make sure current slide is valid after resizing
-      if (this.currentSlide > this.totalSlides - this.slidesToShow) {
-        this.currentSlide = Math.max(0, this.totalSlides - this.slidesToShow);
-      }
-    });
-  }
 
   updateSlidesToShow(): void {
     if (window.innerWidth < 640) {
@@ -190,11 +177,56 @@ export class RecentlyAddedProductsComponent {
       this.slidesToMove = 5;
     }
   }
-
   updateDotsArray(): void {
     const dotsCount = Math.ceil((this.totalSlides - this.slidesToShow + 1) / this.slidesToMove);
     this.dotsArray = Array(dotsCount).fill(0).map((_, i) => i);
   }
+  ngOnInit(): void {
+    // this.updateSlidesToShow();
+    // this.updateDotsArray();
+
+    // // Handle resize event to make slider responsive
+    // window.addEventListener('resize', () => {
+    //   this.updateSlidesToShow();
+    //   this.updateDotsArray();
+    //   // Make sure current slide is valid after resizing
+    //   if (this.currentSlide > this.totalSlides - this.slidesToShow) {
+    //     this.currentSlide = Math.max(0, this.totalSlides - this.slidesToShow);
+    //   }
+    // });
+    if (isPlatformBrowser(this.platformId)) {
+      this.updateSlidesToShow();
+      this.updateDotsArray();
+
+      window.addEventListener('resize', () => {
+        this.updateSlidesToShow();
+        this.updateDotsArray();
+        if (this.currentSlide > this.totalSlides - this.slidesToShow) {
+          this.currentSlide = Math.max(0, this.totalSlides - this.slidesToShow);
+        }
+      });
+  }
+  }
+  // updateSlidesToShow(): void {
+  //   if (window.innerWidth < 640) {
+  //     this.slidesToShow = 1;
+  //     this.slidesToMove = 1;
+  //   } else if (window.innerWidth < 768) {
+  //     this.slidesToShow = 2;
+  //     this.slidesToMove = 2;
+  //   } else if (window.innerWidth < 1024) {
+  //     this.slidesToShow = 3;
+  //     this.slidesToMove = 3;
+  //   } else {
+  //     this.slidesToShow = 5;
+  //     this.slidesToMove = 5;
+  //   }
+  // }
+
+  // updateDotsArray(): void {
+  //   const dotsCount = Math.ceil((this.totalSlides - this.slidesToShow + 1) / this.slidesToMove);
+  //   this.dotsArray = Array(dotsCount).fill(0).map((_, i) => i);
+  // }
 
   nextSlide(): void {
     if (this.currentSlide < this.totalSlides - this.slidesToShow) {

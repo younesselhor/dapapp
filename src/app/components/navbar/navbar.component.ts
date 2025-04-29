@@ -6,6 +6,9 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink, RouterModule } from '@angular/router';
 import { SelectModule } from 'primeng/select';
 import { DropdownModule } from 'primeng/dropdown';
+import { AuthService } from '../../services/auth.service';
+import { AuthUserDetails, MeResponse } from '../../interfaces/user-interface';
+import { CookieService } from 'ngx-cookie-service';
 
 
 
@@ -36,7 +39,6 @@ interface IsubNavItems{
   imports: [
     CommonModule,
     RouterModule,
-
     FormsModule,
     SelectModule,
     DropdownModule
@@ -47,46 +49,50 @@ interface IsubNavItems{
 export class NavbarComponent implements OnInit {
   @Output() menuSelected = new EventEmitter<string>();
 
-  selectMenu(menu: string) {
-    this.menuSelected.emit(menu);
-  }
 
 subNavItems = signal<{id:number, name: string, path:string}[]>([]);
-
 userName: string = '';
 cities: ICity[] | undefined;
 showDropdown = false;
-
-    selectedCity: ICity | undefined;
-
-
-
+selectedCity: ICity | undefined;
+currentUser: AuthUserDetails | undefined
 isLoggedIn = false;
 
-constructor(private router: Router) {}
+constructor(private router: Router,private auth: AuthService,  private cookieService: CookieService) {}
 ngOnInit() {
+  this.auth.isLoggedIn$.subscribe((loggedIn) => {
+    this.isLoggedIn = loggedIn;
+
+    if (loggedIn) {
+      this.auth.getProfile().subscribe({
+        next: (res) => {
+          this.currentUser = res.user;
+          this.userName = res.user.first_name;
+        },
+        error: () => {
+          this.isLoggedIn = false;
+        }
+      });
+    } else {
+      this.currentUser = undefined;
+      this.userName = '';
+    }
+  });
+
   this.cities = [
           { name: 'Riyadh', code: 'RYD' },
           { name: 'Jeddah', code: 'JED' },
           { name: 'Dammam', code: 'DAM' }
         ];
+}
 
-
-  const token = localStorage.getItem('token');
-  const user = localStorage.getItem('user');
-
-  if (token && user) {
-    this.isLoggedIn = true;
-    this.userName = JSON.parse(user).first_name;
-    console.log('user',this.userName);
-  }else{
-    console.log( 'not logged in');
-  }
+selectMenu(menu: string) {
+  this.menuSelected.emit(menu);
 }
 
 navigateToProfile(): void {
   this.showDropdown = false;
-  // Navigate to profile page
+
   this.router.navigate(['/account']);
 }
 
@@ -94,12 +100,29 @@ toggleDropdown(): void {
   this.showDropdown = !this.showDropdown;
 }
 
-logout() {
-  localStorage.clear();
-  this.isLoggedIn = false;
-  localStorage.removeItem('token');
-  this.router.navigate(['/login']);
+
+
+// logout() {
+//   this.auth.logout();
+//   this.router.navigate(['/login']);
+//   this.isLoggedIn = false;
+// }
+logout(): void {
+  this.auth.logout().subscribe({
+    next: () => {
+      this.cookieService.delete('token', '/');
+      localStorage.clear();
+      sessionStorage.clear();
+      this.isLoggedIn = false;  // Update the login status here
+      this.router.navigate(['/login']);
+    },
+    error: (err) => {
+      console.error('Logout failed', err);
+      // You can show an error message to the user if needed
+    }
+  });
 }
+
 }
 
 
