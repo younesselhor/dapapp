@@ -141,12 +141,6 @@ export class LoginComponent {
       expires: 7
     });
 
-    // مباشرة نجيب profile
-    this.auth.getProfile().subscribe({
-      next: (res :MeResponse ) => {
-        this.currentUser = res.user;
-      }
-    });
     this.auth.setLoggedIn(true);
     this.router.navigate(['/plates']);
   }

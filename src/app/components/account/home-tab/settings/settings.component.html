@@ -1,0 +1,54 @@
+<form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="max-w-xl mx-auto p-6 space-y-6 bg-white rounded ">
+  <!-- First & Last Name -->
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+      <input formControlName="firstName" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500" />
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+      <input formControlName="lastName" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500" />
+    </div>
+  </div>
+
+  <!-- Email -->
+  <div>
+    <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+    <div class="relative">
+      <input formControlName="email" class="w-full border border-gray-300 rounded px-3 py-2 pr-10 focus:outline-none focus:ring focus:ring-blue-500" />
+      @if (profileForm.get('email')?.valid){
+      <span  class="absolute right-3 top-1/2 -translate-y-1/2 text-green-500">✔️</span>
+    }
+    </div>
+  </div>
+
+  <!-- Birthday -->
+  <div formGroupName="birthday">
+    <label class="block text-sm font-medium text-gray-700 mb-1">Birthday</label>
+    <div class="grid grid-cols-3 gap-3">
+      <input formControlName="day" class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500" placeholder="DD" />
+      <input formControlName="month" class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500" placeholder="MM" />
+      <input formControlName="year" class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500" placeholder="YYYY" />
+    </div>
+  </div>
+  <!-- Phone -->
+  <div>
+    <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+    <div class="relative">
+      <input formControlName="phone" class="w-full border border-gray-300 rounded px-3 py-2 pr-10 focus:outline-none focus:ring focus:ring-blue-500" />
+      @if (profileForm.get('phone')?.valid){
+      <span  class="absolute right-3 top-1/2 -translate-y-1/2 text-green-500">✔️</span>
+    }
+    </div>
+    <p class="text-xs text-gray-500 mt-1">A primary way to login to your account</p>
+  </div>
+
+  <!-- Submit Button -->
+  <div class="text-center">
+    <button type="submit" class="bg-teal-900 hover:bg-teal-800 text-white font-semibold px-6 py-2 rounded" style="    width: 302px;
+    height: 56px;
+    background-color: #032C40;">
+      Edit
+    </button>
+  </div>
+</form>

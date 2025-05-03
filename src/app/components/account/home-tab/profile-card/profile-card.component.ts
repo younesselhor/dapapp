@@ -28,12 +28,15 @@ currentUser: AuthUserDetails | undefined
 
   constructor(private auth : AuthService){}
   ngOnInit(): void{
-    this.auth.getProfile().subscribe(
-      {
-        next: (res :MeResponse ) => {
-          this.currentUser = res.user;
-        }
-      });
+
+    // this.auth.fetchUserProfileOnce();
+    this.auth.userProfile$.subscribe((res)=>{
+      this.currentUser = res?.user;
+      console.log('this.currentUser: ', this.currentUser);
+    })
+
+
+
 }
 
 }

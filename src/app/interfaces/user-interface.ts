@@ -100,8 +100,8 @@ export interface AuthUserDetails {
   two_factor_enabled: number;
   country_id: string | null;
   bank_cards: any[];
-  wishlists: any[];
-  listings: any[];
+  wishlists: Wishlist[];
+  listings: Listing[];
   auction_histories_as_seller: any[];
   auction_histories_as_buyer: any[];
 }
@@ -112,3 +112,39 @@ export interface Vehicle {
   year: number;
   make: string;
 }
+export interface Listing {
+  id: number;
+  title: string;
+  description: string;
+  price: string;
+  seller_id: number;
+  category_id: number;
+  country_id: number;
+  city_id: number;
+  created_at: string;
+  updated_at: string;
+  status: string;
+  auction_enabled: number;
+  minimum_bid: string;
+  allow_submission: number;
+  listing_type_id: number;
+  // UI properties
+  rating?: number;
+  images: ListingImage[];
+}
+
+export interface ListingImage {
+  id: number;
+  image_url: string;
+  listing_id: number;
+  created_at: string | null;
+  updated_at: string | null;
+}
+export interface Wishlist {
+  id: number;
+  user_id: number;
+  listing_id: number;
+  created_at: string;
+  listing: Listing;
+}
+

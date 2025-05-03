@@ -1,16 +1,17 @@
 
 
 <!-- product-card.component.html -->
-<div class="product-card" [ngClass]="{'uae-card': plateData.country === 'UNITED ARAB EMIRATES', 'ksa-card': plateData.country === 'SAUDI ARABIA', 'kuwait-card': plateData.country === 'KUWAIT'}">
+<!-- <div class="product-card" [ngClass]="{'uae-card': plateData.country === 'UNITED ARAB EMIRATES', 'ksa-card': plateData.country === 'SAUDI ARABIA', 'kuwait-card': plateData.country === 'KUWAIT'}">
   <div class="plate-container">
     <div class="license-plate">
       <div class="plate-top">
-        <div class="plate-number">{{ plateData.number }}</div>
-        <div class="plate-letter">{{ plateData.letter }}</div>
-      </div>
-      <div class="plate-bottom">
         <div class="plate-number-arabic">{{ plateData.numberArabic }}</div>
         <div class="plate-letter-arabic">{{ plateData.letterArabic }}</div>
+
+      </div>
+      <div class="plate-bottom">
+        <div class="plate-number">{{ plateData.number }}</div>
+        <div class="plate-letter">{{ plateData.letter }}</div>
       </div>
     </div>
     <div class="country-badge">
@@ -24,7 +25,72 @@
     <div class="price">{{ plateData.price }} {{ plateData.currency }}</div>
     <button class="view-btn">View Plate</button>
   </div>
-</div>
+</div> -->
+<div class="rounded overflow-hidden shadow-md bg-white transition-transform duration-200 hover:-translate-y-1 h-full flex flex-col"
+         [ngClass]="{
+           'ksa-plate': plateData.country === 'SAUDI ARABIA',
+           'uae-plate': plateData.country === 'UNITED ARAB EMIRATES',
+           'kuwait-plate': plateData.country === 'KUWAIT'
+         }">
+
+      <!-- Plate Container -->
+      <div class="p-5 flex justify-center items-center relative"
+           [ngClass]="{
+             'bg-green-50': plateData.country === 'SAUDI ARABIA',
+             'bg-blue-50': plateData.country === 'UNITED ARAB EMIRATES',
+             'bg-red-50': plateData.country === 'KUWAIT'
+           }">
+
+        <!-- License Plate -->
+        <!-- <div class="flex flex-col border-2 border-black rounded-md overflow-hidden w-56"> -->
+          <div class="flex flex-col border-3 border-black rounded-l-[25px] rounded-r-none overflow-hidden w-56"
+          >
+          <!-- Top Row -->
+          <div class="flex justify-between h-14 bg-white">
+            <div class="flex items-center justify-center py-0 px-2.5 font-bold text-2xl w-1/2 border-b border-black">
+              {{ plateData.numberArabic }}
+            </div>
+            <div class="flex items-center justify-center py-0 px-2.5 font-bold text-2xl w-1/2 border-l-2 border-b border-black">
+              {{ plateData.letterArabic }}
+            </div>
+          </div>
+
+          <!-- Bottom Row -->
+          <div class="flex justify-between h-14 bg-white">
+            <div class="flex items-center justify-center py-0 px-2.5 font-bold text-2xl w-1/2">
+              {{ plateData.number }}
+            </div>
+            <div class="flex items-center justify-center py-0 px-2.5 font-bold text-2xl w-1/2 border-l-2 border-black">
+              {{ plateData.letter }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Country Badge with fixed vertical text -->
+        <div class="h-28 w-10 flex items-center justify-center rounded-r-[25px] border-t-3 border-r-3 border-b-3 border-black"
+             [ngClass]="{
+               'bg-green-600': plateData.country === 'SAUDI ARABIA',
+               'bg-blue-700': plateData.country === 'UNITED ARAB EMIRATES',
+               'bg-red-600': plateData.country === 'KUWAIT'
+             }">
+        <span class="text-white font-bold [writing-mode:vertical-rl] [text-orientation:mixed]">
+          {{ plateData.countryCode }}
+        </span>
+        </div>
+      </div>
+
+      <!-- Product Info (Optional) -->
+      <div  class="p-4 flex-grow flex flex-col gap-1">
+        <div class="text-sm text-gray-500">Plate</div>
+        <div class="text-base font-medium">{{ plateData.country }}</div>
+        <div *ngIf="plateData.price" class="text-lg font-bold my-1">
+          {{ plateData.price }} {{ plateData.currency }}
+        </div>
+        <button  class="mt-2 py-2.5 text-center text-red-500 bg-white border border-red-500 rounded cursor-pointer transition-all duration-200 font-medium hover:bg-red-500 hover:text-white">
+          View Plate
+        </button>
+      </div>
+    </div>
 
 <!-- <p-card class="product-card" [ngClass]="{'uae-card': plateData.country === 'UNITED ARAB EMIRATES', 'ksa-card': plateData.country === 'SAUDI ARABIA', 'kuwait-card': plateData.country === 'KUWAIT'}">
   <ng-template #header>

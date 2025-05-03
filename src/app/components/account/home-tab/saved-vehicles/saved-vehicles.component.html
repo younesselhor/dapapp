@@ -1,1 +1,95 @@
-<p>saved-vehicles works!</p>
+<div class="container mx-auto px-4 py-6">
+  @if (loading) {
+    <div class="flex justify-center py-8">
+      <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+    </div>
+  } @else if (error) {
+    <div class="bg-red-100 text-red-700 p-4 rounded mb-4">
+      {{ error }}
+      <button class="ml-2 underline">Try again</button>
+    </div>
+  } @else if (listingarray.length === 0) {
+    <!-- <div class="text-center py-8">
+      <p class="text-gray-500">Your wishlist is empty</p>
+      <button routerLink="/shop" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+        Browse products
+      </button>
+    </div> -->
+    <div class="flex flex-col items-center justify-center py-16 px-4">
+      <div class="bg-orange-50 rounded-full p-8 mb-6">
+        <!-- <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+        </svg> -->
+        <img src="/pictures/squarfav.png" alt="">
+      </div>
+      <h2 class="text-xl font-medium text-gray-900 mb-2">No items added to wish your list</h2>
+      <p class="text-gray-600 text-center mb-6">You can add products to your wish list and get back here to keep them all in one place</p>
+      <button routerLink="/home" routerLinkActive="router-link-active"  class="bg-red-500 hover:bg-red-600 text-white font-medium rounded px-6 py-3">
+        Start Shopping
+      </button>
+    </div>
+  } @else {
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      @for (item of listingarray; track item.id) {
+        <div class="border border-gray-200 rounded-lg p-4 relative">
+          <!-- Wishlist heart icon -->
+          <button
+            class="absolute top-2 right-2 text-red-500"
+           >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 fill-current" viewBox="0 0 24 24">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+            </svg>
+          </button>
+
+          <!-- Product image -->
+          <div class="mb-4 flex justify-center">
+            <div class="relative">
+              <img
+                [src]="item.images[0].image_url || '/pictures/hondablur1.png'"
+                alt="{{ item.title }}"
+                class="h-40 object-contain" />
+
+              @if (item.status !== 'active') {
+                <div class="absolute inset-0 bg-gray-100 bg-opacity-50 flex items-center justify-center">
+                  <span class="bg-gray-200 text-gray-700 px-3 py-1 rounded-sm text-sm font-medium">
+                    Unavailable
+                  </span>
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Rating stars -->
+          <div class="flex items-center mb-2">
+            <div class="bg-yellow-400 text-white text-xs font-bold px-2 py-1 rounded">
+              {{ item.rating?.toFixed(1) || '4.5' }}
+            </div>
+            <div class="ml-1 text-yellow-400">
+              <!-- @for (star of getStarsArray(item.rating || 4.5); track $index) {
+                <span class="text-sm">★</span>
+              } -->
+            </div>
+          </div>
+
+          <!-- Product title -->
+          <h3 class="text-sm font-medium mb-2 line-clamp-2">{{ item.title }}</h3>
+
+          <!-- Pricing -->
+          <div class="flex items-center">
+            <span class="font-bold">SAR {{ item.price }}</span>
+            @if (item.minimum_bid && item.minimum_bid !== '0.00') {
+              <span class="text-sm text-red-500 ml-2">SAR {{ item.minimum_bid }}</span>
+            }
+          </div>
+
+          <!-- Auction badge if applicable -->
+          @if (item.auction_enabled === 1) {
+            <div class="mt-2">
+              <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-0.5 rounded">Auction</span>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

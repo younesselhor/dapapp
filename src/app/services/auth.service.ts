@@ -2,10 +2,11 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-import { delay, tap } from 'rxjs/operators';
+import { catchError, delay, tap } from 'rxjs/operators';
 import {  LoginRequest, MeResponse, OtpLoginResponse, RegistrationRequest, RegistrationResponse, UserInterface } from '../interfaces/user-interface';
 import { CookieService } from 'ngx-cookie-service';
 import { isPlatformBrowser } from '@angular/common';
+import { response } from 'express';
 
 export interface IUserRegister{
   firstName: string
@@ -24,12 +25,14 @@ export class AuthService {
   public currentUser$ = this.currentUserSubject.asObservable();
   private verificationPhoneNumber = '';
   // private loginUrl = 'http://127.0.0.1:8000/api/'; // 👈 update this
-  baseUrl = 'https://phpstack-1447596-5436406.cloudwaysapps.com/api/';
+  // baseUrl = 'https://phpstack-1447596-5436406.cloudwaysapps.com/api/';
+  baseUrl = 'https://be.dabapp.co/api/'; // 👈 update this
 
+  private userProfileSubject = new BehaviorSubject<MeResponse | null>(null);
+  public userProfile$ = this.userProfileSubject.asObservable();
   private loggedIn = new BehaviorSubject<boolean>(this.hasToken());
-
   isLoggedIn$ = this.loggedIn.asObservable();
-  router: any;
+  private profileLoaded = false;
 
   constructor(private http: HttpClient ,
      private cookieService: CookieService,
@@ -43,6 +46,8 @@ export class AuthService {
         if(response.token) {
           this.saveToken(response.token);
           this.currentUserSubject.next(response);
+          this.setLoggedIn(true);
+          this.fetchUserProfile();
         }
 
       })
@@ -51,7 +56,16 @@ export class AuthService {
   }
 
   register(registerUser: RegistrationRequest): Observable<RegistrationResponse> {
-    return this.http.post<RegistrationResponse>(this.baseUrl + 'register', registerUser);
+    return this.http.post<RegistrationResponse>(this.baseUrl + 'register', registerUser).pipe(
+      tap((response: RegistrationResponse) => {
+        if(response.token) {
+          this.saveToken(response.token);
+          this.currentUserSubject.next(response);
+          this.setLoggedIn(true);
+          this.fetchUserProfile();
+        }
+      })
+    )
   }
 
 otplogin(otp :{login : string,otp:string}) :Observable<OtpLoginResponse> {
@@ -122,6 +136,56 @@ otplogin(otp :{login : string,otp:string}) :Observable<OtpLoginResponse> {
   private hasToken(): boolean {
     const token = this.getToken();
     return !!token;
+  }
+
+  fetchUserProfileOnce(): void {
+    const token = this.getToken();
+    if (token && !this.userProfileSubject.value) {
+      this.getProfile().subscribe({
+        next: (profile) => this.userProfileSubject.next(profile),
+        error: (err) => console.error('Failed to fetch profile', err)
+      });
+    }
+  }
+   fetchUserProfile(): void {
+    if (!this.profileLoaded && this.hasToken()) {
+      this.http.get<MeResponse>(this.baseUrl + 'me')
+        .pipe(
+          catchError(error => {
+            console.error('Failed to fetch profile', error);
+            if (error.status === 401) {
+              this.handleUnauthorized();
+            }
+            return throwError(() => error);
+          })
+        )
+        .subscribe({
+          next: (profile) => {
+            this.userProfileSubject.next(profile);
+            this.profileLoaded = true;
+          }
+        });
+    }
+  }
+
+  private handleUnauthorized(): void {
+    // Handle unauthorized scenarios (expired token, etc.)
+    this.clearUserData();
+  }
+
+  private clearUserData(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      this.cookieService.delete('token', '/');
+      localStorage.clear();
+      sessionStorage.clear();
+    }
+    this.currentUserSubject.next(null);
+    this.userProfileSubject.next(null);
+    this.profileLoaded = false;
+    this.setLoggedIn(false);
+  }
+  updateUser(data: any): Observable<any> {
+    return this.http.put( this.baseUrl+ 'user/update', data);
   }
 
 }

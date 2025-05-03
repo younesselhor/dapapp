@@ -40,7 +40,6 @@ interface IsubNavItems{
     CommonModule,
     RouterModule,
     FormsModule,
-    SelectModule,
     DropdownModule
   ],
   templateUrl: './navbar.component.html',
@@ -62,18 +61,15 @@ constructor(private router: Router,private auth: AuthService,  private cookieSer
 ngOnInit() {
   this.auth.isLoggedIn$.subscribe((loggedIn) => {
     this.isLoggedIn = loggedIn;
-
-    if (loggedIn) {
-      this.auth.getProfile().subscribe({
-        next: (res) => {
-          this.currentUser = res.user;
-          this.userName = res.user.first_name;
-        },
-        error: () => {
-          this.isLoggedIn = false;
-        }
-      });
-    } else {
+    if(loggedIn){
+      this.auth.fetchUserProfileOnce();
+    this.auth.userProfile$.subscribe((profile) => {
+      if( profile && profile.user){
+       this.currentUser = profile.user;
+       this.userName = profile.user.first_name;
+      }
+    });
+    }else{
       this.currentUser = undefined;
       this.userName = '';
     }
