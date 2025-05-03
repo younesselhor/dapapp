@@ -72,7 +72,11 @@
               "buildTarget": "dapapp:build:development"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "development",
+          "options": {
+                  "host": "dabapp.co",
+                  "port": 80
+                }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n"
