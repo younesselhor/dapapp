@@ -1,0 +1,11 @@
+{
+  "routes": {
+    "/": {},
+    "/accessories": {},
+    "/account": {},
+    "/home": {},
+    "/login": {},
+    "/plates": {},
+    "/register": {}
+  }
+}
