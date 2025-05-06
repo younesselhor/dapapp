@@ -82,15 +82,37 @@ export class RegisterComponent implements OnInit {
           this.handleSuccessfulLogin(response.token, response.user);
         }
       },
+      // error: (error) => {
+      //   console.error('Registration error:', error);
+      //   this.submitted = false;
+
+      //   const errorResponse = error.error;
+      //   if (errorResponse.email) {
+      //     this.modalMessage = errorResponse.email[0]; // "The email has already been taken."
+      //   } else if (errorResponse.phone) {
+      //     this.modalMessage = errorResponse.phone[0];
+      //   } else {
+      //     this.modalMessage = 'An unexpected error occurred. Please try again.';
+      //   }
+
+      //   this.showModal = true;
+      // }
       error: (error) => {
         console.error('Registration error:', error);
+
         this.submitted = false;
 
+        console.log('Full error response:', error.error);
+
         const errorResponse = error.error;
-        if (errorResponse.email) {
-          this.modalMessage = errorResponse.email[0]; // "The email has already been taken."
-        } else if (errorResponse.phone) {
+
+        if (errorResponse?.email) {
+          this.modalMessage = errorResponse.email[0];
+        } else if (errorResponse?.phone) {
           this.modalMessage = errorResponse.phone[0];
+        } else if (typeof errorResponse === 'string') {
+          // Maybe backend returns a plain string
+          this.modalMessage = errorResponse;
         } else {
           this.modalMessage = 'An unexpected error occurred. Please try again.';
         }
