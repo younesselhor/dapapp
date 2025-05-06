@@ -32,6 +32,9 @@ export class RegisterComponent implements OnInit {
   submitted : boolean = false;
   tokenExist : string | null = null
     currentUser: AuthUserDetails | undefined
+    modalMessage = '';
+    showModal = false;
+
   constructor(private fb: FormBuilder, private messageService : MessageService, private http : HttpClient, private auth : AuthService ,
     private cookieService: CookieService,
     private router: Router,
@@ -82,6 +85,17 @@ export class RegisterComponent implements OnInit {
       error: (error) => {
         console.error('Registration error:', error);
         this.submitted = false;
+
+        const errorResponse = error.error;
+        if (errorResponse.email) {
+          this.modalMessage = errorResponse.email[0]; // "The email has already been taken."
+        } else if (errorResponse.phone) {
+          this.modalMessage = errorResponse.phone[0];
+        } else {
+          this.modalMessage = 'An unexpected error occurred. Please try again.';
+        }
+
+        this.showModal = true;
       }
     });
   }
@@ -106,5 +120,8 @@ export class RegisterComponent implements OnInit {
        });
        this.auth.setLoggedIn(true);
        this.router.navigate(['/plates']);
+  }
+  closeModal() {
+    this.showModal = false;
   }
 }

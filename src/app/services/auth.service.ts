@@ -163,6 +163,7 @@ otplogin(otp :{login : string,otp:string}) :Observable<OtpLoginResponse> {
           next: (profile) => {
             this.userProfileSubject.next(profile);
             this.profileLoaded = true;
+            console.log(profile);
           }
         });
     }

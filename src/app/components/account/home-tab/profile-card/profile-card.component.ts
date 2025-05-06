@@ -32,7 +32,6 @@ currentUser: AuthUserDetails | undefined
     // this.auth.fetchUserProfileOnce();
     this.auth.userProfile$.subscribe((res)=>{
       this.currentUser = res?.user;
-      console.log('this.currentUser: ', this.currentUser);
     })
 
 

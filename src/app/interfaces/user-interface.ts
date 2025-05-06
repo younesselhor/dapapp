@@ -99,7 +99,7 @@ export interface AuthUserDetails {
   timezone: string | null;
   two_factor_enabled: number;
   country_id: string | null;
-  bank_cards: any[];
+  bank_cards: bank_cards[];
   wishlists: Wishlist[];
   listings: Listing[];
   auction_histories_as_seller: any[];
@@ -147,4 +147,25 @@ export interface Wishlist {
   created_at: string;
   listing: Listing;
 }
+export interface bank_cards {
+  id: string;
+  user_id: number;
+  card_type_id: number;
+  card_number: string;
+  card_holder_name: string;
+  expiration_date: string;
+  cvv: string;
+  created_at: string;
+  is_default: boolean;
+  updated_at: string;
+}
 
+
+
+export interface CreateCardDto {
+  card_type_id: number;
+  card_number: string;
+  card_holder_name: string;
+  expiration_date: string;
+  cvv: string;
+}

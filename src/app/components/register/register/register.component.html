@@ -109,4 +109,13 @@
       </button>
     </div>
   </form>
+
+  <div *ngIf="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <!-- Modal Content -->
+    <div class="bg-white rounded-lg shadow-lg p-6 w-96 relative">
+      <button (click)="closeModal()" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">&times;</button>
+      <h2 class="text-xl font-semibold mb-4 text-red-600">Registration Error</h2>
+      <p class="text-gray-700">{{ modalMessage }}</p>
+    </div>
+  </div>
 </div>
