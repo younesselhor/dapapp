@@ -6,12 +6,22 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ToastModule } from 'primeng/toast';
 import { PasswordModule } from 'primeng/password';
 import { MessageService } from 'primeng/api';
-import { AuthUserDetails, MeResponse, RegistrationRequest, UserInterface } from '../../../interfaces/user-interface';
+import { AuthUserDetails, MeResponse, RegisteredUser, RegistrationRequest, UserInterface } from '../../../interfaces/user-interface';
 import { HttpClient } from '@angular/common/http';
 // import { response, Router } from 'express';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { CookieService } from 'ngx-cookie-service';
+
+interface RegisterForm {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  password: string;
+  password_confirmation: string;
+  role_id: number;
+}
 
 @Component({
   selector: 'app-register',
@@ -28,7 +38,7 @@ import { CookieService } from 'ngx-cookie-service';
   styleUrl: './register.component.css'
 })
 export class RegisterComponent implements OnInit {
-  registerForm: FormGroup = new FormGroup({});
+  registerForm!: FormGroup;
   submitted : boolean = false;
   tokenExist : string | null = null
     currentUser: AuthUserDetails | undefined
@@ -38,21 +48,24 @@ export class RegisterComponent implements OnInit {
   constructor(private fb: FormBuilder, private messageService : MessageService, private http : HttpClient, private auth : AuthService ,
     private cookieService: CookieService,
     private router: Router,
-  ) { }
+  )
+  {this.registerForm = this.fb.group({
+    first_name: ['', Validators.required],
+    last_name: ['', Validators.required],
+    email: ['', [Validators.required, Validators.email]],
+    phone: ['', [Validators.required, Validators.pattern(/^\+?\d{9,15}$/)]],
+    password: ['', [Validators.required, Validators.minLength(6)]],
+    password_confirmation: ['', Validators.required],
+    role_id:1
+  },
+  {
+    validators: this.passwordMatchValidator
+  });
+}
 
   ngOnInit(): void {
 
-    this.registerForm = this.fb.group({
-      first_name: ['', Validators.required],
-      last_name: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      phone: ['', [Validators.required, Validators.pattern(/^\+?\d{9,15}$/)]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      password_confirmation: ['', Validators.required],
-      role_id:1
-    }, {
-      validators: this.passwordMatchValidator
-    });
+
 
   }
 
@@ -82,43 +95,43 @@ export class RegisterComponent implements OnInit {
           this.handleSuccessfulLogin(response.token, response.user);
         }
       },
-      // error: (error) => {
-      //   console.error('Registration error:', error);
-      //   this.submitted = false;
-
-      //   const errorResponse = error.error;
-      //   if (errorResponse.email) {
-      //     this.modalMessage = errorResponse.email[0]; // "The email has already been taken."
-      //   } else if (errorResponse.phone) {
-      //     this.modalMessage = errorResponse.phone[0];
-      //   } else {
-      //     this.modalMessage = 'An unexpected error occurred. Please try again.';
-      //   }
-
-      //   this.showModal = true;
-      // }
       error: (error) => {
         console.error('Registration error:', error);
-
         this.submitted = false;
 
-        console.log('Full error response:', error.error);
-
         const errorResponse = error.error;
-
-        if (errorResponse?.email) {
-          this.modalMessage = errorResponse.email[0];
-        } else if (errorResponse?.phone) {
+        if (errorResponse.email) {
+          this.modalMessage = errorResponse.email[0]; // "The email has already been taken."
+        } else if (errorResponse.phone) {
           this.modalMessage = errorResponse.phone[0];
-        } else if (typeof errorResponse === 'string') {
-          // Maybe backend returns a plain string
-          this.modalMessage = errorResponse;
         } else {
           this.modalMessage = 'An unexpected error occurred. Please try again.';
         }
 
         this.showModal = true;
       }
+      // error: (error) => {
+      //   console.error('Registration error:', error);
+
+      //   this.submitted = false;
+
+      //   console.log('Full error response:', error.error);
+
+      //   const errorResponse = error.error;
+
+      //   if (errorResponse?.email) {
+      //     this.modalMessage = errorResponse.email[0];
+      //   } else if (errorResponse?.phone) {
+      //     this.modalMessage = errorResponse.phone[0];
+      //   } else if (typeof errorResponse === 'string') {
+      //     // Maybe backend returns a plain string
+      //     this.modalMessage = errorResponse;
+      //   } else {
+      //     this.modalMessage = 'An unexpected error occurred. Please try again.';
+      //   }
+
+      //   this.showModal = true;
+      // }
     });
   }
 
@@ -126,15 +139,13 @@ export class RegisterComponent implements OnInit {
     this.registerForm.reset();
   }
 
-  handleSuccessfulLogin(token: string, user: any) {
+  handleSuccessfulLogin(token: string, user: RegisteredUser) {
    this.cookieService.set('token', token, {
          secure: true,
          sameSite: 'Strict',
          path: '/',
          expires: 7
        });
-
-       // مباشرة نجيب profile
        this.auth.getProfile().subscribe({
          next: (res :MeResponse ) => {
            this.currentUser = res.user;
