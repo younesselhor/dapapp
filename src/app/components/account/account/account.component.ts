@@ -40,4 +40,10 @@ export class AccountComponent {
 
   ngOnInit(): void {
   }
+
+  isMobileMenuOpen = false;
+
+  toggleMobileMenu() {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
 }

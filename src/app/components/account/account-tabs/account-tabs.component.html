@@ -1,4 +1,4 @@
-
+<!--
 <div class="border-b mb-6">
   <nav class="flex space-x-6 overflow-x-auto">
     <span
@@ -17,12 +17,40 @@
 
 <div [ngSwitch]="activeTab">
   <app-profile-card *ngSwitchCase="'Home'"></app-profile-card>
-  <!-- <app-home-tab *ngSwitchCase="'Home'"></app-home-tab>
+  <app-home-tab *ngSwitchCase="'Home'"></app-home-tab>
   <app-settings-tab *ngSwitchCase="'Settings'"></app-settings-tab>
   <app-orders-tab *ngSwitchCase="'Orders'"></app-orders-tab>
   <app-addresses-tab *ngSwitchCase="'Addresses'"></app-addresses-tab>
-  <app-garage-tab *ngSwitchCase="'My Garage'"></app-garage-tab>-->
+  <app-garage-tab *ngSwitchCase="'My Garage'"></app-garage-tab>
   <app-payment-card-user *ngSwitchCase="'Payment Information'"></app-payment-card-user>
   <app-settings *ngSwitchCase="'Settings'"></app-settings>
   <app-saved-vehicles *ngSwitchCase="'Wishlist'"></app-saved-vehicles>
+</div> -->
+<div class="border-b border-gray-200">
+  <nav class="flex space-x-8 overflow-x-auto py-2 hide-scrollbar">
+    <button
+      *ngFor="let tab of tabs"
+      (click)="setActiveTab(tab)"
+      [class]="activeTab === tab
+        ? 'border-red-500 text-red-600 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm'
+        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm'">
+      {{ tab }}
+    </button>
+  </nav>
+</div>
+
+<div class="mt-6">
+  <ng-container *ngIf="activeTab === 'Home'">
+    <app-profile-card></app-profile-card>
+  </ng-container>
+  <ng-container *ngIf="activeTab === 'Settings'">
+    <app-settings></app-settings>
+  </ng-container>
+  <ng-container *ngIf="activeTab === 'Payment Information'">
+    <app-payment-card-user></app-payment-card-user>
+  </ng-container>
+  <ng-container *ngIf="activeTab === 'Wishlist'">
+    <app-saved-vehicles></app-saved-vehicles>
+  </ng-container>
+  <!-- Add other tab contents as needed -->
 </div>
