@@ -1,136 +1,42 @@
-/* Base Navbar Styles */
-.navbar {
-  /* position: fixed; */
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 60px;
-  background: #0f2c44;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 20px;
+/* Navbar Component Styles */
+nav {
   z-index: 1000;
 }
 
-.logo {
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
-.nav-links {
-  list-style: none;
-  display: flex;
-  gap: 20px;
-}
-
-.nav-links li a {
-  color: white;
-  text-decoration: none;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-/* Sub-navbar */
-.sub-navbar {
-  background-color: rgb(246, 246, 246);
-  padding: 10px 20px;
-  /* position: fixed; */
-  top: 60px;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-}
-
-.sub-navbar ul {
-  list-style: none;
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-}
-
-.sub-navbar ul li a {
-  text-decoration: none;
-  color: black;
-  font-family: sans-serif;
-  cursor: pointer;
-}
-
-/* Responsive Styles */
-.menu-toggle {
-  display: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: white;
-}
-
+/* For mobile menu transitions */
 @media (max-width: 768px) {
-  .nav-links {
-    display: none;
-    flex-direction: column;
-    background: #0f2c44;
-    position: absolute;
-    top: 40px;;
-    left: 0;
-    right: 0;
-    padding: 10px 0;
-    text-align: center;
+  nav div[class*="w-full"] {
+    transition: max-height 0.3s ease-in-out;
+    overflow: hidden;
   }
 
-  .nav-links.active {
-    display: flex;
-    z-index: 999;
+  nav div.hidden {
+    max-height: 0;
   }
 
-  .menu-toggle {
-    display: block;
-  }
-
-  .profile-mobile {
-    display: block;
-    margin-top: 10px;
-  }
-
-  .profile-mobile button {
-    background: white;
-    color: black;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 5px;
-    font-weight: bold;
-    cursor: pointer;
-  }
-
-  .profile-mobile i {
-    color: #0f2c44;
-  }
-
-  .user-actions {
-    display: none; /* Hide the desktop profile button */
+  nav div:not(.hidden) {
+    max-height: 100vh;
+    padding-bottom: 0.5rem;
   }
 }
 
-/* Desktop Profile Button */
-.profile {
-  background: white;
-  color: black;
-  padding: .5rem;
-  border-radius: 5px;
+/* Button focus and active states */
+button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.5);
+}
+
+/* Enhance dropdown appearance */
+.profile-dropdown {
   position: relative;
-  right: 3%;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: bold;
 }
 
-.profile i {
-  font-size: 1.2rem;
-  color: #0f2c44;
+/* Fix for any z-index issues */
+.z-50 {
+  z-index: 50;
 }
 
-.profile button {
-  border: none;
-  background-color: white;
+/* Additional hover effects */
+a:hover {
+  transition: all 0.2s ease;
 }

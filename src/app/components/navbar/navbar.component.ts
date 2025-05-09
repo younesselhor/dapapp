@@ -53,6 +53,7 @@ subNavItems = signal<{id:number, name: string, path:string}[]>([]);
 userName: string = '';
 cities: ICity[] | undefined;
 showDropdown = false;
+mobileMenuOpen = false;
 selectedCity: ICity | undefined;
 currentUser: AuthUserDetails | undefined
 isLoggedIn = false;
@@ -97,7 +98,9 @@ toggleDropdown(): void {
 }
 
 
-
+toggleMobileMenu(): void {
+  this.mobileMenuOpen = !this.mobileMenuOpen;
+}
 // logout() {
 //   this.auth.logout();
 //   this.router.navigate(['/login']);

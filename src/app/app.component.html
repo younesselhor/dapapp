@@ -1,9 +1,9 @@
 
 <!-- <app-navbar></app-navbar> -->
-<app-navbar (menuSelected)="handleMenuSelection($event)"></app-navbar>
+<!-- <app-navbar (menuSelected)="handleMenuSelection($event)"></app-navbar>
 <app-sub-nav [selectedMenu]="selectedMenu"></app-sub-nav>
 <router-outlet></router-outlet>
-<app-footer></app-footer>
+<app-footer></app-footer> -->
 <!-- <div class="main-container">
 
 
@@ -14,4 +14,17 @@
 </div> -->
 
 
+<div class="flex flex-col min-h-screen">
+  <header>
+    <app-navbar (menuSelected)="handleMenuSelection($event)"></app-navbar>
+    <app-sub-nav [selectedMenu]="selectedMenu"></app-sub-nav>
+  </header>
 
+  <main class="flex-grow">
+    <router-outlet></router-outlet>
+  </main>
+
+  <footer>
+    <app-footer></app-footer>
+  </footer>
+</div>
