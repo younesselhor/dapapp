@@ -13,7 +13,7 @@ import { PaymentCardUserComponent } from '../home-tab/payment-card-user/payment-
   styleUrl: './account-tabs.component.css'
 })
 export class AccountTabsComponent {
-  tabs: string[] = ['Home', 'Settings', 'Orders', 'Payment Information', 'Addresses', 'My Garage', 'Wishlist'];
+  tabs: string[] = ['Home', 'Settings','My Ads' ,'Orders', 'Payment Information', 'Addresses', 'My Garage', 'Wishlist'];
   activeTab: string = 'Home';
 
   setActiveTab(tab: string): void {

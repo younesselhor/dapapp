@@ -28,9 +28,23 @@ export class SubNavComponent implements OnInit, OnChanges {
   @Input() selectedMenu: string = '';
 
   value: string = '';
-  cities: ICity[] | undefined;
-  selectedCity: ICity | undefined;
+  cities: ICity[] = [
+    { name: 'Riyadh', code: 'RUH' },
+    { name: 'Jeddah', code: 'JED' },
+    { name: 'Dammam', code: 'DMM' }
+  ];
 
+  // selectedCity: ICity | undefined;
+
+
+  selectedCity: ICity = { name: '', code: '' };
+
+  onCityChange(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    const selectedCode = selectElement.value;
+    const foundCity = this.cities.find(city => city.code === selectedCode);
+    this.selectedCity = foundCity || { name: '', code: '' };
+  }
   // Using a method instead of a property for reactive updates
   getSubMenuItems(): { name: string; path: string }[] {
     const menuItems: { [key: string]: { name: string; path: string }[] } = {

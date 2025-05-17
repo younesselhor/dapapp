@@ -135,14 +135,14 @@ export class LoginComponent {
   // }
   handleSuccessfulLogin(token: string, user?: AuthUser) {
     this.cookieService.set('token', token, {
-      secure: true,
+      secure: false,
       sameSite: 'Strict',
       path: '/',
       expires: 7
     });
 
     this.auth.setLoggedIn(true);
-    this.router.navigate(['/plates']);
+    this.router.navigate(['/home']);
   }
 
   isValidPhoneNumber(phone: string): boolean {

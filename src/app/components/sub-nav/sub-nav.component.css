@@ -65,3 +65,12 @@
   height: 2px;
   background-color: #ef4444;
 }
+select {
+  background-image: none; /* Remove default arrow in some browsers */
+  padding-right: 2rem; /* Make space for custom arrow */
+}
+
+select:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}

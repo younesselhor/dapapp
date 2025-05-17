@@ -8,7 +8,6 @@ import { PasswordModule } from 'primeng/password';
 import { MessageService } from 'primeng/api';
 import { AuthUserDetails, MeResponse, RegisteredUser, RegistrationRequest, UserInterface } from '../../../interfaces/user-interface';
 import { HttpClient } from '@angular/common/http';
-// import { response, Router } from 'express';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { CookieService } from 'ngx-cookie-service';
@@ -44,7 +43,7 @@ export class RegisterComponent implements OnInit {
     currentUser: AuthUserDetails | undefined
     modalMessage = '';
     showModal = false;
-
+    apiErrors: { [key: string]: string } = {};
   constructor(private fb: FormBuilder, private messageService : MessageService, private http : HttpClient, private auth : AuthService ,
     private cookieService: CookieService,
     private router: Router,
@@ -64,7 +63,9 @@ export class RegisterComponent implements OnInit {
 }
 
   ngOnInit(): void {
-
+    this.registerForm.get('email')?.valueChanges.subscribe(() => {
+      delete this.apiErrors['email'];
+    });
 
 
   }
@@ -98,40 +99,33 @@ export class RegisterComponent implements OnInit {
       error: (error) => {
         console.error('Registration error:', error);
         this.submitted = false;
+        this.apiErrors = {}; // reset previous errors
 
         const errorResponse = error.error;
-        if (errorResponse.email) {
-          this.modalMessage = errorResponse.email[0]; // "The email has already been taken."
-        } else if (errorResponse.phone) {
-          this.modalMessage = errorResponse.phone[0];
-        } else {
-          this.modalMessage = 'An unexpected error occurred. Please try again.';
+
+        for (const key in errorResponse) {
+          if (errorResponse.hasOwnProperty(key)) {
+            this.apiErrors[key] = errorResponse[key][0]; // just take the first error message
+          }
         }
+        // console.error('Registration error:', error);
+        // this.submitted = false;
 
-        this.showModal = true;
+        // const errorResponse = error.error;
+        // if (errorResponse.email) {
+        //   this.modalMessage = errorResponse.email[0];
+        //   console.log( this.modalMessage );
+
+        // } else if (errorResponse.phone) {
+        //   this.modalMessage = errorResponse.phone[0];
+        //   console.log( this.modalMessage );
+        // } else {
+        //   this.modalMessage = 'An unexpected error occurred. Please try again.';
+        // }
+
+        // this.showModal = true;
       }
-      // error: (error) => {
-      //   console.error('Registration error:', error);
 
-      //   this.submitted = false;
-
-      //   console.log('Full error response:', error.error);
-
-      //   const errorResponse = error.error;
-
-      //   if (errorResponse?.email) {
-      //     this.modalMessage = errorResponse.email[0];
-      //   } else if (errorResponse?.phone) {
-      //     this.modalMessage = errorResponse.phone[0];
-      //   } else if (typeof errorResponse === 'string') {
-      //     // Maybe backend returns a plain string
-      //     this.modalMessage = errorResponse;
-      //   } else {
-      //     this.modalMessage = 'An unexpected error occurred. Please try again.';
-      //   }
-
-      //   this.showModal = true;
-      // }
     });
   }
 
@@ -141,7 +135,7 @@ export class RegisterComponent implements OnInit {
 
   handleSuccessfulLogin(token: string, user: RegisteredUser) {
    this.cookieService.set('token', token, {
-         secure: true,
+         secure: false,
          sameSite: 'Strict',
          path: '/',
          expires: 7

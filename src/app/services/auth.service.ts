@@ -1,6 +1,6 @@
 
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { catchError, delay, tap } from 'rxjs/operators';
 import {  LoginRequest, MeResponse, OtpLoginResponse, RegistrationRequest, RegistrationResponse, UserInterface } from '../interfaces/user-interface';
@@ -27,6 +27,7 @@ export class AuthService {
   // private loginUrl = 'http://127.0.0.1:8000/api/'; // 👈 update this
   // baseUrl = 'https://phpstack-1447596-5436406.cloudwaysapps.com/api/';
   baseUrl = 'https://be.dabapp.co/api/'; // 👈 update this
+  // baseUrl = 'http://192.168.11.184:8000/api/'
 
   private userProfileSubject = new BehaviorSubject<MeResponse | null>(null);
   public userProfile$ = this.userProfileSubject.asObservable();
@@ -54,6 +55,25 @@ export class AuthService {
     );
 
   }
+  // login(login: LoginRequest): Observable<UserInterface> {
+  //   const headers = new HttpHeaders().set('Content-Type', 'application/json');
+
+  //   return this.http.post<UserInterface>(this.baseUrl + 'login', login, {
+  //     headers,
+  //     withCredentials: true // 👈 important for Safari
+  //   })
+  //   .pipe(
+  //     tap((response: UserInterface) => {
+  //       if (response.token) {
+  //         this.saveToken(response.token);
+  //         this.currentUserSubject.next(response);
+  //         this.setLoggedIn(true);
+  //         this.fetchUserProfile();
+  //       }
+  //     })
+  //   );
+  // }
+
 
   register(registerUser: RegistrationRequest): Observable<RegistrationResponse> {
     return this.http.post<RegistrationResponse>(this.baseUrl + 'register', registerUser).pipe(
@@ -66,6 +86,10 @@ export class AuthService {
         }
       })
     )
+  }
+
+  refreshToken(): Observable<{ token: string }> {
+    return this.http.post<{ token: string }>(this.baseUrl + 'refresh', {});
   }
 
 otplogin(otp :{login : string,otp:string}) :Observable<OtpLoginResponse> {
@@ -103,7 +127,7 @@ otplogin(otp :{login : string,otp:string}) :Observable<OtpLoginResponse> {
     if (isPlatformBrowser(this.platformId)) {
       this.cookieService.set('token', token, {
         expires: 7,
-        secure: true,
+        secure: false,
         sameSite: 'Lax'
       });
     }
@@ -184,6 +208,9 @@ otplogin(otp :{login : string,otp:string}) :Observable<OtpLoginResponse> {
     this.userProfileSubject.next(null);
     this.profileLoaded = false;
     this.setLoggedIn(false);
+  }
+  public logoutAndClearData(): void {
+    this.clearUserData();
   }
   updateUser(data: any): Observable<any> {
     return this.http.put( this.baseUrl+ 'user/update', data);

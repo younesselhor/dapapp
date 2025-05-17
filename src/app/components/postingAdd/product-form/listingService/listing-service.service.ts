@@ -1,0 +1,62 @@
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { MotorcycleListing } from '../postingAdd-interface';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ListingService {
+  private baseUrl = 'https://be.dabapp.co/api/listings';
+  private filterbaseUrl = '/api/motorcycle/filter';
+
+  constructor(private http: HttpClient) { }
+
+  /**
+   * Create a new motorcycle listing
+   * @param motorcycleData The motorcycle data to be submitted
+   * @returns Observable with the API response
+   */
+  // createMotorcycleListing(motorcycleData: any): Observable<any> {
+  //   return this.http.post(`${this.baseUrl}/motorcycles`, motorcycleData);
+  // }
+  // createMotorcycleListing(data: MotorcycleListing): Observable<any> {
+  //   return this.http.post(`${this.baseUrl}`, data);
+  // }
+  createMotorcycleListing(data: FormData): Observable<any> {
+    return this.http.post(`${this.baseUrl}`, data);
+  }
+
+
+  /**
+   * Create a new bike part listing
+   * @param bikePartData The bike part data to be submitted
+   * @returns Observable with the API response
+   */
+  createBikePartListing(bikePartData: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/parts`, bikePartData);
+  }
+
+  /**
+   * Create a new license plate listing
+   * @param licensePlateData The license plate data to be submitted
+   * @returns Observable with the API response
+   */
+  createLicensePlateListing(licensePlateData: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/plates`, licensePlateData);
+  }
+
+  getMotorcycleFilters(params?: any): Observable<any> {
+    let httpParams = new HttpParams();
+    if (params) {
+      Object.keys(params).forEach(key => {
+        if (params[key]) {
+          httpParams = httpParams.set(key, params[key]);
+        }
+      });
+    }
+
+    return this.http.get<any>(this.filterbaseUrl, { params: httpParams });
+  }
+
+}

@@ -3,10 +3,11 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 // import { AuthService } from '../../../../services/auth.service';
 import { AuthUserDetails } from '../../../../interfaces/user-interface';
 import { AuthService } from '../../../../services/auth.service';
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.css'
 })
@@ -17,17 +18,6 @@ userInfo: AuthUserDetails | null = null;
   error = '';
   constructor(private fb: FormBuilder,private auth: AuthService) {
     console.log('AuthService injected:', this.auth);
-    // this.profileForm = this.fb.group({
-    //   firstName: ['', Validators.required],
-    //   lastName: ['', Validators.required],
-    //   email: ['', [Validators.required, Validators.email]],
-    //   birthday: this.fb.group({
-    //     day: ['', Validators.required,  Validators.min(1), Validators.max(2)],
-    //     month: ['', Validators.required, Validators.min(2), Validators.max(2)],
-    //     year: ['', Validators.required,  Validators.min(2), Validators.max(4)],
-    //   }),
-    //   phone: ['+966 34832431', Validators.required]
-    // });
     this.profileForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -131,10 +121,14 @@ ngOnInit(): void {
     return value.toString().padStart(2, '0');
   }
 
+  get birthdayGroup() {
+    return this.profileForm.get('birthday') as FormGroup;
+  }
 
   onSubmit(): void {
     if (this.profileForm.invalid) {
       this.profileForm.markAllAsTouched();
+      console.warn('Form invalid:', this.profileForm.value);
       return;
     }
 
@@ -154,6 +148,7 @@ ngOnInit(): void {
     this.auth.updateUser(payload).subscribe({
       next: (response) => {
         this.auth.fetchUserProfile();
+        alert('Profile updated successfully!');
       },
       error: (error) => {
         console.error('Error updating user:', error);
