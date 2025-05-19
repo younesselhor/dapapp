@@ -190,7 +190,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ListingService } from './listingService/listing-service.service';
 import { title } from 'process';
 import { ContactDetailsComponent } from '../contact-details/contact-details.component';
-import { ProductDetailsComponent } from '../product-details/product-details.component';
+// import { ProductDetailsComponent } from '../product-details/product-details.component';
 // import { ListingService } from '../services/listing.service';
 
 interface Step {
@@ -208,8 +208,8 @@ interface Step {
 })
 export class ProductFormComponent implements OnInit {
   @Input() currentStep = 1;
-  @ViewChild('vehicleFormRef') vehicleFormComponent!: ProductDetailsComponent;
-@ViewChild('adDetailsFormRef') adDetailsFormComponent!: ContactDetailsComponent;
+  // @ViewChild('vehicleFormRef') vehicleFormComponent!: ProductDetailsComponent;
+// @ViewChild('adDetailsFormRef') adDetailsFormComponent!: ContactDetailsComponent;
 
 vehicleFormData: any | null = null;
   vehicleForm!: FormGroup;
