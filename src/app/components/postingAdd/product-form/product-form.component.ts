@@ -189,7 +189,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ListingService } from './listingService/listing-service.service';
 import { title } from 'process';
-import { ContactDetailsComponent } from '../contact-details/contact-details.component';
+// import { ContactDetailsComponent } from '../contact-details/contact-details.component';
 // import { ProductDetailsComponent } from '../product-details/product-details.component';
 // import { ListingService } from '../services/listing.service';
 
