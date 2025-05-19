@@ -202,7 +202,7 @@ interface Step {
 @Component({
   selector: 'app-product-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, HttpClientModule,ContactDetailsComponent, ProductDetailsComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './product-form.component.html',
   styleUrls: ['./product-form.component.css']
 })
