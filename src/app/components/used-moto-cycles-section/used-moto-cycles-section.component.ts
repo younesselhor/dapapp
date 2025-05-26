@@ -10,7 +10,8 @@ interface Motorcycle {
   title: string;
   price: number;
   currency: string;
-  imageUrl: string;
+  // imageUrl: string;
+  images: string[];
 }
 @Component({
   selector: 'app-used-moto-cycles-section',
@@ -22,6 +23,8 @@ interface Motorcycle {
 export class UsedMotoCyclesSectionComponent implements OnInit {
   // @ViewChild('motoSection') motoSection!: ElementRef;
 
+  currentSlide = 0;
+  itemsPerSlide = 3;
   motorcycles: Motorcycle[] = [
     // {
     //   id: 1,
@@ -57,4 +60,26 @@ this.getMotoresycles();
       console.log('this.motorcycles: ', this.motorcycles);
     });
    }
+
+   get visibleMotorcycles() {
+    const start = this.currentSlide * this.itemsPerSlide;
+    return this.motorcycles.slice(start, start + this.itemsPerSlide);
+  }
+
+  nextSlide() {
+    const maxSlides = Math.ceil(this.motorcycles.length / this.itemsPerSlide) - 1;
+    if (this.currentSlide < maxSlides) {
+      this.currentSlide++;
+    }
+  }
+
+  prevSlide() {
+    if (this.currentSlide > 0) {
+      this.currentSlide--;
+    }
+  }
+
+  get totalSlides() {
+    return Math.ceil(this.motorcycles.length / this.itemsPerSlide);
+  }
   }

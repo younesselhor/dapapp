@@ -7,11 +7,70 @@ import { MotorcycleListing } from '../postingAdd-interface';
   providedIn: 'root'
 })
 export class ListingService {
-  private baseUrl = 'https://be.dabapp.co/api/listings';
+  private baseUrl = 'https://be.dabapp.co/api/';
   private filterbaseUrl = '/api/motorcycle/filter';
 
   constructor(private http: HttpClient) { }
 
+  // addPost(payload: FormData){
+  //   return this.http.post(this.baseUrl , payload)
+  // }
+  // addPost(payload: any): Observable<any> {
+  //   return this.http.post('/api/listings', payload);
+  // }
+
+  // // uploadImage(file: File): Observable<string> {
+  // //   const formData = new FormData();
+  // //   formData.append('image', file);
+
+  // //   return this.http.post<string>('/api/upload', formData);
+  // // }
+  // uploadImage(file: File): Observable<{ url: string }> {
+  //   const formData = new FormData();
+  //   formData.append('image', file);
+  //   return this.http.post<{ url: string }>('/api/upload', formData);
+  // }
+
+  // addPost(payload: any): Observable<any> {
+  //   return this.http.post('/api/listings', payload, {
+  //     headers: { 'Content-Type': 'application/json' }
+  //   });
+  // }
+  // uploadImage(file: File): Observable<{ url: string }> {
+  //   const formData = new FormData();
+  //   formData.append('image', file);
+  //   return this.http.post<{ url: string }>('/api/upload', formData);
+  // }
+  uploadImage(formData: FormData): Observable<any> {
+    return this.http.post(this.baseUrl +'upload-image', formData);
+  }
+
+  addPost(payload: any): Observable<any> {
+    return this.http.post(this.baseUrl + 'listings', payload, {
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+
+  getBrandPartList(){
+    return this.http.get<any>(`${this.baseUrl}bike-part-brands`);
+  }
+  getPartCategoryList(){
+    return this.http.get<any>(`${this.baseUrl}bike-part-categories`);
+  }
+
+// In your listing service
+getPricing(params: {
+  model_id?: number,
+  category_id?: number,
+  country_id?: number,
+  bike_part_category_id?: number
+}): Observable<any> {
+  return this.http.get(`${this.baseUrl}pricing`, { params });
+}
+
+checkPromo(body: { code: string, total_price: number }): Observable<any> {
+  return this.http.post(`${this.baseUrl}promo/check`, body);
+}
   /**
    * Create a new motorcycle listing
    * @param motorcycleData The motorcycle data to be submitted
@@ -59,4 +118,7 @@ export class ListingService {
     return this.http.get<any>(this.filterbaseUrl, { params: httpParams });
   }
 
+  getCityList(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}locations`);
+  }
 }

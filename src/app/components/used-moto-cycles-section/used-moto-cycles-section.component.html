@@ -34,12 +34,12 @@
       </div>
 
       <!-- Right side product cards -->
-      <div class="md:w-2/3">
+      <!-- <div class="md:w-2/3">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <!-- @ngfor(let motorcycle of motorcycles; let i = index) { -->
-          <!-- *ngFor="let motorcycle of motorcycles" -->
+        @ngfor(let motorcycle of motorcycles; let i = index) {
+          *ngFor="let motorcycle of motorcycles"
           <div *ngFor="let motorcycle of motorcycles" class="bg-white rounded-lg overflow-hidden shadow-md border border-gray-100 hover:shadow-lg transition-shadow duration-200">
-            <img [src]="motorcycle.imageUrl" [alt]="motorcycle.title" class="w-full h-48 object-cover" />
+            <img [src]="motorcycle.images[0]" [alt]="motorcycle.title" class="w-full h-48 object-cover" />
             <div class="p-4">
               <h3 class="font-semibold">{{ motorcycle.title }}</h3>
               <p class="text-gray-500 text-sm">PRICE</p>
@@ -49,7 +49,47 @@
               </button>
             </div>
           </div>
-        <!-- } -->
+        }
+        </div>
+      </div> -->
+      <div class="md:w-2/3 relative">
+        <!-- Navigation Arrows -->
+        <button *ngIf="currentSlide > 0"
+                (click)="prevSlide()"
+                class="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow-md hover:bg-gray-100">
+          &lt;
+        </button>
+
+        <button *ngIf="currentSlide < totalSlides - 1"
+                (click)="nextSlide()"
+                class="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow-md hover:bg-gray-100">
+          &gt;
+        </button>
+
+        <!-- Slider Container -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 overflow-hidden">
+          <div *ngFor="let motorcycle of visibleMotorcycles"
+               class="bg-white rounded-lg overflow-hidden shadow-md border border-gray-100 hover:shadow-lg transition-shadow duration-200">
+            <img [src]="motorcycle.images[0]"
+                 [alt]="motorcycle.title"
+                 class="w-full h-48 object-cover" />
+            <div class="p-4">
+              <h3 class="font-semibold">{{ motorcycle.title }}</h3>
+              <p class="text-gray-500 text-sm">PRICE</p>
+              <p class="font-semibold">{{ motorcycle.price }} {{ motorcycle.currency }}</p>
+              <button class="w-full mt-2 py-2 border text-red-500 border-red-300 rounded hover:bg-red-50 transition">
+                View Bike
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide Indicators -->
+        <div class="flex justify-center mt-4 space-x-2">
+          <span *ngFor="let i of [].constructor(totalSlides); let index = index"
+                (click)="currentSlide = index"
+                [class]="'h-2 w-2 rounded-full ' + (currentSlide === index ? 'bg-red-500' : 'bg-gray-300')">
+          </span>
         </div>
       </div>
     </div>

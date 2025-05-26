@@ -1,63 +1,62 @@
 <div class="max-w-4xl mx-auto px-4 py-8">
   <!-- Progress bar -->
+  <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-100">
+    <div class="flex justify-start mb-4">
+      <button (click)="previousStep()" type="button"
+        class="px-4 py-2 bg-white border border-gray-300 rounded-md text-gray-600 hover:bg-gray-100">
+        Exit
+      </button>
+    </div>
 
-  <div class="flex justify-start mb-4">
-    <button (click)="previousStep()" type="button"
-      class="px-4 py-2 bg-white border border-gray-300 rounded-md text-gray-600 hover:bg-gray-100">
-      Exit
-    </button>
-  </div>
-
-  <!-- Stepper -->
-  <div class="flex items-center justify-between mb-10">
-    <ng-container *ngFor="let step of steps; let i = index">
-      <!-- Step Circle + Title -->
-      <div class="flex flex-col items-center w-1/3">
-        <div
-          class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium mb-1 transition-all duration-300"
-          [ngClass]="{
-            'bg-red-500 text-white': currentStep >= i + 1,
-            'bg-white text-gray-500 border border-gray-300': currentStep < i + 1
-          }"
-        >
-          {{ i + 1 }}
-        </div>
-        <div class="text-xs text-center">
-          <p
+    <!-- Stepper -->
+    <div class="flex items-center justify-between mb-10">
+      <ng-container *ngFor="let step of steps; let i = index">
+        <!-- Step Circle + Title -->
+        <div class="flex flex-col items-center w-1/3">
+          <div
+            class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium mb-1 transition-all duration-300"
             [ngClass]="{
-              'font-semibold text-red-500': currentStep === i + 1,
-              'font-semibold': currentStep !== i + 1
-            }"
-          >
-            {{ step.title }}
-          </p>
-          <p class="text-gray-500">{{ step.subtitle }}</p>
+              'bg-red-500 text-white': currentStep >= i + 1,
+              'bg-white text-gray-500 border border-gray-300':
+                currentStep < i + 1
+            }">
+            {{ i + 1 }}
+          </div>
+          <div class="text-xs text-center">
+            <p [ngClass]="{
+                'font-semibold text-red-500': currentStep === i + 1,
+                'font-semibold': currentStep !== i + 1
+              }">
+              {{ step.title }}
+            </p>
+            <p class="text-gray-500">{{ step.subtitle }}</p>
+          </div>
         </div>
-      </div>
 
-      <!-- Progress Line -->
-      <div *ngIf="i < steps.length - 1" class="flex-1 h-1 bg-gray-200 mx-2 relative">
-        <div
-          class="h-full bg-red-500 absolute top-0 left-0 transition-all duration-300"
-          [style.width]="currentStep > i + 1 ? '100%' : currentStep === i + 1 ? '50%' : '0%'"
-        ></div>
-      </div>
-    </ng-container>
+        <!-- Progress Line -->
+        <div *ngIf="i < steps.length - 1" class="flex-1 h-1 bg-gray-200 mx-2 relative">
+          <div class="h-full bg-red-500 absolute top-0 left-0 transition-all duration-300" [style.width]="
+              currentStep > i + 1
+                ? '100%'
+                : currentStep === i + 1
+                ? '50%'
+                : '0%'
+            "></div>
+        </div>
+      </ng-container>
+    </div>
   </div>
-
-
-
-
 
   <div *ngIf="currentStep === 1">
     <h2 class="text-xl font-semibold mb-6 text-left">What are you selling?</h2>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 ">
-      <div *ngFor="let option of vehicleOptions" (click)="selectVehicleType(option.listing_type_id)" [ngClass]="{
-         'border-red-500 bg-red-50': selectedVehicleType === option.listing_type_id,
-         'border-gray-200': selectedVehicleType !== option.listing_type_id
-       }" class="border-2 rounded-lg p-4 cursor-pointer transition-colors relative hover:bg-gray-50">
-        <div *ngIf="selectedVehicleType === option.listing_type_id"
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      <div *ngFor="let option of vehicleOptions" (click)="selectVehicleType(option.category_id)" [ngClass]="{
+          'border-red-500 bg-red-50':
+            selectedVehicleType === option.category_id,
+          'border-gray-200': selectedVehicleType !== option.category_id
+        }" class="border-2 rounded-lg p-4 cursor-pointer transition-colors relative hover:bg-gray-50">
+        <div *ngIf="selectedVehicleType === option.category_id"
           class="absolute top-4 right-4 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
           <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
@@ -74,538 +73,447 @@
         </div>
       </div>
     </div>
-      <div [ngSwitch]="selectedVehicleType">
-        <!-- Motorcycle Form -->
-        <form *ngSwitchCase="1" [formGroup]="vehicleForm">
-          <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
-            <h3 class="text-lg font-semibold mb-6">Bike Details</h3>
+    <div [ngSwitch]="selectedVehicleType">
+      <!-- Motorcycle Form -->
+      <form *ngSwitchCase="1" [formGroup]="vehicleForm">
+        <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+          <h3 class="text-lg font-semibold mb-6">Bike Details</h3>
 
-            <div class="mb-6">
-              <p class="mb-2 font-medium">Add images</p>
+          <div class="mb-6">
+            <p class="mb-2 font-medium">Add images</p>
 
-              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-                <!-- Loop over selected images -->
-                <div *ngFor="let image of uploadedImages; let i = index"
-                  class="relative border border-gray-300 rounded-md aspect-square flex items-center justify-center">
-                  <img [src]="image" alt="Uploaded image {{ i }}" class="object-cover w-full h-full rounded-md" />
-                  <button (click)="removeImage(i)"
-                    class="absolute top-1 right-1 bg-white text-red-500 rounded-full p-1 shadow hover:bg-gray-100">
-                    ✕
-                  </button>
-                </div>
-
-                <!-- Upload placeholder -->
-                <div *ngIf="uploadedImages.length < maxImages"
-                  class="border border-dashed border-gray-300 rounded-md aspect-square flex items-center justify-center cursor-pointer hover:bg-gray-50"
-                  (click)="fileInput.click()">
-                  <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  <input #fileInput type="file" accept="image/*" multiple hidden (change)="handleFileInput($event)" />
-                </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+              <!-- Loop over selected images -->
+              <div *ngFor="let image of uploadedImages; let i = index"
+                class="relative border border-gray-300 rounded-md aspect-square flex items-center justify-center">
+                <!-- <img [src]="image" alt="Uploaded image {{ i }}" class="object-cover w-full h-full rounded-md" /> -->
+                <img [src]="image.preview"
+                [alt]="'Uploaded image ' + i"
+                class="object-cover w-full h-full rounded-md" />
+                <button (click)="removeImage(i)"
+                  class="absolute top-1 right-1 bg-white text-red-500 rounded-full p-1 shadow hover:bg-gray-100">
+                  ✕
+                </button>
               </div>
 
-              <p class="text-xs text-gray-500 mt-2">
-                Only SVG, PNG, JPG or GIF (max. 2000x2000px)<br>
-                <span *ngIf="uploadedImages.length < 4" class="text-red-500">Please upload at least 4 images.</span>
-              </p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-              <!-- <div>
-                <label class="block font-medium">Brand</label>
-                <select formControlName="brand" #brandSelect (change)="onBrandChange(brandSelect.value)"
-                  class="w-full border border-gray-300 rounded-md px-3 py-2 mt-4">
-                  <option value="" disabled>Select a brand</option>
-                  <option *ngFor="let brand of brands" [value]="brand.id">{{ brand.name }}</option>
-                </select>
-                <div *ngIf="vehicleForm.get('brand')?.touched && vehicleForm.get('brand')?.invalid"
-                  class="text-red-500 text-sm mt-1">
-                  Brand is required.
-                </div>
-              </div> -->
-              <!-- Model Select -->
-              <!-- <div>
-                <label class="block font-medium">Model</label>
-                <select formControlName="model" #modelSelect (change)="onModelChange(modelSelect.value)"
-                  [disabled]="models.length === 0" class="w-full border border-gray-300 rounded-md px-3 py-2 mt-4">
-                  <option value="" disabled>Select a model</option>
-                  <option *ngFor="let model of models" [value]="model.id">{{ model.name }}</option>
-                </select>
-              </div> -->
-              <!-- Year Select -->
-              <!-- <div>
-                <label class="block font-medium">Year</label>
-                <select formControlName="modelYear" [disabled]="years.length === 0"
-                  class="w-full border border-gray-300 rounded-md px-3 py-2 mt-4">
-                  <option value="" disabled>Select a year</option>
-                  <option *ngFor="let year of years" [value]="year.id">
-                    {{ year.year.toString() }}
-                  </option>
-                </select>
-              </div> -->
-            </div>
-            <div class="mb-6">
-              <label class="block mb-2 font-medium">Vehicle Body Condition</label>
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div *ngFor="let condition of bodyConditions" (click)="selectBodyCondition(condition)"
-                  [ngClass]="{'border-red-500 bg-red-50': vehicleForm.get('bodyCondition')?.value === condition, 'border-gray-200': vehicleForm.get('bodyCondition')?.value !== condition}"
-                  class="border-2 rounded-lg p-3 cursor-pointer transition-colors">
-                  <div class="flex items-center justify-between">
-                    <span>{{ condition }}</span>
-                    <div *ngIf="vehicleForm.get('bodyCondition')?.value === condition"
-                      class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
-                      <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                    </div>
-                  </div>
-                </div>
+              <!-- Upload placeholder -->
+              <div *ngIf="uploadedImages.length < maxImages"
+                class="border border-dashed border-gray-300 rounded-md aspect-square flex items-center justify-center cursor-pointer hover:bg-gray-50"
+                (click)="fileInput.click()">
+                <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <input #fileInput type="file" accept="image/*" multiple hidden (change)="handleFileInput($event)" />
               </div>
             </div>
 
-            <div class="mb-6">
-              <label class="block mb-2 font-medium">Modified?</label>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div (click)="selectModified('Yes')"
-                  [ngClass]="{'border-red-500 bg-red-50': vehicleForm.get('isModified')?.value === 'Yes', 'border-gray-200': vehicleForm.get('isModified')?.value !== 'Yes'}"
-                  class="border-2 rounded-lg p-3 cursor-pointer transition-colors">
-                  <div class="flex items-center justify-between">
-                    <span>Yes</span>
-                    <div *ngIf="vehicleForm.get('isModified')?.value === 'Yes'"
-                      class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
-                      <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-
-                <div (click)="selectModified('No')"
-                  [ngClass]="{'border-red-500 bg-red-50': vehicleForm.get('isModified')?.value === 'No', 'border-gray-200': vehicleForm.get('isModified')?.value !== 'No'}"
-                  class="border-2 rounded-lg p-3 cursor-pointer transition-colors">
-                  <div class="flex items-center justify-between">
-                    <span>No</span>
-                    <div *ngIf="vehicleForm.get('isModified')?.value === 'No'"
-                      class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
-                      <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="mb-6">
-              <label class="block mb-2 font-medium">Insurance?</label>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div (click)="selectInsurance('Yes')"
-                  [ngClass]="{'border-red-500 bg-red-50': vehicleForm.get('hasInsurance')?.value === 'Yes', 'border-gray-200': vehicleForm.get('hasInsurance')?.value !== 'Yes'}"
-                  class="border-2 rounded-lg p-3 cursor-pointer transition-colors">
-                  <div class="flex items-center justify-between">
-                    <span>Yes</span>
-                    <div *ngIf="vehicleForm.get('hasInsurance')?.value === 'Yes'"
-                      class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
-                      <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-
-                <div (click)="selectInsurance('No')"
-                  [ngClass]="{'border-red-500 bg-red-50': vehicleForm.get('hasInsurance')?.value === 'No', 'border-gray-200': vehicleForm.get('hasInsurance')?.value !== 'No'}"
-                  class="border-2 rounded-lg p-3 cursor-pointer transition-colors">
-                  <div class="flex items-center justify-between">
-                    <span>No</span>
-                    <div *ngIf="vehicleForm.get('hasInsurance')?.value === 'No'"
-                      class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
-                      <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="mb-6">
-              <label class="block mb-2 font-medium">Condition</label>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div (click)="selectCondition('New')"
-                  [ngClass]="{'border-red-500 bg-red-50': vehicleForm.get('condition')?.value === 'New', 'border-gray-200': vehicleForm.get('condition')?.value !== 'New'}"
-                  class="border-2 rounded-lg p-3 cursor-pointer transition-colors">
-                  <div class="flex items-center justify-between">
-                    <span>New</span>
-                    <div *ngIf="vehicleForm.get('condition')?.value === 'New'"
-                      class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
-                      <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-
-                <div (click)="selectCondition('Used')"
-                  [ngClass]="{'border-red-500 bg-red-50': vehicleForm.get('condition')?.value === 'Used', 'border-gray-200': vehicleForm.get('condition')?.value !== 'Used'}"
-                  class="border-2 rounded-lg p-3 cursor-pointer transition-colors">
-                  <div class="flex items-center justify-between">
-                    <span>Used</span>
-                    <div *ngIf="vehicleForm.get('condition')?.value === 'Used'"
-                      class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
-                      <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="mb-6">
-              <label class="block mb-2 font-medium">Vehicle Care</label>
-              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
-                <div *ngFor="let care of vehicleCareOptions" (click)="selectVehicleCare(care)"
-                  [ngClass]="{'border-red-500 bg-red-50': vehicleForm.get('vehicleCare')?.value === care, 'border-gray-200': vehicleForm.get('vehicleCare')?.value !== care}"
-                  class="border-2 rounded-lg p-3 cursor-pointer transition-colors">
-                  <div class="flex items-center justify-between">
-                    <span>{{ care }}</span>
-                    <div *ngIf="vehicleForm.get('vehicleCare')?.value === care"
-                      class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
-                      <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div>
-                <label class="block mb-2 font-medium">Engine Capacity</label>
-                <div class="flex">
-                  <span
-                    class="inline-flex items-center px-3 text-gray-500 bg-gray-100 border border-r-0 border-gray-300 rounded-l-md">
-                    CC
-                  </span>
-                  <input type="number" formControlName="engineCapacity" placeholder="650"
-                    class="flex-grow border border-gray-300 rounded-r-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-              </div>
-
-              <div>
-                <label class="block mb-2 font-medium">Kilometer</label>
-                <div class="flex">
-                  <span
-                    class="inline-flex items-center px-3 text-gray-500 bg-gray-100 border border-r-0 border-gray-300 rounded-l-md">
-                    KM
-                  </span>
-                  <input type="number" formControlName="kilometer" placeholder="8500"
-                    class="flex-grow border border-gray-300 rounded-r-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-              </div>
-            </div>
-
-            <div class="mb-6">
-              <label class="block mb-2 font-medium">Transmission</label>
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div *ngFor="let type of transmissionTypes" (click)="selectTransmission(type)"
-                  [ngClass]="{'border-red-500 bg-red-50': vehicleForm.get('transmission')?.value === type, 'border-gray-200': vehicleForm.get('transmission')?.value !== type}"
-                  class="border-2 rounded-lg p-3 cursor-pointer transition-colors">
-                  <div class="flex items-center justify-between">
-                    <span>{{ type }}</span>
-                    <div *ngIf="vehicleForm.get('transmission')?.value === type"
-                      class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
-                      <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <p class="text-xs text-gray-500 mt-2">
+              Only SVG, PNG, JPG or GIF (max. 2000x2000px)<br />
+              <span *ngIf="uploadedImages.length < 4" class="text-red-500">Please upload at least 4 images.</span>
+            </p>
           </div>
 
-          <div class="flex justify-end mt-6">
-            <button type="button"
-                    class="px-6 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:opacity-50"
-                    [disabled]="vehicleForm.invalid || uploadedImages.length < 4"
-                    (click)="goToNextStep()">
-              Next
-            </button>
-          </div>
-        </form>
-
-        <!-- Bike Part Form -->
-        <form *ngSwitchCase="2" [formGroup]="bikeForm">
-          <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
-            <h3 class="text-lg font-semibold mb-6">Part Details</h3>
-
-            <div class="mb-6">
-              <p class="mb-2 font-medium">Add images</p>
-
-              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-                <!-- Loop over selected images -->
-                <div *ngFor="let image of uploadedImages; let i = index"
-                  class="relative border border-gray-300 rounded-md aspect-square flex items-center justify-center">
-                  <img [src]="image" alt="Uploaded image {{ i }}" class="object-cover w-full h-full rounded-md" />
-                  <button (click)="removeImage(i)"
-                    class="absolute top-1 right-1 bg-white text-red-500 rounded-full p-1 shadow hover:bg-gray-100">
-                    ✕
-                  </button>
-                </div>
-
-                <!-- Upload placeholder -->
-                <div *ngIf="uploadedImages.length < maxImages"
-                  class="border border-dashed border-gray-300 rounded-md aspect-square flex items-center justify-center cursor-pointer hover:bg-gray-50"
-                  (click)="fileInput.click()">
-                  <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  <input #fileInput type="file" accept="image/*" multiple hidden (change)="handleFileInput($event)" />
-                </div>
-              </div>
-
-              <p class="text-xs text-gray-500 mt-2">
-                Only SVG, PNG, JPG or GIF (max. 2000x2000px)<br>
-                <span *ngIf="uploadedImages.length < 4" class="text-red-500">Please upload at least 4 images.</span>
-              </p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-              <!-- <div>
-                <label class="block font-medium">Brand</label>
-                <select formControlName="brand" #brandSelect (change)="onBrandChange(brandSelect.value)"
-                  class="w-full border border-gray-300 rounded-md px-3 py-2 mt-4">
-                  <option value="" disabled>Select a brand</option>
-                  <option *ngFor="let brand of brands" [value]="brand.id">{{ brand.name }}</option>
-                </select>
-                <div *ngIf="vehicleForm.get('brand')?.touched && vehicleForm.get('brand')?.invalid"
-                  class="text-red-500 text-sm mt-1">
-                  Brand is required.
-                </div>
-              </div> -->
-              <!-- Model Select -->
-              <!-- <div>
-                <label class="block font-medium">Model</label>
-                <select formControlName="model" #modelSelect (change)="onModelChange(modelSelect.value)"
-                  [disabled]="models.length === 0" class="w-full border border-gray-300 rounded-md px-3 py-2 mt-4">
-                  <option value="" disabled>Select a model</option>
-                  <option *ngFor="let model of models" [value]="model.id">{{ model.name }}</option>
-                </select>
-              </div> -->
-              <!-- Year Select -->
-              <!-- <div>
-                <label class="block font-medium">Year</label>
-                <select formControlName="modelYear" [disabled]="years.length === 0"
-                  class="w-full border border-gray-300 rounded-md px-3 py-2 mt-4">
-                  <option value="" disabled>Select a year</option>
-                  <option *ngFor="let year of years" [value]="year.id">
-                    {{ year.year.toString() }}
-                  </option>
-                </select>
-              </div> -->
-            </div>
-            <div class="mb-6">
-              <label class="block mb-2 font-medium">Condition</label>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div *ngFor="let condition of partsConditions" (click)="selectBodyCondition(condition)"
-                  [ngClass]="{'border-red-500 bg-red-50': vehicleForm.get('bodyCondition')?.value === condition, 'border-gray-200': vehicleForm.get('bodyCondition')?.value !== condition}"
-                  class="border-2 rounded-lg p-3 cursor-pointer transition-colors">
-                  <div class="flex items-center justify-between">
-                    <span>{{ condition }}</span>
-                    <div *ngIf="vehicleForm.get('bodyCondition')?.value === condition"
-                      class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
-                      <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                    </div>
-                  </div>
-                </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <div>
+              <label class="block font-medium">Brand</label>
+              <select formControlName="brand_id" #brandSelect (change)="onBrandChange(brandSelect.value)"
+                class="w-full border border-gray-300 rounded-md px-3 py-2 mt-4">
+                <option value="" disabled>Select a brand</option>
+                <option *ngFor="let brand of brands" [value]="brand.id">
+                  {{ brand.name }}
+                </option>
+              </select>
+              <div *ngIf="
+                  vehicleForm.get('brand_id')?.touched &&
+                  vehicleForm.get('brand_id')?.invalid
+                " class="text-red-500 text-sm mt-1">
+                Brand is required.
               </div>
             </div>
-            <div class="mb-6">
-              <label for="description" class="block text-sm font-medium text-gray-700 mb-1 flex items-center">
-                Description
-                <span class="ml-1 text-gray-400">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </span>
-              </label>
-              <textarea id="description" formControlName="description" rows="4"
-                placeholder="This is a free text to add any comments or things that might be useful for the buyers"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"></textarea>
+            <!-- Model Select -->
+            <div>
+              <label class="block font-medium">Model</label>
+              <select formControlName="model_id" #modelSelect (change)="onModelChange(modelSelect.value)"
+                [disabled]="models.length === 0" class="w-full border border-gray-300 rounded-md px-3 py-2 mt-4">
+                <option value="" disabled>Select a model</option>
+                <option *ngFor="let model of models" [value]="model.id">
+                  {{ model.name }}
+                </option>
+              </select>
+            </div>
+            <!-- Year Select -->
+            <div>
+              <label class="block font-medium">Year</label>
+              <select formControlName="year_id" [disabled]="years.length === 0"
+                class="w-full border border-gray-300 rounded-md px-3 py-2 mt-4">
+                <option value="" disabled>Select a year</option>
+                <option *ngFor="let year of years" [value]="year.id">
+                  {{ year.year.toString() }}
+                </option>
+              </select>
             </div>
           </div>
-
-          <div class="flex justify-end mt-6">
-            <button type="button"
-                    class="px-6 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:opacity-50"
-                    [disabled]="bikeForm.invalid || uploadedImages.length < 4"
-                    (click)="goToNextStep()">
-              Next
-            </button>
-          </div>
-
-        </form>
-
-        <!-- License Plate Form -->
-        <form *ngSwitchCase="3" [formGroup]="platesForm">
-          <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
-            <h3 class="text-lg font-semibold mb-6">Plate Details</h3>
-
-            <div class="mb-6">
-              <label class="block mb-2 font-medium">Plate format</label>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div *ngFor="let format of plateFormatOptions" class="block">
-                  <div [ngClass]="{
-                    'border-red-500 bg-red-50': platesForm.get('plateFormat')?.value === format.id,
-                    'border-gray-200': platesForm.get('plateFormat')?.value !== format.id
-                  }" (click)="selectPlateFormat(format.id)"
-                  class="border-2 rounded-lg p-3 cursor-pointer transition-colors">
-                    <div class="flex items-center justify-between">
-                      <span>{{ format.label }}</span>
-                      <input type="checkbox"
-                             [checked]="platesForm.get('plateFormat')?.value === format.id"
-                             class="hidden">
-                      <div *ngIf="platesForm.get('plateFormat')?.value === format.id"
-                        class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
-                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                          xmlns="http://www.w3.org/2000/svg">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                      </div>
-                    </div>
+          <div class="mb-6">
+            <label class="block mb-2 font-medium">Vehicle Body Condition</label>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div *ngFor="let condition of bodyConditions" (click)="selectBodyCondition(condition)" [ngClass]="{'border-red-500 bg-red-50':vehicleForm.get('body_condition')?.value === condition,'border-gray-200':vehicleForm.get('body_condition')?.value !== condition}" class="border-2 rounded-lg p-3 cursor-pointer transition-colors">
+                <div class="flex items-center justify-between">
+                  <span>{{ condition }}</span>
+                  <div *ngIf="
+                      vehicleForm.get('body_condition')?.value === condition
+                    " class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
                   </div>
+                  <div *ngIf="vehicleForm.get('body_condition')?.value !== condition" >
+                    <img src="pictures/_Checkbox.svg"
+                    alt="checkmark"
+                    class="w-4 h-4 text-white" />
+              </div>
                 </div>
               </div>
-            </div>
-
-            <!-- Dynamic fields based on plate format -->
-            <div class="mb-6">
-              <div [ngSwitch]="platesForm.get('plateFormat')?.value">
-                <!-- Numbers & Alphabets Format -->
-                <div *ngSwitchCase="'numbers-alphabets'" class="grid grid-cols-1 sm:grid-cols-5 gap-4">
-                  <!-- First Alphabet - 1 column -->
-                  <div class="sm:col-span-1">
-                    <label class="block mb-2 text-sm font-medium">First Alphabet</label>
-                    <input type="text"
-                           formControlName="firstAlphabet"
-                           class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition">
-                  </div>
-
-                  <!-- Second Alphabet - 1 column -->
-                  <div class="sm:col-span-1">
-                    <label class="block mb-2 text-sm font-medium">Second Alphabet</label>
-                    <input type="text"
-                           formControlName="secondAlphabet"
-                           class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition">
-                  </div>
-
-                  <!-- Third Alphabet - 1 column -->
-                  <div class="sm:col-span-1">
-                    <label class="block mb-2 text-sm font-medium">Third Alphabet</label>
-                    <input type="text"
-                           formControlName="thirdAlphabet"
-                           class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition">
-                  </div>
-
-                  <!-- Numbers - 2 columns (wider) -->
-                  <div class="sm:col-span-2">
-                    <label class="block mb-2 text-sm font-medium">Numbers</label>
-                    <input type="text"
-                           formControlName="plateNumbers"
-                           placeholder="From left to right"
-                           class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition">
-                  </div>
-                </div>
-
-                <!-- Numbers Only Format -->
-                <div *ngSwitchCase="'numbers-only'" class="flex mt-4">
-                  <div class="basis-1/2">
-                    <label class="block mb-2 text-sm font-medium">Numbers</label>
-                    <input type="text"
-                           formControlName="plateNumbers"
-                           placeholder="From left to right"
-                           class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition">
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Country and City -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label class="block mb-2 font-medium">Country</label>
-                <select formControlName="country"
-                        class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition">
-                  <option value="" disabled selected>Select the country of the plate</option>
-                  <option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</option>
-                </select>
-              </div>
-              <div>
-                <label class="block mb-2 font-medium">City</label>
-                <select formControlName="city"
-                        class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition">
-                  <option value="" disabled selected>Select a city</option>
-                  <option *ngFor="let city of cities" [value]="city.id">{{ city.name }}</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </form>
-
-        <!-- Default case if no vehicle type is selected -->
-        <div *ngSwitchDefault class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
-          <p class="text-center text-gray-500">Please select a vehicle type above to continue</p>
-        </div>
-      </div>
- </div>
-
-
-    <!-- Step 2: Contact details (placeholder for next step) -->
-    <div *ngIf="currentStep === 2" class="mb-8">
-      <!-- <h2 class="text-xl font-semibold mb-6 text-center">Ad & Contact Details</h2> -->
-      <!-- <app-contact-details #adDetailsFormRef *ngIf="currentStep === 2"></app-contact-details> -->
-      <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
-        <h2 class="text-xl text-blue-600 font-medium mb-6">2. AD Details</h2>
-
-        <form [formGroup]="adDetailsForm">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            <div class="bg-gray-50 rounded p-4">
-              <label class="block text-sm font-medium text-gray-700 mb-1">Your Name</label>
-              <div class="text-gray-800">Ashraf Mahmoud</div>
-            </div>
-
-            <div class="bg-gray-50 rounded p-4">
-              <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number <span
-                  class="text-gray-400">(helps users contact you)</span></label>
-              <div class="text-gray-800">+966 23849021</div>
             </div>
           </div>
 
           <div class="mb-6">
-            <label for="adName" class="block text-sm font-medium text-gray-700 mb-1">Ad Name</label>
-            <input type="text" id="adName" formControlName="adName" placeholder="Try to be brief but concise"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500">
+            <label class="block mb-2 font-medium">Modified?</label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div (click)="selectModified('Yes')" [ngClass]="{'border-red-500 bg-red-50':vehicleForm.get('modified')?.value === 'Yes','border-gray-200':vehicleForm.get('modified')?.value !== 'Yes'}" class="border-2 rounded-lg p-3 cursor-pointer transition-colors">
+                <div class="flex items-center justify-between">
+                  <span>Yes</span>
+                  <div *ngIf="vehicleForm.get('modified')?.value === 'Yes'"
+                    class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                  </div>
+                  <div *ngIf="vehicleForm.get('modified')?.value === 'No'" >
+                    <img src="pictures/_Checkbox.svg"
+                    alt="checkmark"
+                    class="w-4 h-4 text-white" />
+              </div>
+                </div>
+              </div>
+
+              <div (click)="selectModified('No')" [ngClass]="{
+                  'border-red-500 bg-red-50':
+                    vehicleForm.get('modified')?.value === 'No',
+                  'border-gray-200':
+                    vehicleForm.get('modified')?.value !== 'No'
+                }" class="border-2 rounded-lg p-3 cursor-pointer transition-colors">
+                <div class="flex items-center justify-between">
+                  <span>No</span>
+                  <div *ngIf="vehicleForm.get('modified')?.value === 'No'"
+                    class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
+          <div class="mb-6">
+            <label class="block mb-2 font-medium">Warranty ?</label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div (click)="selectInsurance('Yes')" [ngClass]="{
+                  'border-red-500 bg-red-50':
+                    vehicleForm.get('insurance')?.value === 'Yes',
+                  'border-gray-200':
+                    vehicleForm.get('insurance')?.value !== 'Yes'
+                }" class="border-2 rounded-lg p-3 cursor-pointer transition-colors">
+                <div class="flex items-center justify-between">
+                  <span>Yes</span>
+                  <div *ngIf="vehicleForm.get('insurance')?.value === 'Yes'"
+                    class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <div (click)="selectInsurance('No')" [ngClass]="{
+                  'border-red-500 bg-red-50':
+                    vehicleForm.get('insurance')?.value === 'No',
+                  'border-gray-200':
+                    vehicleForm.get('insurance')?.value !== 'No'
+                }" class="border-2 rounded-lg p-3 cursor-pointer transition-colors">
+                <div class="flex items-center justify-between">
+                  <span>No</span>
+                  <div *ngIf="vehicleForm.get('insurance')?.value === 'No'"
+                    class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-6">
+            <label class="block mb-2 font-medium">Condition</label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div (click)="selectCondition('New')" [ngClass]="{
+                  'border-red-500 bg-red-50':
+                    vehicleForm.get('general_condition')?.value === 'New',
+                  'border-gray-200':
+                    vehicleForm.get('general_condition')?.value !== 'New'
+                }" class="border-2 rounded-lg p-3 cursor-pointer transition-colors">
+                <div class="flex items-center justify-between">
+                  <span>New</span>
+                  <div *ngIf="vehicleForm.get('general_condition')?.value === 'New'"
+                    class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <div (click)="selectCondition('Used')" [ngClass]="{
+                  'border-red-500 bg-red-50':
+                    vehicleForm.get('general_condition')?.value === 'Used',
+                  'border-gray-200':
+                    vehicleForm.get('general_condition')?.value !== 'Used'
+                }" class="border-2 rounded-lg p-3 cursor-pointer transition-colors">
+                <div class="flex items-center justify-between">
+                  <span>Used</span>
+                  <div *ngIf="vehicleForm.get('general_condition')?.value === 'Used'"
+                    class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-6">
+            <label class="block mb-2 font-medium">Vehicle Care</label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
+              <div *ngFor="let care of vehicleCareOptions" (click)="selectVehicleCare(care)" [ngClass]="{
+                  'border-red-500 bg-red-50':
+                    vehicleForm.get('vehicle_care')?.value === care,
+                  'border-gray-200':
+                    vehicleForm.get('vehicle_care')?.value !== care
+                }" class="border-2 rounded-lg p-3 cursor-pointer transition-colors">
+                <div class="flex items-center justify-between">
+                  <span>{{ care }}</span>
+                  <div *ngIf="vehicleForm.get('vehicle_care')?.value === care"
+                    class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div>
+              <label class="block mb-2 font-medium">Engine Capacity</label>
+              <div class="flex">
+                <span
+                  class="inline-flex items-center px-3 text-gray-500 bg-gray-100 border border-r-0 border-gray-300 rounded-l-md">
+                  CC
+                </span>
+                <input type="number" formControlName="engine" placeholder="650"
+                  class="flex-grow border border-gray-300 rounded-r-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              </div>
+            </div>
+
+            <div>
+              <label class="block mb-2 font-medium">Kilometer</label>
+              <div class="flex">
+                <span
+                  class="inline-flex items-center px-3 text-gray-500 bg-gray-100 border border-r-0 border-gray-300 rounded-l-md">
+                  KM
+                </span>
+                <input type="number" formControlName="mileage" placeholder="8500"
+                  class="flex-grow border border-gray-300 rounded-r-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-6">
+            <label class="block mb-2 font-medium">Transmission</label>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div *ngFor="let type of transmissionTypes" (click)="selectTransmission(type)" [ngClass]="{
+                  'border-red-500 bg-red-50':
+                    vehicleForm.get('transmission')?.value === type,
+                  'border-gray-200':
+                    vehicleForm.get('transmission')?.value !== type
+                }" class="border-2 rounded-lg p-3 cursor-pointer transition-colors">
+                <div class="flex items-center justify-between">
+                  <span>{{ type }}</span>
+                  <div *ngIf="vehicleForm.get('transmission')?.value === type"
+                    class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-end mt-6">
+          <button type="button" class="px-6 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:opacity-50"
+            [disabled]="vehicleForm.invalid || uploadedImages.length < 4" (click)="goToNextStep()">
+            Next
+          </button>
+        </div>
+      </form>
+
+      <!-- Bike Part Form -->
+      <form *ngSwitchCase="2" [formGroup]="bikeForm">
+        <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+          <h3 class="text-lg font-semibold mb-6">Part Details</h3>
+
+          <div class="mb-6">
+            <p class="mb-2 font-medium">Add images</p>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+              <!-- Loop over selected images -->
+              <div *ngFor="let image of uploadedImages; let i = index"
+                class="relative border border-gray-300 rounded-md aspect-square flex items-center justify-center">
+                <!-- <img [src]="image" alt="Uploaded image {{ i }}" class="object-cover w-full h-full rounded-md" /> -->
+                <img [src]="image.preview"
+                [alt]="'Uploaded image ' + i"
+                class="object-cover w-full h-full rounded-md" />
+                <button (click)="removeImage(i)"
+                  class="absolute top-1 right-1 bg-white text-red-500 rounded-full p-1 shadow hover:bg-gray-100">
+                  ✕
+                </button>
+              </div>
+
+              <!-- Upload placeholder -->
+              <div *ngIf="uploadedImages.length < maxImages"
+                class="border border-dashed border-gray-300 rounded-md aspect-square flex items-center justify-center cursor-pointer hover:bg-gray-50"
+                (click)="fileInput.click()">
+                <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <input #fileInput type="file" accept="image/*" multiple hidden (change)="handleFileInput($event)" />
+              </div>
+            </div>
+
+            <p class="text-xs text-gray-500 mt-2">
+              Only SVG, PNG, JPG or GIF (max. 2000x2000px)<br />
+              <span *ngIf="uploadedImages.length < 4" class="text-red-500">Please upload at least 4 images.</span>
+            </p>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div>
+              <label class="block font-medium">Brand</label>
+              <select formControlName="bike_part_brand_id"
+                class="w-full border border-gray-300 rounded-md px-3 py-2 mt-4">
+                <option value="" disabled>Select a brand</option>
+                <option *ngFor="let brand of brandsPart" [value]="brand.id">
+                  {{ brand.name }}
+                </option>
+              </select>
+              <div *ngIf="
+                  vehicleForm.get('bike_part_brand_id')?.touched &&
+                  vehicleForm.get('bike_part_brand_id')?.invalid
+                " class="text-red-500 text-sm mt-1">
+                Brand is required.
+              </div>
+            </div>
+            <!-- Model Select -->
+            <div>
+              <label class="block font-medium">Model</label>
+              <select formControlName="bike_part_category_id"
+                [disabled]="models.length === 0" class="w-full border border-gray-300 rounded-md px-3 py-2 mt-4">
+                <option value="" disabled>Select a model</option>
+                <option *ngFor="let model of partCategory" [value]="model.id">
+                  {{ model.name }}
+                </option>
+              </select>
+            </div>
+
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <div>
+              <label class="block font-medium">Brand</label>
+              <select formControlName="brand_id" #brandSelect (change)="onBrandChange(brandSelect.value)"
+                class="w-full border border-gray-300 rounded-md px-3 py-2 mt-4">
+                <option value="" disabled>Select a brand</option>
+                <option *ngFor="let brand of brands" [value]="brand.id">
+                  {{ brand.name }}
+                </option>
+              </select>
+              <div *ngIf="
+                  vehicleForm.get('brand_id')?.touched &&
+                  vehicleForm.get('brand_id')?.invalid
+                " class="text-red-500 text-sm mt-1">
+                Brand is required.
+              </div>
+            </div>
+            <!-- Model Select -->
+            <div>
+              <label class="block font-medium">Model</label>
+              <select formControlName="model_id" #modelSelect (change)="onModelChange(modelSelect.value)"
+                [disabled]="models.length === 0" class="w-full border border-gray-300 rounded-md px-3 py-2 mt-4">
+                <option value="" disabled>Select a model</option>
+                <option *ngFor="let model of models" [value]="model.id">
+                  {{ model.name }}
+                </option>
+              </select>
+            </div>
+            <!-- Year Select -->
+            <div>
+              <label class="block font-medium">Year</label>
+              <select formControlName="year_id" [disabled]="years.length === 0"
+                class="w-full border border-gray-300 rounded-md px-3 py-2 mt-4">
+                <option value="" disabled>Select a year</option>
+                <option *ngFor="let year of years" [value]="year.id">
+                  {{ year.year.toString() }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="mb-6">
+            <label class="block mb-2 font-medium">Condition</label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div *ngFor="let condition of partsConditions" (click)="selectBodyCondition(condition)" [ngClass]="{
+                  'border-red-500 bg-red-50':
+                    vehicleForm.get('body_condition')?.value === condition,
+                  'border-gray-200':
+                    vehicleForm.get('body_condition')?.value !== condition
+                }" class="border-2 rounded-lg p-3 cursor-pointer transition-colors">
+                <div class="flex items-center justify-between">
+                  <span>{{ condition }}</span>
+                  <div *ngIf="
+                      vehicleForm.get('body_condition')?.value === condition
+                    " class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
           <div class="mb-6">
             <label for="description" class="block text-sm font-medium text-gray-700 mb-1 flex items-center">
               Description
@@ -621,134 +529,640 @@
               placeholder="This is a free text to add any comments or things that might be useful for the buyers"
               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"></textarea>
           </div>
+        </div>
 
+        <div class="flex justify-end mt-6">
+          <button type="button" class="px-6 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:opacity-50"
+            [disabled]="bikeForm.invalid || uploadedImages.length < 4" (click)="goToNextStep()">
+            Next
+          </button>
+        </div>
+      </form>
 
-          <div [formGroup]="contactMethodsFormGroup">
-            <!-- <div [formGroup]="contactMethodsFormGroup"> -->
-            <div class="mb-6">
-              <label class="block text-sm font-medium text-gray-700 mb-3">Preferred contacting channels</label>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="flex items-center justify-between border border-gray-300 rounded-md px-4 py-3">
-                  <span class="text-gray-700">Direct</span>
-                  <input type="checkbox" formControlName="direct"
-                    class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded">
-                </div>
+      <!-- License Plate Form -->
+      <form *ngSwitchCase="3" [formGroup]="platesForm">
+        <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+          <h3 class="text-lg font-semibold mb-6">Plate Details</h3>
 
-                <div class="flex items-center justify-between border border-gray-300 rounded-md px-4 py-3">
-                  <span class="text-gray-700">Soom</span>
-                  <input type="checkbox" formControlName="soom"
-                    class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded">
-                </div>
-              </div>
-            </div>
-
-            <div class="mb-6">
-              <label class="block text-sm font-medium text-gray-700 mb-3">Preferred contacting channels</label>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="flex items-center justify-between border border-gray-300 rounded-md px-4 py-3">
-                  <span class="text-gray-700">Phone</span>
-                  <input type="checkbox" formControlName="phone"
-                    class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded">
-                </div>
-
-                <div class="flex items-center justify-between border border-gray-300 rounded-md px-4 py-3">
-                  <span class="text-gray-700">Whatsapp</span>
-                  <input type="checkbox" formControlName="whatsapp"
-                    class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded">
-                </div>
-              </div>
-            </div>
-
-          </div>
-          <!--  -->
           <div class="mb-6">
-            <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Price</label>
-            <div class="relative rounded-md shadow-sm">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <span class="text-gray-500 sm:text-sm">SAR</span>
+            <label class="block mb-2 font-medium">Plate format</label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div *ngFor="let format of plateFormatOptions" class="block">
+                <div [ngClass]="{'border-red-500 bg-red-50': platesForm.get('plateFormat')?.value === format.id, 'border-gray-200': platesForm.get('plateFormat')?.value !== format.id}"
+                     (click)="selectPlateFormat(format.id, format.type_id)"
+                     class="border-2 rounded-lg p-3 cursor-pointer transition-colors">
+                  <div class="flex items-center justify-between">
+                    <span>{{ format.label }}</span>
+                    <input type="checkbox" [checked]="platesForm.get('plateFormat')?.value === format.id" class="hidden" formControlName="type_id"/>
+                    <div *ngIf="platesForm.get('plateFormat')?.value === format.id"
+                      class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
+                      <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <input type="text" id="price" formControlName="price" placeholder="500"
-                class="pl-12 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500">
             </div>
           </div>
 
+          <!-- Dynamic fields based on plate format -->
           <div class="mb-6">
-            <label for="city" class="block text-sm font-medium text-gray-700 mb-1">City</label>
+            <div [ngSwitch]="platesForm.get('plateFormat')?.value">
+              <!-- Numbers & Alphabets Format -->
+              <div *ngSwitchCase="'numbers-alphabets'" class="grid grid-cols-1 sm:grid-cols-5 gap-4">
+                <!-- First Alphabet - 1 column -->
+                <div class="sm:col-span-1">
+                  <label class="block mb-2 text-sm font-medium">First Alphabet</label>
+                  <input type="text" formControlName="firstAlphabet"
+                    class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition" />
+                </div>
 
-            <div class="relative">
-              <select id="city" formControlName="city"
-                class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md">
-                <option value="" disabled>Select a City</option>
-                <option *ngFor="let city of cities" [value]="city.id">{{ city.name }}</option>
+                <!-- Second Alphabet - 1 column -->
+                <div class="sm:col-span-1">
+                  <label class="block mb-2 text-sm font-medium">Second Alphabet</label>
+                  <input type="text" formControlName="secondAlphabet"
+                    class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition" />
+                </div>
+
+                <!-- Third Alphabet - 1 column -->
+                <div class="sm:col-span-1">
+                  <label class="block mb-2 text-sm font-medium">Third Alphabet</label>
+                  <input type="text" formControlName="thirdAlphabet"
+                    class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition" />
+                </div>
+
+                <!-- Numbers - 2 columns (wider) -->
+                <div class="sm:col-span-2">
+                  <label class="block mb-2 text-sm font-medium">Numbers</label>
+                  <input type="text" formControlName="digits_count" placeholder="From left to right"
+                    class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition" />
+                </div>
+              </div>
+
+              <!-- Numbers Only Format -->
+              <div *ngSwitchCase="'numbers-only'" class="flex mt-4">
+                <div class="basis-1/2">
+                  <label class="block mb-2 text-sm font-medium">Numbers</label>
+                  <input type="text" formControlName="digits_count" placeholder="From left to right"
+                    class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Country and City -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block mb-2 font-medium">Country</label>
+              <select formControlName="country_id_lp" #countryId (change)="onCountryChange(countryId.value)"
+                class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition">
+                <option value="" disabled selected>
+                  Select the country of the plate
+                </option>
+                <option *ngFor="let country of countries" [value]="country.id">
+                  {{ country.name }}
+                </option>
               </select>
-              <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                  fill="currentColor" aria-hidden="true">
-                  <path fill-rule="evenodd"
-                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                    clip-rule="evenodd" />
-                </svg>
+            </div>
+            <div>
+              <label class="block mb-2 font-medium">City</label>
+              <select formControlName="city_id_lp"
+                class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition">
+                <option value="" disabled selected>Select a city</option>
+                <option *ngFor="let city of cities" [value]="city.id">
+                  {{ city.name }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="flex justify-end mt-6">
+          <button type="button" class="px-6 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:opacity-50"
+            [disabled]="platesForm.invalid" (click)="goToNextStep()">
+            Next
+          </button>
+        </div>
+      </form>
+
+      <!-- Default case if no vehicle type is selected -->
+      <div *ngSwitchDefault class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+        <p class="text-center text-gray-500">
+          Please select a vehicle type above to continue
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2: Contact details (placeholder for next step) -->
+  <div *ngIf="currentStep === 2" class="mb-8">
+    <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+      <h2 class="text-xl text-blue-600 font-medium mb-6">2. AD Details</h2>
+
+      <form [formGroup]="adDetailsForm">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div class="bg-gray-50 rounded p-4">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Your Name</label>
+            <div class="text-gray-800">Ashraf Mahmoud</div>
+          </div>
+
+          <div class="bg-gray-50 rounded p-4">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number
+              <span class="text-gray-400">(helps users contact you)</span></label>
+            <div class="text-gray-800">+966 23849021</div>
+          </div>
+        </div>
+
+        <div class="mb-6">
+          <label for="adName" class="block text-sm font-medium text-gray-700 mb-1">Ad Name</label>
+          <input type="text" id="adName" formControlName="title" placeholder="Try to be brief but concise"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500" />
+        </div>
+
+        <div class="mb-6">
+          <label for="description" class="block text-sm font-medium text-gray-700 mb-1 flex items-center">
+            Description
+            <span class="ml-1 text-gray-400">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </span>
+          </label>
+          <textarea id="description" formControlName="description" rows="4"
+            placeholder="This is a free text to add any comments or things that might be useful for the buyers"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"></textarea>
+        </div>
+
+        <!-- <div class="mb-6">
+          <label class="block text-sm font-medium text-gray-700 mb-3">Preferred contact submission method</label>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="flex items-center justify-between border border-gray-300 rounded-md px-4 py-3">
+              <span class="text-gray-700">Direct</span>
+              <input type="radio" formControlName="allow_submission" value="false"
+                class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300" />
+            </div>
+
+            <div class="flex items-center justify-between border border-gray-300 rounded-md px-4 py-3">
+              <span class="text-gray-700">Soom</span>
+              <input type="radio" formControlName="allow_submission" value="true"
+                class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300" />
+            </div>
+          </div>
+        </div> -->
+        <div class="mb-6">
+          <label class="block mb-2 font-medium">Preferred contact submission method</label>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Direct Contact Option -->
+            <div class="block">
+              <div [ngClass]="{
+                'border-red-500 bg-red-50': adDetailsForm.get('allow_submission')?.value === 'false',
+                'border-gray-200': adDetailsForm.get('allow_submission')?.value !== 'false'
+              }"
+              (click)="adDetailsForm.get('allow_submission')?.setValue('false')"
+              class="border-2 rounded-lg p-4 cursor-pointer transition-colors h-full">
+                <div class="flex items-center justify-between h-full">
+                  <span class="text-gray-700">Direct</span>
+                  <div *ngIf="adDetailsForm.get('allow_submission')?.value === 'false'"
+                    class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                  </div>
+                  <div *ngIf="adDetailsForm.get('allow_submission')?.value !== 'false'"
+                    class="w-6 h-6 border-2 border-gray-300 rounded-full"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Soom Contact Option -->
+            <div class="block">
+              <div [ngClass]="{
+                'border-red-500 bg-red-50': adDetailsForm.get('allow_submission')?.value === 'true',
+                'border-gray-200': adDetailsForm.get('allow_submission')?.value !== 'true'
+              }"
+              (click)="adDetailsForm.get('allow_submission')?.setValue('true')"
+              class="border-2 rounded-lg p-4 cursor-pointer transition-colors h-full">
+                <div class="flex items-center justify-between h-full">
+                  <span class="text-gray-700">Soom</span>
+                  <div *ngIf="adDetailsForm.get('allow_submission')?.value === 'true'"
+                    class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                  </div>
+                  <div *ngIf="adDetailsForm.get('allow_submission')?.value !== 'true'"
+                    class="w-6 h-6 border-2 border-gray-300 rounded-full"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- <div class="mb-6">
+          <label class="block text-sm font-medium text-gray-700 mb-3">Preferred contacting channels</label>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="flex items-center justify-between border border-gray-300 rounded-md px-4 py-3"
+                 [class.opacity-50]="isSoomSelected()"
+                 [class.cursor-not-allowed]="isSoomSelected()">
+              <span class="text-gray-700">Phone</span>
+              <input type="radio" formControlName="contacting_channel" value="phone"
+                [disabled]="isSoomSelected()"
+                class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded" />
+            </div>
+
+            <div class="flex items-center justify-between border border-gray-300 rounded-md px-4 py-3"
+                 [class.opacity-50]="isSoomSelected()"
+                 [class.cursor-not-allowed]="isSoomSelected()">
+              <span class="text-gray-700">Whatsapp</span>
+              <input type="radio" formControlName="contacting_channel" value="whatsapp"
+                [disabled]="isSoomSelected()"
+                class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded" />
+            </div>
+          </div>
+
+
+          <div *ngIf="isSoomSelected()" class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-md">
+            <h4 class="text-sm font-medium text-blue-900 mb-2">Soom Settings</h4>
+            <p class="text-sm text-blue-700 mb-3">
+              We can tell users here some information about Soom, and how it works and the expiration period of ads or requests.
+            </p>
+
+            <div class="mb-3">
+              <label for="autoDecline" class="block text-sm font-medium text-blue-900 mb-1">
+                Automatically decline offers under
+              </label>
+              <div class="relative rounded-md shadow-sm">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <span class="text-gray-500 sm:text-sm">SAR</span>
+                </div>
+                <input type="number" id="autoDecline" formControlName="auto_decline_threshold"
+                       placeholder="0"
+                       class="pl-12 block w-full px-3 py-2 border border-blue-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
+              </div>
+            </div>
+          </div>
+        </div> -->
+        <div class="mb-6">
+          <label class="block mb-2 font-medium">Preferred contacting channels</label>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Phone Option -->
+            <div class="block">
+              <div [ngClass]="{
+                'border-red-500 bg-red-50': adDetailsForm.get('contacting_channel')?.value === 'phone' && !isSoomSelected(),
+                'border-gray-200': adDetailsForm.get('contacting_channel')?.value !== 'phone' || isSoomSelected(),
+                'opacity-50 cursor-not-allowed': isSoomSelected()
+              }"
+              (click)="!isSoomSelected() && adDetailsForm.get('contacting_channel')?.setValue('phone')"
+              class="border-2 rounded-lg p-4 transition-colors h-full">
+                <div class="flex items-center justify-between h-full">
+                  <span class="text-gray-700">Phone</span>
+                  <div *ngIf="adDetailsForm.get('contacting_channel')?.value === 'phone' && !isSoomSelected()"
+                    class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                  </div>
+                  <div *ngIf="adDetailsForm.get('contacting_channel')?.value !== 'phone' || isSoomSelected()"
+                    class="w-6 h-6 border-2 border-gray-300 rounded-full"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- WhatsApp Option -->
+            <div class="block">
+              <div [ngClass]="{
+                'border-red-500 bg-red-50': adDetailsForm.get('contacting_channel')?.value === 'whatsapp' && !isSoomSelected(),
+                'border-gray-200': adDetailsForm.get('contacting_channel')?.value !== 'whatsapp' || isSoomSelected(),
+                'opacity-50 cursor-not-allowed': isSoomSelected()
+              }"
+              (click)="!isSoomSelected() && adDetailsForm.get('contacting_channel')?.setValue('whatsapp')"
+              class="border-2 rounded-lg p-4 transition-colors h-full">
+                <div class="flex items-center justify-between h-full">
+                  <span class="text-gray-700">WhatsApp</span>
+                  <div *ngIf="adDetailsForm.get('contacting_channel')?.value === 'whatsapp' && !isSoomSelected()"
+                    class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                  </div>
+                  <div *ngIf="adDetailsForm.get('contacting_channel')?.value !== 'whatsapp' || isSoomSelected()"
+                    class="w-6 h-6 border-2 border-gray-300 rounded-full"></div>
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- <div class="mb-6">
-            <label class="block text-sm font-medium text-gray-700 mb-3">Are you?</label>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div class="flex items-center justify-between border border-gray-300 rounded-md px-4 py-3">
-                <span class="text-gray-700">Middleman</span>
-                <input type="radio" formControlName="middleman" name="middleman" value="middleman"
-                  class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300">
-              </div>
+          <!-- Soom Settings Section -->
+          <div *ngIf="isSoomSelected()" class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-md">
+            <h4 class="text-sm font-medium text-blue-900 mb-2">Soom Settings</h4>
+            <p class="text-sm text-blue-700 mb-3">
+              We can tell users here some information about Soom, and how it works and the expiration period of ads or requests.
+            </p>
 
-              <div class="flex items-center justify-between border border-gray-300 rounded-md px-4 py-3">
-                <span class="text-gray-700">Selling your own vehicle</span>
-                <input type="radio" formControlName="owner" name="owner" value="owner"
-                  class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300">
-              </div>
-            </div>
-          </div> -->
-          <div class="mb-6">
-            <label class="block text-sm font-medium text-gray-700 mb-3">Are you?</label>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div class="flex items-center justify-between border border-gray-300 rounded-md px-4 py-3">
-                <span class="text-gray-700">Middleman</span>
-                <input type="radio" formControlName="sellerType" value="middleman"
-                  class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300">
-              </div>
-
-              <div class="flex items-center justify-between border border-gray-300 rounded-md px-4 py-3">
-                <span class="text-gray-700">Selling your own vehicle</span>
-                <input type="radio" formControlName="sellerType" value="owner"
-                  class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300">
+            <div class="mb-3">
+              <label for="autoDecline" class="block text-sm font-medium text-blue-900 mb-1">
+                Automatically decline offers under
+              </label>
+              <div class="relative rounded-md shadow-sm">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <span class="text-gray-500 sm:text-sm">SAR</span>
+                </div>
+                <input type="number" id="autoDecline" formControlName="auto_decline_threshold"
+                       placeholder="0"
+                       class="pl-12 block w-full px-3 py-2 border border-blue-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
               </div>
             </div>
           </div>
+        </div>
 
-<div class="flex justify-between mt-8">
-            <button (click)="previousStep()" *ngIf="currentStep > 1" type="button"
-              class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-              Back
-            </button>
-            <button (click)="nextStep()" type="button"
-              class="bg-red-500 border border-transparent rounded-md shadow-sm py-2 px-10 inline-flex justify-center text-sm font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-              Next
-            </button>
+        <div class="mb-6">
+          <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Price</label>
+          <div class="relative rounded-md shadow-sm">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <span class="text-gray-500 sm:text-sm">SAR</span>
+            </div>
+            <input type="text" id="price" formControlName="price" placeholder="500"
+              class="pl-12 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500" />
           </div>
+        </div>
 
-        </form>
+        <div class="mb-6">
+          <label for="city" class="block text-sm font-medium text-gray-700 mb-1">City</label>
+
+          <div class="relative">
+            <select id="city" formControlName="city"
+              class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md">
+              <option value="" disabled>Select a City</option>
+              <option *ngFor="let city of allCities" [value]="city.id">
+                {{ city.name }}
+              </option>
+            </select>
+            <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+              <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clip-rule="evenodd" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-6">
+          <label class="block text-sm font-medium text-gray-700 mb-3">Are you?</label>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="flex items-center justify-between border border-gray-300 rounded-md px-4 py-3">
+              <span class="text-gray-700">Middleman</span>
+              <input type="radio" formControlName="sellerType" value="middleman"
+                class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300" />
+            </div>
+
+            <div class="flex items-center justify-between border border-gray-300 rounded-md px-4 py-3">
+              <span class="text-gray-700">Selling your own vehicle</span>
+              <input type="radio" formControlName="sellerType" value="owner"
+                class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300" />
+            </div>
+          </div>
+        </div>
+        <!-- <div class="mb-6">
+  <label class="block text-sm font-medium text-gray-700 mb-2">Are you?</label>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div *ngFor="let option of sellerTypeOptions" class="block">
+      <div [ngClass]="{'border-red-500 bg-red-50': vehicleForm.get('sellerType')?.value === option.value, 'border-gray-200': vehicleForm.get('sellerType')?.value !== option.value}"
+           (click)="vehicleForm.get('sellerType')?.setValue(option.value)"
+           class="border-2 rounded-lg p-3 cursor-pointer transition-colors">
+        <div class="flex items-center justify-between">
+          <span class="text-gray-700">{{ option.label }}</span>
+          <input type="radio" [checked]="vehicleForm.get('sellerType')?.value === option.value" class="hidden" formControlName="sellerType" [value]="option.value"/>
+          <div *ngIf="vehicleForm.get('sellerType')?.value === option.value"
+            class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
+            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+        <div class="flex justify-between mt-8">
+          <button (click)="previousStep()" *ngIf="currentStep > 1" type="button"
+            class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+            Back
+          </button>
+          <button (click)="goToNextStep()" type="button"
+            class="bg-red-500 border border-transparent rounded-md shadow-sm py-2 px-10 inline-flex justify-center text-sm font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+            Next
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- <div *ngIf="currentStep === 3" class="mb-8">
+    <h2 class="text-xl font-semibold mb-6 text-center">Checkout</h2>
+    <div class="border rounded-lg p-6">
+      <p class="text-center text-gray-600">
+        Review your information and complete your listing.
+      </p>
+    </div>
+  </div> -->
+<!-- checkout.component.html -->
+<div *ngIf="currentStep === 3" class="container mx-auto max-w-3xl px-4 py-8">
+  <h2 class="text-xl font-semibold mb-6 text-blue-600">3. Checkout</h2>
+
+  <!-- Ad Fees Section -->
+  <!-- <div class="border-b pb-4 mb-6">
+    <div class="flex justify-between items-center mb-1">
+      <span class="font-medium">Ad Fees</span>
+      <div>
+        <span class="text-red-500 font-bold ml-1">{{ pricingInfo.converted_price }} {{ pricingInfo.currency_symbol }}</span>
+      </div>
+
+    </div>
+    <p class="text-sm text-gray-500">One time fees, if you delete the ad you will be charged again</p>
+  </div> -->
+  <div class="border-b pb-4 mb-6">
+    <div class="flex justify-between items-center mb-1">
+      <span class="font-medium">Ad Fees</span>
+      <div>
+        <!-- Original price with strikethrough when promo applied -->
+        <span *ngIf="isPromoApplied" class="text-red-500 line-through mr-2">
+          {{ pricingInfo.converted_price }} {{ pricingInfo.currency_symbol }}
+        </span>
+
+        <!-- Discounted price (show only when promo applied) -->
+        <span *ngIf="isPromoApplied" class="text-green-500 font-bold">
+          {{ discountedPrice }} {{ pricingInfo.currency_symbol }}
+        </span>
+
+        <!-- Regular price (show when no promo applied) -->
+        <span *ngIf="!isPromoApplied" class="text-red-500 font-bold">
+          {{ pricingInfo.converted_price }} {{ pricingInfo.currency_symbol }}
+        </span>
+      </div>
+    </div>
+    <p class="text-sm text-gray-500">One time fees, if you delete the ad you will be charged again</p>
+  </div>
+
+  <div class="mb-6">
+    <!-- Rest of your promo code section remains the same -->
+    <div class="flex mb-2">
+      <div class="flex-1 border rounded-l-lg flex items-center px-4">
+        <input
+          type="text"
+          [(ngModel)]="promoCode"
+          [readonly]="isPromoApplied"
+          placeholder="Enter promo code"
+          class="w-full focus:outline-none py-3"
+        />
+      </div>
+      <button
+        *ngIf="!isPromoApplied"
+        (click)="applyPromoCode()"
+        [disabled]="promoLoading || !promoCode"
+        class="border border-l-0 rounded-r-lg px-4 py-3 text-blue-600 hover:bg-gray-50 disabled:opacity-50"
+      >
+        <span *ngIf="!promoLoading">Apply</span>
+        <span *ngIf="promoLoading">Applying...</span>
+      </button>
+      <button
+        *ngIf="isPromoApplied"
+        (click)="removePromoCode()"
+        class="border border-l-0 rounded-r-lg px-4 py-3 text-red-600 hover:bg-gray-50"
+      >
+        Remove
+      </button>
+    </div>
+
+    <!-- Success Message -->
+    <div *ngIf="isPromoApplied" class="flex justify-between">
+      <div class="text-green-500 flex items-center gap-1">
+        <span>Promocode applied!</span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+        </svg>
+      </div>
+      <button class="bg-white border border-gray-300 rounded-lg px-6 py-2 text-gray-700 font-medium">
+        Applied
+      </button>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="promoError" class="text-red-500 text-sm mt-2">
+      {{ promoError }}
+    </div>
+  </div>
+
+  <!-- Promo Code Section -->
+  <!-- <div class="mb-6">
+    <div class="flex mb-2">
+      <div class="flex-1 border rounded-l-lg flex items-center px-4">
+        <input type="text" value="WELCOME10" class="w-full focus:outline-none py-3" readonly />
+      </div>
+      <button class="border border-l-0 rounded-r-lg px-4 py-3 text-blue-600 hover:bg-gray-50">Remove</button>
+    </div>
+    <div class="flex justify-between">
+      <div class="text-green-500 flex items-center gap-1">
+        <span>Promocode applied!</span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+        </svg>
+      </div>
+      <button class="bg-white border border-gray-300 rounded-lg px-6 py-2 text-gray-700 font-medium">Applied</button>
+    </div>
+  </div> -->
+
+
+
+  <!-- Payment Section -->
+  <div class="mb-6">
+    <h3 class="text-lg text-red-500 mb-2">Payment</h3>
+    <p class="text-gray-500 text-sm mb-4">All transactions are secure and encrypted</p>
+
+    <!-- Payment Method Selection -->
+    <div class="border border-red-100 bg-red-50 rounded-lg mb-4">
+      <div class="flex justify-between items-center p-4">
+        <div class="flex items-center gap-2">
+          <div class="w-5 h-5 rounded-full border-2 border-red-500 flex items-center justify-center">
+            <div class="w-2.5 h-2.5 rounded-full bg-red-500"></div>
+          </div>
+          <span>Credit/Debit Card</span>
+        </div>
+        <div class="flex gap-2">
+          <img src="https://cdn.cdnlogo.com/logos/m/33/mastercard.svg" alt="Mastercard" class="h-8" />
+          <img src="https://cdn.cdnlogo.com/logos/v/69/visa.svg" alt="Visa" class="h-8" />
+        </div>
       </div>
     </div>
 
-
-    <div *ngIf="currentStep === 3" class="mb-8">
-      <h2 class="text-xl font-semibold mb-6 text-center">Checkout</h2>
-      <div class="border rounded-lg p-6">
-        <p class="text-center text-gray-600">Review your information and complete your listing.</p>
-        <!-- Summary information would go here -->
+    <!-- Card Details -->
+    <div class="bg-gray-50 border rounded-lg p-4 mb-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div>
+          <label class="block text-sm font-medium mb-1">Name on card</label>
+          <input type="text" value="Olivia Rhye" class="w-full border rounded-lg p-3" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Expiry</label>
+          <input type="text" value="06 2024" class="w-full border rounded-lg p-3" />
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium mb-1">Card number</label>
+          <div class="relative">
+            <div class="absolute left-3 top-1/2 transform -translate-y-1/2">
+              <img src="https://cdn.cdnlogo.com/logos/m/33/mastercard.svg" alt="Mastercard" class="h-6" />
+            </div>
+            <input type="text" value="1234 1234 1234 1234" class="w-full border rounded-lg p-3 pl-12" />
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">CVV</label>
+          <input type="password" value="•••" class="w-full border rounded-lg p-3" />
+        </div>
       </div>
     </div>
 
+    <!-- Alternative Payment Methods -->
+    <div class="space-y-2">
+      <div class="border rounded-lg p-3 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+          <div class="w-5 h-5 rounded-full border border-gray-300"></div>
+          <span>Tamara</span>
+        </div>
+        <div class="bg-yellow-100 text-yellow-800 text-xs font-semibold px-2 py-1 rounded">tamara</div>
+      </div>
+      <div class="border rounded-lg p-3 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+          <div class="w-5 h-5 rounded-full border border-gray-300"></div>
+          <span>Tabby</span>
+        </div>
+        <div class="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded">tabby</div>
+      </div>
+    </div>
+  </div>
+  <div class="flex justify-between mt-8">
+    <button (click)="previousStep()" *ngIf="currentStep > 1" type="button"
+      class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+      Back
+    </button>
+    <button (click)="goToNextStep()" type="button"
+      class="bg-red-500 border border-transparent rounded-md shadow-sm py-2 px-10 inline-flex justify-center text-sm font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+      Next
+    </button>
+  </div>
+</div>
 </div>
 
 <div *ngIf="submissionSuccess" class="text-green-600 font-semibold mb-4">
@@ -757,18 +1171,3 @@
 <div *ngIf="submissionError" class="text-red-600 font-semibold mb-4">
   {{ errorMessage }}
 </div>
-
-
-
-
-
-          <!-- <div class="flex justify-between mt-8">
-            <button (click)="previousStep()" *ngIf="currentStep > 1" type="button"
-              class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-              Back
-            </button>
-            <button (click)="nextStep()" type="button"
-              class="bg-red-500 border border-transparent rounded-md shadow-sm py-2 px-10 inline-flex justify-center text-sm font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-              Next
-            </button>
-          </div> -->

@@ -146,7 +146,7 @@ export class RegisterComponent implements OnInit {
          }
        });
        this.auth.setLoggedIn(true);
-       this.router.navigate(['/plates']);
+       this.router.navigate(['/home']);
   }
   closeModal() {
     this.showModal = false;

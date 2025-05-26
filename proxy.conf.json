@@ -1,0 +1,8 @@
+{
+  "/api": {
+    "target": "https://be.dabapp.co",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}
