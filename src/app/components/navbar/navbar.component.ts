@@ -1,7 +1,7 @@
 
 
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output, signal } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, signal, Inject, PLATFORM_ID } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink, RouterModule } from '@angular/router';
 import { SelectModule } from 'primeng/select';
@@ -9,7 +9,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { AuthService } from '../../services/auth.service';
 import { AuthUserDetails, MeResponse } from '../../interfaces/user-interface';
 import { CookieService } from 'ngx-cookie-service';
-
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { isPlatformBrowser } from '@angular/common';
 
 
 interface sub_menu {
@@ -40,7 +41,8 @@ interface IsubNavItems{
     CommonModule,
     RouterModule,
     FormsModule,
-    DropdownModule
+    DropdownModule,
+    TranslateModule
   ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
@@ -58,7 +60,26 @@ selectedCity: ICity | undefined;
 currentUser: AuthUserDetails | undefined
 isLoggedIn = false;
 
-constructor(private router: Router,private auth: AuthService,  private cookieService: CookieService) {}
+// constructor(private router: Router,private auth: AuthService,  private cookieService: CookieService,private translate: TranslateService) {
+//    this.translate.setDefaultLang('en');
+//    const savedLang = localStorage.getItem('lang') || 'en';
+//   this.translate.use(savedLang);
+// }
+constructor(
+    private router: Router,
+    private auth: AuthService,
+    private cookieService: CookieService,
+    private translate: TranslateService,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+    this.translate.setDefaultLang('en');
+    
+    // Only access localStorage on browser side
+    if (isPlatformBrowser(this.platformId)) {
+      const savedLang = localStorage.getItem('lang') || 'en';
+      this.translate.use(savedLang);
+    }
+  }
 ngOnInit() {
   this.auth.isLoggedIn$.subscribe((loggedIn) => {
     this.isLoggedIn = loggedIn;
@@ -82,6 +103,20 @@ ngOnInit() {
           { name: 'Dammam', code: 'DAM' }
         ];
 }
+
+
+// switchLang(lang: string) {
+//   this.translate.use(lang);
+//   localStorage.setItem('lang', lang);
+// }
+ switchLang(lang: string): void {
+    this.translate.use(lang);
+    
+    // Only access localStorage on browser side
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem('lang', lang);
+    }
+  }
 
 selectMenu(menu: string) {
   this.menuSelected.emit(menu);

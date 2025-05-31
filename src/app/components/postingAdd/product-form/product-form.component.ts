@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Inject, Input, OnInit, PLATFORM_ID, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -6,11 +6,12 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ListingService } from './listingService/listing-service.service';
 import { title } from 'process';
 import { SharedFormDataService } from '../../../services/shared-form-data.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 interface UploadedImage {
   preview: string;  // taswira 9bl ma tuploadi
@@ -31,7 +32,7 @@ interface Step {
 @Component({
   selector: 'app-product-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule,TranslateModule],
   templateUrl: './product-form.component.html',
   styleUrls: ['./product-form.component.css'],
 })
@@ -164,8 +165,17 @@ discountedPrice: number | null = null;
   constructor(
     private fb: FormBuilder,
     private listingService: ListingService,
-    private sharedFormDataService: SharedFormDataService
+    private sharedFormDataService: SharedFormDataService,
+    private translate: TranslateService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
+     this.translate.setDefaultLang('en');
+    
+    // Only set language preference on browser side
+    if (isPlatformBrowser(this.platformId)) {
+      this.translate.use('en');
+    }
+    
     this.postingAnAd = this.fb.group({});
     this.vehicleForm = this.fb.group({
       category_id: [1, Validators.required],
@@ -230,6 +240,7 @@ discountedPrice: number | null = null;
       allow_submission: ['', Validators.required],
       contacting_channel: ['', Validators.required],
       price: ['', [Validators.required, Validators.min(1)]],
+      country: ['',Validators.required],
       city: ['', Validators.required],
       sellerType: ['', Validators.required],
       auto_decline_threshold: [0] // Add this new field for Soom settings
@@ -868,7 +879,7 @@ getPricing() {
           isValid = this.vehicleForm.valid;
           step1Data = {
             category_id: 1,
-            type_id: 1,
+            // type_id: 1,
             vehicleType: 'motorcycle',
             brand_id: parseInt(this.vehicleForm.value.brand_id),
             model_id: parseInt(this.vehicleForm.value.model_id),
@@ -959,6 +970,7 @@ getPricing() {
           price: parseFloat(this.adDetailsForm.value.price),
           allow_submission:this.adDetailsForm.value.allow_submission === 'true',
           contacting_channel: this.adDetailsForm.value.contacting_channel,
+          country_id:Number(this.platesForm.value.country),
           city_id: parseInt(this.adDetailsForm.value.city),
           sellerType: this.adDetailsForm.value.sellerType,
           listing_type_id: 1,

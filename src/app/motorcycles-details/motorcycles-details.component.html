@@ -1,0 +1,195 @@
+<div class="main-container">
+  <div class="content-container">
+    <!-- <app-sidebar></app-sidebar> -->
+    <!-- Side Bar Start -->
+
+    <div class="sidebar" style="width: 25%;">
+      <h2>FILTERS</h2>
+      <!-- 
+      <div class="filter-section">
+        <div class="filter-header" (click)="toggleDigits()">
+          <span>Shop By</span>
+          <span class="toggle-icon">{{ isDigitsOpen ? '−' : '+' }}</span>
+        </div>
+
+        <div class="filter-content" *ngIf="isDigitsOpen">
+          <div class="checkbox-item" *ngFor="let digit of digits">
+            <input type="checkbox" [id]="'digit-' + digit.value" [checked]="digit.checked"
+              (change)="digit.checked = !digit.checked">
+            <label [for]="'digit-' + digit.value">{{ digit.value }} <span class="count">({{ digit.count
+                }})</span></label>
+          </div>
+        </div>
+      </div>
+
+  
+      <div class="filter-section">
+  <div class="filter-header" (click)="toggleCountry()">
+    <span>Brand</span>
+    <span class="toggle-icon">{{ isCountryOpen ? '−' : '+' }}</span>
+  </div>
+
+  <div class="filter-content" *ngIf="isCountryOpen">
+    <div class="checkbox-item" *ngFor="let brand of brands">
+      <input type="checkbox" [id]="'brand-' + brand.id" [checked]="brand.checked"
+        (change)="brand.checked = !brand.checked">
+      <label [for]="'brand-' + brand.id">{{ brand.name }} <span class="count">({{ brand.listings_count}})</span></label>
+    </div>
+  </div>
+</div>
+
+      <div class="filter-section">
+        <div class="filter-header">
+          <span>Price Range</span>
+        </div>
+
+        <div class="price-range">
+          <div class="slider-container">
+            <input type="range" [min]="absoluteMin" [max]="absoluteMax" [(ngModel)]="priceRange.min"
+              (input)="onMinSliderChange($event)" class="slider">
+            <input type="range" [min]="absoluteMin" [max]="absoluteMax" [(ngModel)]="priceRange.max"
+              (input)="onMaxSliderChange($event)" class="slider">
+          </div>
+
+          <div class="price-inputs">
+            <div class="price-input">
+              <label>Min</label>
+              <input type="number" [(ngModel)]="priceRange.min" [min]="absoluteMin" [max]="absoluteMax"
+                (change)="onMinInputChange()">
+            </div>
+            <div class="price-input">
+              <label>MAX</label>
+              <input type="number" [(ngModel)]="priceRange.max" [min]="absoluteMin" [max]="absoluteMax"
+                (change)="onMaxInputChange()">
+            </div>
+          </div>
+        </div>
+      </div> -->
+        <div class="filter-section">
+        <div class="filter-header" (click)="toggleDigits()">
+          <span>Condition</span>
+          <span class="toggle-icon">{{ isDigitsOpen ? '−' : '+' }}</span>
+        </div>
+
+        <div class="filter-content" *ngIf="isDigitsOpen">
+          <div class="checkbox-item">
+            <input type="radio" id="condition-all" name="condition" [checked]="!selectedCondition"
+              (change)="selectedCondition = ''; executeFilter()">
+            <label for="condition-all">All Conditions</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="radio" id="condition-new" name="condition" value="new" [checked]="selectedCondition === 'new'"
+              (change)="selectedCondition = 'new'; executeFilter()">
+            <label for="condition-new">New</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="radio" id="condition-used" name="condition" value="used"
+              [checked]="selectedCondition === 'used'" (change)="selectedCondition = 'used'; executeFilter()">
+            <label for="condition-used">Used</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-header" (click)="toggleCountry()">
+          <span>Brand</span>
+          <span class="toggle-icon">{{ isCountryOpen ? '−' : '+' }}</span>
+        </div>
+
+        <div class="filter-content" *ngIf="isCountryOpen">
+          <div class="checkbox-item" *ngFor="let brand of brands">
+            <input type="checkbox" [id]="'brand-' + brand.id" [checked]="brand.checked"
+              (change)="brand.checked = !brand.checked; onBrandChange()">
+            <label [for]="'brand-' + brand.id">
+              {{ brand.name }} <span class="count">({{ brand.listings_count}})</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+    
+
+      <div class="filter-section">
+        <div class="filter-header">
+          <span>Price Range</span>
+        </div>
+
+        <div class="price-range">
+          <div class="slider-container">
+            <input type="range" [min]="absoluteMin" [max]="absoluteMax" [(ngModel)]="priceRange.min"
+              (input)="onMinSliderChange($event)" class="slider">
+            <input type="range" [min]="absoluteMin" [max]="absoluteMax" [(ngModel)]="priceRange.max"
+              (input)="onMaxSliderChange($event)" class="slider">
+          </div>
+
+          <div class="price-inputs">
+            <div class="price-input">
+              <label>Min</label>
+              <input type="number" [(ngModel)]="priceRange.min" [min]="absoluteMin" [max]="absoluteMax"
+                (change)="onMinInputChange()">
+            </div>
+            <div class="price-input">
+              <label>MAX</label>
+              <input type="number" [(ngModel)]="priceRange.max" [min]="absoluteMin" [max]="absoluteMax"
+                (change)="onMaxInputChange()">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="motorCyclesDetails?.length === 0" class="no-results">
+        No motorcycles match your filters.
+      </div>
+      <div *ngIf="isLoading" class="loading-indicator">
+        <i class="fa fa-spinner fa-spin"></i> Loading results...
+      </div>
+      <!-- <div class="filter-section">
+        <div class="filter-header" (click)="togglePlateCode()">
+          <span>Plate Code</span>
+          <span class="toggle-icon">{{ isPlateCodeOpen ? '−' : '+' }}</span>
+        </div>
+
+        <div class="filter-content" *ngIf="isPlateCodeOpen">
+          <div class="checkbox-item" *ngFor="let code of plateCodes">
+            <input type="checkbox" [id]="'code-' + code.value" [checked]="code.checked"
+              (change)="code.checked = !code.checked">
+            <label [for]="'code-' + code.value">{{ code.value }} <span class="count">({{ code.count }})</span></label>
+          </div>
+        </div>
+      </div> -->
+    </div>
+    <!-- Side Bar End -->
+    <div *ngIf="!isLoading && motorCyclesDetails?.length > 0" class="products-grid">
+      <!-- <div *ngFor="let part of motorCyclesDetails" class="product-card"> -->
+      <div *ngFor="let part of motorCyclesDetails; trackBy: trackByMotorcycleId" class="product-card">
+        <!-- Image -->
+        <div class="product-image">
+          <img [src]="part.image" [alt]="part.title" class="w-full h-full object-cover" />
+        </div>
+
+        <!-- Content -->
+        <div class="product-content">
+          <!-- Title -->
+          <h3 class="product-title" [title]="part.title">
+            {{ truncateText(part.title, 20) }}
+          </h3>
+
+          <!-- Description -->
+          <p *ngIf="part.description" class="product-description" [title]="part.description">
+            {{ truncateText(part.description, 30) }}
+          </p>
+
+          <!-- Price and Button -->
+          <div class="product-footer">
+            <p class="price-label">PRICE</p>
+            <p class="price-value">{{ part.price }} SAR</p>
+
+            <button class="view-button">
+              View Bike
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

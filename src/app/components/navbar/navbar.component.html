@@ -6,7 +6,10 @@
     <div class="flex items-center">
       <img routerLink="/home" src="/pictures/mainLogo.png" alt="Dab" class="h-8 cursor-pointer" />
     </div>
-
+<div class="flex items-center gap-2 ml-4">
+    <button (click)="switchLang('en')" class="text-sm px-3 py-1 rounded bg-gray-700 hover:bg-gray-600">EN</button>
+    <button (click)="switchLang('ar')" class="text-sm px-3 py-1 rounded bg-gray-700 hover:bg-gray-600">AR</button>
+  </div>
     <!-- Mobile Menu Button -->
     <button (click)="toggleMobileMenu()" class="md:hidden text-white focus:outline-none">
       <i class="fa-solid" [ngClass]="{'fa-bars': !mobileMenuOpen, 'fa-times': mobileMenuOpen}"></i>
