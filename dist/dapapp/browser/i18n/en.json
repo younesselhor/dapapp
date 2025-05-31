@@ -1,0 +1,18 @@
+{
+  "FORM": {
+    "BIKE_DETAILS": "Bike Details",
+    "ADD_IMAGES": "Add images",
+    "BRAND": "Brand",
+    "SELECT_BRAND": "Select a brand",
+    "MODEL": "Model",
+    "SELECT_MODEL": "Select a model",
+    "YEAR": "Year",
+    "SELECT_YEAR": "Select a year",
+    "BODY_CONDITION": "Vehicle Body Condition",
+    "MODIFIED": "Modified?",
+    "WARRANTY": "Warranty?",
+    "CONDITION": "Condition",
+    "YES": "Yes",
+    "NO": "No"
+  }
+}
