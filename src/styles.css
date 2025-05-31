@@ -62,7 +62,7 @@ body {
 .content-container {
   display: flex;
   gap: 50px;
-      justify-content: space-around;
+      /* justify-content: space-around; */
 }
 
 @media (max-width: 992px) {
