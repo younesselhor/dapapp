@@ -7,7 +7,7 @@ import { RegisterComponent } from './components/register/register/register.compo
 import { HomePageComponent } from './components/home-page/home-page.component';
 import { AccountComponent } from './components/account/account/account.component';
 import { ProductFormComponent } from './components/postingAdd/product-form/product-form.component';
-// import { SparePlatesDetailsComponent } from './spare-plates-details/spare-plates-details.component';
+import { SparePlatesDetailsComponent } from './spare-plates-details/spare-plates-details.component';
 import { MotorcyclesDetailsComponent } from './motorcycles-details/motorcycles-details.component';
 
 export const routes: Routes = [
@@ -21,10 +21,10 @@ export const routes: Routes = [
     path: 'plates',
     component: ProductsComponent
   },
-  // {
-  //   path: 'spare-parts',
-  //   component: SparePlatesDetailsComponent
-  // },
+  {
+    path: 'spare-parts',
+    component: SparePlatesDetailsComponent
+  },
   {
     path:'motorcycles',
     component:MotorcyclesDetailsComponent
