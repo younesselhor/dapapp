@@ -106,9 +106,6 @@
           </div>
         </div>
       </div>
-
-    
-
       <div class="filter-section">
         <div class="filter-header">
           <span>Price Range</span>
@@ -137,9 +134,10 @@
         </div>
       </div>
 
-      <div *ngIf="motorCyclesDetails?.length === 0" class="no-results">
+      <!-- <div *ngIf="motorCyclesDetails?.length === 0" class="no-results">
         No motorcycles match your filters.
-      </div>
+      </div> -->
+
       <div *ngIf="isLoading" class="loading-indicator">
         <i class="fa fa-spinner fa-spin"></i> Loading results...
       </div>
@@ -190,6 +188,10 @@
           </div>
         </div>
       </div>
+      
     </div>
+          <div *ngIf="!isLoading && motorCyclesDetails.length === 0" class="no-results">
+  🚫 No spare parts found matching your filters.
+</div>
   </div>
 </div>

@@ -81,23 +81,60 @@ selectedCondition: 'new' | 'used' | '' = '';
   return motorcycle.id;
 }
   // Modify your change handlers to use the debouncer
-onMinSliderChange(event: any): void {
-  this.priceRange.min = event.target.valueAsNumber || event.target.value;
-  this.filterDebouncer.next();
-}
+// onMinSliderChange(event: any): void {
+//   this.priceRange.min = event.target.valueAsNumber || event.target.value;
+//   this.filterDebouncer.next();
+// }
 
-onMaxSliderChange(event: any): void {
-  this.priceRange.max = event.target.valueAsNumber || event.target.value;
-  this.filterDebouncer.next();
-}
+// onMaxSliderChange(event: any): void {
+//   this.priceRange.max = event.target.valueAsNumber || event.target.value;
+//   this.filterDebouncer.next();
+// }
 
-onMinInputChange(): void {
-  this.filterDebouncer.next();
-}
+// onMinInputChange(): void {
+//   this.filterDebouncer.next();
+// }
 
-onMaxInputChange(): void {
-  this.filterDebouncer.next();
-}
+// onMaxInputChange(): void {
+//   this.filterDebouncer.next();
+// }
+  // Price range handlers
+  onMinSliderChange(event: any) {
+    this.priceRange.min = +event.target.value;
+    // this.applyFilters();
+        this.executeFilter();
+
+  }
+
+  onMaxSliderChange(event: any) {
+    this.priceRange.max = +event.target.value;
+    // this.applyFilters();
+        this.executeFilter();
+
+  }
+
+  onMinInputChange() {
+    if (this.priceRange.min < this.absoluteMin) {
+      this.priceRange.min = this.absoluteMin;
+    }
+    if (this.priceRange.min > this.priceRange.max) {
+      this.priceRange.min = this.priceRange.max;
+    }
+    // this.applyFilters();
+    this.executeFilter();
+  }
+
+  onMaxInputChange() {
+    if (this.priceRange.max > this.absoluteMax) {
+      this.priceRange.max = this.absoluteMax;
+    }
+    if (this.priceRange.max < this.priceRange.min) {
+      this.priceRange.max = this.priceRange.min;
+    }
+    // this.applyFilters();
+        this.executeFilter();
+
+  }
 
 onBrandChange(): void {
   // No debounce for brand changes as they're discrete clicks

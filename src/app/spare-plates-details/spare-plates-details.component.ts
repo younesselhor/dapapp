@@ -194,12 +194,16 @@ applyFilters() {
   // Price range handlers
   onMinSliderChange(event: any) {
     this.priceRange.min = +event.target.value;
-    this.applyFilters();
+    // this.applyFilters();
+        this.executeFilter();
+
   }
 
   onMaxSliderChange(event: any) {
     this.priceRange.max = +event.target.value;
-    this.applyFilters();
+    // this.applyFilters();
+        this.executeFilter();
+
   }
 
   onMinInputChange() {
@@ -209,7 +213,8 @@ applyFilters() {
     if (this.priceRange.min > this.priceRange.max) {
       this.priceRange.min = this.priceRange.max;
     }
-    this.applyFilters();
+    // this.applyFilters();
+    this.executeFilter();
   }
 
   onMaxInputChange() {
@@ -219,7 +224,9 @@ applyFilters() {
     if (this.priceRange.max < this.priceRange.min) {
       this.priceRange.max = this.priceRange.min;
     }
-    this.applyFilters();
+    // this.applyFilters();
+        this.executeFilter();
+
   }
 
   // Filter application
