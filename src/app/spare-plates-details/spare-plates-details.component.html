@@ -151,9 +151,12 @@
             <p class="price-label">PRICE</p>
             <p class="price-value">{{ part.price }} SAR</p>
 
-            <button class="view-button">
+            <!-- <button class="view-button">
               View Bike
-            </button>
+            </button> -->
+             <button class="view-button" (click)="viewListing(part.id)">
+          View Bike Part
+        </button>
           </div>
         </div>
       </div>

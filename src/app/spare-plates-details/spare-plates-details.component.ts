@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ListingByCatService } from '../services/listingsByCategory/listing-by-cat.service';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { SidebarComponent } from '../components/sidebar/sidebar.component';
 import { FormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
@@ -45,7 +45,7 @@ selectedCondition: 'new' | 'used' | '' = '';
   searchBrandTerm = '';
 searchCategoryTerm = '';
 displayCount = 6;
-  constructor(private listingbyService :ListingByCatService, private cdr: ChangeDetectorRef){}
+  constructor(private listingbyService :ListingByCatService, private router :Router,private cdr: ChangeDetectorRef){}
 
   // Update your applyFilters method
 // Replace your current applyFilters and executeFilter methods with these:
@@ -229,6 +229,10 @@ applyFilters() {
 
   }
 
+  viewListing(id: number): void {
+  this.router.navigate(['/listing', id]);
+  console.log('click');
+}
   // Filter application
   // applyFilters() {
   //   const params: any = {};
