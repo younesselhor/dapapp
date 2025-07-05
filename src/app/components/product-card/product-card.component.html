@@ -26,71 +26,7 @@
     <button class="view-btn">View Plate</button>
   </div>
 </div> -->
-<div class="rounded overflow-hidden shadow-md bg-white transition-transform duration-200 hover:-translate-y-1 h-full flex flex-col"
-         [ngClass]="{
-           'ksa-plate': plateData.country === 'SAUDI ARABIA',
-           'uae-plate': plateData.country === 'UNITED ARAB EMIRATES',
-           'kuwait-plate': plateData.country === 'KUWAIT'
-         }">
 
-      <!-- Plate Container -->
-      <div class="p-5 flex justify-center items-center relative"
-           [ngClass]="{
-             'bg-green-50': plateData.country === 'SAUDI ARABIA',
-             'bg-blue-50': plateData.country === 'UNITED ARAB EMIRATES',
-             'bg-red-50': plateData.country === 'KUWAIT'
-           }">
-
-        <!-- License Plate -->
-        <!-- <div class="flex flex-col border-2 border-black rounded-md overflow-hidden w-56"> -->
-          <div class="flex flex-col border-3 border-black rounded-l-[25px] rounded-r-none overflow-hidden w-56"
-          >
-          <!-- Top Row -->
-          <div class="flex justify-between h-14 bg-white">
-            <div class="flex items-center justify-center py-0 px-2.5 font-bold text-2xl w-1/2 border-b border-black">
-              {{ plateData.numberArabic }}
-            </div>
-            <div class="flex items-center justify-center py-0 px-2.5 font-bold text-2xl w-1/2 border-l-2 border-b border-black">
-              {{ plateData.letterArabic }}
-            </div>
-          </div>
-
-          <!-- Bottom Row -->
-          <div class="flex justify-between h-14 bg-white">
-            <div class="flex items-center justify-center py-0 px-2.5 font-bold text-2xl w-1/2">
-              {{ plateData.number }}
-            </div>
-            <div class="flex items-center justify-center py-0 px-2.5 font-bold text-2xl w-1/2 border-l-2 border-black">
-              {{ plateData.letter }}
-            </div>
-          </div>
-        </div>
-
-        <!-- Country Badge with fixed vertical text -->
-        <div class="h-28 w-10 flex items-center justify-center rounded-r-[25px] border-t-3 border-r-3 border-b-3 border-black"
-             [ngClass]="{
-               'bg-green-600': plateData.country === 'SAUDI ARABIA',
-               'bg-blue-700': plateData.country === 'UNITED ARAB EMIRATES',
-               'bg-red-600': plateData.country === 'KUWAIT'
-             }">
-        <span class="text-white font-bold [writing-mode:vertical-rl] [text-orientation:mixed]">
-          {{ plateData.countryCode }}
-        </span>
-        </div>
-      </div>
-
-      <!-- Product Info (Optional) -->
-      <div  class="p-4 flex-grow flex flex-col gap-1">
-        <div class="text-sm text-gray-500">Plate</div>
-        <div class="text-base font-medium">{{ plateData.country }}</div>
-        <div *ngIf="plateData.price" class="text-lg font-bold my-1">
-          {{ plateData.price }} {{ plateData.currency }}
-        </div>
-        <button  class="mt-2 py-2.5 text-center text-red-500 bg-white border border-red-500 rounded cursor-pointer transition-all duration-200 font-medium hover:bg-red-500 hover:text-white">
-          View Plate
-        </button>
-      </div>
-    </div>
 
 <!-- <p-card class="product-card" [ngClass]="{'uae-card': plateData.country === 'UNITED ARAB EMIRATES', 'ksa-card': plateData.country === 'SAUDI ARABIA', 'kuwait-card': plateData.country === 'KUWAIT'}">
   <ng-template #header>
@@ -120,3 +56,152 @@
       </div>
   </ng-template>
 </p-card> -->
+
+
+<!-- <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200 hover:shadow-xl hover:border-gray-300 transition-all duration-300 group"> -->
+  <div
+  class="flex flex-col justify-between items-start w-[292px] h-[443px] pb-8 rounded border border-gray-200 bg-white"
+>
+
+  <!-- Plate display -->
+  <div class="p-6 flex justify-center items-center" [class]="getPlateBackgroundClass(plateData)">
+    <!-- Saudi Plate -->
+    <ng-container *ngIf="plateData.license_plate?.plate_format?.country?.code === 'SA'; else NonSaudi">
+      <div *ngIf="getSaudiPlateParts(plateData) as parts">
+        <div class="flex border-[2px] border-black rounded-md overflow-hidden shadow-sm bg-white">
+          <div class="grid grid-cols-2 grid-rows-2 w-[180px] h-[90px]">
+            <div class="flex items-center justify-center border border-black text-base font-bold text-black">{{ parts.arNumbers }}</div>
+            <div class="flex items-center justify-center border border-black text-base font-bold text-black">{{ parts.arLetters }}</div>
+            <div class="flex items-center justify-center border border-black text-base font-bold text-black">{{ parts.enNumbers }}</div>
+            <div class="flex items-center justify-center border border-black text-base font-bold text-black uppercase">{{ parts.enLetters }}</div>
+          </div>
+          <div class="flex flex-col items-center justify-center bg-[#138c36] text-white px-1 py-1 w-[36px]">
+            <img src="/pictures/simple-icons_saudia.svg" alt="KSA" class="w-4 h-4 mb-0.5" />
+            <span class="text-[10px] font-bold">KSA</span>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Non-Saudi Plate -->
+    <ng-template #NonSaudi>
+      <div class="relative w-[216px] h-[90px] bg-white border-2 border-black rounded-md shadow-sm transform group-hover:scale-105 transition-transform duration-200 flex">
+        <!-- Fields -->
+        <div class="flex-1 relative">
+          <ng-container *ngIf="getPlateFieldMap(plateData) as fieldMap">
+            <div class="absolute top-1 left-1/2 transform -translate-x-1/2 text-[10px] font-semibold text-gray-600 uppercase">
+              {{ plateData.city }}
+            </div>
+            <div class="absolute bottom-1 left-1/2 transform -translate-x-1/2 text-[10px] font-semibold text-gray-600 uppercase">
+              {{ getCountryName(plateData) }}
+            </div>
+            <ng-container *ngFor="let pos of allPositions">
+              <div *ngIf="fieldMap[pos]" [ngClass]="getPositionClass(pos)" class="absolute text-[14px] font-bold text-gray-800">
+                {{ fieldMap[pos] }}
+              </div>
+            </ng-container>
+          </ng-container>
+        </div>
+        <!-- Sidebar -->
+        <div [ngClass]="getSidebarClass(plateData)" class="flex flex-col items-center justify-center text-white px-1 py-1 w-[36px]">
+          <ng-container [ngSwitch]="plateData.license_plate?.plate_format?.country?.code">
+            <ng-container *ngSwitchCase="'AE'">
+              <img src="/pictures/simple-icons_emirates.svg" class="w-4 h-4 mb-0.5" />
+              <span class="text-[10px] font-bold">UAE</span>
+            </ng-container>
+            <ng-container *ngSwitchCase="'KW'">
+              <div class="text-[10px] font-bold flex flex-col items-center space-y-[1px]">
+                <span>K</span><span>W</span><span>T</span>
+              </div>
+            </ng-container>
+            <ng-container *ngSwitchDefault>
+              <img src="/pictures/simple-icons_saudia.svg" class="w-4 h-4 mb-0.5" />
+              <span class="text-[10px] font-bold">KSA</span>
+            </ng-container>
+          </ng-container>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- Plate Details -->
+<div class="flex flex-col items-start gap-[14px] p-0 px-6 self-stretch">
+  <h3 class="font-bold text-lg text-gray-900 line-clamp-2">{{ plateData.title }}</h3>
+  <p class="text-gray-500 text-sm">{{ getCountryName(plateData) }}</p>
+
+  <p class="text-2xl font-bold text-gray-900">
+    {{ isAuction(plateData) ? plateData.minimum_bid : plateData.price }}
+    <span class="text-sm text-gray-600 ml-1">
+      {{ plateData.license_plate?.plate_format?.country?.code === 'AE' ? 'AED' : 'SAR' }}
+    </span>
+  </p>
+
+  <button
+    class="w-full flex justify-center items-center gap-2 px-[14px] py-2 rounded-lg border border-[#F03D24] bg-white shadow-[0_1px_2px_0_rgba(16,24,40,0.05)] text-red-500"
+  >
+    View Plate
+  </button>
+</div>
+
+</div>
+
+
+<!-- <div class="rounded overflow-hidden shadow-md bg-white transition-transform duration-200 hover:-translate-y-1 h-full flex flex-col"
+
+         [ngClass]="{
+           'ksa-plate': plateData.country === 'SAUDI ARABIA',
+           'uae-plate': plateData.country === 'UNITED ARAB EMIRATES',
+           'kuwait-plate': plateData.country === 'KUWAIT'
+         }">
+
+      <div class="p-5 flex justify-center items-center relative"
+           [ngClass]="{
+             'bg-green-50': plateData.country === 'SAUDI ARABIA',
+             'bg-blue-50': plateData.country === 'UNITED ARAB EMIRATES',
+             'bg-red-50': plateData.country === 'KUWAIT'
+           }">
+
+          <div class="flex flex-col border-3 border-black rounded-l-[25px] rounded-r-none overflow-hidden w-56"
+          >
+          <div class="flex justify-between h-14 bg-white">
+            <div class="flex items-center justify-center py-0 px-2.5 font-bold text-2xl w-1/2 border-b border-black">
+              {{ plateData.numberArabic }}
+            </div>
+            <div class="flex items-center justify-center py-0 px-2.5 font-bold text-2xl w-1/2 border-l-2 border-b border-black">
+              {{ plateData.letterArabic }}
+            </div>
+          </div>
+
+          <div class="flex justify-between h-14 bg-white">
+            <div class="flex items-center justify-center py-0 px-2.5 font-bold text-2xl w-1/2">
+              {{ plateData.number }}
+            </div>
+            <div class="flex items-center justify-center py-0 px-2.5 font-bold text-2xl w-1/2 border-l-2 border-black">
+              {{ plateData.letter }}
+            </div>
+          </div>
+        </div>
+
+        <div class="h-28 w-10 flex items-center justify-center rounded-r-[25px] border-t-3 border-r-3 border-b-3 border-black"
+             [ngClass]="{
+               'bg-green-600': plateData.country === 'SAUDI ARABIA',
+               'bg-blue-700': plateData.country === 'UNITED ARAB EMIRATES',
+               'bg-red-600': plateData.country === 'KUWAIT'
+             }">
+        <span class="text-white font-bold [writing-mode:vertical-rl] [text-orientation:mixed]">
+          {{ plateData.countryCode }}
+        </span>
+        </div>
+      </div>
+
+      <div  class="p-4 flex-grow flex flex-col gap-1">
+        <div class="text-sm text-gray-500">Plate</div>
+        <div class="text-base font-medium">{{ plateData.country }}</div>
+        <div *ngIf="plateData.price" class="text-lg font-bold my-1">
+          {{ plateData.price }} {{ plateData.currency }}
+        </div>
+        <button  class="mt-2 py-2.5 text-center text-red-500 bg-white border border-red-500 rounded cursor-pointer transition-all duration-200 font-medium hover:bg-red-500 hover:text-white">
+          View Plate
+        </button>
+      </div>
+    </div> -->

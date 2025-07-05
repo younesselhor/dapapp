@@ -49,6 +49,9 @@
   <ng-container *ngIf="activeTab === 'Payment Information'">
     <app-payment-card-user></app-payment-card-user>
   </ng-container>
+  <ng-container  *ngIf="activeTab === 'SOOM Box'">
+ <app-soom-box></app-soom-box>
+  </ng-container>
   <ng-container *ngIf="activeTab === 'Wishlist'">
     <app-saved-vehicles></app-saved-vehicles>
   </ng-container>

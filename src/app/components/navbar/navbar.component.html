@@ -61,9 +61,11 @@
 
         <!-- Sign In Button - Mobile -->
         <div class="md:hidden mb-4">
-          <button routerLink="/login" style="background-color: #F03D24;" class="w-full px-4 py-2 rounded-lg text-white">
+          <!-- <button routerLink="/login" style="background-color: #F03D24;" class="w-full px-4 py-2 rounded-lg text-white">
             Sign In
-          </button>
+          </button> -->
+          <button (click)="openLoginModal()">Sign In</button>
+          <app-login-modal *ngIf="showLoginModal" (close)="showLoginModal = false" ></app-login-modal>
         </div>
       }
     </div>
@@ -97,9 +99,11 @@
     @else {
       <!-- Sign In Button - Desktop -->
       <div class="hidden md:block">
-        <button routerLink="/login" style="background-color: #F03D24;" class="px-4 py-2 rounded-lg text-white">
+        <!-- <button routerLink="/login" style="background-color: #F03D24;" class="px-4 py-2 rounded-lg text-white">
           Sign In
-        </button>
+        </button> -->
+        <button (click)="openLoginModal()" style="background-color: #F03D24;" class="px-4 py-2 rounded-lg text-white">Sign In</button>
+          <app-login-modal *ngIf="showLoginModal" (close)="showLoginModal = false" ></app-login-modal>
       </div>
     }
   </div>

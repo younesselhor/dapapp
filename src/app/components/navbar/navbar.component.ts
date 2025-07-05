@@ -11,6 +11,7 @@ import { AuthUserDetails, MeResponse } from '../../interfaces/user-interface';
 import { CookieService } from 'ngx-cookie-service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { isPlatformBrowser } from '@angular/common';
+import { LoginModalComponent } from '../login-modal.component';
 
 
 interface sub_menu {
@@ -42,7 +43,8 @@ interface IsubNavItems{
     RouterModule,
     FormsModule,
     DropdownModule,
-    TranslateModule
+    TranslateModule,
+    LoginModalComponent
   ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
@@ -59,12 +61,8 @@ mobileMenuOpen = false;
 selectedCity: ICity | undefined;
 currentUser: AuthUserDetails | undefined
 isLoggedIn = false;
+showLoginModal = false;
 
-// constructor(private router: Router,private auth: AuthService,  private cookieService: CookieService,private translate: TranslateService) {
-//    this.translate.setDefaultLang('en');
-//    const savedLang = localStorage.getItem('lang') || 'en';
-//   this.translate.use(savedLang);
-// }
 constructor(
     private router: Router,
     private auth: AuthService,
@@ -105,10 +103,7 @@ ngOnInit() {
 }
 
 
-// switchLang(lang: string) {
-//   this.translate.use(lang);
-//   localStorage.setItem('lang', lang);
-// }
+
  switchLang(lang: string): void {
     this.translate.use(lang);
     
@@ -136,26 +131,42 @@ toggleDropdown(): void {
 toggleMobileMenu(): void {
   this.mobileMenuOpen = !this.mobileMenuOpen;
 }
-// logout() {
-//   this.auth.logout();
-//   this.router.navigate(['/login']);
-//   this.isLoggedIn = false;
+
+// logout(): void {
+//   this.auth.logout().subscribe({
+//     next: () => {
+//       this.cookieService.delete('token', '/');
+//       localStorage.clear();
+//       sessionStorage.clear();
+//       this.isLoggedIn = false;  // Update the login status here
+//       this.router.navigate(['/login']);
+//     },
+//     error: (err) => {
+//       console.error('Logout failed', err);
+//       // You can show an error message to the user if needed
+//     }
+//   });
 // }
+
+openLoginModal() {
+  this.showLoginModal = true;
+}
+
+onModalClose() {
+  this.showLoginModal = false;
+}
 logout(): void {
   this.auth.logout().subscribe({
     next: () => {
       this.cookieService.delete('token', '/');
       localStorage.clear();
       sessionStorage.clear();
-      this.isLoggedIn = false;  // Update the login status here
-      this.router.navigate(['/login']);
-    },
-    error: (err) => {
-      console.error('Logout failed', err);
-      // You can show an error message to the user if needed
+      this.isLoggedIn = false;
+      this.showLoginModal = true; // show modal after logout
     }
   });
 }
+
 
 }
 

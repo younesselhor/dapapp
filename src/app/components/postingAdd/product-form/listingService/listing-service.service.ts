@@ -121,4 +121,9 @@ checkPromo(body: { code: string, total_price: number }): Observable<any> {
   getCityList(): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}locations`);
   }
+
+
+  getPlateFormat(cityId: number): Observable<any> {
+  return this.http.get(`${this.baseUrl}cities/${cityId}/plate-formats/details`);
+}
 }

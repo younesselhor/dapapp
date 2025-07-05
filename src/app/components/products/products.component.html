@@ -1,9 +1,10 @@
 <div class="main-container">
   <div class="content-container">
     <app-sidebar></app-sidebar>
-    <div class="products-grid">
-       <app-product-card *ngFor="let plate of plates" [plateData]="plate"></app-product-card>
-    </div>
+   <div class="products-grid flex flex-wrap gap-4" style="width: 75%;">
+  <app-product-card *ngFor="let plate of plates" [plateData]="plate"></app-product-card>
+</div>
+
 
 </div>
 

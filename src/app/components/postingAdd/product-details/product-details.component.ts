@@ -116,7 +116,7 @@ get form() {
 loadBrands() {
   this.listingService.getMotorcycleFilters().subscribe(res => {
     this.brands = res.data.brands;
-    console.log('Brands:', this.brands);
+    console.log('Brands1:', this.brands);
   });
 }
 selectVehicleType(type: number): void {

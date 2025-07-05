@@ -1,0 +1,237 @@
+<!-- <div class="tabs flex">
+    <button (click)="toggleView('received')" [class.active]="currentView === 'received'">Received</button>
+    <button (click)="toggleView('sent')" [class.active]="currentView === 'sent'">Sent</button>
+</div>
+
+<div *ngIf="currentView === 'received'">
+    <table class="min-w-full mt-4 border text-sm">
+        <thead>
+            <tr class="bg-gray-100 text-left">
+                <th class="p-2">Ad Name</th>
+                <th class="p-2">Buyer</th>
+                <th class="p-2">Amount</th>
+                <th class="p-2">Date</th>
+                <th class="p-2">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let soom of receivedSooms" class="border-b">
+                <td class="p-2">
+                    {{ soom.listing.title }}
+                    <br />
+                    <ng-container *ngIf="getDaysLeft(soom.submission_date) > 0; else expired">
+                        <small class="text-gray-500">
+                            Expires in {{ getDaysLeft(soom.submission_date) }} day{{ getDaysLeft(soom.submission_date) >
+                            1 ? 's' : '' }}
+                        </small>
+                    </ng-container>
+                    <ng-template #expired>
+                        <small class="text-blue-600 font-medium">Submit another soom →</small>
+                    </ng-template>
+                </td>
+
+                <td class="p-2">
+                    {{ soom.user.first_name }} {{ soom.user.last_name }}
+                </td>
+                <td class="p-2">{{ soom.amount }} SAR</td>
+                <td class="p-2">{{ soom.submission_date | date:'short' }}</td>
+                <td class="p-2">
+                    <span *ngIf="soom.status === 'accepted'" class="text-green-600 font-semibold">Accepted</span>
+                    <span *ngIf="soom.status === 'rejected'" class="text-red-500 font-semibold">Rejected</span>
+                    <ng-container *ngIf="soom.status === 'pending'">
+                        <button (click)="acceptSoom(soom)" class="text-green-600 font-bold mr-2">✔</button>
+                        <button (click)="rejectSoom(soom)" class="text-red-600 font-bold">✖</button>
+                    </ng-container>
+                </td>
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+<div *ngIf="currentView === 'sent'">
+    <table class="min-w-full mt-4 border text-sm">
+        <thead>
+            <tr class="bg-gray-100 text-left">
+                <th class="p-2">Ad Name</th>
+                <th class="p-2">Country</th>
+                <th class="p-2">Amount</th>
+                <th class="p-2">Status</th>
+                <th class="p-2">Seller Information</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let soom of sentSooms" class="border-b">
+                 <td class="p-2">
+                    {{ soom.listing.title }}
+                    <br />
+                    <ng-container *ngIf="getDaysLeft(soom.submission_date) > 0; else expired">
+                        <small class="text-gray-500">
+                            Expires in {{ getDaysLeft(soom.submission_date) }} day{{ getDaysLeft(soom.submission_date) >
+                            1 ? 's' : '' }}
+                        </small>
+                    </ng-container>
+                    <ng-template #expired>
+                        <small class="text-blue-600 font-medium">Submit another soom →</small>
+                    </ng-template>
+                </td>
+                <td class="p-2">Ksa</td>
+                <td class="p-2">{{ soom.amount }} SAR</td>
+                <td class="p-2">
+                    <span *ngIf="soom.status === 'accepted'" class="text-green-600 font-semibold">Accepted</span>
+                    <span *ngIf="soom.status === 'rejected'" class="text-red-500 font-semibold">Rejected</span>
+                    <span *ngIf="soom.status === 'pending'" class="text-gray-500 font-semibold">pending</span>
+                </td>
+                <td class="p-2">{{ soom.amount }} SAR</td>
+
+            </tr>
+        </tbody>
+
+    </table>
+
+</div> -->
+
+
+
+<div class="tabs flex">
+    <button (click)="toggleView('received')"
+        [class]="currentView === 'received' ? 'px-4 py-2 border-b-2 border-red-500 text-red-500 bg-white' : 'px-4 py-2 border border-gray-300 text-gray-600 bg-gray-50'">
+        Received
+    </button>
+    <button (click)="toggleView('sent')"
+        [class]="currentView === 'sent' ? 'px-4 py-2 border-b-2 border-red-500 text-red-500 bg-white' : 'px-4 py-2 border border-gray-300 text-gray-600 bg-gray-50'">
+        Sent
+    </button>
+</div>
+
+<div *ngIf="currentView === 'received'">
+    <table class="min-w-full mt-4 border border-gray-300 text-sm">
+        <thead>
+            <tr class="bg-gray-100 text-left">
+                <th class="p-2 text-gray-500">Ad Name</th>
+                <th class="p-2 text-gray-500">Country</th>
+                <th class="p-2 text-gray-500">Amount</th>
+                <th class="p-2 text-gray-500">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let soom of receivedSooms" class="border-b border-gray-300">
+                <td class="p-2">
+                    {{ soom.listing.title }}
+                    <br />
+                    <ng-container *ngIf="getDaysLeft(soom.submission_date) > 1">
+                        <small class="text-gray-500">
+                            Expires in {{ getDaysLeft(soom.submission_date) }} days
+                        </small>
+                    </ng-container>
+                    <ng-container *ngIf="getDaysLeft(soom.submission_date) === 1">
+                        <small class="text-yellow-500">
+                            Expires in {{ getDaysLeft(soom.submission_date) }} day
+                        </small>
+                    </ng-container>
+                    <ng-container *ngIf="isExpired(soom.submission_date)">
+                        <button class="text-blue-600 font-medium underline bg-transparent border-none cursor-pointer"
+                            (click)="openModal()">
+                            Submit another soom →
+                        </button>
+                        <!-- <button class="text-blue-600 font-medium underline">Submit another soom →</button> -->
+                    </ng-container>
+                </td>
+                <td class="p-2">{{ soom.listing.country?.code || 'N/A' }}</td>
+                <td class="p-2">{{ soom.amount }} SAR</td>
+                <td class="p-2">
+                    <span *ngIf="soom.status === 'accepted'" class="text-green-600 font-semibold">Accepted</span>
+                    <span *ngIf="soom.status === 'rejected'" class="text-red-500 font-semibold">Rejected</span>
+                    <ng-container *ngIf="soom.status === 'pending'">
+                        <button (click)="acceptSoom(soom)"
+                            class="text-green-600 font-bold mr-2 hover:bg-green-50 px-2 py-1 rounded">✓</button>
+                        <button (click)="rejectSoom(soom)"
+                            class="text-red-600 font-bold hover:bg-red-50 px-2 py-1 rounded">✗</button>
+                    </ng-container>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div *ngIf="currentView === 'sent'">
+    <table class="min-w-full mt-4 border text-sm">
+        <thead>
+            <tr class="bg-gray-100 text-left">
+                <th class="p-2 text-gray-500">Ad Name</th>
+                <th class="p-2 text-gray-500">Country</th>
+                <th class="p-2 text-gray-500">Amount</th>
+                <th class="p-2 text-gray-500">Status</th>
+                <th class="p-2 text-gray-500">Seller Information</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let soom of sentSooms" class="border-b">
+                <!-- <td class="p-2">
+                    {{ soom.listing.title }}
+                    <br />
+                    <ng-container *ngIf="getDaysLeft(soom.submission_date) > 0; else expiredSent">
+                        <small class="text-gray-500">
+                            Expires in {{ getDaysLeft(soom.submission_date) }} day{{ getDaysLeft(soom.submission_date) > 1 ? 's' : '' }}
+                        </small>
+                    </ng-container>
+                       <ng-template #expiredSent>
+                        <small class="text-blue-600 font-medium">Submit another soom →</small>
+                    </ng-template>
+                </td> -->
+                <!-- <td class="p-2">
+                    {{ soom.listing.title }}
+                    <br />
+                    <ng-container *ngIf="getDaysLeft(soom.submission_date) > 1;">
+                        <small class="text-gray-500">
+                            Expires in {{ getDaysLeft(soom.submission_date) }} day{{ getDaysLeft(soom.submission_date) > 1 ? 's' : '' }}
+                        </small>
+                    </ng-container>
+                     <ng-container *ngIf="getDaysLeft(soom.submission_date) === 1;">
+                        <small class="text-yellow-500">
+                            Expires in {{ getDaysLeft(soom.submission_date) }} day{{ getDaysLeft(soom.submission_date) > 1 ? 's' : '' }}
+                        </small>
+                    </ng-container>
+                    <ng-template  *ngIf="getDaysLeft(soom.submission_date) < 1;" #expired>
+                        <small class="text-blue-600 font-medium">Submit another soom →</small>
+                    </ng-template>
+
+                </td> -->
+                <td class="p-2">
+                    {{ soom.listing.title }}
+                    <br />
+                    <ng-container *ngIf="getDaysLeft(soom.submission_date) > 1">
+                        <small class="text-gray-500">
+                            Expires in {{ getDaysLeft(soom.submission_date) }} days
+                        </small>
+                    </ng-container>
+                    <ng-container *ngIf="getDaysLeft(soom.submission_date) === 1">
+                        <small class="text-yellow-500">
+                            Expires in {{ getDaysLeft(soom.submission_date) }} day
+                        </small>
+                    </ng-container>
+                    <ng-container *ngIf="isExpired(soom.submission_date)">
+                        <button class="text-blue-600 font-medium underline bg-transparent border-none cursor-pointer"
+                            (click)="openModal()">
+                            Submit another soom →
+                        </button>
+                        <!-- <button class="text-blue-600 font-medium underline">Submit another soom →</button> -->
+                    </ng-container>
+                </td>
+                <td class="p-2">{{ soom.listing.country?.code}}</td>
+                <td class="p-2">{{ soom.amount }} SAR</td>
+                <td class="p-2">
+                    <span *ngIf="soom.status === 'accepted'" class="text-green-600 font-semibold">Accepted</span>
+                    <span *ngIf="soom.status === 'rejected'" class="text-red-500 font-semibold">Rejected</span>
+                    <span *ngIf="soom.status === 'pending'" class="text-gray-500 font-semibold">Pending</span>
+                </td>
+                <td class="p-2">
+                    <span *ngIf="soom.status === 'accepted'"
+                        class="text-blue-600 font-medium cursor-pointer hover:underline">View Seller Info</span>
+                    <span *ngIf="soom.status !== 'accepted'">-</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

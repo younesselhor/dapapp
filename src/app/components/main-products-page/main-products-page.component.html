@@ -1,0 +1,683 @@
+<!-- listing.component.html -->
+<div *ngIf="loading" class="flex justify-center items-center h-64">
+  <div
+    class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"
+  ></div>
+</div>
+
+<div *ngIf="error" class="p-4 bg-red-100 text-red-700 rounded">
+  {{ error }}
+</div>
+<div
+  *ngIf="listing && !loading"
+  class="max-w-6xl mx-auto p-6 bg-white rounded-lg my-10"
+>
+  <!-- Image Gallery -->
+  <div class="mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+      <!-- Left column with 2 stacked images -->
+      <div class="space-y-2">
+        <div
+          *ngIf="listing.images[0]"
+          (click)="setActiveImage(0)"
+          class="relative h-48 bg-gray-200 rounded-lg overflow-hidden cursor-pointer"
+          [class.border-2]="activeImageIndex === 0"
+          [class.border-blue-500]="activeImageIndex === 0"
+        >
+          <img
+            [src]="listing.images[0]"
+            alt="{{ listing.title }}"
+            class="w-full h-full object-cover"
+          />
+        </div>
+        <div
+          *ngIf="listing.images[1]"
+          (click)="setActiveImage(1)"
+          class="relative h-48 bg-gray-200 rounded-lg overflow-hidden cursor-pointer"
+          [class.border-2]="activeImageIndex === 1"
+          [class.border-blue-500]="activeImageIndex === 1"
+        >
+          <img
+            [src]="listing.images[1]"
+            alt="{{ listing.title }}"
+            class="w-full h-full object-cover"
+          />
+          <!-- Show remaining images count if more than 3 -->
+          <div
+            *ngIf="listing.images.length > 3"
+            class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center text-white font-bold text-xl"
+          >
+            +{{ listing.images.length - 3 }} more
+          </div>
+        </div>
+      </div>
+
+      <!-- Right column with 1 big image -->
+      <div
+        *ngIf="listing.images[2]"
+        (click)="setActiveImage(2)"
+        class="h-full bg-gray-200 rounded-lg overflow-hidden cursor-pointer"
+        [class.border-2]="activeImageIndex === 2"
+        [class.border-blue-500]="activeImageIndex === 2"
+      >
+        <img
+          [src]="listing.images[2]"
+          alt="{{ listing.title }}"
+          class="w-full h-full object-cover"
+        />
+      </div>
+    </div>
+
+  </div>
+  <div *ngIf="listing.allow_submission === 0">
+    <!-- Header Section with Two Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+      <!-- Card 1: Title, Price, Location - spans 2 columns on medium screens -->
+      <div
+        class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 relative md:col-span-2"
+      >
+        <!-- Share and Like buttons at top right -->
+        <div class="absolute top-4 right-4 flex gap-2">
+          <button
+            class="p-2 text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z"
+              />
+            </svg>
+          </button>
+
+          <button
+            (click)="toggleWishlist()"
+            class="p-2 rounded-full hover:bg-gray-100 transition-colors"
+            [class.text-red-500]="listing.wishlist"
+            [class.text-gray-500]="!listing.wishlist"
+            [attr.aria-label]="
+              listing.wishlist ? 'Remove from wishlist' : 'Add to wishlist'
+            "
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Rest of your card content remains the same -->
+        <h1 class="text-2xl font-bold text-gray-800 pr-8">{{ getTitle() }}</h1>
+        <div class="mt-2">
+          <span class="text-xl font-semibold text-red-600"
+            >SAR{{ listing.price }}</span
+          >
+        </div>
+        <div class="flex items-center text-gray-600 mt-4">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 mr-1"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          <span>{{ listing.city }}</span>
+          <span class="mx-1"></span>
+          <span>{{ formatDate(listing.created_at) }}</span>
+        </div>
+      </div>
+      <!-- Card 2: Seller Info - spans 1 column on medium screens -->
+      <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+        <div class="flex items-center mb-4">
+          <div
+            class="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mr-3 overflow-hidden"
+          >
+            <svg
+              *ngIf="!listing.seller.profile_image"
+              class="w-8 h-8"
+              fill="#f03d24"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+          </div>
+          <div>
+            <h3 class="font-medium text-gray-800">{{ listing.seller.name }}</h3>
+            <p class="text-sm text-gray-500">
+              Member since {{ formatMemberSince(listing.seller.member_since) }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Buttons rearranged -->
+        <div class="space-y-3">
+          <div class="flex gap-3">
+            <button
+              class="w-full py-2 px-4 rounded-lg transition"
+              style="
+                background-color: #fef3f2;
+                color: #f03d24;
+                border: 1px solid #f03d24;
+              "
+            >
+              Send a Message
+            </button>
+          </div>
+          <button
+            class="w-full py-2 px-4 rounded-lg transition"
+            style="
+              background-color: #fef3f2;
+              color: #f03d24;
+              border: 1px solid #f03d24;
+            "
+          >
+            Show Phone Number
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="listing.allow_submission === 1" class="space-y-4">
+    <!-- Top Card - Location, Date, Title -->
+    <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+      <div class="flex items-center text-gray-600 mb-3">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5 mr-1"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+            clip-rule="evenodd"
+          />
+        </svg>
+        <span>{{ listing.city }}</span>
+        <span class="mx-2">•</span>
+        <span>{{ formatDate(listing.created_at) }}</span>
+      </div>
+
+      <h1 class="text-xl font-bold text-gray-800">{{ getTitle() }}</h1>
+    </div>
+
+    <!-- Bottom Card - Soon Information -->
+    <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+      <div class="mb-4">
+        <p class="text-sm text-gray-500">Minimum amount to Soom</p>
+        <!-- <p class="text-xl font-semibold text-black-600">SAR {{ listing?.submission?.amount }}</p> -->
+        <p class="text-xl font-semibold text-black-600">SAR {{ lastsoom }}</p>
+      </div>
+
+      <div class="flex gap-4">
+        <button
+          (click)="toggleSoomInfo()"
+          class="p-4 py-2 px-4 shadow-sm border border-gray-200 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition"
+          style="cursor: pointer"
+        >
+          Learn more about Soom
+        </button>
+        <button
+          class="py-2 px-4 rounded-lg bg-red-600 text-white font-medium hover:bg-red-700 transition"
+          style="cursor: pointer"
+          (click)="openModal()"
+        >
+          Submit a Soom
+        </button>
+      </div>
+
+      <!-- Soom Information Section - Toggleable -->
+      <div *ngIf="showSoomInfo" class="mt-6 pt-6 border-t border-gray-200">
+        <div class="space-y-6">
+          <!-- What is Soom? -->
+          <div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">
+              What is Soom?
+            </h3>
+            <p class="text-gray-600">
+              In Saudi culture, "Al-Soom" (السوم) is the act of making an
+              initial price offer in negotiations, especially in markets and
+              real estate. It sets the starting point for bargaining, and others
+              may only offer higher bids.
+            </p>
+          </div>
+
+          <!-- How Soom works? -->
+          <div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">
+              How Soom works?
+            </h3>
+            <p class="text-gray-600 mb-3">
+              In Saudi culture, "Al-Soom" (السوم) is the act of making an
+              initial price offer in negotiations, especially in markets and
+              real estate. It sets the starting point for bargaining, and others
+              may only offer higher bids.
+            </p>
+
+            <!-- Watch tutorial button -->
+            <button
+              class="inline-flex items-center px-4 py-2 bg-gray-800 text-white rounded-lg font-medium hover:bg-gray-900 transition"
+            >
+              <span>Watch a tutorial</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4 ml-2"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </button>
+          </div>
+          <div
+            class="bottom-0 bg-[#F2F4F7] border-t border-gray-200 py-1 px-4 flex justify-center cursor-pointer"
+            (click)="scrollToTop()"
+          >
+            <div
+              class="flex items-center justify-center w-10 h-10 text-gray-600 hover:text-red-600 transition"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+   
+    </div>
+  </div>
+   <!-- Details Table -->
+      <div class="mt-10 mb-6">
+        <h2 class="text-xl font-semibold mb-4 text-gray-800">Details</h2>
+        <div class="grid grid-cols-1 gap-4">
+          <!-- Motorcycle Details -->
+
+          <ng-container *ngIf="isMotorcycle">
+            <div class="grid grid-cols-2 gap-2">
+              <!-- Brand -->
+              <div class="bg-gray-50 p-3 rounded">
+                <p class="text-gray-700">
+                  <span class="text-sm text-gray-500">Brand: </span>
+                  <span class="font-medium">{{
+                    listing.motorcycle.brand
+                  }}</span>
+                </p>
+              </div>
+
+              <!-- Year -->
+              <div class="bg-gray-50 p-3 rounded">
+                <p class="text-gray-700">
+                  <span class="text-sm text-gray-500">Year: </span>
+                  <span class="font-medium">{{ listing.motorcycle.year }}</span>
+                </p>
+              </div>
+
+              <!-- Kilometer -->
+              <div class="bg-gray-50 p-3 rounded">
+                <p class="text-gray-700">
+                  <span class="text-sm text-gray-500">Kilometer: </span>
+                  <span class="font-medium"
+                    >{{ listing.motorcycle.mileage }} km</span
+                  >
+                </p>
+              </div>
+
+              <!-- Condition -->
+              <div class="bg-gray-50 p-3 rounded">
+                <p class="text-gray-700">
+                  <span class="text-sm text-gray-500">Condition: </span>
+                  <span class="font-medium">{{
+                    listing.motorcycle.general_condition
+                  }}</span>
+                </p>
+              </div>
+
+              <!-- CC -->
+              <div class="bg-gray-50 p-3 rounded">
+                <p class="text-gray-700">
+                  <span class="text-sm text-gray-500">CC: </span>
+                  <span class="font-medium">{{
+                    listing.motorcycle.engine
+                  }}</span>
+                </p>
+              </div>
+
+              <!-- Transmission -->
+              <div class="bg-gray-50 p-3 rounded">
+                <p class="text-gray-700">
+                  <span class="text-sm text-gray-500">Transmission: </span>
+                  <span class="font-medium">{{
+                    listing.motorcycle.transmission
+                  }}</span>
+                </p>
+              </div>
+            </div>
+          </ng-container>
+          <!-- Spare Part Details -->
+          <ng-container *ngIf="isSparePart">
+            <div class="grid grid-cols-2 gap-2">
+              <div class="bg-gray-50 p-3 rounded">
+                <p class="text-gray-700">
+                  <span class="text-sm text-gray-500">Part Brand</span>
+                  <span class="font-medium">{{
+                    listing.spare_part.bike_part_brand
+                  }}</span>
+                </p>
+              </div>
+              <div class="bg-gray-50 p-3 rounded">
+                <p class="text-gray-700">
+                  <span class="text-sm text-gray-500">Category</span>
+                  <span class="font-medium">{{
+                    listing.spare_part.bike_part_category
+                  }}</span>
+                </p>
+              </div>
+              <div class="bg-gray-50 p-3 rounded">
+                <p class="text-gray-700">
+                  <span class="text-sm text-gray-500">Condition</span>
+                  <span class="font-medium">{{
+                    listing.spare_part.condition
+                  }}</span>
+                </p>
+              </div>
+              <div class="bg-gray-50 p-3 rounded">
+                <p class="text-gray-700">
+                  <span class="text-sm text-gray-500">Compatible With</span>
+                  <!-- <span class="font-medium">{{ listing.spare_part.bike_part_brand }}</span> -->
+                  <span
+                    *ngFor="
+                      let bike of listing.spare_part.motorcycle_associations;
+                      let last = last
+                    "
+                  >
+                    {{ bike.brand }} {{ bike.model }} ({{ bike.year }})<span
+                      *ngIf="!last"
+                      >,
+                    </span>
+                  </span>
+                </p>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+
+      <div class="mb-8">
+        <h2 class="text-xl font-semibold mb-4 text-gray-800">Description</h2>
+        <div class="border border-gray-200 rounded-lg p-6 h-60 overflow-y-auto">
+          <p class="text-gray-700 whitespace-pre-line">
+            {{ listing.description }}
+          </p>
+        </div>
+      </div>
+  <!-- Updated Modal Content -->
+  <!-- Enhanced Modal Content with Loading States -->
+  <div
+    *ngIf="showModal"
+    class="fixed inset-0 bg-gray bg-opacity-100 z-50 flex items-center justify-center p-4"
+  >
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
+      <!-- Success State -->
+      <div *ngIf="confirmSoomStep" class="text-center">
+        <div
+          class="w-12 h-12 mx-auto mb-4 bg-yellow-100 rounded-full flex items-center justify-center"
+        >
+          <svg
+            class="w-6 h-6 text-yellow-500"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 16h-1v-4h-1m1-4h.01M12 20c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8z"
+            />
+          </svg>
+        </div>
+        <h2 class="text-xl font-semibold mb-2 text-gray-800">
+          Review Soom amount
+        </h2>
+        <p class="text-gray-600 mb-2">
+          You have entered an amount that is 10x the minimum to buy, do you wish
+          still to continue?
+        </p>
+        <p class="font-semibold text-gray-700 mb-1">
+          Minimum {{ minimumRequired | number }} SAR
+        </p>
+        <p class="font-semibold text-gray-700 mb-4">
+          You offered {{ soomAmount | number }} SAR
+        </p>
+
+        <div class="flex justify-center gap-4">
+          <button
+            (click)="confirmSoomStep = false"
+            class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+          >
+            Edit amount
+          </button>
+          <button
+            (click)="confirmSoomStep = false; performSoomSubmission()"
+            class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+          >
+            Yes, Submit amount
+          </button>
+        </div>
+      </div>
+      <div *ngIf="!confirmSoomStep && soomSuccess" class="text-center">
+        <div
+          class="w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center"
+        >
+          <svg
+            class="w-8 h-8 text-green-500"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 13l4 4L19 7"
+            ></path>
+          </svg>
+        </div>
+        <h2 class="text-xl font-bold mb-2 text-green-600">
+          Soom Submitted Successfully!
+        </h2>
+        <p class="text-gray-600">Your soom request has been submitted.</p>
+      </div>
+
+      <!-- Form State -->
+      <div *ngIf="!confirmSoomStep && !soomSuccess">
+        <h2 class="text-xl font-bold mb-2 text-center">Soom Request</h2>
+        <p class="text-gray-600 mb-2 text-center">
+          Submit a request to this ad
+        </p>
+
+        <!-- Product Info with Image -->
+        <div class="mb-6 flex items-center space-x-4">
+          <!-- Product Image -->
+          <div
+            class="w-16 h-16 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0"
+          >
+            <img
+              *ngIf="listing.images && listing.images[0]"
+              [src]="listing.images[0]"
+              [alt]="getTitle()"
+              class="w-full h-full object-cover"
+            />
+            <div
+              *ngIf="!listing.images || !listing.images[0]"
+              class="w-full h-full bg-gray-300 flex items-center justify-center"
+            >
+              <svg
+                class="w-6 h-6 text-gray-500"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </div>
+          </div>
+
+          <!-- Product Details -->
+          <div class="flex-1">
+            <h3 class="font-semibold text-gray-800">{{ getTitle() }}</h3>
+            <p class="text-gray-600 text-sm">{{ listing.city }}</p>
+          </div>
+        </div>
+
+        <!-- Soom Amount Input Section -->
+        <div class="mb-6">
+          <h3 class="font-semibold mb-2">Soom Amount</h3>
+          <div class="relative">
+            <span
+              class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+              >SAR</span
+            >
+            <input
+              type="number"
+              [(ngModel)]="soomAmount"
+              [min]="lastsoom"
+              [disabled]="isSubmittingSoom"
+              class="w-full pl-12 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent disabled:bg-gray-100"
+              placeholder="Enter your soom amount"
+            />
+          </div>
+
+          <p
+            class="text-sm mt-2"
+            [ngClass]="{
+              'text-red-600': !isSoomAmountValid() && soomAmount !== null,
+              'text-gray-500': isSoomAmountValid() || soomAmount === null
+            }"
+          >
+            <!-- Minimum amount to Soom is SAR {{ minimumRequired ?? listing?.submission?.amount | number }} -->
+            Minimum amount to Soom is SAR {{ lastsoom }}
+          </p>
+
+          <!-- Error Message -->
+          <div
+            *ngIf="soomError"
+            class="mt-2 p-2 bg-red-100 border border-red-300 rounded text-red-700 text-sm"
+          >
+            {{ soomError }}
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex justify-end space-x-3">
+          <button
+            (click)="closeModal()"
+            [disabled]="isSubmittingSoom"
+            class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition disabled:opacity-50"
+          >
+            Cancel
+          </button>
+          <button
+            (click)="submitSoom()"
+            [disabled]="!isSoomAmountValid() || isSubmittingSoom"
+            class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition flex items-center"
+          >
+            <!-- Loading Spinner -->
+            <svg
+              *ngIf="isSubmittingSoom"
+              class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+            {{ isSubmittingSoom ? "Submitting..." : "Submit" }}
+          </button>
+        </div>
+      </div>
+      <!-- Confirmation Modal State -->
+    </div>
+  </div>
+  <!-- </div> -->
+  <!-- <div *ngIf="showModal"
+                class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+                <div [class.blur-sm]="showModal" [class.overflow-hidden]="showModal" class="transition-all duration-200">
+                Modal Content
+                <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
+                    <h2 class="text-xl font-bold mb-4">Soom Request</h2>
+                    <p class="text-gray-600 mb-6">Submit a request to this ad</p>
+
+                    <div class="mb-6">
+                        <h3 class="font-semibold">BMW</h3>
+                        <p class="text-gray-600">fat boy low 2022</p>
+                    </div>
+
+                    <div class="mb-6">
+                        <h3 class="font-semibold mb-2">Soom Amount</h3>
+                        <p class="text-lg">SAR 12,900</p>
+                        <p class="text-sm text-gray-500 mt-1">minimum amount to soom is SAR 12,900</p>
+                    </div>
+
+                    <div class="flex justify-end space-x-3">
+                        <button (click)="closeModal()"
+                            class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                            Cancel
+                        </button>
+                        <button class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                            Submit
+                        </button>
+                    </div>
+                </div>
+            </div>
+    </div> -->
+</div>

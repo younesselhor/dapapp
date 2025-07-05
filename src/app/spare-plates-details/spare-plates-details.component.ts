@@ -92,6 +92,7 @@ applyFilters() {
   this.listingbyService.filterSpareParts(params).subscribe(
     (response) => {
       this.spareParts = response;
+      console.log(' this.spareParts: ',  this.spareParts);
       this.isLoading = false;
       this.cdr.detectChanges();
     },

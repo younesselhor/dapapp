@@ -9,6 +9,7 @@ import { AccountComponent } from './components/account/account/account.component
 import { ProductFormComponent } from './components/postingAdd/product-form/product-form.component';
 import { SparePlatesDetailsComponent } from './spare-plates-details/spare-plates-details.component';
 import { MotorcyclesDetailsComponent } from './motorcycles-details/motorcycles-details.component';
+import { MainProductsPageComponent } from './components/main-products-page/main-products-page.component';
 
 export const routes: Routes = [
   {
@@ -33,10 +34,10 @@ export const routes: Routes = [
     path: 'accessories',
     component: AccessoriesComponent
   },
-  {
-    path: 'login',
-    component: LoginComponent
-  },
+  // {
+  //   path: 'login',
+  //   component: LoginComponent
+  // },
   {
     path: 'register',
     component: RegisterComponent
@@ -52,6 +53,7 @@ export const routes: Routes = [
   {
     path: 'add-product',
     component: ProductFormComponent
-  }
+  },
 
+   { path: 'listing/:id', component: MainProductsPageComponent }
 ];

@@ -154,3 +154,6 @@
   border-bottom-style: var(--tw-border-style);
   border-bottom-width: 3px;
 }
+.pb-8 {
+    padding-bottom: calc(var(--spacing) * 18);
+}

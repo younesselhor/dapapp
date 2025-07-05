@@ -1,0 +1,22 @@
+.cardclass{
+    display: flex;
+padding-bottom: 24px;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+gap: 48px;
+align-self: stretch;
+border-radius: 8px;
+border: 1px solid var(--Gray-200, #E4E7EC);
+}
+
+.details-card{
+    display: flex;
+flex-direction: column;
+align-items: flex-start;
+flex: 1 0 0;
+align-self: stretch;
+border-radius: 3.688px;
+border: 0.922px solid var(--Gray-200, #E4E7EC);
+background: #FFF;
+}

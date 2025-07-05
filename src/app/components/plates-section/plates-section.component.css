@@ -1,0 +1,48 @@
+/* <!-- Add this CSS to your component's styles or global styles -->
+<style> */
+/* Country-specific background colors */
+.uae-bg {
+  background: var(--Purple-100, #EBE9FE);
+}
+
+.saudi-bg {
+  background: #E2FFEA;
+}
+
+.kuwait-bg {
+  background: var(--Error-100, #FEE4E2);
+}
+
+.default-bg {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+}
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Responsive text sizing for long plate letters */
+.break-all {
+  word-break: break-all;
+}
+
+/* Smooth transitions for hover effects */
+.transition-all {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Custom border width */
+.border-3 {
+  border-width: 3px;
+}
+
+/* Ensure proper text wrapping in plate display */
+@media (max-width: 768px) {
+  .plate-letters {
+    font-size: 0.875rem;
+    line-height: 1.2;
+  }
+}
+/* </style> */

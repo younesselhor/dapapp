@@ -116,23 +116,6 @@ export class LoginComponent {
     })
   }
 
-  // shakeOTPForm() {
-  //   const otpContainer = document.querySelector('.otp-container');
-  //   if (otpContainer) {
-  //     otpContainer.classList.add('animate-shake');
-  //     setTimeout(() => {
-  //       otpContainer.classList.remove('animate-shake');
-  //     }, 500);
-  //   }
-  // }
-  // handleSuccessfulLogin(token: string, user: any) {
-  //   localStorage.setItem('token', token);
-  //   localStorage.setItem('user', JSON.stringify(user));
-  //   this.showOTPModal = false;
-  //   this.router.navigate(['/plates']);
-
-
-  // }
   handleSuccessfulLogin(token: string, user?: AuthUser) {
     this.cookieService.set('token', token, {
       secure: false,
@@ -152,24 +135,10 @@ export class LoginComponent {
 
 
 
-  // startResendCountdown() {
-  //   this.resendCountdown = 30;
-  //   this.otpResendEnabled = false;
 
-  //   this.countdownInterval = setInterval(() => {
-  //     this.resendCountdown--;
-  //     if (this.resendCountdown <= 0) {
-  //       clearInterval(this.countdownInterval);
-  //       this.otpResendEnabled = true;
-  //       this.otpExpired = true;
-  //     }
-  //   }, 1000);
-  // }
 
   resendOTP() {
-  //   if (this.otpResendEnabled) {
 
-  //   }
   }
 
   onOTPInputChange(event: any, nextField?: string) {

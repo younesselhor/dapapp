@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 // import { Component } from '@angular/core';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ListingByCatService } from '../../services/listingsByCategory/listing-by-cat.service';
 
 
@@ -49,7 +49,7 @@ export class UsedMotoCyclesSectionComponent implements OnInit {
     // },
   ];
 
-  constructor(private listings : ListingByCatService) {}
+  constructor(private listings : ListingByCatService, private router : Router) {}
   ngOnInit(): void {
 this.getMotoresycles();
   }
@@ -66,6 +66,10 @@ this.getMotoresycles();
     return this.motorcycles.slice(start, start + this.itemsPerSlide);
   }
 
+      viewListing(id: number): void {
+  this.router.navigate(['/listing', id]);
+  console.log('click');
+}
   nextSlide() {
     const maxSlides = Math.ceil(this.motorcycles.length / this.itemsPerSlide) - 1;
     if (this.currentSlide < maxSlides) {

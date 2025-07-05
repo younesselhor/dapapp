@@ -79,6 +79,23 @@ filterSpareParts(params: any): Observable<any> {
   return this.http.get(`${this.baseUrl}filter/spare-parts?${queryParams.toString()}`);
 }
 
+filterLicencePlate(): Observable<any> {
+  // Convert array parameters to the correct format
+  // const queryParams = new URLSearchParams();
+  
+  // for (const key in params) {
+  //   if (Array.isArray(params[key])) {
+  //     params[key].forEach((value: any) => {
+  //       queryParams.append(`${key}[]`, value);
+  //     });
+  //   } else {
+  //     queryParams.set(key, params[key]);
+  //   }
+  // }
+  
+  return this.http.get(`${this.baseUrl}filter-license-plates`);
+}
 
 }
+
 

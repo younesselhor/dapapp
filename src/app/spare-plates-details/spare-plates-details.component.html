@@ -127,6 +127,7 @@
 </div>
     </div>
     <!-- Side Bar End -->
+     <div *ngIf="spareParts?.length !== 0">
     <div class="products-grid">
       <div *ngFor="let part of spareParts" class="product-card">
         <!-- Image -->
@@ -161,8 +162,23 @@
         </div>
       </div>
     </div>
-<div *ngIf="spareParts.length === 0" class="no-results">
+    </div>
+<!-- <div *ngIf="spareParts.length === 0" class="no-results">
   🚫 No spare parts found matching your filters.
+</div> -->
+<div *ngIf="spareParts?.length === 0" class="flex flex-col items-center justify-center py-12 px-4 text-center">
+  <div class="max-w-md mx-auto">
+    <h3 class="text-xl font-medium text-gray-800 mb-2">No vehicles found</h3>
+    <p class="text-gray-600 mb-6">
+      We couldn't find any vehicle that matches your filter, change or clear filters
+    </p>
+    <button 
+      
+      class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+    >
+      Clear Filter
+    </button>
+  </div>
 </div>
   </div>
 </div>
