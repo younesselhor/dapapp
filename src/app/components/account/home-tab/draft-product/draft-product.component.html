@@ -11,8 +11,8 @@
   <tbody>
     <tr *ngFor="let draft of drafts">
       <td class="p-3">{{ draft.title }}</td>
-      <td class="p-3">{{ draft.category?.name }}</td>
-      <td class="p-3">{{ draft.city?.name }}</td>
+      <td class="p-3">{{ draft.category.name }}</td>
+      <td class="p-3">{{ draft.city.name }}</td>
       <td class="p-3">{{ draft.status }}</td>
       <td class="p-3">
         <button
