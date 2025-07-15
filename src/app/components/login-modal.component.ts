@@ -50,6 +50,21 @@ export class LoginModalComponent implements OnDestroy {
     });
   }
 
+  async loginWithGoogle() {
+  try {
+    const result = await this.auth.googleLogin();
+    // const idToken = await this.auth.getIdToken();
+
+    // Send to your backend if needed (optional)
+    console.log('Logged in user:', result.user);
+    // console.log('Firebase ID Token:', idToken);
+
+    this.closeModal(); // Optional
+  } catch (error) {
+    console.error('Google login error:', error);
+  }
+}
+
   onSubmit() {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
@@ -208,6 +223,13 @@ export class LoginModalComponent implements OnDestroy {
       }
     }
   }
+
+
+  ngOnDestroy() {
+    this.clearCountdown();
+  }
+}
+
   // onOTPInputChange(event: any, nextField?: string) {
   //   const input = event.target;
   //   const value = input.value;
@@ -238,8 +260,3 @@ export class LoginModalComponent implements OnDestroy {
   //     }
   //   }
   // }
-
-  ngOnDestroy() {
-    this.clearCountdown();
-  }
-}

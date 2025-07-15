@@ -15,7 +15,7 @@ import { title } from 'process';
 import { SharedFormDataService } from '../../../services/shared-form-data.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FormatFieldNamePipe } from './FormatFieldNamePipe';
-import { Route, Router } from '@angular/router';
+import { ActivatedRoute, Route, Router } from '@angular/router';
 
 interface UploadedImage {
   preview: string;  // taswira 9bl ma tuploadi
@@ -172,6 +172,7 @@ discountedPrice: number | null = null;
   filteredCities: any[] = [];
   dynamicFields: any[] = [];
   selectedPlateFormat: any = null;
+  listingId: number | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -179,6 +180,7 @@ discountedPrice: number | null = null;
     private sharedFormDataService: SharedFormDataService,
     private translate: TranslateService,
     private router : Router, 
+    private route: ActivatedRoute,
     @Inject(PLATFORM_ID) private platformId: Object
   ) 
   {
@@ -250,7 +252,11 @@ discountedPrice: number | null = null;
   }
 
 ngOnInit(): void {
-
+ const draftId = this.route.snapshot.queryParamMap.get('draftId');
+  
+  if (draftId) {
+    this.loadDraftData(+draftId); // convert to number
+  }
   // this.onBrandChange();
   this.loadBrands();
   this.getPartCategoryList()
@@ -268,6 +274,114 @@ ngOnInit(): void {
     this.onCitySelected(cityId);
   });
 }
+loadDraftData(draftId: number) {
+  this.listingService.getSingleDraft(draftId).subscribe({
+    next: (res: any) => {
+      const draft = res?.data;
+
+      if (!draft) return;
+
+      // Fill Step 1 (vehicle form)
+      if (draft.motorcycle) {
+        this.vehicleForm.patchValue({
+          brand_id: draft.motorcycle.brand_id,
+          model_id: draft.motorcycle.model_id,
+          year_id: draft.motorcycle.year_id,
+          engine: parseInt(draft.motorcycle.engine), // strip "cc" if needed
+          mileage: draft.motorcycle.mileage,
+          body_condition: draft.motorcycle.body_condition,
+          modified: draft.motorcycle.modified ? 'Yes' : 'No',
+          insurance: draft.motorcycle.insurance ? 'Yes' : 'No',
+          general_condition: draft.motorcycle.general_condition,
+          vehicle_care: draft.motorcycle.vehicle_care,
+          transmission: draft.motorcycle.transmission
+        });
+
+        this.uploadedImageUrls = draft.images.map((img: any) => img.image_url);
+        console.log('this.uploadedImageUrls: ', this.uploadedImageUrls);
+      }
+
+      // Fill Step 2 (ad details)
+      this.adDetailsForm.patchValue({
+        title: draft.title,
+        description: draft.description,
+        price: draft.price,
+        city: draft.city_id,
+        country: draft.country_id,
+        listing_type_id: draft.listing_type_id,
+        contacting_channel: draft.contacting_channel,
+        sellerType: draft.seller_type,
+        allow_submission: draft.allow_submission ? 'true' : 'false',
+        minimum_bid: draft.minimum_bid
+      });
+
+      // Track current step
+      this.currentStep = draft.step || 1;
+    },
+    error: (err) => {
+      console.error('Failed to load draft', err);
+    }
+  });
+}
+
+// loadDraftData(draftId: number): void {
+//    this.listingService.getSingleDraft(draftId).subscribe({
+//     next: (response) => {
+//       const data = response.data;
+
+//       // Step 1: Set vehicle type
+//       // this.selectedVehicleType = 'motorcycle'; // Based on response
+//       // this.setCorrectForm(); // Optional: if you switch forms dynamically
+
+//       // Step 2: Patch bikeForm
+//       this.bikeForm.patchValue({
+//         brand: data.motorcycle.brand_id,
+//         model: data.motorcycle.model_id,
+//         modelYear: data.motorcycle.year_id,
+//         bikeType: data.motorcycle.type_id,
+//         engineSize: data.motorcycle.engine,
+//         mileage: data.motorcycle.mileage,
+//         bodyCondition: data.motorcycle.body_condition,
+//         isModified: data.motorcycle.modified ? 'Yes' : 'No',
+//         hasInsurance: data.motorcycle.insurance ? 'Yes' : 'No',
+//         condition: data.motorcycle.general_condition,
+//         bikeCare: data.motorcycle.vehicle_care,
+//         transmission: data.motorcycle.transmission
+//       });
+
+//       this.models = [data.motorcycle.model]; // to ensure the dropdown has this value
+//       this.years = [data.motorcycle.year];   // same idea
+
+//       // Step 3: Patch adDetailsForm
+//       this.adDetailsForm.patchValue({
+//         adName: data.title,
+//         description: data.description,
+//         city: data.city_id,
+//         country: data.country_id,
+//         price: data.minimum_bid ?? '', // fallback if null
+//         auctionEnabled: !!data.auction_enabled
+//         // Add more fields if needed (e.g., sellerType, contactMethods)
+//       });
+
+//       // Step 4: Set uploaded images (read-only view)
+//       this.uploadedImages = data.images.map((img: any) => ({
+//         previewUrl: img.image_url,
+//       }));
+//       console.log(' this.uploadedImages ', this.uploadedImages );
+// console.log('data.motorcycle.brand_id',data.motorcycle.brand_id);
+//       // Step 5: Load dependent dropdowns
+//       this.onBrandChange(data.motorcycle.brand_id);
+// this.onModelChange(data.motorcycle.model_id);
+
+//       // Optional: Set current step
+//       this.currentStep = data.step ?? 1;
+//     },
+//     error: (err) => {
+//       console.error('Failed to load draft', err);
+//       // Optional: show error UI
+//     }
+//   });
+// }
 
 initForm(): void {
   this.platesForm = this.fb.group({
@@ -832,16 +946,7 @@ removeImage(index: number): void {
   }
 
 
-  markCurrentFormTouched(): void {
-    const form =
-      this.currentStep === 1
-        ? this.vehicleForm
-        : this.currentStep === 2
-        ? this.adDetailsForm
-        : this.checkoutForm;
 
-    form.markAllAsTouched();
-  }
 
   previousStep(): void {
     if (this.currentStep > 1) {
@@ -909,6 +1014,17 @@ getPricing() {
   });
 }
 
+  markCurrentFormTouched(): void {
+    const form =
+      this.currentStep === 1
+        ? this.vehicleForm
+        : this.currentStep === 2
+        ? this.adDetailsForm
+        : this.checkoutForm;
+
+    form.markAllAsTouched();
+  }
+
 async goToNextStep() {
   try {
     switch (this.currentStep) {
@@ -930,14 +1046,34 @@ async goToNextStep() {
   }
 }
 
+// private async handleStep1() {
+//   if (!this.validateStep1()) return;
+
+//   const step1Data = this.prepareStep1Data();
+//   if (!step1Data) return;
+
+//   this.sharedFormDataService.setStep1Data(step1Data);
+//   this.currentStep++;
+// }
 private async handleStep1() {
   if (!this.validateStep1()) return;
 
   const step1Data = this.prepareStep1Data();
   if (!step1Data) return;
 
-  this.sharedFormDataService.setStep1Data(step1Data);
-  this.currentStep++;
+  step1Data.step = 1;
+
+  try {
+    const response = await this.listingService.addPost(step1Data).toPromise();
+    this.listingId = response?.listing_id;
+
+    // Store it for later steps
+    this.sharedFormDataService.setStep1Data({ ...step1Data, listing_id: this.listingId });
+    this.currentStep++;
+  } catch (error) {
+    console.error('Error creating listing (step 1):', error);
+    alert('Failed to create listing. Please try again.');
+  }
 }
 
 private validateStep1(): boolean {
@@ -970,11 +1106,47 @@ private validateStep1(): boolean {
   return true;
 }
 
+// private async handleStep2() {
+//   if (!this.adDetailsForm.valid) {
+//     this.adDetailsForm.markAllAsTouched();
+//     return;
+//   }
+
+//   const step2Data = {
+//     step: 2,
+//     title: this.adDetailsForm.value.title,
+//     description: this.adDetailsForm.value.description,
+//     price: parseFloat(this.adDetailsForm.value.price),
+//     allow_submission: this.adDetailsForm.value.allow_submission === 'true',
+//     contacting_channel: this.adDetailsForm.value.contacting_channel,
+//     country_id: Number(this.adDetailsForm.value.country),
+//     city_id: parseInt(this.adDetailsForm.value.city),
+//     sellerType: this.adDetailsForm.value.sellerType,
+//     listing_type_id: 1,
+//     auction_enabled: this.adDetailsForm.value.allow_submission === 'true',
+//     minimum_bid: this.adDetailsForm.value.minimum_bid,
+//   };
+
+//   this.sharedFormDataService.setStep2Data(step2Data);
+//   this.currentStep++;
+
+//   try {
+//     const step1Data = this.sharedFormDataService.getStep1Data();
+//     const priceData = await this.getPricingInfo(step1Data, step2Data);
+//     this.pricingInfo = priceData;
+//     await this.buildAndSubmitPayload(step1Data, step2Data, priceData);
+//   } catch (error) {
+//     console.error('Error in pricing:', error);
+//     alert('Failed to get pricing information. Please try again.');
+//     this.currentStep--; // Go back if pricing fails
+//   }
+// }
 private prepareStep1Data(): any {
   switch (this.selectedVehicleType) {
     case 1: // Motorcycle
       return {
         category_id: 1,
+        step: 1,
         vehicleType: 'motorcycle',
         brand_id: parseInt(this.vehicleForm.value.brand_id),
         model_id: parseInt(this.vehicleForm.value.model_id),
@@ -992,6 +1164,7 @@ private prepareStep1Data(): any {
 
     case 2: // Bike Part
       return {
+        step: 1,
         category_id: 2,
         bike_part_brand_id: Number(this.bikeForm.value.bike_part_brand_id),
         bike_part_category_id: Number(this.bikeForm.value.bike_part_category_id),
@@ -1040,6 +1213,7 @@ case 3: // License Plate
 
   return {
     category_id: 3,
+    step: 1,
     type_id: this.platesForm.value.type_id,
     plate_format_id: this.selectedPlateFormat?.id,
     country_id_lp: Number(this.platesForm.value.country_id_lp),
@@ -1061,6 +1235,8 @@ private async handleStep2() {
   }
 
   const step2Data = {
+    step: 2,
+    listing_id: this.listingId,
     title: this.adDetailsForm.value.title,
     description: this.adDetailsForm.value.description,
     price: parseFloat(this.adDetailsForm.value.price),
@@ -1075,26 +1251,62 @@ private async handleStep2() {
   };
 
   this.sharedFormDataService.setStep2Data(step2Data);
-  this.currentStep++;
 
   try {
+    // Call API with step 2 data
+    await this.listingService.addPost(step2Data).toPromise(); // new API method
+
+    // Optional: get pricing after successful save
     const step1Data = this.sharedFormDataService.getStep1Data();
     const priceData = await this.getPricingInfo(step1Data, step2Data);
     this.pricingInfo = priceData;
-    await this.buildAndSubmitPayload(step1Data, step2Data, priceData);
+
+    this.currentStep++;
   } catch (error) {
-    console.error('Error in pricing:', error);
-    alert('Failed to get pricing information. Please try again.');
-    this.currentStep--; // Go back if pricing fails
+    console.error('Error updating listing (step 2):', error);
+    alert('Failed to save ad details. Please try again.');
   }
 }
 
+
+// private async handleStep3() {
+//   const step1Data = this.sharedFormDataService.getStep1Data();
+//   const step2Data = this.sharedFormDataService.getStep2Data();
+
+//   const payload = {
+//     // Common ad details
+//     step: 3,
+//     title: step2Data.title,
+//     description: step2Data.description,
+//     price: step2Data.price,
+//     listing_type_id: step2Data.listing_type_id,
+//     city_id: step2Data.city_id,
+//     auction_enabled: step2Data.auction_enabled,
+//     minimum_bid: step2Data.minimum_bid,
+//     allow_submission: step2Data.allow_submission,
+//     contacting_channel: step2Data.contacting_channel,
+//     seller_type: step2Data.sellerType,
+//     // Type-specific details
+//     ...this.getTypeSpecificPayload(step1Data)
+//   };
+
+//   try {
+//     const res = await this.listingService.addPost(payload).toPromise();
+//     console.log('Ad created successfully:', res);
+//     this.currentStep++;
+//     this.router.navigate(['/home']);
+//   } catch (err) {
+//     console.error('Error creating ad:', err);
+//     alert('Failed to create ad. Please try again.');
+//   }
+// }
 private async handleStep3() {
   const step1Data = this.sharedFormDataService.getStep1Data();
   const step2Data = this.sharedFormDataService.getStep2Data();
 
   const payload = {
-    // Common ad details
+    step: 3,
+    listing_id: this.listingId,
     title: step2Data.title,
     description: step2Data.description,
     price: step2Data.price,
@@ -1105,7 +1317,6 @@ private async handleStep3() {
     allow_submission: step2Data.allow_submission,
     contacting_channel: step2Data.contacting_channel,
     seller_type: step2Data.sellerType,
-    // Type-specific details
     ...this.getTypeSpecificPayload(step1Data)
   };
 
@@ -1169,46 +1380,6 @@ private getTypeSpecificPayload(step1Data: any): any {
       return basePayload;
   }
 }
-
-private logFormErrors(form: FormGroup) {
-  Object.keys(form.controls).forEach(key => {
-    const control = form.get(key);
-    if (control?.errors) {
-      console.log(`Field ${key} errors:`, control.errors);
-    }
-  });
-}
-
-  private getPricingInfo(step1Data: any, step2Data: any): Promise<any> {
-    return new Promise((resolve, reject) => {
-      const pricingParams: any = {
-        country_id: step2Data.country_id || 3, // Default to 1 if not provided
-      };
-
-      switch (this.selectedVehicleType) {
-        case 1: // Motorcycle
-          pricingParams.model_id = step1Data.model_id;
-          pricingParams.category_id = 1;
-          break;
-        case 2: // Bike Part
-          pricingParams.model_id = step1Data.bike_part_category_id;
-          pricingParams.category_id = 2;
-          break;
-        case 3: // License Plate
-          pricingParams.category_id = 3;
-          break;
-      }
-
-      this.listingService.getPricing(pricingParams).subscribe({
-        next: (priceData) => {
-          resolve(priceData);
-        },
-        error: (err) => {
-          reject(err);
-        }
-      });
-    });
-  }
 
   private buildAndSubmitPayload(step1Data: any, step2Data: any, priceData?: any) {
     let payload: any = {
@@ -1281,6 +1452,47 @@ private logFormErrors(form: FormGroup) {
     // Submit to API
 
   }
+private logFormErrors(form: FormGroup) {
+  Object.keys(form.controls).forEach(key => {
+    const control = form.get(key);
+    if (control?.errors) {
+      console.log(`Field ${key} errors:`, control.errors);
+    }
+  });
+}
+
+  private getPricingInfo(step1Data: any, step2Data: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const pricingParams: any = {
+        country_id: step2Data.country_id || 3, // Default to 1 if not provided
+      };
+
+      switch (this.selectedVehicleType) {
+        case 1: // Motorcycle
+          pricingParams.model_id = step1Data.model_id;
+          pricingParams.category_id = 1;
+          break;
+        case 2: // Bike Part
+          pricingParams.model_id = step1Data.bike_part_category_id;
+          pricingParams.category_id = 2;
+          break;
+        case 3: // License Plate
+          pricingParams.category_id = 3;
+          break;
+      }
+
+      this.listingService.getPricing(pricingParams).subscribe({
+        next: (priceData) => {
+          resolve(priceData);
+        },
+        error: (err) => {
+          reject(err);
+        }
+      });
+    });
+  }
+
+
 
   removePromocode() {
     this.promocode = '';

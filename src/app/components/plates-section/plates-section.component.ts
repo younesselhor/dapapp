@@ -46,7 +46,7 @@
 // plates-section.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 interface Plate {
@@ -100,7 +100,22 @@ allPositions: string[] = [
 ];
 currentSlide = 0;
 slidesToShow = 1;
-  constructor(private http: HttpClient) {}
+
+
+ touchStartX = 0;
+  // isDragging = false;
+  // startPosition = 0;
+  containerWidth = 1024; // Width of visible container area
+  itemsPerSlide = 3;
+
+  currentPosition = 0;
+  isDragging = false;
+  startX = 0;
+  startPosition = 0;
+  cardWidth = 324; // Desktop card width
+  mobileCardWidth = 300; // Mobile card width
+  isMobile = false;
+  constructor(private http: HttpClient, private router : Router) {}
 
   ngOnInit(): void {
     this.fetchPlates();
@@ -111,7 +126,7 @@ slidesToShow = 1;
       .subscribe({
         next: (response) => {
           this.plates = (response || []).filter((plate: Plate) => plate.license_plate);
-          this.availableCount = this.plates.length;
+          // this.availableCount = this.plates.length;
         },
         error: (error) => {
           console.error('Error fetching plates:', error);
@@ -129,6 +144,10 @@ slidesToShow = 1;
     .map(pos => fieldMap[pos]);
 }
 
+  viewListing(id: number): void {
+  this.router.navigate(['/listing', id]);
+  console.log('click');
+}
   getPlateNumber(plate: Plate): string {
     if (!plate.license_plate) return '';
     const numberField = plate.license_plate.fields.find(f => 
@@ -280,6 +299,72 @@ goToSlide(index: number) {
 //   });
 //   return fieldMap;
 // }
+ checkMobile() {
+    this.isMobile = window.innerWidth < 768;
+    this.currentPosition = 0; // Reset position on resize
+  }
 
+  getCardWidth() {
+    return this.isMobile ? this.mobileCardWidth : this.cardWidth;
+  }
+
+  getVisibleCards() {
+    return this.isMobile ? 1 : 3;
+  }
+
+  // getMaxPosition() {
+  //   const cardWidth = this.getCardWidth();
+  //   const visibleCards = this.getVisibleCards();
+  //   return -((this.plates.length - visibleCards) * cardWidth);
+  // }
+
+  startDrag(event: MouseEvent | TouchEvent) {
+    this.isDragging = true;
+    this.startX = this.getX(event);
+    this.startPosition = this.currentPosition;
+    event.preventDefault();
+  }
+
+  onDrag(event: MouseEvent | TouchEvent) {
+    if (!this.isDragging) return;
+    const x = this.getX(event);
+    const dragDistance = x - this.startX;
+    this.currentPosition = this.startPosition + dragDistance;
+    
+    // Constrain to boundaries
+    const maxPosition = this.getMaxPosition();
+    if (this.currentPosition > 0) this.currentPosition = 0;
+    if (this.currentPosition < maxPosition) this.currentPosition = maxPosition;
+  }
+
+  // endDrag() {
+  //   this.isDragging = false;
+  //   // Snap to nearest card
+  //   const cardWidth = this.getCardWidth();
+  //   this.currentPosition = Math.round(this.currentPosition / cardWidth) * cardWidth;
+  // }
+
+  private getX(event: MouseEvent | TouchEvent): number {
+    return event instanceof MouseEvent ? event.clientX : event.touches[0].clientX;
+  }
+
+  // Update these methods in your component
+getMaxPosition() {
+  const cardWidth = this.getCardWidth();
+  const visibleCards = this.getVisibleCards();
+  const totalWidth = this.plates.length * cardWidth;
+  const containerWidth = window.innerWidth * 0.9; // Adjust based on your layout
+  return Math.min(0, containerWidth - totalWidth);
+}
+
+endDrag() {
+  this.isDragging = false;
+  // Snap to nearest card with boundary checks
+  const cardWidth = this.getCardWidth();
+  const newPosition = Math.round(this.currentPosition / cardWidth) * cardWidth;
+  const maxPosition = this.getMaxPosition();
+  
+  this.currentPosition = Math.max(maxPosition, Math.min(0, newPosition));
+}
 
 }

@@ -3,6 +3,7 @@ import { ListingService } from './listingProduct.service';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
 
 
 
@@ -40,7 +41,8 @@ export class MainProductsPageComponent implements OnInit {
   constructor(
     private listingService: ListingService,
     private datePipe: DatePipe,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private auth :AuthService
   ) { }
 
   ngOnInit(): void {
@@ -59,6 +61,7 @@ export class MainProductsPageComponent implements OnInit {
       next: (data) => {
         this.listingId = data.id
         this.listing = data;
+        console.log('this.listing: ', this.listing);
         this.isMotorcycle = !!data.motorcycle;
         this.isSparePart = !!data.spare_part;
         this.loading = false;
@@ -80,6 +83,20 @@ export class MainProductsPageComponent implements OnInit {
     })
   }
 
+
+//   toggleWishlist(listingId: number): void {
+//   this.listingService.toggleWishlist(listingId).subscribe({
+//     next: () => {
+//       // Force refresh the user profile to get updated wishlist
+//       this.auth.fetchUserProfile();
+//     },
+//     error: (err) => {
+//       console.error('Error toggling wishlist:', err);
+//       // Optionally show error message
+//     }
+//   });
+// }
+
   toggleWishlist(): void {
     // const previousState = this.listing.wishlist;
 
@@ -87,6 +104,9 @@ export class MainProductsPageComponent implements OnInit {
     // this.listing.wishlist = !previousState;
 
     this.listingService.toggleWishlist(this.listingId).subscribe({
+      next: ()=>{
+        // this.auth.fetchUserProfileOnce();
+      },
       error: () => {
         // Revert on error
         // this.listing.wishlist = previousState;
@@ -130,6 +150,23 @@ export class MainProductsPageComponent implements OnInit {
   //     // this.soomService.submitSoom(this.listing.id, this.soomAmount);
   //   }
   // }
+//   toggleWishlist(): void {
+//   // Optimistic UI update - toggle the state immediately
+//   const previousState = this.listing.wishlist;
+//   this.listing.wishlist = !previousState;
+
+//   this.listingService.toggleWishlist(this.listingId).subscribe({
+//     next: () => {
+//       // Success - refresh user profile
+//       this.auth.fetchUserProfileOnce();
+//     },
+//     error: () => {
+//       // Revert on error
+//       this.listing.wishlist = previousState;
+//       // this.toastr.error('Failed to update wishlist'); // Optional
+//     }
+//   });
+// }
 
   scrollToTop() {
     // window.scrollTo({

@@ -67,7 +67,6 @@
         />
       </div>
     </div>
-
   </div>
   <div *ngIf="listing.allow_submission === 0">
     <!-- Header Section with Two Cards -->
@@ -92,7 +91,6 @@
               />
             </svg>
           </button>
-
           <button
             (click)="toggleWishlist()"
             class="p-2 rounded-full hover:bg-gray-100 transition-colors"
@@ -197,10 +195,52 @@
       </div>
     </div>
   </div>
-
   <div *ngIf="listing.allow_submission === 1" class="space-y-4">
     <!-- Top Card - Location, Date, Title -->
-    <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+    <div
+      class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 relative"
+    >
+      <!-- Add these buttons at the top right -->
+      <div class="absolute top-4 right-4 flex gap-2">
+        <button
+          class="p-2 text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z"
+            />
+          </svg>
+        </button>
+
+        <button
+          (click)="toggleWishlist()"
+          class="p-2 rounded-full hover:bg-gray-100 transition-colors"
+          [class.text-red-500]="listing.wishlist"
+          [class.text-gray-500]="!listing.wishlist"
+          [attr.aria-label]="
+            listing.wishlist ? 'Remove from wishlist' : 'Add to wishlist'
+          "
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </button>
+      </div>
+
       <div class="flex items-center text-gray-600 mb-3">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -219,14 +259,13 @@
         <span>{{ formatDate(listing.created_at) }}</span>
       </div>
 
-      <h1 class="text-xl font-bold text-gray-800">{{ getTitle() }}</h1>
+      <h1 class="text-xl font-bold text-gray-800 pr-10">{{ getTitle() }}</h1>
     </div>
 
-    <!-- Bottom Card - Soon Information -->
+    <!-- Rest of your existing code remains the same -->
     <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
       <div class="mb-4">
         <p class="text-sm text-gray-500">Minimum amount to Soom</p>
-        <!-- <p class="text-xl font-semibold text-black-600">SAR {{ listing?.submission?.amount }}</p> -->
         <p class="text-xl font-semibold text-black-600">SAR {{ lastsoom }}</p>
       </div>
 
@@ -317,134 +356,128 @@
           </div>
         </div>
       </div>
-
-   
     </div>
   </div>
-   <!-- Details Table -->
-      <div class="mt-10 mb-6">
-        <h2 class="text-xl font-semibold mb-4 text-gray-800">Details</h2>
-        <div class="grid grid-cols-1 gap-4">
-          <!-- Motorcycle Details -->
+  <!-- Details Table -->
+  <div class="mt-10 mb-6">
+    <h2 class="text-xl font-semibold mb-4 text-gray-800">Details</h2>
+    <div class="grid grid-cols-1 gap-4">
+      <!-- Motorcycle Details -->
 
-          <ng-container *ngIf="isMotorcycle">
-            <div class="grid grid-cols-2 gap-2">
-              <!-- Brand -->
-              <div class="bg-gray-50 p-3 rounded">
-                <p class="text-gray-700">
-                  <span class="text-sm text-gray-500">Brand: </span>
-                  <span class="font-medium">{{
-                    listing.motorcycle.brand
-                  }}</span>
-                </p>
-              </div>
+      <ng-container *ngIf="isMotorcycle">
+        <div class="grid grid-cols-2 gap-2">
+          <!-- Brand -->
+          <div class="bg-gray-50 p-3 rounded">
+            <p class="text-gray-700">
+              <span class="text-sm text-gray-500">Brand: </span>
+              <span class="font-medium">{{ listing.motorcycle.brand }}</span>
+            </p>
+          </div>
 
-              <!-- Year -->
-              <div class="bg-gray-50 p-3 rounded">
-                <p class="text-gray-700">
-                  <span class="text-sm text-gray-500">Year: </span>
-                  <span class="font-medium">{{ listing.motorcycle.year }}</span>
-                </p>
-              </div>
+          <!-- Year -->
+          <div class="bg-gray-50 p-3 rounded">
+            <p class="text-gray-700">
+              <span class="text-sm text-gray-500">Year: </span>
+              <span class="font-medium">{{ listing.motorcycle.year }}</span>
+            </p>
+          </div>
 
-              <!-- Kilometer -->
-              <div class="bg-gray-50 p-3 rounded">
-                <p class="text-gray-700">
-                  <span class="text-sm text-gray-500">Kilometer: </span>
-                  <span class="font-medium"
-                    >{{ listing.motorcycle.mileage }} km</span
-                  >
-                </p>
-              </div>
+          <!-- Kilometer -->
+          <div class="bg-gray-50 p-3 rounded">
+            <p class="text-gray-700">
+              <span class="text-sm text-gray-500">Kilometer: </span>
+              <span class="font-medium"
+                >{{ listing.motorcycle.mileage }} km</span
+              >
+            </p>
+          </div>
 
-              <!-- Condition -->
-              <div class="bg-gray-50 p-3 rounded">
-                <p class="text-gray-700">
-                  <span class="text-sm text-gray-500">Condition: </span>
-                  <span class="font-medium">{{
-                    listing.motorcycle.general_condition
-                  }}</span>
-                </p>
-              </div>
+          <!-- Condition -->
+          <div class="bg-gray-50 p-3 rounded">
+            <p class="text-gray-700">
+              <span class="text-sm text-gray-500">Condition: </span>
+              <span class="font-medium">{{
+                listing.motorcycle.general_condition
+              }}</span>
+            </p>
+          </div>
 
-              <!-- CC -->
-              <div class="bg-gray-50 p-3 rounded">
-                <p class="text-gray-700">
-                  <span class="text-sm text-gray-500">CC: </span>
-                  <span class="font-medium">{{
-                    listing.motorcycle.engine
-                  }}</span>
-                </p>
-              </div>
+          <!-- CC -->
+          <div class="bg-gray-50 p-3 rounded">
+            <p class="text-gray-700">
+              <span class="text-sm text-gray-500">CC: </span>
+              <span class="font-medium">{{ listing.motorcycle.engine }}</span>
+            </p>
+          </div>
 
-              <!-- Transmission -->
-              <div class="bg-gray-50 p-3 rounded">
-                <p class="text-gray-700">
-                  <span class="text-sm text-gray-500">Transmission: </span>
-                  <span class="font-medium">{{
-                    listing.motorcycle.transmission
-                  }}</span>
-                </p>
-              </div>
-            </div>
-          </ng-container>
-          <!-- Spare Part Details -->
-          <ng-container *ngIf="isSparePart">
-            <div class="grid grid-cols-2 gap-2">
-              <div class="bg-gray-50 p-3 rounded">
-                <p class="text-gray-700">
-                  <span class="text-sm text-gray-500">Part Brand</span>
-                  <span class="font-medium">{{
-                    listing.spare_part.bike_part_brand
-                  }}</span>
-                </p>
-              </div>
-              <div class="bg-gray-50 p-3 rounded">
-                <p class="text-gray-700">
-                  <span class="text-sm text-gray-500">Category</span>
-                  <span class="font-medium">{{
-                    listing.spare_part.bike_part_category
-                  }}</span>
-                </p>
-              </div>
-              <div class="bg-gray-50 p-3 rounded">
-                <p class="text-gray-700">
-                  <span class="text-sm text-gray-500">Condition</span>
-                  <span class="font-medium">{{
-                    listing.spare_part.condition
-                  }}</span>
-                </p>
-              </div>
-              <div class="bg-gray-50 p-3 rounded">
-                <p class="text-gray-700">
-                  <span class="text-sm text-gray-500">Compatible With</span>
-                  <!-- <span class="font-medium">{{ listing.spare_part.bike_part_brand }}</span> -->
-                  <span
-                    *ngFor="
-                      let bike of listing.spare_part.motorcycle_associations;
-                      let last = last
-                    "
-                  >
-                    {{ bike.brand }} {{ bike.model }} ({{ bike.year }})<span
-                      *ngIf="!last"
-                      >,
-                    </span>
-                  </span>
-                </p>
-              </div>
-            </div>
-          </ng-container>
+          <!-- Transmission -->
+          <div class="bg-gray-50 p-3 rounded">
+            <p class="text-gray-700">
+              <span class="text-sm text-gray-500">Transmission: </span>
+              <span class="font-medium">{{
+                listing.motorcycle.transmission
+              }}</span>
+            </p>
+          </div>
         </div>
-      </div>
-
-      <div class="mb-8">
-        <h2 class="text-xl font-semibold mb-4 text-gray-800">Description</h2>
-        <div class="border border-gray-200 rounded-lg p-6 h-60 overflow-y-auto">
-          <p class="text-gray-700 whitespace-pre-line">
-            {{ listing.description }}
-          </p>
+      </ng-container>
+      <!-- Spare Part Details -->
+      <ng-container *ngIf="isSparePart">
+        <div class="grid grid-cols-2 gap-2">
+          <div class="bg-gray-50 p-3 rounded">
+            <p class="text-gray-700">
+              <span class="text-sm text-gray-500">Part Brand</span>
+              <span class="font-medium">{{
+                listing.spare_part.bike_part_brand
+              }}</span>
+            </p>
+          </div>
+          <div class="bg-gray-50 p-3 rounded">
+            <p class="text-gray-700">
+              <span class="text-sm text-gray-500">Category</span>
+              <span class="font-medium">{{
+                listing.spare_part.bike_part_category
+              }}</span>
+            </p>
+          </div>
+          <div class="bg-gray-50 p-3 rounded">
+            <p class="text-gray-700">
+              <span class="text-sm text-gray-500">Condition</span>
+              <span class="font-medium">{{
+                listing.spare_part.condition
+              }}</span>
+            </p>
+          </div>
+          <div class="bg-gray-50 p-3 rounded">
+            <p class="text-gray-700">
+              <span class="text-sm text-gray-500">Compatible With</span>
+              <!-- <span class="font-medium">{{ listing.spare_part.bike_part_brand }}</span> -->
+              <span
+                *ngFor="
+                  let bike of listing.spare_part.motorcycle_associations;
+                  let last = last
+                "
+              >
+                {{ bike.brand }} {{ bike.model }} ({{ bike.year }})<span
+                  *ngIf="!last"
+                  >,
+                </span>
+              </span>
+            </p>
+          </div>
         </div>
-      </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="mb-8">
+    <h2 class="text-xl font-semibold mb-4 text-gray-800">Description</h2>
+    <div class="border border-gray-200 rounded-lg p-6 h-60 overflow-y-auto">
+      <p class="text-gray-700 whitespace-pre-line">
+        {{ listing.description }}
+      </p>
+    </div>
+  </div>
   <!-- Updated Modal Content -->
   <!-- Enhanced Modal Content with Loading States -->
   <div

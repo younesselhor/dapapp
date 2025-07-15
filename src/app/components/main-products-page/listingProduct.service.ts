@@ -94,4 +94,13 @@ export class ListingService {
     return this.http.get(this.apiUrl + 'listings/'+listingId+'/last-soom')
   }
 
+
+getDraftListings(): Observable<{ message: string; data: any[] }> {
+  return this.http.get<{ message: string; data: any[] }>(this.apiUrl + 'listings/draft');
+}
+
+getSingleDraft(id: number):Observable<any[]> {
+  return this.http.get<any[]>(this.apiUrl +`listings/draft/${id}`);
+}
+
 }

@@ -17,3 +17,294 @@
 .h-full {
   height: 100%;
 }
+/* motorcycle-slider.component.css */
+.slider-section {
+  padding: 32px 80px 48px 80px;
+  background: #FFF;
+}
+
+.slider-container {
+  width: 1024px; /* Shows exactly 3 cards (324px each) + gaps */
+  overflow: hidden;
+  position: relative;
+}
+
+.slider-track {
+  display: flex;
+  gap: 16px;
+  transition: transform 0.3s ease-out;
+  cursor: grab;
+  user-select: none;
+}
+
+.slider-track:active {
+  cursor: grabbing;
+}
+
+.slider-card {
+  width: 324px;
+  height: 491px;
+  flex-shrink: 0;
+  border-radius: 3px;
+  background: #FFF;
+  box-shadow: 0px 44px 44px -7px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.slider-card img {
+  width: 324px;
+  height: 270px;
+  object-fit: cover;
+  background: lightgray 50% / cover no-repeat;
+}
+
+.card-content {
+  padding: 24px;
+}
+
+.card-content h3 {
+  color: #151518;
+  font-family: Manrope;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 24px;
+  margin-bottom: 8px;
+}
+
+.price-label {
+  color: #71717A;
+  font-family: Manrope;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 18px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.price-value {
+  color: #18181B;
+  font-family: Manrope;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 24px;
+  margin-bottom: 16px;
+}
+
+/* button {
+  display: flex;
+  width: 292px;
+  padding: 10px 18px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  border: 1px solid #D0D5DD;
+  background: #FFF;
+  box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+  color: #344054;
+  font-family: Manrope;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  cursor: pointer;
+} */
+
+button:hover {
+  background: #F9FAFB;
+}
+/* motorcycle-slider.component.css */
+.slider-section {
+  padding: 32px 20px 48px;
+  background: #FFF;
+}
+
+@media (min-width: 768px) {
+  .slider-section {
+    padding: 32px 80px 48px;
+  }
+}
+
+.slider-container {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+@media (min-width: 768px) {
+  .slider-container {
+    width: 1024px; /* Fits 3 cards on desktop */
+  }
+}
+
+.slider-track {
+  display: flex;
+  gap: 16px;
+  transition: transform 0.3s ease-out;
+  cursor: grab;
+  user-select: none;
+  padding: 0 16px; /* Add padding for mobile */
+}
+
+.slider-track.dragging {
+  transition: none;
+  cursor: grabbing;
+}
+
+.slider-card {
+  width: 300px; /* Mobile width */
+  height: 491px;
+  flex-shrink: 0;
+  border-radius: 3px;
+  background: #FFF;
+  box-shadow: 0px 44px 44px -7px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .slider-card {
+    width: 324px; /* Desktop width */
+  }
+}
+
+.slider-card img {
+  width: 100%;
+  height: 270px;
+  object-fit: cover;
+  background: lightgray 50% / cover no-repeat;
+}
+
+.card-content {
+  padding: 24px;
+}
+
+.card-content h3 {
+  color: #151518;
+  font-family: Manrope, sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 24px;
+  margin-bottom: 8px;
+}
+
+.price-label {
+  color: #71717A;
+  font-family: Manrope, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 18px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.price-value {
+  color: #18181B;
+  font-family: Manrope, sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 24px;
+  margin-bottom: 16px;
+}
+
+/* button {
+  display: flex;
+  width: 100%;
+  padding: 10px 18px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  border: 1px solid #D0D5DD;
+  background: #FFF;
+  box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+  color: #344054;
+  font-family: Manrope, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  cursor: pointer;
+} */
+
+button:hover {
+  background: #F9FAFB;
+}
+
+.slider-track {
+  display: flex;
+  gap: 16px;
+  transition: transform 0.3s ease;
+}
+
+.slider-track.dragging {
+  transition: none;
+}
+
+.slider-card {
+  min-width: 300px;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.card-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.card-content {
+  padding: 16px;
+}
+
+.card-content h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.price-label {
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 4px;
+}
+
+.price-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ef4444;
+  margin-bottom: 12px;
+}
+
+/* .card-content button {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #fca5a5;
+  color: #ef4444;
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+} */
+
+.card-content button:hover {
+  background: #fef2f2;
+}
+.card-content button {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #e5e7eb;
+  color: #18181B;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-weight: 500;
+}
+
+.card-content button:hover {
+  background: #f3f4f6;
+}
+.button{
+  cursor: pointer;
+}

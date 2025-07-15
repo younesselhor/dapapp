@@ -18,6 +18,8 @@ interface Product {
   styleUrl: './recently-added-products.component.css'
 })
 export class RecentlyAddedProductsComponent {
+    currentSlide = 0;
+  slidesToShow = 5;
   recentProducts: Product[] = [
     {
       id: 1,
@@ -115,42 +117,42 @@ export class RecentlyAddedProductsComponent {
       imageUrl: '/pictures/hondablur1.png',
       type: 'motorcycle'
     }
-    , {
-      id: 13,
-      title: 'Honda Shadow - Aero 2006',
-      price: 54000,
-      currency: 'SAR',
-      imageUrl: '/pictures/hondablur2.png',
-      type: 'motorcycle'
-    },
-    {
-      id: 14,
-      title: 'Honda Shadow - Aero 2006',
-      price: 54000,
-      currency: 'SAR',
-      imageUrl: '/pictures/hondablur1.png',
-      type: 'motorcycle'
-    }, {
-      id: 15,
-      title: 'Honda Shadow - Aero 2006',
-      price: 54000,
-      currency: 'SAR',
-      imageUrl: '/pictures/hondablur2.png',
-      type: 'motorcycle'
-    },
-    {
-      id: 16,
-      title: 'Honda Shadow - Aero 2006',
-      price: 54000,
-      currency: 'SAR',
-      imageUrl: '/pictures/hondablur1.png',
-      type: 'motorcycle'
-    }
+    // , {
+    //   id: 13,
+    //   title: 'Honda Shadow - Aero 2006',
+    //   price: 54000,
+    //   currency: 'SAR',
+    //   imageUrl: '/pictures/hondablur2.png',
+    //   type: 'motorcycle'
+    // },
+    // {
+    //   id: 14,
+    //   title: 'Honda Shadow - Aero 2006',
+    //   price: 54000,
+    //   currency: 'SAR',
+    //   imageUrl: '/pictures/hondablur1.png',
+    //   type: 'motorcycle'
+    // }, {
+    //   id: 15,
+    //   title: 'Honda Shadow - Aero 2006',
+    //   price: 54000,
+    //   currency: 'SAR',
+    //   imageUrl: '/pictures/hondablur2.png',
+    //   type: 'motorcycle'
+    // },
+    // {
+    //   id: 16,
+    //   title: 'Honda Shadow - Aero 2006',
+    //   price: 54000,
+    //   currency: 'SAR',
+    //   imageUrl: '/pictures/hondablur1.png',
+    //   type: 'motorcycle'
+    // }
   ];
 
   // Slider configuration
-  currentSlide: number = 0;
-  slidesToShow: number = 5;
+  // currentSlide: number = 0;
+  // slidesToShow: number = 5;
   slidesToMove: number = 5;
   totalSlides: number = this.recentProducts.length;
   dotsArray: number[] = [];
@@ -228,31 +230,67 @@ export class RecentlyAddedProductsComponent {
   //   this.dotsArray = Array(dotsCount).fill(0).map((_, i) => i);
   // }
 
-  nextSlide(): void {
+  // nextSlide(): void {
+  //   if (this.currentSlide < this.totalSlides - this.slidesToShow) {
+  //     this.currentSlide += this.slidesToMove;
+  //     // Don't exceed total slides
+  //     if (this.currentSlide > this.totalSlides - this.slidesToShow) {
+  //       this.currentSlide = this.totalSlides - this.slidesToShow;
+  //     }
+  //   }
+  // }
+
+  // prevSlide(): void {
+  //   if (this.currentSlide > 0) {
+  //     this.currentSlide -= this.slidesToMove;
+  //     // Don't go below 0
+  //     if (this.currentSlide < 0) {
+  //       this.currentSlide = 0;
+  //     }
+  //   }
+  // }
+
+  // goToSlide(index: number): void {
+  //   this.currentSlide = index * this.slidesToMove;
+  //   // Ensure we don't exceed boundaries
+  //   if (this.currentSlide > this.totalSlides - this.slidesToShow) {
+  //     this.currentSlide = this.totalSlides - this.slidesToShow;
+  //   }
+  // }
+
+
+
+
+  
+  get currentDotIndex() {
+    return Math.floor(this.currentSlide / this.slidesToShow);
+  }
+  
+  // get totalSlides() {
+  //   return this.recentProducts.length;
+  // }
+  
+  // get dotsArray() {
+  //   return Array(Math.ceil(this.totalSlides / this.slidesToShow)).fill(0);
+  // }
+  
+  getVisibleProducts() {
+    return this.recentProducts.slice(this.currentSlide, this.currentSlide + this.slidesToShow);
+  }
+  
+  nextSlide() {
     if (this.currentSlide < this.totalSlides - this.slidesToShow) {
-      this.currentSlide += this.slidesToMove;
-      // Don't exceed total slides
-      if (this.currentSlide > this.totalSlides - this.slidesToShow) {
-        this.currentSlide = this.totalSlides - this.slidesToShow;
-      }
+      this.currentSlide += this.slidesToShow;
     }
   }
-
-  prevSlide(): void {
+  
+  prevSlide() {
     if (this.currentSlide > 0) {
-      this.currentSlide -= this.slidesToMove;
-      // Don't go below 0
-      if (this.currentSlide < 0) {
-        this.currentSlide = 0;
-      }
+      this.currentSlide -= this.slidesToShow;
     }
   }
-
-  goToSlide(index: number): void {
-    this.currentSlide = index * this.slidesToMove;
-    // Ensure we don't exceed boundaries
-    if (this.currentSlide > this.totalSlides - this.slidesToShow) {
-      this.currentSlide = this.totalSlides - this.slidesToShow;
-    }
+  
+  goToSlide(index: number) {
+    this.currentSlide = index * this.slidesToShow;
   }
 }

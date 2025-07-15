@@ -222,7 +222,7 @@ export class MotorcyclesDetailsComponent implements OnInit, OnDestroy {
     this.listingbyService.getPriceRange(1).subscribe({
       next: (res: any) => {
         // Set default minimum if 0
-        this.absoluteMin = res.min_price > 0 ? res.min_price : 1000; 
+        this.absoluteMin = res.min_price > 0 ? res.min_price : 0; 
         // Set default maximum if 0
         this.absoluteMax = res.max_price > 0 ? res.max_price : 50000;
         

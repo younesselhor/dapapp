@@ -3,6 +3,7 @@ import { Component, Input } from '@angular/core';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
+import { Router } from '@angular/router';
 
 
 interface Plate {
@@ -52,6 +53,7 @@ export class ProductCardComponent {
   'left-center', 'center', 'right-center',
   'bottom-left', 'bottom-center', 'bottom-right'
 ];
+constructor(private router: Router){}
    getPlateLetters(plate: Plate): string {
     if (!plate.license_plate) return '';
     const letterField = plate.license_plate.fields.find(f => 
@@ -152,5 +154,9 @@ getSidebarClass(plate: Plate): string {
     default:
       return 'bg-[#138c36]'; // KSA green fallback
   }
+}
+    viewListing(id: number): void {
+  this.router.navigate(['/listing', id]);
+  console.log('click');
 }
 }

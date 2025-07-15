@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ListingByCatService } from '../../services/listingsByCategory/listing-by-cat.service';
 import { animate, style, transition, trigger } from '@angular/animations';
 
@@ -30,8 +30,20 @@ export class UsedSparePartsSectionComponent implements OnInit {
   itemsPerSlide = 3;
   spareParts: SparePart[] = [];
   slideDirection: 'left' | 'right' = 'right';
-
-  constructor(private listinbyCat: ListingByCatService) {}
+  touchStartX = 0;
+  // isDragging = false;
+  // startPosition = 0;
+  containerWidth = 1024; // Width of visible container area
+  // itemsPerSlide = 3;
+  // motorcycles: Motorcycle[] = [];
+  currentPosition = 0;
+  isDragging = false;
+  startX = 0;
+  startPosition = 0;
+  cardWidth = 324; // Desktop card width
+  mobileCardWidth = 300; // Mobile card width
+  isMobile = false;
+  constructor(private listinbyCat: ListingByCatService, private router : Router) {}
 
   ngOnInit(): void {
     this.getBikePart();
@@ -72,7 +84,60 @@ export class UsedSparePartsSectionComponent implements OnInit {
     this.currentSlide = index;
   }
 
+    viewListing(id: number): void {
+  this.router.navigate(['/listing', id]);
+  console.log('click');
+}
+
   get totalSlides() {
     return Math.ceil(this.spareParts.length / this.itemsPerSlide);
+  }
+    checkMobile() {
+    this.isMobile = window.innerWidth < 768;
+    this.currentPosition = 0; // Reset position on resize
+  }
+
+  getCardWidth() {
+    return this.isMobile ? this.mobileCardWidth : this.cardWidth;
+  }
+
+  getVisibleCards() {
+    return this.isMobile ? 1 : 3;
+  }
+
+  getMaxPosition() {
+    const cardWidth = this.getCardWidth();
+    const visibleCards = this.getVisibleCards();
+    return -((this.spareParts.length - visibleCards) * cardWidth);
+  }
+
+  startDrag(event: MouseEvent | TouchEvent) {
+    this.isDragging = true;
+    this.startX = this.getX(event);
+    this.startPosition = this.currentPosition;
+    event.preventDefault();
+  }
+
+  onDrag(event: MouseEvent | TouchEvent) {
+    if (!this.isDragging) return;
+    const x = this.getX(event);
+    const dragDistance = x - this.startX;
+    this.currentPosition = this.startPosition + dragDistance;
+    
+    // Constrain to boundaries
+    const maxPosition = this.getMaxPosition();
+    if (this.currentPosition > 0) this.currentPosition = 0;
+    if (this.currentPosition < maxPosition) this.currentPosition = maxPosition;
+  }
+
+  endDrag() {
+    this.isDragging = false;
+    // Snap to nearest card
+    const cardWidth = this.getCardWidth();
+    this.currentPosition = Math.round(this.currentPosition / cardWidth) * cardWidth;
+  }
+
+  private getX(event: MouseEvent | TouchEvent): number {
+    return event instanceof MouseEvent ? event.clientX : event.touches[0].clientX;
   }
 }

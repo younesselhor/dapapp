@@ -20,10 +20,12 @@ export class SavedVehiclesComponent implements OnInit {
   constructor(private auth: AuthService) {}
 
   ngOnInit(): void {
+    this.auth.getProfile();
   this.auth.userProfile$.subscribe({
     next: (res) => {
       if (res && res.user && res.user.wishlists) {
         this.listingarray = res.user.wishlists.map(wishlist => wishlist.listing);
+        console.log('this.listingarray: ', this.listingarray);
       } else {
         this.listingarray = [];
       }

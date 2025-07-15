@@ -46,3 +46,104 @@
   }
 }
 /* </style> */
+
+.slider-track {
+  display: flex;
+  gap: 20px;
+  transition: transform 0.3s ease;
+  padding: 10px 0;
+}
+
+.slider-track.dragging {
+  transition: none;
+}
+
+.slider-card {
+  min-width: 300px;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+  border: 1px solid #e5e7eb;
+}
+
+.plate-display {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f9fafb;
+}
+
+.card-content {
+  padding: 20px;
+}
+
+.card-content h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.price-label {
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 4px;
+}
+
+.price-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ef4444;
+  margin-bottom: 12px;
+}
+
+.card-content button {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #e5e7eb;
+  color: #18181B;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-weight: 500;
+}
+
+.button{
+  cursor: pointer;
+}
+.card-content button:hover {
+  background: #f3f4f6;
+}
+/* Ensure these are in your component's CSS */
+.uae-bg {
+  background: var(--Purple-100, #EBE9FE) !important;
+}
+
+.saudi-bg {
+  background: #E2FFEA !important;
+}
+
+.kuwait-bg {
+  background: var(--Error-100, #FEE4E2) !important;
+}
+
+.default-bg {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%) !important;
+}
+.slider-track {
+  display: flex;
+  gap: 20px;
+  transition: transform 0.3s ease;
+  padding: 10px;
+  margin-right: -20px; /* Allow overflow on the right */
+}
+
+.slider-card {
+  min-width: 300px;
+  width: 300px; /* Fixed width helps with calculations */
+  flex-shrink: 0; /* Prevent cards from shrinking */
+  /* ... rest of your card styles ... */
+}
