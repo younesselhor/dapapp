@@ -1,0 +1,27 @@
+<table class="w-full table-auto">
+  <thead>
+    <tr class="bg-gray-100 text-left">
+      <th class="p-3">Title</th>
+      <th class="p-3">Category</th>
+      <th class="p-3">City</th>
+      <th class="p-3">Status</th>
+      <th class="p-3">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let draft of drafts">
+      <td class="p-3">{{ draft.title }}</td>
+      <td class="p-3">{{ draft.category?.name }}</td>
+      <td class="p-3">{{ draft.city?.name }}</td>
+      <td class="p-3">{{ draft.status }}</td>
+      <td class="p-3">
+        <button
+          class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          (click)="continueDraft(draft.id)"
+        >
+          Continue Publishing
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
