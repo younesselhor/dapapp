@@ -50,20 +50,20 @@ export class LoginModalComponent implements OnDestroy {
     });
   }
 
-  async loginWithGoogle() {
-  try {
-    const result = await this.auth.googleLogin();
-    // const idToken = await this.auth.getIdToken();
+//   async loginWithGoogle() {
+//   try {
+//     const result = await this.auth.googleLogin();
+//     // const idToken = await this.auth.getIdToken();
 
-    // Send to your backend if needed (optional)
-    console.log('Logged in user:', result.user);
-    // console.log('Firebase ID Token:', idToken);
+//     // Send to your backend if needed (optional)
+//     console.log('Logged in user:', result.user);
+//     // console.log('Firebase ID Token:', idToken);
 
-    this.closeModal(); // Optional
-  } catch (error) {
-    console.error('Google login error:', error);
-  }
-}
+//     this.closeModal(); // Optional
+//   } catch (error) {
+//     console.error('Google login error:', error);
+//   }
+// }
 
   onSubmit() {
     if (this.loginForm.invalid) {
