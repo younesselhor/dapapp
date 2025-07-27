@@ -528,7 +528,7 @@ if (draft.spare_part) {
     general_condition: draft.spare_part.condition,
     description: draft.description
   });
-
+this.uploadedImageUrls = draft.images.map((img: any) => img.image_url);
   // 2. Load models if brand exists
   if (moto?.brand_id) {
     this.listingService.getMotorcycleFilters({ brand_id: moto.brand_id }).subscribe((res) => {
