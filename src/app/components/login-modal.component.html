@@ -20,39 +20,51 @@
         <label class="block text-sm font-medium text-gray-700">Phone Number or Email</label>
         <input
           type="text"
-          class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
-          placeholder="+966"
+          class="w-full mt-1 px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+          placeholder="+212612345678 or email@example.com"
           formControlName="login"
           required
+          (input)="onLoginInputChange()"
         />
         <p *ngIf="loginForm.get('login')?.invalid && loginForm.get('login')?.touched" class="text-sm text-red-600 mt-1">
           Please enter a valid phone number or email
         </p>
       </div>
 
-      <div class="mb-6">
+      <div class="mb-4">
         <label class="block text-sm font-medium text-gray-700">Password</label>
         <input
           type="password"
-          class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+          class="w-full mt-1 px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
           placeholder="Enter password"
           formControlName="password"
-          required
+          [required]="!isPhone(loginForm.get('login')?.value)"
         />
         @if(loginForm.get('password')?.invalid && loginForm.get('password')?.touched){
         <p class="text-sm text-red-600 mt-1">
           Password must be at least 6 characters
         </p>
         }
-        @if(loginError){
-        <div class="bg-red-100 border border-red-400 px-4 py-3 rounded-lg mt-4 text-sm">
-          <strong class="font-medium">Incorrect email or password.<br/></strong> Please try again.<br />
-          <span class="block mt-1">That doesn't look right. Doublecheck your email and password, or
-            reset your password if you've forgotten it.</span>
-          <a href="#" class="text-red-500 font-semibold block mt-2">Forgot Password?</a>
-        </div>
-        }
       </div>
+
+      @if(message){
+      <div class="mb-4 p-3 rounded-lg text-sm" 
+           [class.bg-green-100]="!loginError && !otpError"
+           [class.bg-red-100]="loginError || otpError"
+           [class.text-green-800]="!loginError && !otpError"
+           [class.text-red-800]="loginError || otpError">
+        {{ message }}
+      </div>
+      }
+
+      @if(loginError && !isPhone(loginForm.get('login')?.value)){
+      <div class="bg-red-100 border border-red-400 px-4 py-3 rounded-lg mt-4 text-sm">
+        <strong class="font-medium">Incorrect email or password.<br/></strong> Please try again.<br />
+        <span class="block mt-1">That doesn't look right. Doublecheck your email and password, or
+          reset your password if you've forgotten it.</span>
+        <a href="#" class="text-red-500 font-semibold block mt-2">Forgot Password?</a>
+      </div>
+      }
 
       <!-- Buttons -->
       <div class="space-y-2">
@@ -73,14 +85,20 @@
           Sign Up
         </button>
 
-        <!-- <button
-  type="button"
-  class="w-full bg-white border border-gray-300 text-gray-800 hover:bg-gray-100 py-2 px-4 rounded-lg flex items-center justify-center gap-2"
-  (click)="loginWithGoogle()"
->
-  <img src="/assets/google-icon.svg" alt="Google" class="w-5 h-5" />
-  <span class="font-medium">Continue with Google</span>
-</button> -->
+        <button
+          type="button"
+          class="w-full bg-white border border-gray-300 text-gray-800 hover:bg-gray-100 py-2 px-4 rounded-lg flex items-center justify-center gap-2"
+          (click)="loginWithGoogle()"
+        >
+          <!-- Google Icon SVG -->
+          <svg class="w-5 h-5" viewBox="0 0 533.5 544.3" xmlns="http://www.w3.org/2000/svg">
+            <path fill="#4285f4" d="M533.5 278.4c0-17.4-1.6-34.1-4.6-50.4H272v95.3h146.9c-6.3 34-25.1 62.8-53.4 82.1v68h86.4c50.6-46.7 81.6-115.5 81.6-194.9z"/>
+            <path fill="#34a853" d="M272 544.3c72.6 0 133.6-24 178.2-65.2l-86.4-68c-24 16-54.8 25.5-91.8 25.5-70.6 0-130.4-47.7-151.8-111.7h-89v69.9c44.5 88.1 136.3 149.5 240.8 149.5z"/>
+            <path fill="#fbbc04" d="M120.2 324.9c-10.1-29.7-10.1-61.6 0-91.3v-69.9h-89c-38.2 75.6-38.2 165.5 0 241.1l89-69.9z"/>
+            <path fill="#ea4335" d="M272 107.7c39.5 0 75 13.6 102.9 40.3l77.3-77.3C405.5 24 344.6 0 272 0c-104.5 0-196.3 61.4-240.8 149.5l89 69.9c21.3-64 81.1-111.7 151.8-111.7z"/>
+          </svg>
+          <span class="font-medium">Continue with Google</span>
+        </button>
 
         <button
           (click)="closeModal()"
@@ -93,27 +111,71 @@
     </form>
   </div>
 
+  <!-- reCAPTCHA Modal -->
+  @if(showRecaptcha) {
+  <div class="fixed inset-0 z-50 bg-gray bg-opacity-50 backdrop-blur-sm flex items-center justify-center">
+    <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6">
+      <div class="text-center mb-6">
+        <h2 class="text-lg font-semibold text-gray-800">🔐 SMS Verification</h2>
+        <p class="text-sm text-gray-600 mt-2">Complete the verification to receive SMS code</p>
+        @if(currentUser) {
+        <div class="mt-4 p-3 bg-blue-50 rounded-lg">
+          <p class="text-sm text-gray-700"><strong>User:</strong> {{currentUser.first_name}} {{currentUser.last_name}}</p>
+          <p class="text-sm text-gray-700"><strong>Phone:</strong> {{currentUser.phone}}</p>
+          <p class="text-sm text-gray-700"><strong>Email:</strong> {{currentUser.email || 'Not provided'}}</p>
+        </div>
+        }
+      </div>
+
+      <!-- reCAPTCHA container -->
+      <div class="flex justify-center mb-6">
+        <div id="recaptcha-container"></div>
+      </div>
+
+      @if(message && !loginError){
+      <div class="mb-4 p-3 bg-blue-100 text-blue-800 rounded-lg text-sm text-center">
+        {{ message }}
+      </div>
+      }
+
+      @if(message && loginError){
+      <div class="mb-4 p-3 bg-red-100 text-red-800 rounded-lg text-sm text-center">
+        {{ message }}
+      </div>
+      }
+
+      <div class="flex space-x-3">
+        <button
+          type="button"
+          (click)="closeRecaptcha()"
+          class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-lg border border-gray-300"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+  }
+
   <!-- OTP Modal -->
   @if(showOTPModal) {
-  <!-- <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"> -->
-    <div class="fixed inset-0 z-50 bg-gray bg-opacity-50 backdrop-blur-sm flex items-center justify-center">
-
+  <div class="fixed inset-0 z-50 bg-gray bg-opacity-50 backdrop-blur-sm flex items-center justify-center">
     <div class="bg-white rounded-xl shadow-lg w-full max-w-sm p-6">
       <div class="text-center mb-6">
-        <h2 class="text-lg font-semibold text-gray-800">DabApp</h2>
+        <h2 class="text-lg font-semibold text-gray-800">📱 SMS Verification</h2>
         <p class="text-sm text-gray-600 mt-2">Please check your phone</p>
-        <p class="text-sm text-gray-600">We've sent a code to {{ phoneNumber || userLogin }}</p>
+        <p class="text-sm text-gray-600">We've sent a code to {{ phoneNumber }}</p>
       </div>
 
       <form [formGroup]="otpForm" (ngSubmit)="verifyOTP()">
         <div class="mb-6">
-          <label class="block text-sm font-medium text-gray-700 mb-2">OTP</label>
-           <div class="flex justify-between ">
+          <label class="block text-sm font-medium text-gray-700 mb-2">SMS Code</label>
+          <div class="flex justify-between gap-2">
             <input
               id="digit1"
               type="text"
               maxlength="1"
-              class="w-16 h-14 text-center border border-blue-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 text-black"
+              class="w-12 h-14 text-center border border-blue-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 text-black"
               formControlName="digit1"
               (input)="onOTPInputChange($event, 'digit2')"
             >
@@ -121,7 +183,7 @@
               id="digit2"
               type="text"
               maxlength="1"
-              class="w-16 h-14 text-center border border-blue-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 text-black"
+              class="w-12 h-14 text-center border border-blue-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 text-black"
               formControlName="digit2"
               (input)="onOTPInputChange($event, 'digit3')"
             >
@@ -129,7 +191,7 @@
               id="digit3"
               type="text"
               maxlength="1"
-              class="w-16 h-14 text-center border border-blue-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 text-black"
+              class="w-12 h-14 text-center border border-blue-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 text-black"
               formControlName="digit3"
               (input)="onOTPInputChange($event, 'digit4')"
             >
@@ -137,35 +199,50 @@
               id="digit4"
               type="text"
               maxlength="1"
-              class="w-16 h-14 text-center border border-blue-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 text-black"
+              class="w-12 h-14 text-center border border-blue-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 text-black"
               formControlName="digit4"
               (input)="onOTPInputChange($event, 'digit5')"
             >
-            <!-- <input
+            <input
               id="digit5"
               type="text"
               maxlength="1"
-              class="w-16 h-14 text-center border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+              class="w-12 h-14 text-center border border-blue-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 text-black"
               formControlName="digit5"
-            > -->
+              (input)="onOTPInputChange($event, 'digit6')"
+            >
+            <input
+              id="digit6"
+              type="text"
+              maxlength="1"
+              class="w-12 h-14 text-center border border-blue-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 text-black"
+              formControlName="digit6"
+              (input)="onOTPInputChange($event)"
+            >
           </div>
 
-          @if(otpError) {
+          @if(message && (otpError || loginError)) {
           <div class="mt-4 text-center">
-            <p class="text-sm text-red-600">Invalid OTP. Please try again.</p>
+            <p class="text-sm text-red-600">{{ message }}</p>
+          </div>
+          }
+
+          @if(message && !otpError && !loginError) {
+          <div class="mt-4 text-center">
+            <p class="text-sm text-green-600">{{ message }}</p>
           </div>
           }
 
           @if(otpExpired) {
           <div class="mt-4 text-center">
-            <p class="text-sm text-red-600">OTP Expired!</p>
+            <p class="text-sm text-red-600">SMS Code Expired!</p>
             <button 
               type="button" 
               [disabled]="!otpResendEnabled"
               class="text-sm text-blue-600 hover:text-blue-800 disabled:text-gray-400" 
               (click)="resendOTP()"
             >
-              Resend OTP
+              Resend SMS Code
             </button>
           </div>
           }
@@ -186,7 +263,7 @@
 
           @if(otpForm.invalid && otpForm.touched) {
           <p class="text-sm text-red-600 mt-2 text-center">
-            Please enter the complete OTP
+            Please enter the complete SMS code
           </p>
           }
         </div>
@@ -204,12 +281,11 @@
             [disabled]="otpForm.invalid"
             class="flex-1 bg-red-500 hover:bg-red-600 disabled:bg-gray-300 text-white font-semibold py-2 px-4 rounded-lg"
           >
-            Verify
+            Verify Code
           </button>
         </div>
       </form>
     </div>
   </div>
   }
-  <!-- End of OTP Modal -->
 </div>

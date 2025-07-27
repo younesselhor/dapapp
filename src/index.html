@@ -8,8 +8,27 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+<!-- Add these scripts to your index.html file in the <head> section -->
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+<script src="https://www.google.com/recaptcha/api.js?render=explicit" async defer></script>
 
+<script>
+  // Your Firebase config
+  const firebaseConfig = {
+    apiKey: "AIzaSyCPGsHiy6Eq2J8bnHi2xo9rx-1nIXM-p-o",
+    authDomain: "dabapp-3d853.firebaseapp.com",
+    projectId: "dabapp-3d853",
+    storageBucket: "dabapp-3d853.firebasestorage.app",
+    messagingSenderId: "988124060172",
+    appId: "1:988124060172:web:6a7b2aeb937a44fa196c29",
+    measurementId: "G-RELFGL4QX8"
+  };
 
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  console.log('Firebase initialized globally');
+</script>
 
   <meta name="robots" content="noindex, nofollow">
   <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">

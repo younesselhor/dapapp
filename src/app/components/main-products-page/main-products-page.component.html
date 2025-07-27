@@ -67,7 +67,47 @@
         />
       </div>
     </div>
+
   </div>
+  
+<!-- Image Modal -->
+<div
+  *ngIf="isModalOpen"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-gray bg-opacity-100"
+>
+  <!-- Close button -->
+  <button
+    class="absolute top-4 right-4 text-white text-2xl"
+    (click)="closeModalImages()"
+  >
+    &times;
+  </button>
+
+  <!-- Image viewer container -->
+  <div class="relative max-w-4xl w-full px-4">
+    <!-- Previous arrow -->
+    <button
+      class="absolute left-0 top-1/2 transform -translate-y-1/2 text-white text-4xl z-10"
+      (click)="prevImage()"
+    >
+      &#10094;
+    </button>
+
+    <!-- Image -->
+    <img
+      [src]="listing.images[activeImageIndex]"
+      class="max-h-[80vh] w-full object-contain rounded-lg"
+    />
+
+    <!-- Next arrow -->
+    <button
+      class="absolute right-0 top-1/2 transform -translate-y-1/2 text-white text-4xl z-10"
+      (click)="nextImage()"
+    >
+      &#10095;
+    </button>
+  </div>
+</div>
   <div *ngIf="listing.allow_submission === 0">
     <!-- Header Section with Two Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
@@ -714,3 +754,7 @@
             </div>
     </div> -->
 </div>
+
+
+
+

@@ -48,6 +48,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { LocationSService } from '../../services/location-s.service';
 
 interface Plate {
   id: number;
@@ -115,24 +116,92 @@ slidesToShow = 1;
   cardWidth = 324; // Desktop card width
   mobileCardWidth = 300; // Mobile card width
   isMobile = false;
-  constructor(private http: HttpClient, private router : Router) {}
+  countryId?: number;
+  constructor(private http: HttpClient, private router : Router, private locationService: LocationSService) {}
 
-  ngOnInit(): void {
-    this.fetchPlates();
-  }
+  // ngOnInit(): void {
 
-  fetchPlates(): void {
-    this.http.get<any>('https://be.dabapp.co/api/listings/by-category/3')
-      .subscribe({
-        next: (response) => {
-          this.plates = (response || []).filter((plate: Plate) => plate.license_plate);
-          // this.availableCount = this.plates.length;
-        },
-        error: (error) => {
-          console.error('Error fetching plates:', error);
-        }
-      });
-  }
+  //     this.locationService.selectedCountry$.subscribe((country) => {
+  //   if (country?.id) {
+  //     this.countryId = country.id;
+  //     console.log('this.countryId : ', this.countryId );
+  //      this.fetchPlates();
+  //   }
+  // });
+
+   
+  // }
+ngOnInit(): void {
+  // Call initially without country
+  this.fetchPlates();
+
+  // If user selects a country, re-fetch with that country
+  this.locationService.selectedCountry$.subscribe((country) => {
+    if (country?.id) {
+      this.countryId = country.id;
+      console.log('this.countryId : ', this.countryId);
+      this.fetchPlates();
+    }
+  });
+}
+
+
+  // fetchPlates(): void {
+  //   this.http.get<any>('https://be.dabapp.co/api/listings/by-category/3')
+  //     .subscribe({
+  //       next: (response) => {
+  //         this.plates = (response || []).filter((plate: Plate) => plate.license_plate);
+  //         // this.availableCount = this.plates.length;
+  //       },
+  //       error: (error) => {
+  //         console.error('Error fetching plates:', error);
+  //       }
+  //     });
+  // }
+//   fetchPlates(): void {
+//   const url = this.countryId
+//     ? `https://be.dabapp.co/api/listings/by-category/3?country=${this.countryId}`
+//     : `https://be.dabapp.co/api/listings/by-category/3`;
+
+//   this.http.get<any>(url).subscribe({
+//     next: (response) => {
+//       this.plates = (response).filter((plate: Plate) => plate.license_plate);
+//       // this.availableCount = this.plates.length;
+//     },
+//     error: (error) => {
+//       console.error('Error fetching plates:', error);
+//     }
+//   });
+// }
+
+searchedCountryMessage: string | null = null;
+// plates: Plate[] = [];
+
+fetchPlates(): void {
+  const url = this.countryId
+    ? `https://be.dabapp.co/api/listings/by-category/3?country=${this.countryId}`
+    : `https://be.dabapp.co/api/listings/by-category/3`;
+
+  this.http.get<any>(url).subscribe({
+    next: (response) => {
+      const listings = response.listings || [];
+
+      // Optional: filter plates if needed
+      this.plates = listings.filter((plate: Plate) => plate.license_plate);
+
+      if (response.showing_all_countries && response.searched_country) {
+        this.searchedCountryMessage = `No listings found for "${response.searched_country}". Showing all countries instead.`;
+      } else {
+        this.searchedCountryMessage = null;
+      }
+    },
+    error: (error) => {
+      console.error('Error fetching plates:', error);
+      this.searchedCountryMessage = 'Unable to load listings.';
+    }
+  });
+}
+
 
   getAriaLabel(index: number): string {
   return `Go to slide ${index + 1}`;

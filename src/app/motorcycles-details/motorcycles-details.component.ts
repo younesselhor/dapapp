@@ -162,7 +162,7 @@ export class MotorcyclesDetailsComponent implements OnInit, OnDestroy {
   }
 
   getMotorcyclesdetails(): void {
-    this.listingbyService.getMotorcyclesByCategory().subscribe((response: any) => {
+    this.listingbyService.getMotorcyclesByCategory(1).subscribe((response: any) => {
       this.motorCyclesDetails = response;
     });
   }

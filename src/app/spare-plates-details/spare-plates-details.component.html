@@ -42,10 +42,13 @@
 
   <div class="filter-content" *ngIf="isCountryOpen">
     <!-- Brand search input -->
-    <div class="search-box">
-     <input type="text" placeholder="Search brands..." [(ngModel)]="searchBrandTerm" 
-       (input)="displayCount = 6; applyFilters()">
-    </div>
+   <div class="search-box">
+  <input type="text" placeholder="Search brands..." [(ngModel)]="searchBrandTerm" 
+         (input)="displayCount = 6; applyFilters()">
+  <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 30 30" fill="none">
+    <path d="M25.8648 23.122L20.4231 17.6803C21.2439 16.3339 21.7162 14.7499 21.7162 13.0579C21.7162 8.1374 17.4523 3.875 12.5319 3.875C7.61138 3.875 3.62402 7.86236 3.62402 12.7828C3.62402 17.7019 7.88786 21.9657 12.8069 21.9657C14.4442 21.9657 15.9749 21.5208 17.2925 20.7504L22.7631 26.2238C23.2987 26.758 24.1671 26.758 24.7013 26.2238L26.0592 24.8659C26.5935 24.3316 26.3991 23.6563 25.8648 23.122ZM6.36578 12.7828C6.36578 9.3758 9.12626 6.61532 12.5319 6.61532C15.9375 6.61532 18.9744 9.6494 18.9744 13.0579C18.9744 16.4635 16.2125 19.2254 12.8069 19.2254C9.4013 19.2254 6.36578 16.1884 6.36578 12.7828Z" fill="#FA4C06"/>
+  </svg>
+</div>
 
     <!-- Brand list with scroll -->
     <div class="scrollable-list">
@@ -78,6 +81,9 @@
     <div class="search-box">
       <input type="text" placeholder="Search categories..." [(ngModel)]="searchCategoryTerm"
              (input)="displayCount = 6">
+               <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 30 30" fill="none">
+    <path d="M25.8648 23.122L20.4231 17.6803C21.2439 16.3339 21.7162 14.7499 21.7162 13.0579C21.7162 8.1374 17.4523 3.875 12.5319 3.875C7.61138 3.875 3.62402 7.86236 3.62402 12.7828C3.62402 17.7019 7.88786 21.9657 12.8069 21.9657C14.4442 21.9657 15.9749 21.5208 17.2925 20.7504L22.7631 26.2238C23.2987 26.758 24.1671 26.758 24.7013 26.2238L26.0592 24.8659C26.5935 24.3316 26.3991 23.6563 25.8648 23.122ZM6.36578 12.7828C6.36578 9.3758 9.12626 6.61532 12.5319 6.61532C15.9375 6.61532 18.9744 9.6494 18.9744 13.0579C18.9744 16.4635 16.2125 19.2254 12.8069 19.2254C9.4013 19.2254 6.36578 16.1884 6.36578 12.7828Z" fill="#FA4C06"/>
+  </svg>
     </div>
 
     <!-- Category list with scroll -->
@@ -126,6 +132,48 @@
   </div>
 </div>
     </div>
+    <!-- Main Content Area -->
+    <div class="main-content">
+      <!-- New Filter Card Section -->
+      <div class="filter-card-container">
+        <div class="filter-card">
+          <div class="filter-card-header">
+            <h3>Browse as you wish</h3>
+            <div class="filter-tags">
+              <span class="filter-tag">Model</span>
+              <span class="filter-tag">Category</span>
+            </div>
+          </div>
+          
+          <div class="filter-controls">
+            <div class="filter-select">
+              <select>
+                <option value="">Brand</option>
+                <option *ngFor="let brand of brands" [value]="brand.id">{{ brand.name }}</option>
+              </select>
+              <span class="check-mark">✔</span>
+            </div>
+            
+            <div class="filter-select">
+              <select>
+                <option value="">Model</option>
+              </select>
+              <span class="check-mark">✔</span>
+            </div>
+            
+            <div class="filter-select">
+              <select>
+                <option value="">Year</option>
+              </select>
+              <span class="check-mark">✔</span>
+            </div>
+            
+            <button class="search-btn">
+              Search
+            </button>
+          </div>
+        </div>
+      </div>
     <!-- Side Bar End -->
      <div *ngIf="spareParts?.length !== 0">
     <div class="products-grid">

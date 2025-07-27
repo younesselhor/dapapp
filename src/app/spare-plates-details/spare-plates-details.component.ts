@@ -6,6 +6,24 @@ import { SidebarComponent } from '../components/sidebar/sidebar.component';
 import { FormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
+
+interface Brand {
+  id: number;
+  name: string;
+  listings_count: number;
+  checked?: boolean; // optional property for the checkbox state
+}
+
+interface bikePart {
+  id: number;
+  title: string;
+  description?: string;
+  price: number;
+  images: string[];
+  image?: string;
+  imageLoaded?: boolean; // Add this for image loading state
+  // add other properties as needed
+}
 @Component({
   selector: 'app-spare-plates-details',
    standalone: true,
@@ -24,6 +42,7 @@ export class SparePlatesDetailsComponent implements OnInit{
     { value: 'sale', count: 22, checked: false },
     { value: 'DabApp Exclusives', count: 23, checked: false }
   ];
+  brands: Brand[] = [];
 
 
 selectedCondition: 'new' | 'used' | '' = '';
@@ -102,6 +121,10 @@ applyFilters() {
     }
   );
 }
+
+  trackByPartId(index: number, bike: bikePart): number {
+    return bike.id;
+  }
   ngOnInit(): void {
    this.filterDebouncer.pipe(
     debounceTime(300),
@@ -116,6 +139,25 @@ applyFilters() {
      // this.getSparePlates();
   }
 
+    onImageLoad(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    const motorcycleIndex = this.bikePartsCatg.findIndex(m => m.image === img.src);
+    if (motorcycleIndex !== -1) {
+      this.bikePartsCatg[motorcycleIndex].imageLoaded = true;
+      this.cdr.detectChanges();
+    }
+  }
+
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    // Set a placeholder image or handle error
+    img.src = 'assets/images/motorcycle-placeholder.jpg'; // Add your placeholder image
+    const motorcycleIndex = this.bikePartsCatg.findIndex(m => m.image === img.src);
+    if (motorcycleIndex !== -1) {
+      this.bikePartsCatg[motorcycleIndex].imageLoaded = true;
+      this.cdr.detectChanges();
+    }
+  }
 
   // getSparePlates(){
   //   this.listingbyService.getBikePartByCategory().subscribe((res :any) =>{

@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { ListingByCatService } from '../../services/listingsByCategory/listing-by-cat.service';
 import { animate, style, transition, trigger } from '@angular/animations';
+import { LocationSService } from '../../services/location-s.service';
 
 interface SparePart {
   id: number;
@@ -43,23 +44,47 @@ export class UsedSparePartsSectionComponent implements OnInit {
   cardWidth = 324; // Desktop card width
   mobileCardWidth = 300; // Mobile card width
   isMobile = false;
-  constructor(private listinbyCat: ListingByCatService, private router : Router) {}
+    countryId?: number;
+  constructor(private listinbyCat: ListingByCatService, private router : Router, private locationService: LocationSService) {}
 
   ngOnInit(): void {
-    this.getBikePart();
+
+
+    this.locationService.selectedCountry$.subscribe((country) => {
+    if (country?.id) {
+      this.countryId = country.id;
+      console.log('this.countryId : ', this.countryId );
+      this.getBikePart();
+    }
+  });
   }
 
 
    truncateText(text: string, maxLength: number): string {
     return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
   }
-  getBikePart() {
-    this.listinbyCat.getBikePartByCategory().subscribe((res: any) => {
-      this.spareParts = res;
-      console.log('this.spareParts: ', this.spareParts);
-    });
-  }
+  // getBikePart() {
+  //   if (!this.countryId) return;
+  //   this.listinbyCat.getBikePartByCategory(this.countryId).subscribe((res: any) => {
+  //     this.spareParts = res;
+  //     console.log('this.spareParts: ', this.spareParts);
+  //   });
+  // }
+  searchedCountryMessage: string | null = null;
 
+  getBikePart() {
+  if (!this.countryId) return;
+
+  this.listinbyCat.getMotorcyclesByCategory(this.countryId).subscribe((res: any) => {
+    this.spareParts = res.listings || [];
+
+    if (res.showing_all_countries && res.searched_country) {
+      this.searchedCountryMessage = `No listings found for "${res.searched_country}". Showing all countries instead.`;
+    } else {
+      this.searchedCountryMessage = null;
+    }
+  });
+}
   get visibleParts() {
     const start = this.currentSlide * this.itemsPerSlide;
     return this.spareParts.slice(start, start + this.itemsPerSlide);

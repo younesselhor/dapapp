@@ -35,7 +35,7 @@ export class MainProductsPageComponent implements OnInit {
   soomSuccess: boolean = false;
   minimumRequired: number | null = null;
   confirmSoomStep = false;
-
+  isModalOpen = false;
 
 
   constructor(
@@ -191,10 +191,34 @@ export class MainProductsPageComponent implements OnInit {
     return this.datePipe.transform(date, 'MMM yyyy') || '';
   }
 
-  setActiveImage(index: number): void {
-    this.activeImageIndex = index;
-  }
+  // setActiveImage(index: number): void {
+  //   this.activeImageIndex = index;
+  // }
 
+  setActiveImage(index: number): void {
+  this.activeImageIndex = index;
+  this.isModalOpen = true;
+}
+
+closeModalImages(): void {
+  this.isModalOpen = false;
+}
+
+
+prevImage(): void {
+  if (this.listing?.images?.length > 0) {
+    this.activeImageIndex =
+      (this.activeImageIndex - 1 + this.listing.images.length) %
+      this.listing.images.length;
+  }
+}
+
+nextImage(): void {
+  if (this.listing?.images?.length > 0) {
+    this.activeImageIndex =
+      (this.activeImageIndex + 1) % this.listing.images.length;
+  }
+}
   getTitle(): string {
     if (this.isMotorcycle) {
       return `${this.listing.motorcycle.brand} ${this.listing.motorcycle.model} ${this.listing.motorcycle.year}`;

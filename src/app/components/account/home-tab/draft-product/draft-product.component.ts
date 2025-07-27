@@ -65,6 +65,7 @@ export class DraftProductComponent implements OnInit{
     next: (response) => {
       if (response && Array.isArray(response.data)) {
         this.drafts = response.data;
+        console.log('this.drafts: ', this.drafts);
       } else {
         console.warn('Unexpected response format:', response);
         this.drafts = [];
@@ -76,6 +77,15 @@ export class DraftProductComponent implements OnInit{
   });
 }
 
+
+continueDraft(draftId: number) {
+  this.router.navigate(['/add-product'], {
+    queryParams: { draftId: draftId }
+  });
+}
+
+
+}
 
 // ngOnInit(): void {
 //   this.listingService.getDraftListings().subscribe({
@@ -97,11 +107,3 @@ export class DraftProductComponent implements OnInit{
 // continueDraft(draftId: number) {
 //   this.router.navigate(['/add-product', draftId]); // or whatever route for continuing
 // }
-continueDraft(draftId: number) {
-  this.router.navigate(['/add-product'], {
-    queryParams: { draftId: draftId }
-  });
-}
-
-
-}

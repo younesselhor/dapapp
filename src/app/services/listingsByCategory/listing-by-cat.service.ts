@@ -20,13 +20,21 @@ export class ListingByCatService {
   constructor(private http: HttpClient) { }
   baseUrl = 'https://be.dabapp.co/api/';
 
-  getMotorcyclesByCategory(){
-    return this.http.get(this.baseUrl + 'listings/by-category/1')
+  // getMotorcyclesByCategory(){
+  //   return this.http.get(this.baseUrl + 'listings/by-category/1')
+  // }
+
+  // listings.service.ts
+getMotorcyclesByCategory(countryId: any) {
+  return this.http.get(`${this.baseUrl}listings/by-category/1?country=${countryId}`);
+}
+  getBikePartByCategory(countryId: any) {
+    return this.http.get(`${this.baseUrl}listings/by-category/2?country=${countryId}`);
   }
 
-  getBikePartByCategory(){
-    return this.http.get(this.baseUrl + 'listings/by-category/2')
-  }
+  // getBikePartByCategory(){
+  //   return this.http.get(this.baseUrl + 'listings/by-category/2')
+  // }
   
   getPriceRange(cat:number){
     return this.http.get(this.baseUrl +'categories/'+cat+'/price-range')

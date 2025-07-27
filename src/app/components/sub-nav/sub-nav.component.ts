@@ -5,6 +5,20 @@ import { RouterLink, RouterModule } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 
+
+import { AuthService } from '../../services/auth.service'; // Update path if needed
+import { Subscription } from 'rxjs';
+import { ListingService } from '../postingAdd/product-form/listingService/listing-service.service';
+import { LocationSService } from '../../services/location-s.service';
+// import { ListingService } from '../main-products-page/listingProduct.service';
+
+
+interface ICountry {
+  id: number;
+  name: string;
+  code: string;
+}
+
 interface ICity {
   name: string;
   code: string;
@@ -28,23 +42,16 @@ export class SubNavComponent implements OnInit, OnChanges {
   @Input() selectedMenu: string = '';
 
   value: string = '';
-  cities: ICity[] = [
-    { name: 'Riyadh', code: 'RUH' },
-    { name: 'Jeddah', code: 'JED' },
-    { name: 'Dammam', code: 'DMM' }
-  ];
 
-  // selectedCity: ICity | undefined;
+  selectedCountry: string = ''; // ← country code like 'SA', 'AE', 'MA'
+  countries: ICountry[] = [];
+  allCities: any[] = [];
+  
+
+   private userSub: Subscription | undefined;
+    constructor(private authService: AuthService, private listingService: ListingService, private locationService: LocationSService) {}
 
 
-  selectedCity: ICity = { name: '', code: '' };
-
-  onCityChange(event: Event) {
-    const selectElement = event.target as HTMLSelectElement;
-    const selectedCode = selectElement.value;
-    const foundCity = this.cities.find(city => city.code === selectedCode);
-    this.selectedCity = foundCity || { name: '', code: '' };
-  }
   // Using a method instead of a property for reactive updates
   getSubMenuItems(): { name: string; path: string }[] {
     const menuItems: { [key: string]: { name: string; path: string }[] } = {
@@ -98,18 +105,140 @@ export class SubNavComponent implements OnInit, OnChanges {
     return menuItems[this.selectedMenu] || [];
   }
 
+
+
+
   ngOnInit() {
-    this.cities = [
-      { name: 'Riyadh', code: 'RYD' },
-      { name: 'Jeddah', code: 'JED' },
-      { name: 'Dammam', code: 'DAM' }
-    ];
+    this.loadCountries();
+
+    this.userSub = this.authService.currentUser$.subscribe((user) => {
+      if (user?.country) {
+        const found = this.countries.find(c => c.name.toLowerCase() === user.country.toLowerCase());
+        if (found) {
+          this.selectedCountry = found.name;
+          console.log(' this.selectedCountry: ',  this.selectedCountry);
+          console.log('User country matched:', found.name, '-> code:', found.code);
+        }
+      }
+    });
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    // React to selectedMenu changes if needed
-    if (changes['selectedMenu']) {
-      // Additional logic if needed when menu changes
-    }
+  loadCountries() {
+    this.listingService.getCityList().subscribe((res) => {
+      this.countries = res.countries;
+      console.log('this.countries: ', this.countries);
+      this.allCities = res.cities;
+    });
+  }
+
+onCountryChange(event: Event) {
+  const selectedName = (event.target as HTMLSelectElement).value;
+  const selected = this.countries.find(c => c.name === selectedName);
+  if (selected) {
+    // this.selectedCountry = selected;
+    this.locationService.setSelectedCountry(selected); // 👈 notify the app
   }
 }
+//   onCountryChange(event: Event) {
+//   const selectedName = (event.target as HTMLSelectElement).value;
+//   this.selectedCountry = selectedName;
+//   const matched = this.countries.find(c => c.name === selectedName);
+//   console.log('Country changed to:', matched?.name, 'Code:', matched?.code);
+// }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['selectedMenu']) {
+      // ...
+    }
+  }
+
+  ngOnDestroy() {
+    this.userSub?.unsubscribe();
+  }
+}
+
+
+
+
+
+
+
+  // ngOnInit() {
+  //   this.cities = [
+  //     { name: 'Riyadh', code: 'RYD' },
+  //     { name: 'Jeddah', code: 'JED' },
+  //     { name: 'Dammam', code: 'DAM' }
+  //   ];
+  // }
+  
+  // ngOnInit() {
+  //   this.userSub = this.authService.currentUser$.subscribe((user) => {
+  //     if (user && user.country) {
+  //       const countryToCityMap: { [key: string]: ICity } = {
+  //         'Saudi Arabia': { name: 'Riyadh', code: 'RYD' },
+  //         'Morocco': { name: 'Casablanca', code: 'CSB' }, // Add city to cities list
+  //         'UAE': { name: 'Dubai', code: 'DXB' }
+  //         // Add more countries if needed
+  //       };
+
+  //       const mappedCity = countryToCityMap[user.country];
+  //       if (mappedCity) {
+  //         this.cities = [...this.cities, mappedCity]; // avoid duplicates if needed
+  //         this.selectedCity = mappedCity;
+  //       }
+  //     }
+  //   });
+  // }
+
+
+  //  ngOnInit() {
+  //   this.loadCountries();
+
+  //   this.authService.currentUser$.subscribe((user) => {
+  //     if (user?.country) {
+  //       this.selectedCountry = user.country;
+  //       console.log('User country:', this.selectedCountry);
+  //     }
+  //   });
+  // }
+
+  // loadCountries() {
+  //   this.listingService.getCityList().subscribe((res) => {
+  //     this.countries = res.countries; // array of strings
+  //     this.allCities = res.cities; // optional: you might use this later
+  //   });
+  // }
+
+  // onCountryChange(event: Event) {
+  //   const selected = (event.target as HTMLSelectElement).value;
+  //   this.selectedCountry = selected;
+
+  //   // Optional: emit change or filter city list if needed
+  //   console.log('Country changed to:', this.selectedCountry);
+  // }
+
+
+  // onCountryChange(event: Event) {
+  //   const selectElement = event.target as HTMLSelectElement;
+  //   const selectedCode = selectElement.value;
+  //   const foundCity = this.countries.find(city => city === selectedCode);
+  //   this.selectedCountry = foundCity || ''
+  // }
+
+  // ngOnChanges(changes: SimpleChanges): void {
+  //   // React to selectedMenu changes if needed
+  //   if (changes['selectedMenu']) {
+  //     // Additional logic if needed when menu changes
+  //   }
+  // }
+
+
+  //   ngOnDestroy() {
+  //   this.userSub?.unsubscribe();
+  // }
+    // onCityChange(event: Event) {
+  //   const selectElement = event.target as HTMLSelectElement;
+  //   const selectedCode = selectElement.value;
+  //   const foundCity = this.cities.find(city => city.code === selectedCode);
+  //   this.selectedCity = foundCity || { name: '', code: '' };
+  // }

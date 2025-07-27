@@ -33,7 +33,32 @@ interface Step {
   description: string;
 }
 
+interface PlateFieldValue {
+  plate_format_field_id: number;
+  field_value: string;
+}
 
+interface FormatField {
+  id: number;
+  field_name: string;
+  is_required: boolean;
+  min_length?: number;
+  max_length?: number;
+  character_type?: string;
+  writing_system?: string;
+  validation_pattern?: string;
+  // Add other properties as needed from API
+}
+
+interface FieldValue {
+  plate_format_field_id: number;
+  field_value: string;
+  format_field: FormatField;
+}
+
+interface DynamicField extends FormatField {
+  controlName: string;
+}
 @Component({
   selector: 'app-product-form',
   standalone: true,
@@ -165,6 +190,8 @@ discountedPrice: number | null = null;
     { id: 'tabby', name: 'Tabby', selected: false, badge: 'tabby' },
   ];
 
+  draftLicensePlateFieldValues: any[] = [];
+
 
    platesForm: FormGroup;
   countries: any[] = [];
@@ -173,6 +200,8 @@ discountedPrice: number | null = null;
   dynamicFields: any[] = [];
   selectedPlateFormat: any = null;
   listingId: number | null = null;
+
+  isLoadingDraft = false;
 
   constructor(
     private fb: FormBuilder,
@@ -212,11 +241,11 @@ discountedPrice: number | null = null;
     this.bikeForm = this.fb.group({
       category_id: [2, Validators.required],
       images: [[]],
-      bike_part_brand_id: [1, Validators.required],
-      bike_part_category_id: [1, Validators.required],
-      brand_id: ['1', Validators.required],
-      model_id: ['2', Validators.required],
-      year_id: ['1'],
+      bike_part_brand_id: ['', Validators.required],
+      bike_part_category_id: ['', Validators.required],
+      brand_id: ['', Validators.required],
+      model_id: ['', Validators.required],
+      year_id: [''],
       condition: ['new', Validators.required],
       description: ['', [Validators.required, Validators.minLength(20)]],
     });
@@ -242,7 +271,7 @@ discountedPrice: number | null = null;
       price: [null, ],
       country: ['',Validators.required],
       city: ['', Validators.required],
-      sellerType: ['', Validators.required],
+      seller_type: ['', Validators.required],
       minimum_bid: [0] // Add this new field for Soom settings
     });
 
@@ -266,42 +295,292 @@ ngOnInit(): void {
     this.setupFormListeners();
   this.loadCitys();
 
-  this.platesForm.get('country_id_lp')?.valueChanges.subscribe((countryId) => {
-    this.onCountryChange(countryId);
-  });
+  // this.platesForm.get('country_id_lp')?.valueChanges.subscribe((countryId) => {
+  //   this.onCountryChange(countryId);
+  // });
 
-  this.platesForm.get('city_id_lp')?.valueChanges.subscribe((cityId) => {
-    this.onCitySelected(cityId);
-  });
+  // this.platesForm.get('city_id_lp')?.valueChanges.subscribe((cityId) => {
+  //   this.onCitySelected(cityId);
+  // });
+  this.platesForm.get('country_id_lp')?.valueChanges.subscribe((countryId) => {
+  if (this.isLoadingDraft) return;
+  this.onCountryChange(countryId);
+});
+
+this.platesForm.get('city_id_lp')?.valueChanges.subscribe((cityId) => {
+  if (this.isLoadingDraft) return;
+  this.onCitySelected(cityId);
+});
+
 }
+// loadDraftData(draftId: number) {
+//   this.listingService.getSingleDraft(draftId).subscribe({
+//     next: (res: any) => {
+//       const draft = res?.data;
+
+//       if (!draft) return;
+
+//       // Fill Step 1 (vehicle form)
+//       if (draft.motorcycle) {
+//         this.vehicleForm.patchValue({
+//           brand_id: draft.motorcycle.brand_id,
+//           model_id: draft.motorcycle.model_id,
+//           year_id: draft.motorcycle.year_id,
+//           engine: parseInt(draft.motorcycle.engine), // strip "cc" if needed
+//           mileage: draft.motorcycle.mileage,
+//           body_condition: draft.motorcycle.body_condition,
+//           modified: draft.motorcycle.modified ? 'Yes' : 'No',
+//           insurance: draft.motorcycle.insurance ? 'Yes' : 'No',
+//           general_condition: draft.motorcycle.general_condition,
+//           vehicle_care: draft.motorcycle.vehicle_care,
+//           transmission: draft.motorcycle.transmission
+//         });
+
+//         this.uploadedImageUrls = draft.images.map((img: any) => img.image_url);
+//         console.log('this.uploadedImageUrls: ', this.uploadedImageUrls);
+//       }
+
+//       // Fill Step 2 (ad details)
+//       this.adDetailsForm.patchValue({
+//         title: draft.title,
+//         description: draft.description,
+//         price: draft.price,
+//         city: draft.city_id,
+//         country: draft.country_id,
+//         listing_type_id: draft.listing_type_id,
+//         contacting_channel: draft.contacting_channel,
+//         seller_type: draft.seller_type,
+//         allow_submission: draft.allow_submission ? 'true' : 'false',
+//         minimum_bid: draft.minimum_bid
+//       });
+
+//       // Track current step
+//       this.currentStep = draft.step || 1;
+//     },
+//     error: (err) => {
+//       console.error('Failed to load draft', err);
+//     }
+//   });
+// }
 loadDraftData(draftId: number) {
   this.listingService.getSingleDraft(draftId).subscribe({
     next: (res: any) => {
       const draft = res?.data;
-
+      console.log('draft: ', draft);
       if (!draft) return;
 
-      // Fill Step 1 (vehicle form)
-      if (draft.motorcycle) {
-        this.vehicleForm.patchValue({
-          brand_id: draft.motorcycle.brand_id,
-          model_id: draft.motorcycle.model_id,
-          year_id: draft.motorcycle.year_id,
-          engine: parseInt(draft.motorcycle.engine), // strip "cc" if needed
-          mileage: draft.motorcycle.mileage,
-          body_condition: draft.motorcycle.body_condition,
-          modified: draft.motorcycle.modified ? 'Yes' : 'No',
-          insurance: draft.motorcycle.insurance ? 'Yes' : 'No',
-          general_condition: draft.motorcycle.general_condition,
-          vehicle_care: draft.motorcycle.vehicle_care,
-          transmission: draft.motorcycle.transmission
-        });
+      // ✅ 1. Select vehicle type (1: Motorcycle, 2: Spare Part, 3: License Plate)
+      this.selectVehicleType(draft.category_id);
 
-        this.uploadedImageUrls = draft.images.map((img: any) => img.image_url);
-        console.log('this.uploadedImageUrls: ', this.uploadedImageUrls);
+      // ✅ 2. Handle LICENSE PLATE case
+      if (draft.license_plate) {
+        const licensePlate = draft.license_plate;
+
+        // Patch basic fields
+        // this.platesForm.patchValue({
+        //   country_id_lp: licensePlate.country_id,
+        //   city_id_lp: licensePlate.city_id,
+        //   plate_format_id: licensePlate.plate_format_id,
+        // });
+        this.isLoadingDraft = true;
+
+this.platesForm.patchValue({
+  country_id_lp: draft.license_plate.country_id,
+  city_id_lp: draft.license_plate.city_id,
+  plate_format_id: draft.license_plate.plate_format_id,
+});
+
+// ⏳ Wait for dynamic fields to be added (after city selection triggers city change & format load)
+setTimeout(() => {
+  this.patchDynamicFieldValues(draft.license_plate.field_values.map((fv: any) => ({
+    id: fv.id,
+    controlName: fv.field_value
+  })));
+}, 300); // 300ms should be enough
+
+
+
+this.dynamicFields = draft.license_plate.field_values.map((fv: FieldValue): DynamicField => {
+  const f: FormatField = fv.format_field;
+  return {
+    ...f,
+    controlName: `${f.field_name}_${f.id}`,
+  };
+});
+
+this.addDynamicFieldsToForm(); // <-- ensures form controls exist
+
+// Delay patching to ensure fields are registered
+// setTimeout(() => {
+//   this.patchDynamicFieldValues(draft.license_plate.field_values);
+//   this.isLoadingDraft = false;
+// }, 0);
+
+
+        const fieldValues = licensePlate.field_values;
+
+        if (fieldValues?.length) {
+          // ✅ Build dynamicFields array from format_field inside each field_value
+          interface FormatField {
+            id: number;
+            field_name: string;
+            is_required: boolean;
+            min_length?: number;
+            max_length?: number;
+            character_type?: string;
+            writing_system?: string;
+            validation_pattern?: string;
+            // Add other properties as needed from API
+          }
+
+          interface FieldValue {
+            plate_format_field_id: number;
+            field_value: string;
+            format_field: FormatField;
+          }
+
+          interface DynamicField extends FormatField {
+            controlName: string;
+          }
+
+          // this.dynamicFields = fieldValues.map((fv: FieldValue): DynamicField => {
+          //   const field = fv.format_field;
+          //   return {
+          //     ...field,
+          //     controlName: `${field.field_name}_${field.id}`
+          //   };
+          // });
+
+          // ✅ Add dynamic controls to form
+          this.addDynamicFieldsToForm();
+
+          // ✅ Patch values
+          // this.patchDynamicFieldValues(fieldValues);
+          Promise.resolve().then(() => {
+  this.patchDynamicFieldValues(fieldValues);
+});
+        }
       }
 
-      // Fill Step 2 (ad details)
+      // ✅ 3. Handle MOTORCYCLE case
+      // if (draft.motorcycle) {
+      //   this.vehicleForm.patchValue({
+      //     brand_id: draft.motorcycle.brand_id,
+      //     model_id: draft.motorcycle.model_id,
+      //     year_id: draft.motorcycle.year_id,
+      //     engine: parseInt(draft.motorcycle.engine),
+      //     mileage: draft.motorcycle.mileage,
+      //     body_condition: draft.motorcycle.body_condition,
+      //     modified: draft.motorcycle.modified ? 'Yes' : 'No',
+      //     insurance: draft.motorcycle.insurance ? 'Yes' : 'No',
+      //     general_condition: draft.motorcycle.general_condition,
+      //     vehicle_care: draft.motorcycle.vehicle_care,
+      //     transmission: draft.motorcycle.transmission
+      //   });
+
+      //   this.uploadedImageUrls = draft.images.map((img: any) => img.image_url);
+      //   console.log('📸 Uploaded image URLs:', this.uploadedImageUrls);
+      // }
+if (draft.motorcycle) {
+  const { brand_id, model_id, year_id } = draft.motorcycle;
+
+  this.vehicleForm.patchValue({
+    brand_id,
+    model_id,
+    year_id,
+    engine: parseInt(draft.motorcycle.engine),
+    mileage: draft.motorcycle.mileage,
+    body_condition: draft.motorcycle.body_condition,
+    modified: draft.motorcycle.modified ? 'Yes' : 'No',
+    insurance: draft.motorcycle.insurance ? 'Yes' : 'No',
+    general_condition: draft.motorcycle.general_condition,
+    vehicle_care: draft.motorcycle.vehicle_care,
+    transmission: draft.motorcycle.transmission
+  });
+
+  this.uploadedImageUrls = draft.images.map((img: any) => img.image_url);
+
+  // ✅ Step 1: Load models using brand_id
+  this.listingService.getMotorcycleFilters({ brand_id }).subscribe((brandRes) => {
+    this.models = brandRes.data.models || [];
+
+    // ✅ Step 2: Load years using brand_id and model_id
+    this.listingService.getMotorcycleFilters({ brand_id, model_id }).subscribe((modelRes) => {
+      this.years = modelRes.data.years.map((y: any) => ({
+        id: y.id,
+        year: y.year,
+      }));
+    });
+  });
+}
+
+
+if (draft.spare_part) {
+  const moto = draft.spare_part.motorcycles?.[0]; // Get the first linked motorcycle
+
+  // 1. Patch bikeForm
+  this.bikeForm.patchValue({
+    brand_id: moto?.brand_id || '',
+    model_id: moto?.model_id || '',
+    year_id: moto?.year_id || '',
+    bike_part_brand_id: draft.spare_part.bike_part_brand_id,
+    bike_part_category_id: draft.spare_part.bike_part_category_id,
+    general_condition: draft.spare_part.condition,
+    description: draft.description
+  });
+
+  // 2. Load models if brand exists
+  if (moto?.brand_id) {
+    this.listingService.getMotorcycleFilters({ brand_id: moto.brand_id }).subscribe((res) => {
+      this.models = res.data.models || [];
+
+      // 3. Load years if model also exists
+      if (moto?.model_id) {
+        this.listingService.getMotorcycleFilters({
+          brand_id: moto.brand_id,
+          model_id: moto.model_id
+        }).subscribe((res2) => {
+          this.years = res2.data.years || [];
+        });
+      }
+    });
+  }
+}
+
+// if(draft.spare_part) {
+//  const { brand_id, model_id, year_id } = draft.spare_part;
+//   // ✅ Handle SPARE PART case
+//   this.bikeForm.patchValue({
+//      brand_id,
+//     model_id,
+//     year_id,
+//     bike_part_brand_id: draft.spare_part.bike_part_brand_id,
+//     bike_part_category_id: draft.spare_part.bike_part_category_id,
+//     // brand_id: draft.motorcycles.brand_id,
+//     // model_id: draft.motorcycles.model_id,
+//     // year_id: draft.motorcycles.year_id,
+//     general_condition: draft.spare_part.condition,
+//     description: draft.description
+//   });
+// }
+
+
+    // this.bikeForm = this.fb.group({
+    //   category_id: [2, Validators.required],
+    //   images: [[]],
+    //   bike_part_brand_id: ['', Validators.required],
+    //   bike_part_category_id: ['', Validators.required],
+    //   brand_id: ['', Validators.required],
+    //   model_id: ['', Validators.required],
+    //   year_id: [''],
+    //   condition: ['new', Validators.required],
+    //   description: ['', [Validators.required, Validators.minLength(20)]],
+    // });
+
+
+
+
+      // ✅ 4. Handle Ad Details (Step 2)
       this.adDetailsForm.patchValue({
         title: draft.title,
         description: draft.description,
@@ -310,16 +589,41 @@ loadDraftData(draftId: number) {
         country: draft.country_id,
         listing_type_id: draft.listing_type_id,
         contacting_channel: draft.contacting_channel,
-        sellerType: draft.seller_type,
+        seller_type: draft.seller_type,
         allow_submission: draft.allow_submission ? 'true' : 'false',
         minimum_bid: draft.minimum_bid
       });
+//  this.uploadedImages = draft.images.image_url || [];
+// this.imageList = draft.images || [];
 
-      // Track current step
+// this.uploadedImages = (draft.images || []).map((img: any) => ({
+//   file: null,
+//   preview: img.image_url
+// }));
+this.uploadedImages = (draft.images || []).map((img: any) => ({
+  preview: img.image_url,
+  serverUrl: img.image_url,
+  file: undefined
+}));
+      // ✅ 5. Track the current draft step
       this.currentStep = draft.step || 1;
     },
     error: (err) => {
-      console.error('Failed to load draft', err);
+      console.error('❌ Failed to load draft:', err);
+    }
+  });
+}
+
+
+patchDynamicFieldValues(fieldValues: FieldValue[]) {
+  fieldValues.forEach(fv => {
+    const field = this.dynamicFields.find(f => f.id === fv.plate_format_field_id);
+    if (field) {
+      const controlName = field.controlName;
+      this.platesForm.get(controlName)?.patchValue(fv.field_value);
+      console.log(`✅ Patched ${controlName} with`, fv.field_value);
+    } else {
+      console.warn(`⚠️ No dynamic field found for id ${fv.plate_format_field_id}`);
     }
   });
 }
@@ -360,7 +664,7 @@ loadDraftData(draftId: number) {
 //         country: data.country_id,
 //         price: data.minimum_bid ?? '', // fallback if null
 //         auctionEnabled: !!data.auction_enabled
-//         // Add more fields if needed (e.g., sellerType, contactMethods)
+//         // Add more fields if needed (e.g., seller_type, contactMethods)
 //       });
 
 //       // Step 4: Set uploaded images (read-only view)
@@ -578,24 +882,41 @@ onCitySelected(cityId: number): void {
   });
 }
 // Modify the addDynamicFieldsToForm method
+// addDynamicFieldsToForm(): void {
+//   this.dynamicFields.forEach(field => {
+//     const controlName = this.getControlName(field);
+//     const validators = this.getValidatorsForField(field);
+
+//     if (!this.platesForm.contains(controlName)) {
+//       this.platesForm.addControl(controlName, new FormControl('', validators));
+//     } else {
+//       // Update validators if control already exists
+//       const control = this.platesForm.get(controlName);
+//       control?.setValidators(validators);
+//       control?.updateValueAndValidity();
+//     }
+
+//     field.controlName = controlName;
+//   });
+
+//   // Force form validation check
+//   this.platesForm.updateValueAndValidity();
+// }
 addDynamicFieldsToForm(): void {
   this.dynamicFields.forEach(field => {
-    const controlName = this.getControlName(field);
-    const validators = this.getValidatorsForField(field);
+    const controlName = field.controlName;
+    const validators = [];
+
+    if (field.is_required) validators.push(Validators.required);
+    if (field.min_length) validators.push(Validators.minLength(field.min_length));
+    if (field.max_length) validators.push(Validators.maxLength(field.max_length));
+    if (field.validation_pattern) validators.push(Validators.pattern(field.validation_pattern));
 
     if (!this.platesForm.contains(controlName)) {
       this.platesForm.addControl(controlName, new FormControl('', validators));
-    } else {
-      // Update validators if control already exists
-      const control = this.platesForm.get(controlName);
-      control?.setValidators(validators);
-      control?.updateValueAndValidity();
     }
-
-    field.controlName = controlName;
   });
 
-  // Force form validation check
   this.platesForm.updateValueAndValidity();
 }
 
@@ -642,24 +963,26 @@ updatePlateFormWithDynamicFields(fields: any[]) {
   });
 
   // Add dynamic fields
-  this.dynamicFields = fields.map(field => {
+  // this.dynamicFields = format.fields.map(field => {
+  this.dynamicFields = fields.map((field: FormatField) => {
     const controlName = `${field.field_name}_${field.id}`;
-    const validators = [];
-
-    if (field.is_required) validators.push(Validators.required);
-    if (field.min_length) validators.push(Validators.minLength(field.min_length));
-    if (field.max_length) validators.push(Validators.maxLength(field.max_length));
-    if (field.validation_pattern) validators.push(Validators.pattern(field.validation_pattern));
 
     if (!this.platesForm.contains(controlName)) {
-      this.platesForm.addControl(controlName, new FormControl('', validators));
+      this.platesForm.addControl(
+        controlName,
+        new FormControl('', this.getValidatorsForField(field))
+      );
     }
 
     return {
       ...field,
-      controlName
-    };
+      controlName,
+    } as DynamicField;
   });
+
+  if (this.draftLicensePlateFieldValues?.length) {
+    this.patchDynamicFieldValues(this.draftLicensePlateFieldValues);
+  }
 }
 
 generateDynamicPlateForm(fields: any[]) {
@@ -886,9 +1209,7 @@ removeImage(index: number): void {
   this.vehicleForm.patchValue({ images: this.uploadedImageUrls });
 }
   selectVehicleType(type: number): void {
-    console.log('Received type:', type); // Check if this logs correctly
     this.selectedVehicleType = type;
-    console.log('After assignment:', this.selectedVehicleType);
     // Only patch and reset if form exists
     this.vehicleForm?.patchValue({ category_id: type });
     this.vehicleForm?.patchValue({ vehicleType: type });
@@ -936,7 +1257,7 @@ removeImage(index: number): void {
   }
 
   selectSellerType(type: string): void {
-    this.adDetailsForm.patchValue({ sellerType: type });
+    this.adDetailsForm.patchValue({ seller_type: type });
   }
 
   toggleContactMethod(method: string): void {
@@ -1025,6 +1346,53 @@ getPricing() {
     form.markAllAsTouched();
   }
 
+
+// private async handleStep1() {
+//   if (!this.validateStep1()) return;
+
+//   const step1Data = this.prepareStep1Data();
+//   if (!step1Data) return;
+
+//   this.sharedFormDataService.setStep1Data(step1Data);
+//   this.currentStep++;
+// }
+
+
+// private async handleStep2() {
+//   if (!this.adDetailsForm.valid) {
+//     this.adDetailsForm.markAllAsTouched();
+//     return;
+//   }
+
+//   const step2Data = {
+//     step: 2,
+//     title: this.adDetailsForm.value.title,
+//     description: this.adDetailsForm.value.description,
+//     price: parseFloat(this.adDetailsForm.value.price),
+//     allow_submission: this.adDetailsForm.value.allow_submission === 'true',
+//     contacting_channel: this.adDetailsForm.value.contacting_channel,
+//     country_id: Number(this.adDetailsForm.value.country),
+//     city_id: parseInt(this.adDetailsForm.value.city),
+//     seller_type: this.adDetailsForm.value.seller_type,
+//     listing_type_id: 1,
+//     auction_enabled: this.adDetailsForm.value.allow_submission === 'true',
+//     minimum_bid: this.adDetailsForm.value.minimum_bid,
+//   };
+
+//   this.sharedFormDataService.setStep2Data(step2Data);
+//   this.currentStep++;
+
+//   try {
+//     const step1Data = this.sharedFormDataService.getStep1Data();
+//     const priceData = await this.getPricingInfo(step1Data, step2Data);
+//     this.pricingInfo = priceData;
+//     await this.buildAndSubmitPayload(step1Data, step2Data, priceData);
+//   } catch (error) {
+//     console.error('Error in pricing:', error);
+//     alert('Failed to get pricing information. Please try again.');
+//     this.currentStep--; // Go back if pricing fails
+//   }
+// }
 async goToNextStep() {
   try {
     switch (this.currentStep) {
@@ -1046,15 +1414,7 @@ async goToNextStep() {
   }
 }
 
-// private async handleStep1() {
-//   if (!this.validateStep1()) return;
 
-//   const step1Data = this.prepareStep1Data();
-//   if (!step1Data) return;
-
-//   this.sharedFormDataService.setStep1Data(step1Data);
-//   this.currentStep++;
-// }
 private async handleStep1() {
   if (!this.validateStep1()) return;
 
@@ -1105,42 +1465,6 @@ private validateStep1(): boolean {
 
   return true;
 }
-
-// private async handleStep2() {
-//   if (!this.adDetailsForm.valid) {
-//     this.adDetailsForm.markAllAsTouched();
-//     return;
-//   }
-
-//   const step2Data = {
-//     step: 2,
-//     title: this.adDetailsForm.value.title,
-//     description: this.adDetailsForm.value.description,
-//     price: parseFloat(this.adDetailsForm.value.price),
-//     allow_submission: this.adDetailsForm.value.allow_submission === 'true',
-//     contacting_channel: this.adDetailsForm.value.contacting_channel,
-//     country_id: Number(this.adDetailsForm.value.country),
-//     city_id: parseInt(this.adDetailsForm.value.city),
-//     sellerType: this.adDetailsForm.value.sellerType,
-//     listing_type_id: 1,
-//     auction_enabled: this.adDetailsForm.value.allow_submission === 'true',
-//     minimum_bid: this.adDetailsForm.value.minimum_bid,
-//   };
-
-//   this.sharedFormDataService.setStep2Data(step2Data);
-//   this.currentStep++;
-
-//   try {
-//     const step1Data = this.sharedFormDataService.getStep1Data();
-//     const priceData = await this.getPricingInfo(step1Data, step2Data);
-//     this.pricingInfo = priceData;
-//     await this.buildAndSubmitPayload(step1Data, step2Data, priceData);
-//   } catch (error) {
-//     console.error('Error in pricing:', error);
-//     alert('Failed to get pricing information. Please try again.');
-//     this.currentStep--; // Go back if pricing fails
-//   }
-// }
 private prepareStep1Data(): any {
   switch (this.selectedVehicleType) {
     case 1: // Motorcycle
@@ -1244,7 +1568,7 @@ private async handleStep2() {
     contacting_channel: this.adDetailsForm.value.contacting_channel,
     country_id: Number(this.adDetailsForm.value.country),
     city_id: parseInt(this.adDetailsForm.value.city),
-    sellerType: this.adDetailsForm.value.sellerType,
+    seller_type: this.adDetailsForm.value.seller_type,
     listing_type_id: 1,
     auction_enabled: this.adDetailsForm.value.allow_submission === 'true',
     minimum_bid: this.adDetailsForm.value.minimum_bid,
@@ -1268,38 +1592,6 @@ private async handleStep2() {
   }
 }
 
-
-// private async handleStep3() {
-//   const step1Data = this.sharedFormDataService.getStep1Data();
-//   const step2Data = this.sharedFormDataService.getStep2Data();
-
-//   const payload = {
-//     // Common ad details
-//     step: 3,
-//     title: step2Data.title,
-//     description: step2Data.description,
-//     price: step2Data.price,
-//     listing_type_id: step2Data.listing_type_id,
-//     city_id: step2Data.city_id,
-//     auction_enabled: step2Data.auction_enabled,
-//     minimum_bid: step2Data.minimum_bid,
-//     allow_submission: step2Data.allow_submission,
-//     contacting_channel: step2Data.contacting_channel,
-//     seller_type: step2Data.sellerType,
-//     // Type-specific details
-//     ...this.getTypeSpecificPayload(step1Data)
-//   };
-
-//   try {
-//     const res = await this.listingService.addPost(payload).toPromise();
-//     console.log('Ad created successfully:', res);
-//     this.currentStep++;
-//     this.router.navigate(['/home']);
-//   } catch (err) {
-//     console.error('Error creating ad:', err);
-//     alert('Failed to create ad. Please try again.');
-//   }
-// }
 private async handleStep3() {
   const step1Data = this.sharedFormDataService.getStep1Data();
   const step2Data = this.sharedFormDataService.getStep2Data();
@@ -1316,7 +1608,7 @@ private async handleStep3() {
     minimum_bid: step2Data.minimum_bid,
     allow_submission: step2Data.allow_submission,
     contacting_channel: step2Data.contacting_channel,
-    seller_type: step2Data.sellerType,
+    seller_type: step2Data.seller_type,
     ...this.getTypeSpecificPayload(step1Data)
   };
 
@@ -1381,6 +1673,39 @@ private getTypeSpecificPayload(step1Data: any): any {
   }
 }
 
+// private async handleStep3() {
+//   const step1Data = this.sharedFormDataService.getStep1Data();
+//   const step2Data = this.sharedFormDataService.getStep2Data();
+
+//   const payload = {
+//     // Common ad details
+//     step: 3,
+//     title: step2Data.title,
+//     description: step2Data.description,
+//     price: step2Data.price,
+//     listing_type_id: step2Data.listing_type_id,
+//     city_id: step2Data.city_id,
+//     auction_enabled: step2Data.auction_enabled,
+//     minimum_bid: step2Data.minimum_bid,
+//     allow_submission: step2Data.allow_submission,
+//     contacting_channel: step2Data.contacting_channel,
+//     seller_type: step2Data.seller_type,
+//     // Type-specific details
+//     ...this.getTypeSpecificPayload(step1Data)
+//   };
+
+//   try {
+//     const res = await this.listingService.addPost(payload).toPromise();
+//     console.log('Ad created successfully:', res);
+//     this.currentStep++;
+//     this.router.navigate(['/home']);
+//   } catch (err) {
+//     console.error('Error creating ad:', err);
+//     alert('Failed to create ad. Please try again.');
+//   }
+// }
+
+
   private buildAndSubmitPayload(step1Data: any, step2Data: any, priceData?: any) {
     let payload: any = {
       // Common ad details
@@ -1393,7 +1718,7 @@ private getTypeSpecificPayload(step1Data: any): any {
       minimum_bid: step2Data.minimum_bid,
       allow_submission: step2Data.allow_submission,
       contacting_channel: step2Data.contacting_channel,
-      seller_type: step2Data.sellerType,
+      seller_type: step2Data.seller_type,
     };
 
     // Add vehicle/item-specific fields
@@ -1671,7 +1996,7 @@ private logFormErrors(form: FormGroup) {
 //           contacting_channel: this.adDetailsForm.value.contacting_channel,
 //           country_id:Number(this.platesForm.value.country),
 //           city_id: parseInt(this.adDetailsForm.value.city),
-//           sellerType: this.adDetailsForm.value.sellerType,
+//           seller_type: this.adDetailsForm.value.seller_type,
 //           listing_type_id: 1,
 
 //           auction_enabled: this.adDetailsForm.value.allow_submission === 'true',
@@ -1712,7 +2037,7 @@ private logFormErrors(form: FormGroup) {
 //       minimum_bid: step2Data.minimum_bid,
 //       allow_submission: step2Data.allow_submission,
 //       contacting_channel: step2Data.contacting_channel,
-//       seller_type: step2Data.sellerType,
+//       seller_type: step2Data.seller_type,
 //     };
 
 //     // Add vehicle/item-specific fields
@@ -1796,7 +2121,7 @@ private logFormErrors(form: FormGroup) {
 //       allow_submission: this.adDetailsForm.value.allow_submission === 'true',
 //       contacting_channel: this.adDetailsForm.value.contacting_channel,
 //       city_id: parseInt(this.adDetailsForm.value.city),
-//       sellerType: this.adDetailsForm.value.sellerType,
+//       seller_type: this.adDetailsForm.value.seller_type,
 //       category_id: 1,
 //       country_id: 1,
 //       auction_enabled: false,

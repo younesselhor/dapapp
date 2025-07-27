@@ -50,6 +50,13 @@
         </button> -->
 
         <!-- Slider Container -->
+          <!-- No Results Message -->
+        <div *ngIf="visibleParts?.length === 0" 
+             class="flex items-center justify-center min-h-[300px] bg-gray-50 rounded-lg border border-gray-200">
+          <div class="text-center">
+            <p class="text-lg text-gray-600 font-medium">No items found for search</p>
+          </div>
+        </div>
         <div class="slider-track" 
              [style.transform]="'translateX(' + currentPosition + 'px)'"
              [class.dragging]="isDragging"

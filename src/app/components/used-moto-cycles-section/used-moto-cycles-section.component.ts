@@ -144,6 +144,7 @@ import { CommonModule } from '@angular/common';
 import { Component, HostListener } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { ListingByCatService } from '../../services/listingsByCategory/listing-by-cat.service';
+import { LocationSService } from '../../services/location-s.service';
 
 interface Motorcycle {
   id: number;
@@ -177,20 +178,57 @@ export class UsedMotoCyclesSectionComponent {
   cardWidth = 324; // Desktop card width
   mobileCardWidth = 300; // Mobile card width
   isMobile = false;
+  countryId?: any;
 
-  constructor(private listings: ListingByCatService, private router: Router) {}
+  constructor(private listings: ListingByCatService, private router: Router,private locationService: LocationSService) {}
 
   ngOnInit(): void {
-    this.getMotoresycles();
+
+      this.locationService.selectedCountry$.subscribe((country) => {
+    if (country?.id) {
+      console.log('country',country);
+      this.countryId = country.id;
+      console.log('this.countryId : ', this.countryId );
+      this.getMotorcycles();
+    }
+  });
+
+    // this.getMotoresycles();
      this.checkMobile();
     window.addEventListener('resize', () => this.checkMobile());
   }
 
-  getMotoresycles() {
-    this.listings.getMotorcyclesByCategory().subscribe((res: any) => {
-      this.motorcycles = res;
-    });
-  }
+  // getMotoresycles() {
+  //   this.listings.getMotorcyclesByCategory().subscribe((res: any) => {
+  //     this.motorcycles = res;
+  //   });
+  // }
+  
+// getMotorcycles() {
+//   if (!this.countryId) return;
+
+//   this.listings.getMotorcyclesByCategory(this.countryId).subscribe((res: any) => {
+//     this.motorcycles = res as Motorcycle[];
+//     console.log(' this.motorcycles : ',  this.motorcycles );
+//   });
+// }
+
+searchedCountryMessage: string | null = null;
+
+getMotorcycles() {
+  if (!this.countryId) return;
+
+  this.listings.getMotorcyclesByCategory(this.countryId).subscribe((res: any) => {
+    this.motorcycles = res.listings || [];
+
+    if (res.showing_all_countries && res.searched_country) {
+      this.searchedCountryMessage = `No listings found for "${res.searched_country}". Showing all countries instead.`;
+    } else {
+      this.searchedCountryMessage = null;
+    }
+  });
+}
+
 
   get visibleMotorcycles() {
     return this.motorcycles;
@@ -211,6 +249,60 @@ export class UsedMotoCyclesSectionComponent {
   get maxPosition() {
     return -((this.motorcycles.length * this.cardWidth) - this.containerWidth);
   }
+
+
+
+  checkMobile() {
+    this.isMobile = window.innerWidth < 768;
+    this.currentPosition = 0; // Reset position on resize
+  }
+
+  getCardWidth() {
+    return this.isMobile ? this.mobileCardWidth : this.cardWidth;
+  }
+
+  getVisibleCards() {
+    return this.isMobile ? 1 : 3;
+  }
+
+  getMaxPosition() {
+    const cardWidth = this.getCardWidth();
+    const visibleCards = this.getVisibleCards();
+    return -((this.motorcycles.length - visibleCards) * cardWidth);
+  }
+
+  startDrag(event: MouseEvent | TouchEvent) {
+    this.isDragging = true;
+    this.startX = this.getX(event);
+    this.startPosition = this.currentPosition;
+    event.preventDefault();
+  }
+
+  onDrag(event: MouseEvent | TouchEvent) {
+    if (!this.isDragging) return;
+    const x = this.getX(event);
+    const dragDistance = x - this.startX;
+    this.currentPosition = this.startPosition + dragDistance;
+    
+    // Constrain to boundaries
+    const maxPosition = this.getMaxPosition();
+    if (this.currentPosition > 0) this.currentPosition = 0;
+    if (this.currentPosition < maxPosition) this.currentPosition = maxPosition;
+  }
+
+  endDrag() {
+    this.isDragging = false;
+    // Snap to nearest card
+    const cardWidth = this.getCardWidth();
+    this.currentPosition = Math.round(this.currentPosition / cardWidth) * cardWidth;
+  }
+
+  private getX(event: MouseEvent | TouchEvent): number {
+    return event instanceof MouseEvent ? event.clientX : event.touches[0].clientX;
+  }
+}
+
+
 
   // Handle mouse/touch start
   // startDrag(event: MouseEvent | TouchEvent) {
@@ -306,53 +398,3 @@ export class UsedMotoCyclesSectionComponent {
   //     this.currentPosition = Math.max(minPosition, this.currentPosition - this.cardWidth);
   //   }
   // }
-
-  checkMobile() {
-    this.isMobile = window.innerWidth < 768;
-    this.currentPosition = 0; // Reset position on resize
-  }
-
-  getCardWidth() {
-    return this.isMobile ? this.mobileCardWidth : this.cardWidth;
-  }
-
-  getVisibleCards() {
-    return this.isMobile ? 1 : 3;
-  }
-
-  getMaxPosition() {
-    const cardWidth = this.getCardWidth();
-    const visibleCards = this.getVisibleCards();
-    return -((this.motorcycles.length - visibleCards) * cardWidth);
-  }
-
-  startDrag(event: MouseEvent | TouchEvent) {
-    this.isDragging = true;
-    this.startX = this.getX(event);
-    this.startPosition = this.currentPosition;
-    event.preventDefault();
-  }
-
-  onDrag(event: MouseEvent | TouchEvent) {
-    if (!this.isDragging) return;
-    const x = this.getX(event);
-    const dragDistance = x - this.startX;
-    this.currentPosition = this.startPosition + dragDistance;
-    
-    // Constrain to boundaries
-    const maxPosition = this.getMaxPosition();
-    if (this.currentPosition > 0) this.currentPosition = 0;
-    if (this.currentPosition < maxPosition) this.currentPosition = maxPosition;
-  }
-
-  endDrag() {
-    this.isDragging = false;
-    // Snap to nearest card
-    const cardWidth = this.getCardWidth();
-    this.currentPosition = Math.round(this.currentPosition / cardWidth) * cardWidth;
-  }
-
-  private getX(event: MouseEvent | TouchEvent): number {
-    return event instanceof MouseEvent ? event.clientX : event.touches[0].clientX;
-  }
-}

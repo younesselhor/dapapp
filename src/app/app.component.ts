@@ -14,7 +14,7 @@ import { LoginModalComponent } from './components/login-modal.component';
 @Component({
   selector: 'app-root',
   standalone:true,
-  imports: [RouterOutlet,NavbarComponent,FooterComponent,SubNavComponent,TranslateModule,LoginModalComponent],
+  imports: [RouterOutlet,NavbarComponent,FooterComponent,SubNavComponent,TranslateModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

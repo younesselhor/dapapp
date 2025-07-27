@@ -2,21 +2,19 @@
   <div class="container mx-auto px-4 py-2 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
 
     <!-- Location Dropdown -->
-    <div class="flex items-center gap-1 w-8 text-sm">
-      <i class="pi pi-map-marker text-red-600 text-lg"></i>
-      <select
-        [(ngModel)]="selectedCity.code"
-        (change)="onCityChange($event)"
-        class="w-full min-w-[200px] p-2  rounded-md
-               hover:border-blue-500 focus:border-blue-500 focus:ring-blue-500
-               transition-colors appearance-none bg-white">
-        <option value="" disabled selected>Select a City</option>
-        <option *ngFor="let city of cities" [ngValue]="city.code">
-          {{ city.name }}
-        </option>
-      </select>
-      <i class="pi pi-chevron-down text-gray-500 ml-[-1.5rem] pointer-events-none"></i>
-    </div>
+   <div class="flex items-center gap-1 w-8 text-sm">
+  <i class="pi pi-map-marker text-red-600 text-lg"></i>
+  <select
+    [(ngModel)]="selectedCountry"
+    (change)="onCountryChange($event)"
+    class="w-full min-w-[200px] p-2 rounded-md hover:border-blue-500 focus:border-blue-500 focus:ring-blue-500 transition-colors appearance-none bg-white">
+    <option value="" disabled selected>Select a Country</option>
+   <option *ngFor="let country of countries" [value]="country.name">
+  {{ country.name }}
+</option>
+  </select>
+  <i class="pi pi-chevron-down text-gray-500 ml-[-1.5rem] pointer-events-none"></i>
+</div>
 
     <!-- Search Box - Shown on mobile as second item -->
     <!-- <div class="relative w-full md:order-3 md:max-w-sm mt-2 md:mt-0">
