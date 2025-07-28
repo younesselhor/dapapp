@@ -234,33 +234,6 @@ const firebaseConfig = {
   measurementId: "G-RELFGL4QX8"
 };
 
-// bootstrapApplication(AppComponent, {
-//   providers: [
-//     provideRouter(routes),
-//     provideAnimations(),
-//     provideHttpClient(withInterceptorsFromDi()),
-//     CookieService,
-//     {
-//       provide: HTTP_INTERCEPTORS,
-//       useClass: AuthInterceptor,
-//       multi: true
-//     },
-//     // Firebase providers should be separate from importProvidersFrom
-//     provideFirebaseApp(() => initializeApp(firebaseConfig)),
-//     provideAuth(() => getAuth()),
-//     // Translate module can stay with importProvidersFrom
-//     importProvidersFrom(
-//       TranslateModule.forRoot({
-//         loader: {
-//           provide: TranslateLoader,
-//           useFactory: HttpLoaderFactory,
-//           deps: [HttpClient]
-//         }
-//       })
-//     )
-//   ]
-// }).catch(err => console.error(err));
-
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes),
@@ -272,7 +245,6 @@ bootstrapApplication(AppComponent, {
       useClass: AuthInterceptor,
       multi: true
     },
-    // ✅ Firebase and Translate modules inside importProvidersFrom
     importProvidersFrom(
       provideFirebaseApp(() => initializeApp(firebaseConfig)),
       provideAuth(() => getAuth()),
