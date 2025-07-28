@@ -218,6 +218,8 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { environment } from './environments/environment';
+import { appConfig } from './app/app.config';
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -234,27 +236,31 @@ const firebaseConfig = {
   measurementId: "G-RELFGL4QX8"
 };
 
-bootstrapApplication(AppComponent, {
-  providers: [
-    provideRouter(routes),
-    provideAnimations(),
-    provideHttpClient(withInterceptorsFromDi()),
-    CookieService,
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
-      multi: true
-    },
-    importProvidersFrom(
-      provideFirebaseApp(() => initializeApp(firebaseConfig)),
-      provideAuth(() => getAuth()),
-      TranslateModule.forRoot({
-        loader: {
-          provide: TranslateLoader,
-          useFactory: HttpLoaderFactory,
-          deps: [HttpClient]
-        }
-      })
-    )
-  ]
-}).catch(err => console.error(err));
+// bootstrapApplication(AppComponent, {
+//   providers: [
+//       provideFirebaseApp(() => initializeApp(environment.firebase)),
+//       provideAuth(() => getAuth()),
+//     provideRouter(routes),
+//     provideAnimations(),
+//     provideHttpClient(withInterceptorsFromDi()),
+//     CookieService,
+//     {
+//       provide: HTTP_INTERCEPTORS,
+//       useClass: AuthInterceptor,
+//       multi: true
+//     },
+//     importProvidersFrom(
+    
+//       TranslateModule.forRoot({
+//         loader: {
+//           provide: TranslateLoader,
+//           useFactory: HttpLoaderFactory,
+//           deps: [HttpClient]
+//         }
+//       })
+//     )
+//   ]
+// }).catch(err => console.error(err));
+
+bootstrapApplication(AppComponent, appConfig)
+  .catch(err => console.error(err));
