@@ -5,9 +5,9 @@
     "/account": {},
     "/add-product": {},
     "/home": {},
-    "/login": {},
     "/motorcycles": {},
     "/plates": {},
-    "/register": {}
+    "/register": {},
+    "/spare-parts": {}
   }
 }
