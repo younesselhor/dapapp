@@ -1,59 +1,45 @@
 import { Routes } from '@angular/router';
-import { ProductCardComponent } from './components/product-card/product-card.component';
-import { ProductsComponent } from './components/products/products.component';
-import { AccessoriesComponent } from './components/accessories/accessories.component';
-import { LoginComponent } from './components/login/login/login.component';
-import { RegisterComponent } from './components/register/register/register.component';
-import { HomePageComponent } from './components/home-page/home-page.component';
-import { AccountComponent } from './components/account/account/account.component';
-import { ProductFormComponent } from './components/postingAdd/product-form/product-form.component';
-import { SparePlatesDetailsComponent } from './spare-plates-details/spare-plates-details.component';
-import { MotorcyclesDetailsComponent } from './motorcycles-details/motorcycles-details.component';
-import { MainProductsPageComponent } from './components/main-products-page/main-products-page.component';
 
 export const routes: Routes = [
-  {
-    path:'',
-    redirectTo:'home',
-    pathMatch:'full'
-
-  },
-  {
-    path: 'plates',
-    component: ProductsComponent
-  },
-  {
-    path: 'spare-parts',
-    component: SparePlatesDetailsComponent
-  },
-  {
-    path:'motorcycles',
-    component:MotorcyclesDetailsComponent
-  },
-  {
-    path: 'accessories',
-    component: AccessoriesComponent
-  },
-  // {
-  //   path: 'login',
-  //   component: LoginComponent
-  // },
-  {
-    path: 'register',
-    component: RegisterComponent
+  { 
+    path: '',
+    redirectTo: 'home',
+    pathMatch: 'full'
   },
   {
     path: 'home',
-    component: HomePageComponent
+    loadComponent: () => import('./components/home-page/home-page.component').then(m => m.HomePageComponent)
   },
   {
-    path:'account',
-    component:AccountComponent
+    path: 'plates',
+    loadComponent: () => import('./components/products/products.component').then(m => m.ProductsComponent)
+  },
+  {
+    path: 'spare-parts',
+    loadComponent: () => import('./spare-plates-details/spare-plates-details.component').then(m => m.SparePlatesDetailsComponent)
+  },
+  {
+    path: 'motorcycles',
+    loadComponent: () => import('./motorcycles-details/motorcycles-details.component').then(m => m.MotorcyclesDetailsComponent)
+  },
+  {
+    path: 'accessories',
+    loadComponent: () => import('./components/accessories/accessories.component').then(m => m.AccessoriesComponent)
+  },
+  {
+    path: 'register',
+    loadComponent: () => import('./components/register/register/register.component').then(m => m.RegisterComponent)
+  },
+  {
+    path: 'account',
+    loadComponent: () => import('./components/account/account/account.component').then(m => m.AccountComponent)
   },
   {
     path: 'add-product',
-    component: ProductFormComponent
+    loadComponent: () => import('./components/postingAdd/product-form/product-form.component').then(m => m.ProductFormComponent)
   },
-
-   { path: 'listing/:id', component: MainProductsPageComponent }
+  { 
+    path: 'listing/:id', 
+    loadComponent: () => import('./components/main-products-page/main-products-page.component').then(m => m.MainProductsPageComponent)
+  }
 ];
