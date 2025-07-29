@@ -226,17 +226,14 @@ export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCPGsHiy6Eq2J8bnHi2xo9rx-1nIXM-p-o",
-  authDomain: "dabapp-3d853.firebaseapp.com",
-  projectId: "dabapp-3d853",
-  storageBucket: "dabapp-3d853.firebasestorage.app",
-  messagingSenderId: "988124060172",
-  appId: "1:988124060172:web:6a7b2aeb937a44fa196c29",
-  measurementId: "G-RELFGL4QX8"
-};
 
-// bootstrapApplication(AppComponent, {
+bootstrapApplication(AppComponent, appConfig)
+  .catch(err => console.error(err));
+
+
+
+
+  // bootstrapApplication(AppComponent, {
 //   providers: [
 //       provideFirebaseApp(() => initializeApp(environment.firebase)),
 //       provideAuth(() => getAuth()),
@@ -261,6 +258,3 @@ const firebaseConfig = {
 //     )
 //   ]
 // }).catch(err => console.error(err));
-
-bootstrapApplication(AppComponent, appConfig)
-  .catch(err => console.error(err));
