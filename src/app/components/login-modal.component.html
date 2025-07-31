@@ -144,7 +144,7 @@
       </div>
       }
 
-      <div class="flex space-x-3">
+      <!-- <div class="flex space-x-3">
         <button
           type="button"
           (click)="closeRecaptcha()"
@@ -152,7 +152,7 @@
         >
           Cancel
         </button>
-      </div>
+      </div> -->
     </div>
   </div>
   }
@@ -236,28 +236,28 @@
           @if(otpExpired) {
           <div class="mt-4 text-center">
             <p class="text-sm text-red-600">SMS Code Expired!</p>
-            <button 
+            <!-- <button 
               type="button" 
               [disabled]="!otpResendEnabled"
               class="text-sm text-blue-600 hover:text-blue-800 disabled:text-gray-400" 
               (click)="resendOTP()"
             >
               Resend SMS Code
-            </button>
+            </button> -->
           </div>
           }
 
           @if(!otpResendEnabled && !otpExpired) {
           <div class="mt-4 text-center">
             <p class="text-sm text-gray-600">Didn't get a code? Click to resend</p>
-            <button
+            <!-- <button
               type="button"
               [disabled]="!otpResendEnabled"
               class="text-sm font-semibold text-gray-400 focus:outline-none"
               (click)="resendOTP()"
             >
               Resend in {{ resendCountdown }}s
-            </button>
+            </button> -->
           </div>
           }
 

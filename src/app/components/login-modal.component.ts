@@ -483,7 +483,7 @@ import { AuthService } from '../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { AuthUser } from '../interfaces/user-interface';
 import { Router, RouterLink } from '@angular/router';
-import { Auth, RecaptchaVerifier, signInWithPhoneNumber, signInWithPopup, GoogleAuthProvider } from '@angular/fire/auth';
+// import { Auth, RecaptchaVerifier, signInWithPhoneNumber, signInWithPopup, GoogleAuthProvider } from '@angular/fire/auth';
 
 
 
@@ -494,7 +494,7 @@ import { Auth, RecaptchaVerifier, signInWithPhoneNumber, signInWithPopup, Google
   imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink]
 })
 export class LoginModalComponent implements OnDestroy, OnInit {
-  private authInstance = inject(Auth);
+  // private authInstance = inject(Auth);
   @Output() close = new EventEmitter<void>();
 
   loginForm: FormGroup;
@@ -509,7 +509,7 @@ export class LoginModalComponent implements OnDestroy, OnInit {
   resendCountdown = 30;
   userLogin = '';
   otpError = false;
-  recaptchaVerifier: RecaptchaVerifier | null = null;
+  // recaptchaVerifier: RecaptchaVerifier | null = null;
   confirmationResult: any = null;
   message: string = '';
   recaptchaWidgetId: any = null;
@@ -571,58 +571,58 @@ export class LoginModalComponent implements OnDestroy, OnInit {
     document.head.appendChild(script);
   }
 
-  async initRecaptcha(): Promise<void> {
-    try {
-      const container = document.getElementById('recaptcha-container');
-      if (!container) {
-        throw new Error('Recaptcha container not found');
-      }
+  // async initRecaptcha(): Promise<void> {
+  //   try {
+  //     const container = document.getElementById('recaptcha-container');
+  //     if (!container) {
+  //       throw new Error('Recaptcha container not found');
+  //     }
       
-      // Clear previous instance
-      container.innerHTML = '';
+  //     // Clear previous instance
+  //     container.innerHTML = '';
 
-      // Clear any existing verifier
-      if (this.recaptchaVerifier) {
-        try {
-          this.recaptchaVerifier.clear();
-        } catch (e) {
-          console.log('Previous verifier already cleared');
-        }
-        this.recaptchaVerifier = null;
-      }
+  //     // Clear any existing verifier
+  //     if (this.recaptchaVerifier) {
+  //       try {
+  //         this.recaptchaVerifier.clear();
+  //       } catch (e) {
+  //         console.log('Previous verifier already cleared');
+  //       }
+  //       this.recaptchaVerifier = null;
+  //     }
 
-      console.log('Initializing reCAPTCHA for phone:', this.phoneNumber);
+  //     console.log('Initializing reCAPTCHA for phone:', this.phoneNumber);
 
-      this.recaptchaVerifier = new RecaptchaVerifier(this.authInstance, 'recaptcha-container', {
-        'size': 'normal',
-        'callback': (response: string) => {
-          console.log('reCAPTCHA verified, response:', response.substring(0, 50) + '...');
-          // Automatically send OTP after verification
-          this.sendFirebaseOTP(); 
-        },
-        'expired-callback': () => {
-          console.log('reCAPTCHA expired');
-          this.message = 'reCAPTCHA expired. Please try again.';
-          this.loginError = true;
-        },
-        'error-callback': (error: any) => {
-          console.error('reCAPTCHA error:', error);
-          this.message = 'reCAPTCHA error. Please try again.';
-          this.loginError = true;
-        }
-      });
+  //     this.recaptchaVerifier = new RecaptchaVerifier(this.authInstance, 'recaptcha-container', {
+  //       'size': 'normal',
+  //       'callback': (response: string) => {
+  //         console.log('reCAPTCHA verified, response:', response.substring(0, 50) + '...');
+  //         // Automatically send OTP after verification
+  //         this.sendFirebaseOTP(); 
+  //       },
+  //       'expired-callback': () => {
+  //         console.log('reCAPTCHA expired');
+  //         this.message = 'reCAPTCHA expired. Please try again.';
+  //         this.loginError = true;
+  //       },
+  //       'error-callback': (error: any) => {
+  //         console.error('reCAPTCHA error:', error);
+  //         this.message = 'reCAPTCHA error. Please try again.';
+  //         this.loginError = true;
+  //       }
+  //     });
 
-      console.log('Rendering reCAPTCHA...');
-      await this.recaptchaVerifier.render();
-      console.log('reCAPTCHA rendered successfully');
+  //     console.log('Rendering reCAPTCHA...');
+  //     await this.recaptchaVerifier.render();
+  //     console.log('reCAPTCHA rendered successfully');
       
-    } catch (error) {
-      console.error('Error initializing reCAPTCHA:', error);
-      this.message = 'Failed to initialize verification. Please refresh the page.';
-      this.loginError = true;
-      throw error;
-    }
-  }
+  //   } catch (error) {
+  //     console.error('Error initializing reCAPTCHA:', error);
+  //     this.message = 'Failed to initialize verification. Please refresh the page.';
+  //     this.loginError = true;
+  //     throw error;
+  //   }
+  // }
 
   // Format phone number to international format
   formatPhoneNumber(phone: string): string {
@@ -757,55 +757,55 @@ export class LoginModalComponent implements OnDestroy, OnInit {
   //   }
   // }
 
-  async sendFirebaseOTP() {
-    try {
-      if (!this.recaptchaVerifier) {
-        throw new Error('reCAPTCHA not initialized');
-      }
+  // async sendFirebaseOTP() {
+  //   try {
+  //     if (!this.recaptchaVerifier) {
+  //       throw new Error('reCAPTCHA not initialized');
+  //     }
 
-      if (!this.phoneNumber) {
-        throw new Error('Phone number not set');
-      }
+  //     if (!this.phoneNumber) {
+  //       throw new Error('Phone number not set');
+  //     }
 
-      console.log('Sending Firebase OTP to:', this.phoneNumber);
-      this.message = 'Sending SMS code...';
-      this.loginError = false;
+  //     console.log('Sending Firebase OTP to:', this.phoneNumber);
+  //     this.message = 'Sending SMS code...';
+  //     this.loginError = false;
       
-      // Send SMS via Firebase
-      this.confirmationResult = await signInWithPhoneNumber(
-        this.authInstance, 
-        this.phoneNumber, 
-        this.recaptchaVerifier
-      );
+  //     // Send SMS via Firebase
+  //     this.confirmationResult = await signInWithPhoneNumber(
+  //       this.authInstance, 
+  //       this.phoneNumber, 
+  //       this.recaptchaVerifier
+  //     );
       
-      console.log('SMS sent successfully, confirmationResult:', this.confirmationResult);
+  //     console.log('SMS sent successfully, confirmationResult:', this.confirmationResult);
       
-      // Hide reCAPTCHA and show OTP modal
-      this.showRecaptcha = false;
-      this.showOTPModal = true;
-      this.startOTPCountdown();
-      this.message = 'SMS code sent successfully to ' + this.phoneNumber;
+  //     // Hide reCAPTCHA and show OTP modal
+  //     this.showRecaptcha = false;
+  //     this.showOTPModal = true;
+  //     this.startOTPCountdown();
+  //     this.message = 'SMS code sent successfully to ' + this.phoneNumber;
       
-    } catch (error: any) {
-      console.error('Firebase SMS Error:', error);
-      console.error('Error code:', error.code);
-      console.error('Error message:', error.message);
+  //   } catch (error: any) {
+  //     console.error('Firebase SMS Error:', error);
+  //     console.error('Error code:', error.code);
+  //     console.error('Error message:', error.message);
       
-      this.message = this.getFirebaseErrorMessage(error);
-      this.loginError = true;
+  //     this.message = this.getFirebaseErrorMessage(error);
+  //     this.loginError = true;
       
-      // Reset recaptcha on error
-      if (this.recaptchaVerifier) {
-        try {
-          this.recaptchaVerifier.clear();
-        } catch (e) {
-          console.log('Error clearing verifier:', e);
-        }
-        this.recaptchaVerifier = null;
-      }
-      this.showRecaptcha = false;
-    }
-  }
+  //     // Reset recaptcha on error
+  //     if (this.recaptchaVerifier) {
+  //       try {
+  //         this.recaptchaVerifier.clear();
+  //       } catch (e) {
+  //         console.log('Error clearing verifier:', e);
+  //       }
+  //       this.recaptchaVerifier = null;
+  //     }
+  //     this.showRecaptcha = false;
+  //   }
+  // }
 
   // async verifyOTP() {
   //   if (this.otpForm.invalid) {
@@ -1013,13 +1013,13 @@ verifyOTP() {
     this.clearCountdown();
   }
 
-  closeRecaptcha() {
-    this.showRecaptcha = false;
-    if (this.recaptchaVerifier) {
-      this.recaptchaVerifier.clear();
-      this.recaptchaVerifier = null;
-    }
-  }
+  // closeRecaptcha() {
+  //   this.showRecaptcha = false;
+  //   if (this.recaptchaVerifier) {
+  //     this.recaptchaVerifier.clear();
+  //     this.recaptchaVerifier = null;
+  //   }
+  // }
 
   resetComponent() {
     this.showOTPModal = false;
@@ -1033,10 +1033,10 @@ verifyOTP() {
     this.clearOTPForm();
     this.clearCountdown();
     
-    if (this.recaptchaVerifier) {
-      this.recaptchaVerifier.clear();
-      this.recaptchaVerifier = null;
-    }
+    // if (this.recaptchaVerifier) {
+    //   this.recaptchaVerifier.clear();
+    //   this.recaptchaVerifier = null;
+    // }
   }
 
   clearOTPForm() {
@@ -1063,27 +1063,27 @@ verifyOTP() {
     }, 1000);
   }
 
-  async resendOTP() {
-    if (!this.otpResendEnabled) return;
+  // async resendOTP() {
+  //   if (!this.otpResendEnabled) return;
     
-    this.otpExpired = false;
-    this.otpError = false;
-    this.clearOTPForm();
+  //   this.otpExpired = false;
+  //   this.otpError = false;
+  //   this.clearOTPForm();
     
-    // Show reCAPTCHA again for resend
-    this.showOTPModal = false;
-    this.showRecaptcha = true;
-    this.message = 'Complete reCAPTCHA to resend SMS code';
+  //   // Show reCAPTCHA again for resend
+  //   this.showOTPModal = false;
+  //   this.showRecaptcha = true;
+  //   this.message = 'Complete reCAPTCHA to resend SMS code';
     
-    try {
-      await this.initRecaptcha();
-    } catch (error: any) {
-      console.error('Error initializing reCAPTCHA for resend:', error);
-      this.message = 'Error initializing verification. Please try again.';
-      this.showRecaptcha = false;
-      this.showOTPModal = true;
-    }
-  }
+  //   try {
+  //     await this.initRecaptcha();
+  //   } catch (error: any) {
+  //     console.error('Error initializing reCAPTCHA for resend:', error);
+  //     this.message = 'Error initializing verification. Please try again.';
+  //     this.showRecaptcha = false;
+  //     this.showOTPModal = true;
+  //   }
+  // }
 
   onOTPInputChange(event: any, nextField?: string) {
     const input = event.target;
@@ -1118,8 +1118,8 @@ verifyOTP() {
 
   ngOnDestroy() {
     this.clearCountdown();
-    if (this.recaptchaVerifier) {
-      this.recaptchaVerifier.clear();
-    }
+    // if (this.recaptchaVerifier) {
+    //   this.recaptchaVerifier.clear();
+    // }
   }
 }
