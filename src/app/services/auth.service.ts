@@ -218,36 +218,36 @@ export class AuthService {
   }
 
   // Firebase and Google Login
-  loginWithFirebaseToken(idToken: string): Observable<any> {
-    return this.http.post(this.baseUrl + 'firebase-login', { idToken });
-  }
+  // loginWithFirebaseToken(idToken: string): Observable<any> {
+  //   return this.http.post(this.baseUrl + 'firebase-login', { idToken });
+  // }
 
   // Email/Password Login
-  loginWithEmailPassword(login: string, password: string): Observable<UserInterface> {
-    return this.http.post<UserInterface>(this.baseUrl + 'login', { login, password }).pipe(
-      tap((response: UserInterface) => {
-        // Only set user data if OTP is not required
-        if (!response.requiresOTP) {
-          if (response.token) {
-            this.saveToken(response.token);
-            this.currentUserSubject.next(response);
-            this.setLoggedIn(true);
-            this.fetchUserProfile();
-          }
-        }
-      })
-    );
-  }
+  // loginWithEmailPassword(login: string, password: string): Observable<UserInterface> {
+  //   return this.http.post<UserInterface>(this.baseUrl + 'login', { login, password }).pipe(
+  //     tap((response: UserInterface) => {
+  //       // Only set user data if OTP is not required
+  //       if (!response.requiresOTP) {
+  //         if (response.token) {
+  //           this.saveToken(response.token);
+  //           this.currentUserSubject.next(response);
+  //           this.setLoggedIn(true);
+  //           this.fetchUserProfile();
+  //         }
+  //       }
+  //     })
+  //   );
+  // }
 
   // Phone/Password Login - Returns user info and requiresFirebaseOTP flag
-  loginWithPhonePassword(phone: string, password: string): Observable<any> {
-    return this.http.post(this.baseUrl + 'login-phone-password', { phone, password }).pipe(
-      tap((response: any) => {
-        console.log('Phone login response:', response);
-        // Don't save token yet - wait for OTP verification
-      })
-    );
-  }
+  // loginWithPhonePassword(phone: string, password: string): Observable<any> {
+  //   return this.http.post(this.baseUrl + 'login-phone-password', { phone, password }).pipe(
+  //     tap((response: any) => {
+  //       console.log('Phone login response:', response);
+  //       // Don't save token yet - wait for OTP verification
+  //     })
+  //   );
+  // }
 
   // Verify OTP from backend
   verifyOtp(userId: number, otp: string): Observable<any> {
@@ -268,23 +268,23 @@ export class AuthService {
   }
 
   // Complete Firebase authentication
-  completeFirebaseAuth(userId: number, idToken: string): Observable<any> {
-    return this.http.post(this.baseUrl + 'complete-firebase-auth', { 
-      user_id: userId, 
-      idToken: idToken 
-    }).pipe(
-      tap((response: any) => {
-        console.log('Firebase auth completion response:', response);
-        // Final token and user data
-        if (response.token) {
-          this.saveToken(response.token);
-          this.currentUserSubject.next(response);
-          this.setLoggedIn(true);
-          this.fetchUserProfile();
-        }
-      })
-    );
-  }
+  // completeFirebaseAuth(userId: number, idToken: string): Observable<any> {
+  //   return this.http.post(this.baseUrl + 'complete-firebase-auth', { 
+  //     user_id: userId, 
+  //     idToken: idToken 
+  //   }).pipe(
+  //     tap((response: any) => {
+  //       console.log('Firebase auth completion response:', response);
+  //       // Final token and user data
+  //       if (response.token) {
+  //         this.saveToken(response.token);
+  //         this.currentUserSubject.next(response);
+  //         this.setLoggedIn(true);
+  //         this.fetchUserProfile();
+  //       }
+  //     })
+  //   );
+  // }
 
   // Request OTP (if needed separately)
   requestOTP(login: string): Observable<any> {

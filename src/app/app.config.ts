@@ -10,10 +10,10 @@ import { environment } from '../environments/environment';
 import { CookieService } from 'ngx-cookie-service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptor/auth.interceptor';
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { provideFirebaseApp } from '@angular/fire/app';
-import { provideAuth } from '@angular/fire/auth';
+// import { initializeApp } from 'firebase/app';
+// import { getAuth } from 'firebase/auth';
+// import { provideFirebaseApp } from '@angular/fire/app';
+// import { provideAuth } from '@angular/fire/auth';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -21,26 +21,17 @@ export function HttpLoaderFactory(http: HttpClient) {
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    // Angular core providers
     provideRouter(routes),
     provideAnimations(),
     provideHttpClient(withInterceptorsFromDi()),
-    
-    // Third-party services
     CookieService,
-    
-    // Interceptors
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true
     },
-    
-    // Firebase providers (must come BEFORE importProvidersFrom)
-    provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideAuth(() => getAuth()),
-    
-    // Translation module
+    //  provideFirebaseApp(() => initializeApp(environment.firebase)),
+    //   provideAuth(() => getAuth()),
     importProvidersFrom(
       TranslateModule.forRoot({
         loader: {
@@ -48,7 +39,9 @@ export const appConfig: ApplicationConfig = {
           useFactory: HttpLoaderFactory,
           deps: [HttpClient]
         }
-      })
+      }),
+      // AngularFire providers
+     
     )
   ]
 };

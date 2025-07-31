@@ -519,6 +519,9 @@ export class LoginModalComponent implements OnDestroy, OnInit {
   currentUser: any = null;
   showRecaptcha = false;
 
+   // Store user info when OTP is required
+  pendingUserInfo: any = null;
+
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
@@ -654,65 +657,105 @@ export class LoginModalComponent implements OnDestroy, OnInit {
     return phone;
   }
 
-  async onSubmit() {
+  // async onSubmit() {
+  //   if (this.loginForm.invalid) {
+  //     this.loginForm.markAllAsTouched();
+  //     return;
+  //   }
+
+  //   const login = this.loginForm.get('login')?.value?.trim() || '';
+  //   const password = this.loginForm.get('password')?.value?.trim() || '';
+
+  //   if (this.isEmail(login)) {
+  //     this.auth.loginWithEmailPassword(login, password).subscribe({
+  //       next: (res) => {
+  //         this.message = 'Connexion réussie (email)';
+  //         this.closeModal();
+  //       },
+  //       error: (err) => {
+  //         this.message = err.error?.message || 'Erreur email';
+  //         this.loginError = true;
+  //       },
+  //     });
+  //   } else if (this.isPhone(login)) {
+  //     await this.handlePhonePasswordLogin(login, password);
+  //   } else {
+  //     this.message = 'Email ou numéro invalide';
+  //     this.loginError = true;
+  //   }
+  // }
+
+  onSubmit() {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       return;
     }
 
-    const login = this.loginForm.get('login')?.value?.trim() || '';
-    const password = this.loginForm.get('password')?.value?.trim() || '';
+    const login = this.loginForm.value;
+    this.userLogin = login.login;
 
-    if (this.isEmail(login)) {
-      this.auth.loginWithEmailPassword(login, password).subscribe({
-        next: (res) => {
-          this.message = 'Connexion réussie (email)';
-          this.closeModal();
-        },
-        error: (err) => {
-          this.message = err.error?.message || 'Erreur email';
-          this.loginError = true;
-        },
-      });
-    } else if (this.isPhone(login)) {
-      await this.handlePhonePasswordLogin(login, password);
-    } else {
-      this.message = 'Email ou numéro invalide';
-      this.loginError = true;
-    }
-  }
+    this.auth.login(login).subscribe({
+      next: (response) => {
+        this.loginError = false;
 
-  async handlePhonePasswordLogin(phone: string, password: string) {
-    try {
-      // Format phone number to international format
-      const formattedPhone = this.formatPhoneNumber(phone);
-      this.phoneNumber = formattedPhone;
-
-      // 1. First verify with your backend
-      const response = await this.auth.loginWithPhonePassword(formattedPhone, password).toPromise();
-      
-      if (response.requiresFirebaseOTP) {
-        this.currentUser = response;
-        this.pendingUserId = response.user_id;
-        
-        // Show reCAPTCHA for verification
-        this.showRecaptcha = true;
-        this.message = 'Please complete the reCAPTCHA verification to receive SMS code';
-        
-        // Initialize reCAPTCHA
-        setTimeout(() => {
-          this.initRecaptcha();
-        }, 100);
-        
-      } else {
-        // Handle direct login (no OTP required)
-        this.handleSuccessfulLogin(response.token, response.user);
+        // Check if OTP is required
+        if (response.requiresOTP) {
+          // Store pending user info but don't save token or set logged in yet
+          this.pendingUserInfo = response;
+          this.phoneNumber = this.extractPhoneNumber(login.login);
+          this.showOTPModal = true;
+          this.startOTPCountdown();
+        } else {
+          // Normal login without OTP
+          this.handleSuccessfulLogin(response.token, response.user);
+        }
+      },
+      error: (err) => {
+        this.loginError = true;
+        console.error('Login error:', err);
       }
-    } catch (error: any) {
-      this.message = error.error?.message || 'Login failed';
-      this.loginError = true;
-    }
+    });
   }
+  extractPhoneNumber(login: string): string {
+    // If login is a phone number, return it, otherwise return empty string
+    return this.isValidPhoneNumber(login) ? login : '';
+  }
+
+   isValidPhoneNumber(phone: string): boolean {
+    return /^\+?\d{10,15}$/.test(phone);
+  }
+
+  // async handlePhonePasswordLogin(phone: string, password: string) {
+  //   try {
+  //     // Format phone number to international format
+  //     const formattedPhone = this.formatPhoneNumber(phone);
+  //     this.phoneNumber = formattedPhone;
+
+  //     // 1. First verify with your backend
+  //     const response = await this.auth.loginWithPhonePassword(formattedPhone, password).toPromise();
+      
+  //     if (response.requiresFirebaseOTP) {
+  //       this.currentUser = response;
+  //       this.pendingUserId = response.user_id;
+        
+  //       // Show reCAPTCHA for verification
+  //       this.showRecaptcha = true;
+  //       this.message = 'Please complete the reCAPTCHA verification to receive SMS code';
+        
+  //       // Initialize reCAPTCHA
+  //       setTimeout(() => {
+  //         this.initRecaptcha();
+  //       }, 100);
+        
+  //     } else {
+  //       // Handle direct login (no OTP required)
+  //       this.handleSuccessfulLogin(response.token, response.user);
+  //     }
+  //   } catch (error: any) {
+  //     this.message = error.error?.message || 'Login failed';
+  //     this.loginError = true;
+  //   }
+  // }
 
   async sendFirebaseOTP() {
     try {
@@ -764,41 +807,41 @@ export class LoginModalComponent implements OnDestroy, OnInit {
     }
   }
 
-  async verifyOTP() {
-    if (this.otpForm.invalid) {
-      this.otpForm.markAllAsTouched();
-      return;
-    }
+  // async verifyOTP() {
+  //   if (this.otpForm.invalid) {
+  //     this.otpForm.markAllAsTouched();
+  //     return;
+  //   }
     
-    const otp = Object.values(this.otpForm.value).join('');
-    this.message = 'Verifying OTP...';
+  //   const otp = Object.values(this.otpForm.value).join('');
+  //   this.message = 'Verifying OTP...';
 
-    try {
-      // 1. First verify OTP with backend
-      const verifyResponse = await this.auth.verifyOtp(this.pendingUserId!, otp).toPromise();
+  //   try {
+  //     // 1. First verify OTP with backend
+  //     const verifyResponse = await this.auth.verifyOtp(this.pendingUserId!, otp).toPromise();
       
-      // 2. Confirm with Firebase to get ID token
-      const credential = await this.confirmationResult.confirm(otp);
-      const idToken = await credential.user.getIdToken();
+  //     // 2. Confirm with Firebase to get ID token
+  //     const credential = await this.confirmationResult.confirm(otp);
+  //     const idToken = await credential.user.getIdToken();
       
-      // 3. Complete authentication with backend using Firebase ID token
-      const finalResponse = await this.auth.completeFirebaseAuth(this.pendingUserId!, idToken).toPromise();
+  //     // 3. Complete authentication with backend using Firebase ID token
+  //     const finalResponse = await this.auth.completeFirebaseAuth(this.pendingUserId!, idToken).toPromise();
       
-      // 4. Handle successful login
-      this.handleSuccessfulLogin(finalResponse.token, finalResponse.user);
-      this.showOTPModal = false;
-      this.closeModal();
+  //     // 4. Handle successful login
+  //     this.handleSuccessfulLogin(finalResponse.token, finalResponse.user);
+  //     this.showOTPModal = false;
+  //     this.closeModal();
       
-    } catch (error: any) {
-      console.error('OTP Verification Error:', error);
-      if (error.code && error.code.includes('auth/')) {
-        this.message = this.getFirebaseErrorMessage(error);
-      } else {
-        this.message = error.error?.message || 'OTP verification failed';
-      }
-      this.otpError = true;
-    }
-  }
+  //   } catch (error: any) {
+  //     console.error('OTP Verification Error:', error);
+  //     if (error.code && error.code.includes('auth/')) {
+  //       this.message = this.getFirebaseErrorMessage(error);
+  //     } else {
+  //       this.message = error.error?.message || 'OTP verification failed';
+  //     }
+  //     this.otpError = true;
+  //   }
+  // }
 
   getFirebaseErrorMessage(error: any): string {
     switch (error.code) {
@@ -819,29 +862,99 @@ export class LoginModalComponent implements OnDestroy, OnInit {
     }
   }
 
-  async loginWithGoogle() {
-    const provider = new GoogleAuthProvider();
-    try {
-      const result = await signInWithPopup(this.authInstance, provider);
-      const user = result.user;
-      const idToken = await user.getIdToken();
+  // async loginWithGoogle() {
+  //   const provider = new GoogleAuthProvider();
+  //   try {
+  //     const result = await signInWithPopup(this.authInstance, provider);
+  //     const user = result.user;
+  //     const idToken = await user.getIdToken();
 
-      this.auth.loginWithFirebaseToken(idToken).subscribe({
-        next: (res) => {
-          if (res.token) {
-            this.handleSuccessfulLogin(res.token, res.user);
-          }
-        },
-        error: (err) => {
-          console.error('Backend login error:', err);
-          this.message = 'Google login failed';
-        }
-      });
+  //     this.auth.loginWithFirebaseToken(idToken).subscribe({
+  //       next: (res) => {
+  //         if (res.token) {
+  //           this.handleSuccessfulLogin(res.token, res.user);
+  //         }
+  //       },
+  //       error: (err) => {
+  //         console.error('Backend login error:', err);
+  //         this.message = 'Google login failed';
+  //       }
+  //     });
 
-    } catch (error) {
-      console.error('Google login error:', error);
-      this.message = 'Google login error';
+  //   } catch (error) {
+  //     console.error('Google login error:', error);
+  //     this.message = 'Google login error';
+  //   }
+  // }
+
+  isSigningInWithGoogle = false;
+
+// async loginWithGoogle() {
+//   if (this.isSigningInWithGoogle) return; // prevent multiple triggers
+//   this.isSigningInWithGoogle = true;
+
+//   const provider = new GoogleAuthProvider();
+//   try {
+//     const result = await signInWithPopup(this.authInstance, provider);
+//     const user = result.user;
+//     const idToken = await user.getIdToken();
+
+//     this.auth.loginWithFirebaseToken(idToken).subscribe({
+//       next: (res) => {
+//         if (res.token) {
+//           this.handleSuccessfulLogin(res.token, res.user);
+//         }
+//       },
+//       error: (err) => {
+//         console.error('Backend login error:', err);
+//         this.message = 'Google login failed';
+//       },
+//       complete: () => {
+//         this.isSigningInWithGoogle = false;
+//       }
+//     });
+
+//   } catch (error: any) {
+//     if (error.code !== 'auth/cancelled-popup-request') {
+//       console.error('Google login error:', error);
+//       this.message = 'Google login error';
+//     }
+//     this.isSigningInWithGoogle = false;
+//   }
+// }
+
+verifyOTP() {
+    if (this.otpForm.invalid) {
+      this.otpForm.markAllAsTouched();
+      return;
     }
+
+    const otpValue = this.otpForm.value.digit1 + this.otpForm.value.digit2 + 
+                     this.otpForm.value.digit3 + this.otpForm.value.digit4;
+
+    const otpPayload = {
+      login: this.loginForm.value.login,
+      otp: otpValue
+    };
+
+    console.log('Verifying OTP:', otpPayload); // Debug log
+
+    this.auth.otplogin(otpPayload).subscribe({
+      next: (response) => {
+        console.log('OTP Response:', response); // Debug log
+        this.otpError = false;
+
+        if (response.token) {
+          this.handleSuccessfulLogin(response.token, response.user);
+          this.showOTPModal = false;
+          this.closeModal();
+        }
+      },
+      error: (err) => {
+        console.error('OTP verification error:', err);
+        this.otpError = true;
+      }
+    });
   }
 
   isEmail(value: string): boolean {

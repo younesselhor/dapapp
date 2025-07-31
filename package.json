@@ -1,14 +1,16 @@
 {
   "name": "dapapp",
   "version": "0.0.0",
-  "scripts": {
-    "ng": "ng",
-    "start": "ng serve --host 127.0.0.1 --port 4201",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "serve:ssr:dapapp": "node dist/dapapp/server/server.mjs"
-  },
+"scripts": {
+  "ng": "ng",
+  "start": "ng serve --host 127.0.0.1 --port 4201",
+  "build": "ng build",
+  "watch": "ng build --watch --configuration development",
+  "test": "ng test",
+  "build:ssr": "ng build && ng run dapapp:server",
+  "serve:ssr": "node dist/dapapp/server/server.mjs",
+  "serve:ssr:dapapp": "node dist/dapapp/server/server.mjs"
+},
   "private": true,
   "dependencies": {
     "@angular/animations": "^19.2.4",

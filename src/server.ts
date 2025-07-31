@@ -1,3 +1,4 @@
+import 'zone.js/node'; // MUST be first import
 import { APP_BASE_HREF } from '@angular/common';
 import { CommonEngine, isMainModule } from '@angular/ssr/node';
 import express from 'express';
@@ -27,14 +28,18 @@ const commonEngine = new CommonEngine();
 /**
  * Serve static files from /browser
  */
-app.get(
-  '**',
-  express.static(browserDistFolder, {
-    maxAge: '1y',
-    index: 'index.html'
-  }),
-);
-
+// app.get(
+//   '**',
+//   express.static(browserDistFolder, {
+//     maxAge: '1y',
+//     index: 'index.html'
+//   }),
+// );
+app.use(express.static(browserDistFolder, {
+  maxAge: '1y',
+  index: false, // Disable automatic index.html
+  fallthrough: false // Don't fall through to next middleware
+}));
 /**
  * Handle all other requests by rendering the Angular application.
  */
@@ -47,7 +52,10 @@ app.get('**', (req, res, next) => {
       documentFilePath: indexHtml,
       url: `${protocol}://${headers.host}${originalUrl}`,
       publicPath: browserDistFolder,
-      providers: [{ provide: APP_BASE_HREF, useValue: baseUrl }],
+      providers: [{ provide: APP_BASE_HREF, useValue: baseUrl },
+           { provide: 'REQUEST', useValue: req },
+        { provide: 'RESPONSE', useValue: res }
+      ],
     })
     .then((html) => res.send(html))
     .catch((err) => next(err));
