@@ -38,11 +38,7 @@
             "prerender": true,
             "ssr": {
               "entry": "src/server.ts"
-            },
-            "allowedCommonJsDependencies": [
-        "undici",
-        "@firebase/auth"
-      ]
+            }
           },
           "configurations": {
             "production": {

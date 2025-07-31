@@ -1,23 +1,22 @@
 {
   "name": "dapapp",
   "version": "0.0.0",
-"scripts": {
-  "ng": "ng",
-  "start": "ng serve --host 127.0.0.1 --port 4201",
-  "build": "ng build",
-  "watch": "ng build --watch --configuration development",
-  "test": "ng test",
-  "build:ssr": "ng build && ng run dapapp:server",
-  "serve:ssr": "node dist/dapapp/server/server.mjs",
-  "serve:ssr:dapapp": "node dist/dapapp/server/server.mjs"
-},
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve --host 127.0.0.1 --port 4201",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "build:ssr": "ng build && ng run dapapp:server",
+    "serve:ssr": "node dist/dapapp/server/server.mjs",
+    "serve:ssr:dapapp": "node dist/dapapp/server/server.mjs"
+  },
   "private": true,
   "dependencies": {
     "@angular/animations": "^19.2.4",
     "@angular/common": "^19.2.4",
     "@angular/compiler": "^19.2.4",
     "@angular/core": "^19.2.4",
-    "@angular/fire": "^19.2.0",
     "@angular/forms": "^19.2.4",
     "@angular/platform-browser": "^19.2.4",
     "@angular/platform-browser-dynamic": "^19.2.4",
@@ -30,7 +29,6 @@
     "@tailwindcss/postcss": "^4.0.15",
     "bootstrap": "^5.3.3",
     "express": "^4.18.2",
-    "firebase": "^12.0.0",
     "ngx-cookie-service": "^19.1.2",
     "postcss": "^8.5.3",
     "primeicons": "^7.0.0",

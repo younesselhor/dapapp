@@ -8,136 +8,136 @@ export default {
   entryPointToBrowserMapping: {
   "src/app/components/postingAdd/product-form/product-form.component.ts": [
     {
-      "path": "chunk-BROPBVQJ.js",
+      "path": "chunk-5RVMNL2F.js",
       "dynamicImport": false
     }
   ],
   "src/app/components/main-products-page/main-products-page.component.ts": [
     {
-      "path": "chunk-KZJL3GEQ.js",
+      "path": "chunk-MHMHW3IO.js",
       "dynamicImport": false
     },
     {
-      "path": "chunk-CEVU57XV.js",
+      "path": "chunk-X6L6KJUL.js",
       "dynamicImport": false
     }
   ],
   "src/main.ts": [
     {
-      "path": "main-4VLHWFEC.js",
+      "path": "main-IR4XEC64.js",
       "dynamicImport": false
     },
     {
-      "path": "chunk-7WUPKHMH.js",
+      "path": "chunk-PQARD4QJ.js",
       "dynamicImport": true
     },
     {
-      "path": "chunk-ZZT3V3QW.js",
+      "path": "chunk-UWVBV6VA.js",
       "dynamicImport": true
     },
     {
-      "path": "chunk-R5VLIVF5.js",
+      "path": "chunk-Z4UK7N3S.js",
       "dynamicImport": true
     },
     {
-      "path": "chunk-BURSZOO2.js",
+      "path": "chunk-RQQLP3IM.js",
       "dynamicImport": true
     },
     {
-      "path": "chunk-EOFXZZIV.js",
+      "path": "chunk-RR3X3TC2.js",
       "dynamicImport": true
     },
     {
-      "path": "chunk-JHDUWOLG.js",
+      "path": "chunk-6UEAXAFV.js",
       "dynamicImport": true
     },
     {
-      "path": "chunk-N3NDW2WY.js",
+      "path": "chunk-ZTLWQIAB.js",
       "dynamicImport": true
     },
     {
-      "path": "chunk-BROPBVQJ.js",
+      "path": "chunk-5RVMNL2F.js",
       "dynamicImport": true
     },
     {
-      "path": "chunk-KZJL3GEQ.js",
+      "path": "chunk-MHMHW3IO.js",
       "dynamicImport": true
     }
   ],
   "src/app/components/home-page/home-page.component.ts": [
     {
-      "path": "chunk-7WUPKHMH.js",
+      "path": "chunk-PQARD4QJ.js",
       "dynamicImport": false
     },
     {
-      "path": "chunk-IGW5E2RP.js",
+      "path": "chunk-OSI7JPAE.js",
       "dynamicImport": false
     }
   ],
   "src/app/components/products/products.component.ts": [
     {
-      "path": "chunk-ZZT3V3QW.js",
+      "path": "chunk-UWVBV6VA.js",
       "dynamicImport": false
     },
     {
-      "path": "chunk-IGW5E2RP.js",
+      "path": "chunk-OSI7JPAE.js",
       "dynamicImport": false
     },
     {
-      "path": "chunk-TGYWCX6R.js",
+      "path": "chunk-RIISN3TA.js",
       "dynamicImport": false
     }
   ],
   "src/app/spare-plates-details/spare-plates-details.component.ts": [
     {
-      "path": "chunk-R5VLIVF5.js",
+      "path": "chunk-Z4UK7N3S.js",
       "dynamicImport": false
     },
     {
-      "path": "chunk-IGW5E2RP.js",
+      "path": "chunk-OSI7JPAE.js",
       "dynamicImport": false
     }
   ],
   "src/app/motorcycles-details/motorcycles-details.component.ts": [
     {
-      "path": "chunk-BURSZOO2.js",
+      "path": "chunk-RQQLP3IM.js",
       "dynamicImport": false
     },
     {
-      "path": "chunk-IGW5E2RP.js",
+      "path": "chunk-OSI7JPAE.js",
       "dynamicImport": false
     }
   ],
   "src/app/components/accessories/accessories.component.ts": [
     {
-      "path": "chunk-EOFXZZIV.js",
+      "path": "chunk-RR3X3TC2.js",
       "dynamicImport": false
     }
   ],
   "src/app/components/register/register/register.component.ts": [
     {
-      "path": "chunk-JHDUWOLG.js",
+      "path": "chunk-6UEAXAFV.js",
       "dynamicImport": false
     },
     {
-      "path": "chunk-TGYWCX6R.js",
+      "path": "chunk-RIISN3TA.js",
       "dynamicImport": false
     }
   ],
   "src/app/components/account/account/account.component.ts": [
     {
-      "path": "chunk-N3NDW2WY.js",
+      "path": "chunk-ZTLWQIAB.js",
       "dynamicImport": false
     },
     {
-      "path": "chunk-CEVU57XV.js",
+      "path": "chunk-X6L6KJUL.js",
       "dynamicImport": false
     }
   ]
 },
   assets: {
-    'index.csr.html': {size: 20875, hash: 'e74e487a847fce955f3e236da7add0a64b2257e6ff0eb5e12015e10a0c00f9d9', text: () => import('./assets-chunks/index_csr_html.mjs').then(m => m.default)},
-    'index.server.html': {size: 10268, hash: '9e2536952f27bf9ca0b270f7ebca901bf55db91c24b81955eb7fce2959a6505e', text: () => import('./assets-chunks/index_server_html.mjs').then(m => m.default)},
+    'index.csr.html': {size: 20875, hash: 'a2a3a98a07518fe5fea98e70dbbb9cf4483faff50ca39c2ccea9dfa6146243bd', text: () => import('./assets-chunks/index_csr_html.mjs').then(m => m.default)},
+    'index.server.html': {size: 10268, hash: '2f04a3d62f5f39c379b0474dafe394b1ff9919512fe918a2415faaf4897e08cc', text: () => import('./assets-chunks/index_server_html.mjs').then(m => m.default)},
     'styles-VI62UWQR.css': {size: 136885, hash: 'Jrz6DaQvf2I', text: () => import('./assets-chunks/styles-VI62UWQR_css.mjs').then(m => m.default)}
   },
 };

@@ -216,8 +216,8 @@ import { importProvidersFrom } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { getAuth, provideAuth } from '@angular/fire/auth';
-import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+// import { getAuth, provideAuth } from '@angular/fire/auth';
+// import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { environment } from './environments/environment';
 import { appConfig } from './app/app.config';
 

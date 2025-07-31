@@ -8,7 +8,7 @@ import { MotorcycleListing } from '../postingAdd-interface';
 })
 export class ListingService {
   private baseUrl = 'https://be.dabapp.co/api/';
-  private filterbaseUrl = '/api/motorcycle/filter';
+  private filterbaseUrl = 'motorcycle/filter';
 
   constructor(private http: HttpClient) { }
 
@@ -115,7 +115,7 @@ checkPromo(body: { code: string, total_price: number }): Observable<any> {
       });
     }
 
-    return this.http.get<any>(this.filterbaseUrl, { params: httpParams });
+    return this.http.get<any>(this.baseUrl +this.filterbaseUrl, { params: httpParams });
   }
 
   getCityList(): Observable<any> {
