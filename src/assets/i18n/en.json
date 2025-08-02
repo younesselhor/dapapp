@@ -14,5 +14,38 @@
     "CONDITION": "Condition",
     "YES": "Yes",
     "NO": "No"
+  },
+  "USED_MOTORCYCLES": {
+    "TITLE": "Used",
+    "SUBTITLE": "Motorcycles",
+    "DESCRIPTION": "Buy or sell a used motorcycle directly without a middle man",
+    "SOLD": "Sold",
+    "AVAILABLE": "Available to buy"
+  },
+  "SPARE_PARTS": {
+    "TITLE": "Used",
+    "SUBTITLE": "Spare Parts",
+    "DESCRIPTION": "Buy or sell your spare parts, from body, to engine, and all accessories",
+    "SOLD": "Sold",
+    "AVAILABLE": "Available to buy",
+    "VIEW_PART": "View Bike Part"
+  },
+  "COMMON": {
+    "VIEW_ALL": "View All",
+    "NO_RESULTS": "No items found for search",
+    "PRICE": "PRICE",
+    "VIEW_BIKE": "View Bike",
+    "CURRENCY": "SAR"
+
+  },
+  "PLATES": {
+    "TITLE": "Plates",
+    "GCC_BADGE": "All GCC Countries",
+    "DESCRIPTION": "Buy or sell your special plates",
+    "SUCCESSFULLY_SOLD": "Successfully Sold",
+    "AVAILABLE_NOW": "Available Now",
+    "VIEW_PLATE": "View Plate",
+    "UAE_ICON": "UAE Icon",
+    "SAUDI_ICON": "Saudi Icon"
   }
 }

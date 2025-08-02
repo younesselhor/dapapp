@@ -114,11 +114,19 @@ export class SubNavComponent implements OnInit, OnChanges {
     this.userSub = this.authService.currentUser$.subscribe((user) => {
       if (user?.country) {
         const found = this.countries.find(c => c.name.toLowerCase() === user.country.toLowerCase());
+        // if (found) {
+        //   this.selectedCountry = found.name;
+        //   console.log(' this.selectedCountry: ',  this.selectedCountry);
+        //   console.log('User country matched:', found.name, '-> code:', found.code);
+        // }
         if (found) {
-          this.selectedCountry = found.name;
-          console.log(' this.selectedCountry: ',  this.selectedCountry);
-          console.log('User country matched:', found.name, '-> code:', found.code);
-        }
+  this.selectedCountry = found.name;
+  this.locationService.setSelectedCountry(found); // 🔥 Notify globally on login
+
+  console.log(' this.selectedCountry: ', this.selectedCountry);
+  console.log('User country matched:', found.name, '-> code:', found.code);
+}
+
       }
     });
   }
@@ -139,12 +147,7 @@ onCountryChange(event: Event) {
     this.locationService.setSelectedCountry(selected); // 👈 notify the app
   }
 }
-//   onCountryChange(event: Event) {
-//   const selectedName = (event.target as HTMLSelectElement).value;
-//   this.selectedCountry = selectedName;
-//   const matched = this.countries.find(c => c.name === selectedName);
-//   console.log('Country changed to:', matched?.name, 'Code:', matched?.code);
-// }
+
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['selectedMenu']) {
@@ -242,3 +245,10 @@ onCountryChange(event: Event) {
   //   const foundCity = this.cities.find(city => city.code === selectedCode);
   //   this.selectedCity = foundCity || { name: '', code: '' };
   // }
+
+  //   onCountryChange(event: Event) {
+//   const selectedName = (event.target as HTMLSelectElement).value;
+//   this.selectedCountry = selectedName;
+//   const matched = this.countries.find(c => c.name === selectedName);
+//   console.log('Country changed to:', matched?.name, 'Code:', matched?.code);
+// }

@@ -605,11 +605,23 @@
 
             class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
           /> -->
-<input 
+<!-- <input 
   *ngIf="field.character_type === 'digit'"
   (keypress)="allowOnlyDigits($event, field.writing_system)"
   [id]="field.controlName"
   [formControlName]="field.controlName"
+  type="text"
+  [pattern]="field.writing_system === 'arabic' ? '[\u0660-\u0669\u06F0-\u06F90-9]+' : '[0-9]+'"
+  [placeholder]="'Enter ' + (field.field_name | formatFieldName)"
+  [attr.maxlength]="field.max_length"
+  inputmode="numeric"
+  class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+/> -->
+<input 
+  *ngIf="field.character_type === 'digit'"
+  (keypress)="allowOnlyDigits($event, field.writing_system)"
+  [id]="field.controlName"
+  [formControlName]="field.controlName"  
   type="text"
   [pattern]="field.writing_system === 'arabic' ? '[\u0660-\u0669\u06F0-\u06F90-9]+' : '[0-9]+'"
   [placeholder]="'Enter ' + (field.field_name | formatFieldName)"
@@ -677,10 +689,13 @@
   <div class="flex justify-between mt-6">
   <button type="button" 
           class="px-6 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition"
-          [disabled]="!allRequiredFieldsFilled()" 
+          
           (click)="goToNextStep()">
     Next
   </button>
+  <button type="button" (click)="logFormValues()" class="mt-4 p-2 bg-blue-100">
+  Debug Form Values
+</button>
 </div>
 </form>
       <!-- Default case if no vehicle type is selected -->

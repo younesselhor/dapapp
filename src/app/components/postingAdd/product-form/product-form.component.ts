@@ -295,13 +295,6 @@ ngOnInit(): void {
     this.setupFormListeners();
   this.loadCitys();
 
-  // this.platesForm.get('country_id_lp')?.valueChanges.subscribe((countryId) => {
-  //   this.onCountryChange(countryId);
-  // });
-
-  // this.platesForm.get('city_id_lp')?.valueChanges.subscribe((cityId) => {
-  //   this.onCitySelected(cityId);
-  // });
   this.platesForm.get('country_id_lp')?.valueChanges.subscribe((countryId) => {
   if (this.isLoadingDraft) return;
   this.onCountryChange(countryId);
@@ -313,55 +306,7 @@ this.platesForm.get('city_id_lp')?.valueChanges.subscribe((cityId) => {
 });
 
 }
-// loadDraftData(draftId: number) {
-//   this.listingService.getSingleDraft(draftId).subscribe({
-//     next: (res: any) => {
-//       const draft = res?.data;
 
-//       if (!draft) return;
-
-//       // Fill Step 1 (vehicle form)
-//       if (draft.motorcycle) {
-//         this.vehicleForm.patchValue({
-//           brand_id: draft.motorcycle.brand_id,
-//           model_id: draft.motorcycle.model_id,
-//           year_id: draft.motorcycle.year_id,
-//           engine: parseInt(draft.motorcycle.engine), // strip "cc" if needed
-//           mileage: draft.motorcycle.mileage,
-//           body_condition: draft.motorcycle.body_condition,
-//           modified: draft.motorcycle.modified ? 'Yes' : 'No',
-//           insurance: draft.motorcycle.insurance ? 'Yes' : 'No',
-//           general_condition: draft.motorcycle.general_condition,
-//           vehicle_care: draft.motorcycle.vehicle_care,
-//           transmission: draft.motorcycle.transmission
-//         });
-
-//         this.uploadedImageUrls = draft.images.map((img: any) => img.image_url);
-//         console.log('this.uploadedImageUrls: ', this.uploadedImageUrls);
-//       }
-
-//       // Fill Step 2 (ad details)
-//       this.adDetailsForm.patchValue({
-//         title: draft.title,
-//         description: draft.description,
-//         price: draft.price,
-//         city: draft.city_id,
-//         country: draft.country_id,
-//         listing_type_id: draft.listing_type_id,
-//         contacting_channel: draft.contacting_channel,
-//         seller_type: draft.seller_type,
-//         allow_submission: draft.allow_submission ? 'true' : 'false',
-//         minimum_bid: draft.minimum_bid
-//       });
-
-//       // Track current step
-//       this.currentStep = draft.step || 1;
-//     },
-//     error: (err) => {
-//       console.error('Failed to load draft', err);
-//     }
-//   });
-// }
 loadDraftData(draftId: number) {
   this.listingService.getSingleDraft(draftId).subscribe({
     next: (res: any) => {
@@ -628,65 +573,6 @@ patchDynamicFieldValues(fieldValues: FieldValue[]) {
   });
 }
 
-// loadDraftData(draftId: number): void {
-//    this.listingService.getSingleDraft(draftId).subscribe({
-//     next: (response) => {
-//       const data = response.data;
-
-//       // Step 1: Set vehicle type
-//       // this.selectedVehicleType = 'motorcycle'; // Based on response
-//       // this.setCorrectForm(); // Optional: if you switch forms dynamically
-
-//       // Step 2: Patch bikeForm
-//       this.bikeForm.patchValue({
-//         brand: data.motorcycle.brand_id,
-//         model: data.motorcycle.model_id,
-//         modelYear: data.motorcycle.year_id,
-//         bikeType: data.motorcycle.type_id,
-//         engineSize: data.motorcycle.engine,
-//         mileage: data.motorcycle.mileage,
-//         bodyCondition: data.motorcycle.body_condition,
-//         isModified: data.motorcycle.modified ? 'Yes' : 'No',
-//         hasInsurance: data.motorcycle.insurance ? 'Yes' : 'No',
-//         condition: data.motorcycle.general_condition,
-//         bikeCare: data.motorcycle.vehicle_care,
-//         transmission: data.motorcycle.transmission
-//       });
-
-//       this.models = [data.motorcycle.model]; // to ensure the dropdown has this value
-//       this.years = [data.motorcycle.year];   // same idea
-
-//       // Step 3: Patch adDetailsForm
-//       this.adDetailsForm.patchValue({
-//         adName: data.title,
-//         description: data.description,
-//         city: data.city_id,
-//         country: data.country_id,
-//         price: data.minimum_bid ?? '', // fallback if null
-//         auctionEnabled: !!data.auction_enabled
-//         // Add more fields if needed (e.g., seller_type, contactMethods)
-//       });
-
-//       // Step 4: Set uploaded images (read-only view)
-//       this.uploadedImages = data.images.map((img: any) => ({
-//         previewUrl: img.image_url,
-//       }));
-//       console.log(' this.uploadedImages ', this.uploadedImages );
-// console.log('data.motorcycle.brand_id',data.motorcycle.brand_id);
-//       // Step 5: Load dependent dropdowns
-//       this.onBrandChange(data.motorcycle.brand_id);
-// this.onModelChange(data.motorcycle.model_id);
-
-//       // Optional: Set current step
-//       this.currentStep = data.step ?? 1;
-//     },
-//     error: (err) => {
-//       console.error('Failed to load draft', err);
-//       // Optional: show error UI
-//     }
-//   });
-// }
-
 initForm(): void {
   this.platesForm = this.fb.group({
     country_id_lp: [null, Validators.required],
@@ -787,20 +673,21 @@ getValidatorsForField(field: any): ValidatorFn[] {
     validators.push(Validators.maxLength(field.max_length));
   }
 
-  // Add character validation pattern based on character type and writing system
+
   if (field.character_type === 'letter') {
-    if (field.writing_system === 'latin') {
-      validators.push(Validators.pattern(/^[a-zA-Z]*$/));
-    } else if (field.writing_system === 'arabic') {
-      validators.push(Validators.pattern(/^[\u0600-\u06FF\s]*$/));
-    }
-  } else if (field.character_type === 'digit') {
-    if (field.writing_system === 'latin') {
-      validators.push(Validators.pattern(/^[0-9]*$/));
-    } else if (field.writing_system === 'arabic') {
-      validators.push(Validators.pattern(/^[\u0660-\u0669]*$/)); // Arabic-Indic digits (١-٩)
-    }
+  if (field.writing_system === 'latin') {
+    validators.push(Validators.pattern(/^[a-zA-Z]+$/)); // على الأقل حرف واحد
+  } else if (field.writing_system === 'arabic') {
+    validators.push(Validators.pattern(/^[\u0600-\u06FF\s]+$/)); // حروف عربية ومسافات
   }
+} else if (field.character_type === 'digit') {
+  if (field.writing_system === 'latin') {
+    validators.push(Validators.pattern(/^[0-9]+$/)); // أرقام لاتينية
+  } else if (field.writing_system === 'arabic') {
+    validators.push(Validators.pattern(/^[\u0660-\u0669]+$/)); // أرقام عربية هندية (٠-٩)
+  }
+}
+
 
   // Add custom regex if provided by the API
   if (field.validation_pattern) {
@@ -821,27 +708,7 @@ getValidatorsForField(field: any): ValidatorFn[] {
     this.dynamicFields = [];
     this.selectedPlateFormat = null;
   }
-  // getValidatorsForField(field: any): any[] {
-  //   const validators = [];
-    
-  //   if (field.is_required) validators.push(Validators.required);
-  //   if (field.min_length) validators.push(Validators.minLength(field.min_length));
-  //   if (field.max_length) validators.push(Validators.maxLength(field.max_length));
-    
-  //   // Add pattern validation based on character type
-  //   if (field.character_type === 'digit') {
-  //     validators.push(Validators.pattern(/^[0-9]*$/));
-  //   } else if (field.character_type === 'letter') {
-  //     validators.push(Validators.pattern(/^[a-zA-Z]*$/));
-  //   }
-    
-  //   // Add custom pattern if provided
-  //   if (field.validation_pattern) {
-  //     validators.push(Validators.pattern(field.validation_pattern));
-  //   }
-    
-  //   return validators;
-  // }
+
 
 
 
@@ -859,6 +726,12 @@ onCitySelected(cityId: number): void {
       if (res.formats?.length > 0) {
         this.selectedPlateFormat = res.formats[0];
         this.dynamicFields = this.selectedPlateFormat.fields;
+        console.log('this.dynamicFields: ', this.dynamicFields);
+          console.log('Dynamic fields after API response:', this.dynamicFields.map(f => ({
+          id: f.id, 
+          name: f.field_name, 
+          controlName: f.controlName
+        })));
         
         // Store the format ID in the form
         this.platesForm.patchValue({
@@ -881,43 +754,36 @@ onCitySelected(cityId: number): void {
     }
   });
 }
-// Modify the addDynamicFieldsToForm method
+
 // addDynamicFieldsToForm(): void {
 //   this.dynamicFields.forEach(field => {
-//     const controlName = this.getControlName(field);
-//     const validators = this.getValidatorsForField(field);
+//     const controlName = field.controlName;
+//     const validators = [];
+
+//     if (field.is_required) validators.push(Validators.required);
+//     if (field.min_length) validators.push(Validators.minLength(field.min_length));
+//     if (field.max_length) validators.push(Validators.maxLength(field.max_length));
+//     if (field.validation_pattern) validators.push(Validators.pattern(field.validation_pattern));
 
 //     if (!this.platesForm.contains(controlName)) {
 //       this.platesForm.addControl(controlName, new FormControl('', validators));
-//     } else {
-//       // Update validators if control already exists
-//       const control = this.platesForm.get(controlName);
-//       control?.setValidators(validators);
-//       control?.updateValueAndValidity();
 //     }
-
-//     field.controlName = controlName;
 //   });
 
-//   // Force form validation check
 //   this.platesForm.updateValueAndValidity();
 // }
 addDynamicFieldsToForm(): void {
   this.dynamicFields.forEach(field => {
-    const controlName = field.controlName;
-    const validators = [];
+    // Create a unique control name using field ID
+    const controlName = `field_${field.id}`;
+    field.controlName = controlName; // Store it on the field object
 
-    if (field.is_required) validators.push(Validators.required);
-    if (field.min_length) validators.push(Validators.minLength(field.min_length));
-    if (field.max_length) validators.push(Validators.maxLength(field.max_length));
-    if (field.validation_pattern) validators.push(Validators.pattern(field.validation_pattern));
+    const validators = this.getValidatorsForField(field);
 
     if (!this.platesForm.contains(controlName)) {
       this.platesForm.addControl(controlName, new FormControl('', validators));
     }
   });
-
-  this.platesForm.updateValueAndValidity();
 }
 
 // Add a method to check if all required fields are filled
@@ -1266,9 +1132,6 @@ removeImage(index: number): void {
     contactMethods?.get(method)?.setValue(!currentValue);
   }
 
-
-
-
   previousStep(): void {
     if (this.currentStep > 1) {
       this.currentStep--;
@@ -1414,6 +1277,13 @@ async goToNextStep() {
   }
 }
 
+logFormValues() {
+  console.log('Current form values:', this.platesForm.value);
+  this.dynamicFields.forEach(field => {
+    const value = this.platesForm.get(field.controlName)?.value;
+    console.log(`Field ${field.controlName} (${field.field_name}):`, value);
+  });
+}
 
 private async handleStep1() {
   if (!this.validateStep1()) return;
@@ -1516,34 +1386,59 @@ private prepareStep1Data(): any {
       //   fields: dynamicFieldValues
       // };
 case 3: // License Plate
-  const dynamicFieldValues = this.dynamicFields.map(field => {
-    // Convert value to string explicitly
-    let fieldValue = this.platesForm.value[field.controlName];
+  // const dynamicFieldValues = this.dynamicFields.map(field => {
+  //   // Convert value to string explicitly
+  //   let fieldValue = this.platesForm.value[field.controlName];
     
-    // Handle different value types
-    if (fieldValue === null || fieldValue === undefined) {
-      fieldValue = ''; // Default empty string
-    } else if (typeof fieldValue === 'number') {
-      fieldValue = fieldValue.toString();
-    } else if (typeof fieldValue !== 'string') {
-      fieldValue = String(fieldValue);
-    }
+  //   // Handle different value types
+  //   if (fieldValue === null || fieldValue === undefined) {
+  //     fieldValue = ''; // Default empty string
+  //   } else if (typeof fieldValue === 'number') {
+  //     fieldValue = fieldValue.toString();
+  //   } else if (typeof fieldValue !== 'string') {
+  //     fieldValue = String(fieldValue);
+  //   }
 
-    return {
-      field_id: field.id,
-      value: fieldValue // Now guaranteed to be a string
-    };
-  });
+  //   return {
+  //     field_id: field.id,
+  //     value: fieldValue // Now guaranteed to be a string
+  //   };
+  // });
 
-  return {
-    category_id: 3,
-    step: 1,
-    type_id: this.platesForm.value.type_id,
-    plate_format_id: this.selectedPlateFormat?.id,
-    country_id_lp: Number(this.platesForm.value.country_id_lp),
-    city_id_lp: Number(this.platesForm.value.city_id_lp),
-    fields: dynamicFieldValues
-  };
+  // return {
+  //   category_id: 3,
+  //   step: 1,
+  //   type_id: this.platesForm.value.type_id,
+  //   plate_format_id: this.selectedPlateFormat?.id,
+  //   country_id_lp: Number(this.platesForm.value.country_id_lp),
+  //   city_id_lp: Number(this.platesForm.value.city_id_lp),
+  //   fields: dynamicFieldValues
+  // };
+      case 3: // License Plate
+      const dynamicFieldValues = this.dynamicFields.map(field => {
+        // Get the raw value from the form control
+        const rawValue = this.platesForm.get(field.controlName)?.value;
+        
+        // Convert to string and handle null/undefined
+        let fieldValue = rawValue !== null && rawValue !== undefined 
+          ? String(rawValue) 
+          : '';
+
+        return {
+          field_id: field.id,
+          value: fieldValue
+        };
+      });
+
+      return {
+        category_id: 3,
+        step: 1,
+        type_id: this.platesForm.value.type_id,
+        plate_format_id: this.selectedPlateFormat?.id,
+        country_id_lp: Number(this.platesForm.value.country_id_lp),
+        city_id_lp: Number(this.platesForm.value.city_id_lp),
+        fields: dynamicFieldValues
+      };
     default:
       console.error('Unknown vehicle type:', this.selectedVehicleType);
       return null;
@@ -1673,37 +1568,6 @@ private getTypeSpecificPayload(step1Data: any): any {
   }
 }
 
-// private async handleStep3() {
-//   const step1Data = this.sharedFormDataService.getStep1Data();
-//   const step2Data = this.sharedFormDataService.getStep2Data();
-
-//   const payload = {
-//     // Common ad details
-//     step: 3,
-//     title: step2Data.title,
-//     description: step2Data.description,
-//     price: step2Data.price,
-//     listing_type_id: step2Data.listing_type_id,
-//     city_id: step2Data.city_id,
-//     auction_enabled: step2Data.auction_enabled,
-//     minimum_bid: step2Data.minimum_bid,
-//     allow_submission: step2Data.allow_submission,
-//     contacting_channel: step2Data.contacting_channel,
-//     seller_type: step2Data.seller_type,
-//     // Type-specific details
-//     ...this.getTypeSpecificPayload(step1Data)
-//   };
-
-//   try {
-//     const res = await this.listingService.addPost(payload).toPromise();
-//     console.log('Ad created successfully:', res);
-//     this.currentStep++;
-//     this.router.navigate(['/home']);
-//   } catch (err) {
-//     console.error('Error creating ad:', err);
-//     alert('Failed to create ad. Please try again.');
-//   }
-// }
 
 
   private buildAndSubmitPayload(step1Data: any, step2Data: any, priceData?: any) {
@@ -1867,7 +1731,37 @@ private logFormErrors(form: FormGroup) {
 }
 
 
+// private async handleStep3() {
+//   const step1Data = this.sharedFormDataService.getStep1Data();
+//   const step2Data = this.sharedFormDataService.getStep2Data();
 
+//   const payload = {
+//     // Common ad details
+//     step: 3,
+//     title: step2Data.title,
+//     description: step2Data.description,
+//     price: step2Data.price,
+//     listing_type_id: step2Data.listing_type_id,
+//     city_id: step2Data.city_id,
+//     auction_enabled: step2Data.auction_enabled,
+//     minimum_bid: step2Data.minimum_bid,
+//     allow_submission: step2Data.allow_submission,
+//     contacting_channel: step2Data.contacting_channel,
+//     seller_type: step2Data.seller_type,
+//     // Type-specific details
+//     ...this.getTypeSpecificPayload(step1Data)
+//   };
+
+//   try {
+//     const res = await this.listingService.addPost(payload).toPromise();
+//     console.log('Ad created successfully:', res);
+//     this.currentStep++;
+//     this.router.navigate(['/home']);
+//   } catch (err) {
+//     console.error('Error creating ad:', err);
+//     alert('Failed to create ad. Please try again.');
+//   }
+// }
 
 //   async goToNextStep() {
 //     // Step 1: Vehicle-specific form
@@ -2213,4 +2107,155 @@ private logFormErrors(form: FormGroup) {
         //   if (!isValid) {
         //     this.platesForm.markAllAsTouched();
         //   }
-        //   break;
+        //   break;// loadDraftData(draftId: number) {
+//   this.listingService.getSingleDraft(draftId).subscribe({
+//     next: (res: any) => {
+//       const draft = res?.data;
+
+//       if (!draft) return;
+
+//       // Fill Step 1 (vehicle form)
+//       if (draft.motorcycle) {
+//         this.vehicleForm.patchValue({
+//           brand_id: draft.motorcycle.brand_id,
+//           model_id: draft.motorcycle.model_id,
+//           year_id: draft.motorcycle.year_id,
+//           engine: parseInt(draft.motorcycle.engine), // strip "cc" if needed
+//           mileage: draft.motorcycle.mileage,
+//           body_condition: draft.motorcycle.body_condition,
+//           modified: draft.motorcycle.modified ? 'Yes' : 'No',
+//           insurance: draft.motorcycle.insurance ? 'Yes' : 'No',
+//           general_condition: draft.motorcycle.general_condition,
+//           vehicle_care: draft.motorcycle.vehicle_care,
+//           transmission: draft.motorcycle.transmission
+//         });
+
+//         this.uploadedImageUrls = draft.images.map((img: any) => img.image_url);
+//         console.log('this.uploadedImageUrls: ', this.uploadedImageUrls);
+//       }
+
+//       // Fill Step 2 (ad details)
+//       this.adDetailsForm.patchValue({
+//         title: draft.title,
+//         description: draft.description,
+//         price: draft.price,
+//         city: draft.city_id,
+//         country: draft.country_id,
+//         listing_type_id: draft.listing_type_id,
+//         contacting_channel: draft.contacting_channel,
+//         seller_type: draft.seller_type,
+//         allow_submission: draft.allow_submission ? 'true' : 'false',
+//         minimum_bid: draft.minimum_bid
+//       });
+
+//       // Track current step
+//       this.currentStep = draft.step || 1;
+//     },
+//     error: (err) => {
+//       console.error('Failed to load draft', err);
+//     }
+//   });
+// }
+
+
+
+
+// loadDraftData(draftId: number): void {
+//    this.listingService.getSingleDraft(draftId).subscribe({
+//     next: (response) => {
+//       const data = response.data;
+
+//       // Step 1: Set vehicle type
+//       // this.selectedVehicleType = 'motorcycle'; // Based on response
+//       // this.setCorrectForm(); // Optional: if you switch forms dynamically
+
+//       // Step 2: Patch bikeForm
+//       this.bikeForm.patchValue({
+//         brand: data.motorcycle.brand_id,
+//         model: data.motorcycle.model_id,
+//         modelYear: data.motorcycle.year_id,
+//         bikeType: data.motorcycle.type_id,
+//         engineSize: data.motorcycle.engine,
+//         mileage: data.motorcycle.mileage,
+//         bodyCondition: data.motorcycle.body_condition,
+//         isModified: data.motorcycle.modified ? 'Yes' : 'No',
+//         hasInsurance: data.motorcycle.insurance ? 'Yes' : 'No',
+//         condition: data.motorcycle.general_condition,
+//         bikeCare: data.motorcycle.vehicle_care,
+//         transmission: data.motorcycle.transmission
+//       });
+
+//       this.models = [data.motorcycle.model]; // to ensure the dropdown has this value
+//       this.years = [data.motorcycle.year];   // same idea
+
+//       // Step 3: Patch adDetailsForm
+//       this.adDetailsForm.patchValue({
+//         adName: data.title,
+//         description: data.description,
+//         city: data.city_id,
+//         country: data.country_id,
+//         price: data.minimum_bid ?? '', // fallback if null
+//         auctionEnabled: !!data.auction_enabled
+//         // Add more fields if needed (e.g., seller_type, contactMethods)
+//       });
+
+//       // Step 4: Set uploaded images (read-only view)
+//       this.uploadedImages = data.images.map((img: any) => ({
+//         previewUrl: img.image_url,
+//       }));
+//       console.log(' this.uploadedImages ', this.uploadedImages );
+// console.log('data.motorcycle.brand_id',data.motorcycle.brand_id);
+//       // Step 5: Load dependent dropdowns
+//       this.onBrandChange(data.motorcycle.brand_id);
+// this.onModelChange(data.motorcycle.model_id);
+
+//       // Optional: Set current step
+//       this.currentStep = data.step ?? 1;
+//     },
+//     error: (err) => {
+//       console.error('Failed to load draft', err);
+//       // Optional: show error UI
+//     }
+//   });
+// }
+  // getValidatorsForField(field: any): any[] {
+  //   const validators = [];
+    
+  //   if (field.is_required) validators.push(Validators.required);
+  //   if (field.min_length) validators.push(Validators.minLength(field.min_length));
+  //   if (field.max_length) validators.push(Validators.maxLength(field.max_length));
+    
+  //   // Add pattern validation based on character type
+  //   if (field.character_type === 'digit') {
+  //     validators.push(Validators.pattern(/^[0-9]*$/));
+  //   } else if (field.character_type === 'letter') {
+  //     validators.push(Validators.pattern(/^[a-zA-Z]*$/));
+  //   }
+    
+  //   // Add custom pattern if provided
+  //   if (field.validation_pattern) {
+  //     validators.push(Validators.pattern(field.validation_pattern));
+  //   }
+    
+  //   return validators;
+  // }// Modify the addDynamicFieldsToForm method
+// addDynamicFieldsToForm(): void {
+//   this.dynamicFields.forEach(field => {
+//     const controlName = this.getControlName(field);
+//     const validators = this.getValidatorsForField(field);
+
+//     if (!this.platesForm.contains(controlName)) {
+//       this.platesForm.addControl(controlName, new FormControl('', validators));
+//     } else {
+//       // Update validators if control already exists
+//       const control = this.platesForm.get(controlName);
+//       control?.setValidators(validators);
+//       control?.updateValueAndValidity();
+//     }
+
+//     field.controlName = controlName;
+//   });
+
+//   // Force form validation check
+//   this.platesForm.updateValueAndValidity();
+// }

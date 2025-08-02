@@ -4,26 +4,26 @@
       <!-- Left Content -->
       <div class="lg:w-[495px] flex flex-col gap-10">
         <h2 class="font-manrope text-[#18181B] text-[52px] font-bold leading-[66px]">
-          Used<br />Motorcycles
+          {{ 'USED_MOTORCYCLES.TITLE' | translate }}<br />{{ 'USED_MOTORCYCLES.SUBTITLE' | translate }}
         </h2>
         
         <p class="font-manrope text-[#18181B] text-[18px] font-medium leading-[30px]">
-          Buy or sell a used motorcycle directly without a middle man
+          {{ 'USED_MOTORCYCLES.DESCRIPTION' | translate }}
         </p>
 
         <div class="flex flex-col gap-12">
           <button routerLink="/motorcycles" 
                   class="w-fit h-[48px] px-[57.63px] py-[14.75px] border border-gray-800 text-gray-800 hover:bg-gray-100 transition cursor-pointer">
-            View All
+            {{ 'COMMON.VIEW_ALL' | translate }}
           </button>
           <div class="flex gap-12">
             <div>
               <p class="text-2xl font-bold">50k+</p>
-              <p class="text-gray-500">Sold</p>
+              <p class="text-gray-500">{{ 'USED_MOTORCYCLES.SOLD' | translate }}</p>
             </div>
             <div>
               <p class="text-2xl font-bold">17k+</p>
-              <p class="text-gray-500">Available to buy</p>
+              <p class="text-gray-500">{{ 'USED_MOTORCYCLES.AVAILABLE' | translate }}</p>
             </div>
           </div>
         </div>
@@ -36,7 +36,7 @@
         <div *ngIf="motorcycles.length === 0" 
              class="flex items-center justify-center min-h-[300px] bg-gray-50 rounded-lg border border-gray-200">
           <div class="text-center">
-            <p class="text-lg text-gray-600 font-medium">No items found for search</p>
+            <p class="text-lg text-gray-600 font-medium">{{ 'COMMON.NO_RESULTS' | translate }}</p>
           </div>
         </div>
 
@@ -57,11 +57,11 @@
             <img [src]="bike.images[0]" draggable="false" class="card-image">
             <div class="card-content">
               <h3>{{bike.title}}</h3>
-              <p class="price-label">PRICE</p>
+              <p class="price-label">{{ 'COMMON.PRICE' | translate }}</p>
               <p class="price-value">
                 {{bike.price > 0 ? bike.price : bike.minimum_bid}} {{bike.currency}}
               </p>
-              <button (click)="viewListing(bike.id)">View Bike</button>
+              <button (click)="viewListing(bike.id)">{{ 'COMMON.VIEW_BIKE' | translate }}</button>
             </div>
           </div>
         </div>

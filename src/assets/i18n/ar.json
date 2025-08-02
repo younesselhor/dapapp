@@ -14,5 +14,38 @@
     "CONDITION": "الحالة",
     "YES": "نعم",
     "NO": "لا"
+  },
+  "USED_MOTORCYCLES": {
+    "TITLE": "مستعملة",
+    "SUBTITLE": "دراجات نارية",
+    "DESCRIPTION": "اشترِ أو بع دراجة نارية مستعملة مباشرة بدون وسيط",
+    "SOLD": "تم البيع",
+    "AVAILABLE": "متاح للشراء"
+  },
+  "SPARE_PARTS": {
+    "TITLE": "مستعملة",
+    "SUBTITLE": "قطع الغيار",
+    "DESCRIPTION": "اشترِ أو بع قطع الغيار، من الهيكل إلى المحرك وجميع الملحقات",
+    "SOLD": "تم البيع",
+    "AVAILABLE": "متاح للشراء",
+    "VIEW_PART": "عرض قطعة الدراجة"
+  },
+  "PLATES": {
+    "TITLE": "لوحات",
+    "GCC_BADGE": "جميع دول الخليج",
+    "DESCRIPTION": "اشترِ أو بع لوحاتك الخاصة",
+    "SUCCESSFULLY_SOLD": "تم البيع بنجاح",
+    "AVAILABLE_NOW": "متاحة الآن",
+    "VIEW_PLATE": "عرض اللوحة",
+    "UAE_ICON": "أيقونة الإمارات",
+    "SAUDI_ICON": "أيقونة السعودية"
+  },
+  "COMMON": {
+    "VIEW_ALL": "عرض الكل",
+    "NO_RESULTS": "لم يتم العثور على نتائج",
+    "PRICE": "السعر",
+    "VIEW_BIKE": "عرض الدراجة",
+    "CURRENCY": "ر.س"
   }
 }
+

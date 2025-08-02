@@ -13,7 +13,7 @@
   class="max-w-6xl mx-auto p-6 bg-white rounded-lg my-10"
 >
   <!-- Image Gallery -->
-  <div class="mb-6">
+  <div *ngIf="listing.category_id !== 3 && !listing.license_plate" class="mb-6">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
       <!-- Left column with 2 stacked images -->
       <div class="space-y-2">
@@ -69,6 +69,83 @@
     </div>
 
   </div>
+
+  <!-- Show license plate if category is 3 (license plates) -->
+<!-- Show license plate if category is 3 (license plates) -->
+<div *ngIf="listing.category_id === 3 && listing.license_plate" class="mb-6 flex justify-center">
+  <div class="plate-display" [ngClass]="getPlateBackgroundClass(listing)">
+    <!-- Non-Saudi plate - scaled up -->
+    <div *ngIf="listing.license_plate.plate_format?.country?.code !== 'SA'"
+      class="relative w-[324px] h-[135px] bg-white border-3 border-black rounded-md shadow-sm flex transform scale-125">
+      
+      <!-- Plate Fields -->
+      <div class="flex-1 relative">
+        <ng-container *ngIf="getPlateFieldMap(listing) as fieldMap">
+          <!-- City -->
+          <div class="absolute top-1 left-1/2 transform -translate-x-1/2 text-[15px] font-semibold text-gray-600 uppercase tracking-widest">
+            {{ listing.city }}
+          </div>
+          <!-- Country -->
+          <div class="absolute bottom-1 left-1/2 transform -translate-x-1/2 text-[15px] font-semibold text-gray-600 uppercase tracking-widest">
+            {{ getCountryName(listing) }}
+          </div>
+
+          <!-- Fields -->
+          <ng-container *ngFor="let pos of allPositions">
+            <div *ngIf="fieldMap[pos]" [ngClass]="getPositionClass(pos)" class="absolute text-[21px] font-bold text-gray-800">
+              {{ fieldMap[pos] }}
+            </div>
+          </ng-container>
+
+          <!-- Separator -->
+          <div *ngIf="fieldMap['left-center'] && fieldMap['right-center']"
+            class="absolute top-1/2 left-1/2 w-px h-9 bg-gray-400 transform -translate-y-1/2 -translate-x-1/2">
+          </div>
+        </ng-container>
+      </div>
+
+      <!-- Sidebar -->
+      <div [ngClass]="getSidebarClass(listing)" class="flex flex-col items-center justify-center text-white px-1.5 py-1.5 w-[54px]">
+        <ng-container [ngSwitch]="listing.license_plate?.plate_format?.country?.code">
+          <ng-container *ngSwitchCase="'AE'">
+            <img src="/pictures/simple-icons_emirates.svg" class="w-6 h-6 mb-1" />
+            <span class="text-[15px] font-bold tracking-widest leading-tight">UAE</span>
+          </ng-container>
+          <ng-container *ngSwitchCase="'KW'">
+            <div class="text-[15px] font-bold tracking-widest leading-tight flex flex-col items-center space-y-[2px]">
+              <span>K</span><span>W</span><span>T</span>
+            </div>
+          </ng-container>
+          <ng-container *ngSwitchDefault>
+            <img src="/pictures/simple-icons_saudia.svg" class="w-6 h-6 mb-1" />
+            <span class="text-[15px] font-bold tracking-widest leading-tight">KSA</span>
+          </ng-container>
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- Saudi plate - scaled up -->
+    <div *ngIf="listing.license_plate.plate_format?.country?.code === 'SA'">
+      <div *ngIf="getSaudiPlateParts(listing) as parts" class="transform scale-125">
+        <div class="flex items-center justify-center">
+          <div class="flex border-[3px] border-black rounded-md overflow-hidden shadow-sm bg-white">
+            <div class="grid grid-cols-2 grid-rows-2 w-[270px] h-[135px]">
+              <div class="flex items-center justify-center border border-black text-[21px] font-bold text-black">{{ parts.arNumbers }}</div>
+              <div class="flex items-center justify-center border border-black text-[21px] font-bold text-black">{{ parts.arLetters }}</div>
+              <div class="flex items-center justify-center border border-black text-[21px] font-bold text-black">{{ parts.enNumbers }}</div>
+              <div class="flex items-center justify-center border border-black text-[21px] font-bold text-black uppercase">{{ parts.enLetters }}</div>
+            </div>
+            <div class="flex flex-col items-center justify-center bg-[#138c36] text-white px-1.5 py-1.5 w-[54px]">
+              <img src="/pictures/simple-icons_saudia.svg" class="w-6 h-6 mb-1" />
+              <span class="text-[15px] font-bold tracking-widest leading-tight">KSA</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
   
 <!-- Image Modal -->
 <div
@@ -108,6 +185,7 @@
     </button>
   </div>
 </div>
+
   <div *ngIf="listing.allow_submission === 0">
     <!-- Header Section with Two Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
@@ -156,7 +234,7 @@
         </div>
 
         <!-- Rest of your card content remains the same -->
-        <h1 class="text-2xl font-bold text-gray-800 pr-8">{{ getTitle() }}</h1>
+        <h1 class="text-2xl font-bold text-gray-800 pr-8">{{ listing.title }}</h1>
         <div class="mt-2">
           <span class="text-xl font-semibold text-red-600"
             >SAR{{ listing.price }}</span

@@ -151,7 +151,7 @@ applyFilters() {
   onImageError(event: Event): void {
     const img = event.target as HTMLImageElement;
     // Set a placeholder image or handle error
-    img.src = 'assets/images/motorcycle-placeholder.jpg'; // Add your placeholder image
+    // img.src = 'assets/images/motorcycle-placeholder.jpg'; // Add your placeholder image
     const motorcycleIndex = this.bikePartsCatg.findIndex(m => m.image === img.src);
     if (motorcycleIndex !== -1) {
       this.bikePartsCatg[motorcycleIndex].imageLoaded = true;

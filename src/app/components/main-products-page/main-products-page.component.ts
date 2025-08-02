@@ -9,8 +9,39 @@ import { AuthService } from '../../services/auth.service';
 
 // Update your method
 
+interface Plate {
+  id: number;
+  title: string;
+  price: string;
+  city: string;
+  license_plate?: {
+    plate_format: {
+      country: {
+        name: string;
+        code: string;
+      };
+    };
+    fields: {
+      field_name: string;
+      field_position:string;
+      value: string;
+      position?: string;
+    }[];
+  };
+  auction_enabled?: number;
+  minimum_bid?: string;
+}
 
-
+interface PlateField {
+  field_id: number;
+  field_name: string;
+  field_type: string | null;
+  field_label: string | null;
+  is_required: boolean;
+  max_length: number;
+  validation_pattern: string | null;
+  value: string;
+}
 @Component({
   selector: 'app-main-products-page',
   imports: [CommonModule, FormsModule],
@@ -37,6 +68,12 @@ export class MainProductsPageComponent implements OnInit {
   confirmSoomStep = false;
   isModalOpen = false;
 
+
+  allPositions: string[] = [
+  'top-left', 'top-center', 'top-right',
+  'left-center', 'center', 'right-center',
+  'bottom-left', 'bottom-center', 'bottom-right'
+];
 
   constructor(
     private listingService: ListingService,
@@ -83,7 +120,61 @@ export class MainProductsPageComponent implements OnInit {
     })
   }
 
+  getPlateBackgroundClass(plate: any): string {
+  const countryCode = plate.license_plate?.plate_format?.country?.code;
+  
+  switch(countryCode) {
+    case 'AE': // UAE
+      return 'uae-bg';
+    case 'SA': // Saudi Arabia
+      return 'saudi-bg';
+    case 'KW': // Kuwait
+      return 'kuwait-bg';
+    default:
+      return 'default-bg';
+  }
+}
 
+// getPlateFieldMap(plate: Plate): { [position: string]: string } {
+//   const map: { [key: string]: string } = {};
+//   plate.license_plate?.fields?.forEach(field => {
+//     if (field.field_position && field.value) {
+//       map[field.field_position] = field.value;
+//     }
+//   });
+//   return map;
+// }
+
+  getCountryName(plate: Plate): string {
+    return plate.license_plate?.plate_format.country.name || '';
+  }
+
+  getPositionClass(pos: string): string {
+  const base = 'text-center';
+  const map: { [key: string]: string } = {
+    'top-left': 'top-1 left-1',
+    'top-center': 'top-1 left-1/2 transform -translate-x-1/2',
+    'top-right': 'top-1 right-1',
+    'left-center': 'left-1 top-1/2 transform -translate-y-1/2',
+    'center': 'top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2',
+    'right-center': 'right-1 top-1/2 transform -translate-y-1/2',
+    'bottom-left': 'bottom-1 left-1',
+    'bottom-center': 'bottom-1 left-1/2 transform -translate-x-1/2',
+    'bottom-right': 'bottom-1 right-1'
+  };
+  return `${base} ${map[pos] || ''}`;
+}
+getSidebarClass(plate: Plate): string {
+  const code = plate.license_plate?.plate_format?.country?.code;
+  switch (code) {
+    case 'KW':
+      return 'bg-[#d32f2f]'; // Red
+    case 'AE':
+      return 'bg-[#6b21a8]'; // Purple
+    default:
+      return 'bg-[#138c36]'; // KSA green fallback
+  }
+}
 //   toggleWishlist(listingId: number): void {
 //   this.listingService.toggleWishlist(listingId).subscribe({
 //     next: () => {
@@ -96,6 +187,39 @@ export class MainProductsPageComponent implements OnInit {
 //     }
 //   });
 // }
+
+getSaudiPlateParts(plate: any): {
+  arLetters: string,
+  arNumbers: string,
+  enLetters: string,
+  enNumbers: string
+} | null {
+  const fields: PlateField[] = plate?.license_plate?.fields;
+  if (!fields || fields.length < 4) return null;
+
+  const arLetters = fields.find((f: PlateField) =>
+    f.field_name.toLowerCase().includes('letter') &&
+    f.field_name.toLowerCase().includes('arabic')
+  )?.value || '';
+
+  const arNumbers = fields.find((f: PlateField) =>
+    f.field_name.toLowerCase().includes('number') &&
+    f.field_name.toLowerCase().includes('arabic')
+  )?.value || '';
+
+  const enLetters = fields.find((f: PlateField) =>
+    f.field_name.toLowerCase().includes('letter') &&
+    f.field_name.toLowerCase().includes('english')
+  )?.value || '';
+
+  const enNumbers = fields.find((f: PlateField) =>
+    f.field_name.toLowerCase().includes('number') &&
+    f.field_name.toLowerCase().includes('english')
+  )?.value || '';
+
+  return { arLetters, arNumbers, enLetters, enNumbers };
+}
+
 
   toggleWishlist(): void {
     // const previousState = this.listing.wishlist;
@@ -247,52 +371,6 @@ nextImage(): void {
     return this.soomAmount !== null && this.soomAmount >= baseMinimum;
   }
 
-  // submitSoom(): void {
-  //   const baseMinimum = this.minimumRequired ?? this.listing?.submission?.amount ?? 0;
-
-  //   if (!this.soomAmount || this.soomAmount < baseMinimum) {
-  //     this.soomError = 'Please enter a valid amount above the minimum.';
-  //     return;
-  //   }
-
-  //   if (!this.listing?.id) {
-  //     this.soomError = 'Listing information is not available.';
-  //     return;
-  //   }
-
-  //   this.isSubmittingSoom = true;
-  //   this.soomError = null;
-
-  //   this.listingService.submitSoom(this.listing.id, this.soomAmount).subscribe({
-  //     next: (response) => {
-  //       console.log('Soom submitted successfully:', response);
-  //       this.isSubmittingSoom = false;
-  //       this.lastsoom = response.data.min_soom
-
-  //       this.minimumRequired = response.data.min_soom ;
-
-  //       setTimeout(() => {
-  //         this.closeModal();
-  //       }, 2000);
-  //     },
-  //     error: (error) => {
-  //       console.error('Error submitting soom:', error);
-  //       this.isSubmittingSoom = false;
-
-  //       if (error.status === 422 && error.error?.minimum_required) {
-  //         this.minimumRequired = error.error.minimum_required;
-  //         this.soomError = `The current highest soom is SAR ${error.error.current_highest}. You must offer at least SAR ${this.minimumRequired}.`;
-  //       } else if (error.status === 401) {
-  //         this.soomError = 'You need to be logged in to submit a soom.';
-  //       } else if (error.status === 403) {
-  //         this.soomError = 'You are not authorized to submit a soom for this listing.';
-  //       } else {
-  //         this.soomError = 'Failed to submit soom. Please try again later.';
-  //       }
-  //     }
-  //   });
-  // }
-
   submitSoom(): void {
   const baseMinimum = this.lastsoom;
 
@@ -354,6 +432,67 @@ performSoomSubmission(): void {
   });
 }
 
+getPlateFieldMap(plate: Plate): { [position: string]: string } {
+  const map: { [key: string]: string } = {};
+  if (!plate.license_plate?.fields) return map;
+  
+  plate.license_plate.fields.forEach(field => {
+    // Normalize position names to match your template
+    const normalizedPosition = field.position?.toLowerCase().replace(' ', '-') || '';
+    if (normalizedPosition && field.value) {
+      map[normalizedPosition] = field.value;
+    }
+  });
+  return map;
+}
+}
+
+  // submitSoom(): void {
+  //   const baseMinimum = this.minimumRequired ?? this.listing?.submission?.amount ?? 0;
+
+  //   if (!this.soomAmount || this.soomAmount < baseMinimum) {
+  //     this.soomError = 'Please enter a valid amount above the minimum.';
+  //     return;
+  //   }
+
+  //   if (!this.listing?.id) {
+  //     this.soomError = 'Listing information is not available.';
+  //     return;
+  //   }
+
+  //   this.isSubmittingSoom = true;
+  //   this.soomError = null;
+
+  //   this.listingService.submitSoom(this.listing.id, this.soomAmount).subscribe({
+  //     next: (response) => {
+  //       console.log('Soom submitted successfully:', response);
+  //       this.isSubmittingSoom = false;
+  //       this.lastsoom = response.data.min_soom
+
+  //       this.minimumRequired = response.data.min_soom ;
+
+  //       setTimeout(() => {
+  //         this.closeModal();
+  //       }, 2000);
+  //     },
+  //     error: (error) => {
+  //       console.error('Error submitting soom:', error);
+  //       this.isSubmittingSoom = false;
+
+  //       if (error.status === 422 && error.error?.minimum_required) {
+  //         this.minimumRequired = error.error.minimum_required;
+  //         this.soomError = `The current highest soom is SAR ${error.error.current_highest}. You must offer at least SAR ${this.minimumRequired}.`;
+  //       } else if (error.status === 401) {
+  //         this.soomError = 'You need to be logged in to submit a soom.';
+  //       } else if (error.status === 403) {
+  //         this.soomError = 'You are not authorized to submit a soom for this listing.';
+  //       } else {
+  //         this.soomError = 'Failed to submit soom. Please try again later.';
+  //       }
+  //     }
+  //   });
+  // }
+
   // submitSoom(): void {
   //   if (!this.soomAmount || this.soomAmount < (this.listing?.submission?.amount || 0)) {
   //     this.soomError = 'Please enter a valid amount above the minimum.';
@@ -407,4 +546,4 @@ performSoomSubmission(): void {
   //          this.soomAmount >= (this.listing?.submission?.amount || 0);
   // }
 
-}
+

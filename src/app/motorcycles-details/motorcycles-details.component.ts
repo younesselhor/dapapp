@@ -53,7 +53,10 @@ export class MotorcyclesDetailsComponent implements OnInit, OnDestroy {
   selectedCondition: 'new' | 'used' | '' = '';
   motorCyclesDetails: Motorcycle[] = [];
   selectedBrands: number[] = [];
-  priceRange = { min: 0, max: 0 };
+  priceRange = {
+    min: 0,
+    max: 50000
+  };
   absoluteMin = 0;
   absoluteMax = 0;
   isLoading = false;
@@ -66,12 +69,12 @@ export class MotorcyclesDetailsComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.filterDebouncer.pipe(
-      debounceTime(300), // Wait 300ms after last change
-      distinctUntilChanged() // Only emit if value changed
-    ).subscribe(() => {
-      this.executeFilter();
-    });
+    // this.filterDebouncer.pipe(
+    //   debounceTime(300), // Wait 300ms after last change
+    //   distinctUntilChanged() // Only emit if value changed
+    // ).subscribe(() => {
+    //   this.executeFilter();
+    // });
 
     this.executeFilter();
     this.getPriceRange();
@@ -103,7 +106,7 @@ export class MotorcyclesDetailsComponent implements OnInit, OnDestroy {
   onImageError(event: Event): void {
     const img = event.target as HTMLImageElement;
     // Set a placeholder image or handle error
-    img.src = 'assets/images/motorcycle-placeholder.jpg'; // Add your placeholder image
+    // img.src = 'assets/images/motorcycle-placeholder.jpg'; // Add your placeholder image
     const motorcycleIndex = this.motorCyclesDetails.findIndex(m => m.image === img.src);
     if (motorcycleIndex !== -1) {
       this.motorCyclesDetails[motorcycleIndex].imageLoaded = true;
@@ -162,7 +165,7 @@ export class MotorcyclesDetailsComponent implements OnInit, OnDestroy {
   }
 
   getMotorcyclesdetails(): void {
-    this.listingbyService.getMotorcyclesByCategory(1).subscribe((response: any) => {
+    this.listingbyService.getMotorcyclesByCategory('all').subscribe((response: any) => {
       this.motorCyclesDetails = response;
     });
   }

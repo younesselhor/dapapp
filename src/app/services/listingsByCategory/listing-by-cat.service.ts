@@ -25,12 +25,26 @@ export class ListingByCatService {
   // }
 
   // listings.service.ts
-getMotorcyclesByCategory(countryId: any) {
-  return this.http.get(`${this.baseUrl}listings/by-category/1?country=${countryId}`);
+// getMotorcyclesByCategory(countryId: any) {
+//   return this.http.get(`${this.baseUrl}listings/by-category/1?country=${countryId}`);
+// }
+getMotorcyclesByCategory(countryId?: string|null): Observable<any> {
+  const url = countryId
+    ? `${this.baseUrl}listings/by-category/1?country=${countryId}`
+    : `${this.baseUrl}listings/by-category/1?country=all`;
+
+  return this.http.get(url);
 }
-  getBikePartByCategory(countryId: any) {
-    return this.http.get(`${this.baseUrl}listings/by-category/2?country=${countryId}`);
-  }
+  // getBikePartByCategory(countryId: any) {
+  //   return this.http.get(`${this.baseUrl}listings/by-category/2?country=${countryId}`);
+  // }
+  getBikePartByCategory(countryId?: any) {
+  const url = countryId
+    ? `${this.baseUrl}listings/by-category/2?country=${countryId}`
+    : `${this.baseUrl}listings/by-category/2?country=all`;
+
+  return this.http.get(url);
+}
 
   // getBikePartByCategory(){
   //   return this.http.get(this.baseUrl + 'listings/by-category/2')

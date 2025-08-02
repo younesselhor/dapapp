@@ -4,6 +4,7 @@ import { Router, RouterModule } from '@angular/router';
 import { ListingByCatService } from '../../services/listingsByCategory/listing-by-cat.service';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { LocationSService } from '../../services/location-s.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 interface SparePart {
   id: number;
@@ -21,7 +22,7 @@ interface SparePart {
 @Component({
   selector: 'app-used-spare-parts-section',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule,TranslateModule],
   templateUrl: './used-spare-parts-section.component.html',
   styleUrls: ['./used-spare-parts-section.component.css'],
 
@@ -44,16 +45,16 @@ export class UsedSparePartsSectionComponent implements OnInit {
   cardWidth = 324; // Desktop card width
   mobileCardWidth = 300; // Mobile card width
   isMobile = false;
-    countryId?: number;
+    countryname?: string;
   constructor(private listinbyCat: ListingByCatService, private router : Router, private locationService: LocationSService) {}
 
   ngOnInit(): void {
 
 
     this.locationService.selectedCountry$.subscribe((country) => {
-    if (country?.id) {
-      this.countryId = country.id;
-      console.log('this.countryId : ', this.countryId );
+    if (country?.name) {
+      this.countryname = country.name;
+      console.log('this.countryname : ', this.countryname );
       this.getBikePart();
     }
   });
@@ -73,9 +74,9 @@ export class UsedSparePartsSectionComponent implements OnInit {
   searchedCountryMessage: string | null = null;
 
   getBikePart() {
-  if (!this.countryId) return;
+  if (!this.countryname) return;
 
-  this.listinbyCat.getMotorcyclesByCategory(this.countryId).subscribe((res: any) => {
+  this.listinbyCat.getBikePartByCategory(this.countryname).subscribe((res: any) => {
     this.spareParts = res.listings || [];
 
     if (res.showing_all_countries && res.searched_country) {

@@ -145,6 +145,7 @@ import { Component, HostListener } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { ListingByCatService } from '../../services/listingsByCategory/listing-by-cat.service';
 import { LocationSService } from '../../services/location-s.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 interface Motorcycle {
   id: number;
@@ -158,7 +159,7 @@ interface Motorcycle {
 @Component({
   selector: 'app-used-moto-cycles-section',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule,TranslateModule],
   templateUrl: './used-moto-cycles-section.component.html',
   styleUrls: ['./used-moto-cycles-section.component.css']
 })
@@ -178,49 +179,27 @@ export class UsedMotoCyclesSectionComponent {
   cardWidth = 324; // Desktop card width
   mobileCardWidth = 300; // Mobile card width
   isMobile = false;
-  countryId?: any;
+  countryname?: string;
 
   constructor(private listings: ListingByCatService, private router: Router,private locationService: LocationSService) {}
 
   ngOnInit(): void {
-
       this.locationService.selectedCountry$.subscribe((country) => {
-    if (country?.id) {
-      console.log('country',country);
-      this.countryId = country.id;
-      console.log('this.countryId : ', this.countryId );
+    if (country?.name) {
+      this.countryname = country.name;
       this.getMotorcycles();
     }
   });
-
-    // this.getMotoresycles();
      this.checkMobile();
     window.addEventListener('resize', () => this.checkMobile());
   }
 
-  // getMotoresycles() {
-  //   this.listings.getMotorcyclesByCategory().subscribe((res: any) => {
-  //     this.motorcycles = res;
-  //   });
-  // }
-  
-// getMotorcycles() {
-//   if (!this.countryId) return;
-
-//   this.listings.getMotorcyclesByCategory(this.countryId).subscribe((res: any) => {
-//     this.motorcycles = res as Motorcycle[];
-//     console.log(' this.motorcycles : ',  this.motorcycles );
-//   });
-// }
-
 searchedCountryMessage: string | null = null;
 
 getMotorcycles() {
-  if (!this.countryId) return;
-
-  this.listings.getMotorcyclesByCategory(this.countryId).subscribe((res: any) => {
+  if (!this.countryname) return;
+  this.listings.getMotorcyclesByCategory(this.countryname).subscribe((res: any) => {
     this.motorcycles = res.listings || [];
-
     if (res.showing_all_countries && res.searched_country) {
       this.searchedCountryMessage = `No listings found for "${res.searched_country}". Showing all countries instead.`;
     } else {
@@ -398,3 +377,20 @@ getMotorcycles() {
   //     this.currentPosition = Math.max(minPosition, this.currentPosition - this.cardWidth);
   //   }
   // }
+
+
+  
+  // getMotoresycles() {
+  //   this.listings.getMotorcyclesByCategory().subscribe((res: any) => {
+  //     this.motorcycles = res;
+  //   });
+  // }
+  
+// getMotorcycles() {
+//   if (!this.countryId) return;
+
+//   this.listings.getMotorcyclesByCategory(this.countryId).subscribe((res: any) => {
+//     this.motorcycles = res as Motorcycle[];
+//     console.log(' this.motorcycles : ',  this.motorcycles );
+//   });
+// }

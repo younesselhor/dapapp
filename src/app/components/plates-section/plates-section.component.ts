@@ -49,6 +49,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { LocationSService } from '../../services/location-s.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 interface Plate {
   id: number;
@@ -86,7 +87,7 @@ interface PlateField {
 @Component({
   selector: 'app-plates-section',
   standalone: true,
-  imports: [CommonModule, RouterModule, HttpClientModule],
+  imports: [CommonModule, RouterModule, HttpClientModule,TranslateModule],
   templateUrl: './plates-section.component.html',
   styleUrl: './plates-section.component.css'
 })
@@ -116,8 +117,8 @@ slidesToShow = 1;
   cardWidth = 324; // Desktop card width
   mobileCardWidth = 300; // Mobile card width
   isMobile = false;
-  countryId?: number;
-  constructor(private http: HttpClient, private router : Router, private locationService: LocationSService) {}
+  countryname?: string | null;
+    constructor(private http: HttpClient, private router : Router, private locationService: LocationSService) {}
 
   // ngOnInit(): void {
 
@@ -137,9 +138,9 @@ ngOnInit(): void {
 
   // If user selects a country, re-fetch with that country
   this.locationService.selectedCountry$.subscribe((country) => {
-    if (country?.id) {
-      this.countryId = country.id;
-      console.log('this.countryId : ', this.countryId);
+    if (country?.name) {
+      this.countryname = country.name;
+      console.log('this.countryname : ', this.countryname);
       this.fetchPlates();
     }
   });
@@ -178,9 +179,9 @@ searchedCountryMessage: string | null = null;
 // plates: Plate[] = [];
 
 fetchPlates(): void {
-  const url = this.countryId
-    ? `https://be.dabapp.co/api/listings/by-category/3?country=${this.countryId}`
-    : `https://be.dabapp.co/api/listings/by-category/3`;
+  const url = this.countryname
+    ? `https://be.dabapp.co/api/listings/by-category/3?country=${this.countryname}`
+    : `https://be.dabapp.co/api/listings/by-category/3?country=all`;
 
   this.http.get<any>(url).subscribe({
     next: (response) => {
