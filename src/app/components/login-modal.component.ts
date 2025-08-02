@@ -538,8 +538,8 @@ export class LoginModalComponent implements OnDestroy, OnInit {
       digit2: ['', [Validators.required, Validators.pattern(/^[0-9]$/)]],
       digit3: ['', [Validators.required, Validators.pattern(/^[0-9]$/)]],
       digit4: ['', [Validators.required, Validators.pattern(/^[0-9]$/)]],
-      digit5: ['', [Validators.required, Validators.pattern(/^[0-9]$/)]],
-      digit6: ['', [Validators.required, Validators.pattern(/^[0-9]$/)]],
+      // digit5: ['', [Validators.required, Validators.pattern(/^[0-9]$/)]],
+      // digit6: ['', [Validators.required, Validators.pattern(/^[0-9]$/)]],
     });
   }
 
@@ -1105,7 +1105,7 @@ verifyOTP() {
     
     // Move to previous field on backspace
     if (!value && event.inputType === 'deleteContentBackward') {
-      const previousFields = ['digit1', 'digit2', 'digit3', 'digit4', 'digit5', 'digit6'];
+      const previousFields = ['digit1', 'digit2', 'digit3', 'digit4'];
       const currentIndex = previousFields.indexOf(input.id);
       if (currentIndex > 0) {
         const previousInput = document.getElementById(previousFields[currentIndex - 1]) as HTMLInputElement;
