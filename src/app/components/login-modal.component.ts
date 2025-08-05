@@ -519,6 +519,9 @@ export class LoginModalComponent implements OnDestroy, OnInit {
   currentUser: any = null;
   showRecaptcha = false;
 
+  isResendingOTP = false;
+
+
    // Store user info when OTP is required
   pendingUserInfo: any = null;
 
@@ -657,33 +660,7 @@ export class LoginModalComponent implements OnDestroy, OnInit {
     return phone;
   }
 
-  // async onSubmit() {
-  //   if (this.loginForm.invalid) {
-  //     this.loginForm.markAllAsTouched();
-  //     return;
-  //   }
 
-  //   const login = this.loginForm.get('login')?.value?.trim() || '';
-  //   const password = this.loginForm.get('password')?.value?.trim() || '';
-
-  //   if (this.isEmail(login)) {
-  //     this.auth.loginWithEmailPassword(login, password).subscribe({
-  //       next: (res) => {
-  //         this.message = 'Connexion réussie (email)';
-  //         this.closeModal();
-  //       },
-  //       error: (err) => {
-  //         this.message = err.error?.message || 'Erreur email';
-  //         this.loginError = true;
-  //       },
-  //     });
-  //   } else if (this.isPhone(login)) {
-  //     await this.handlePhonePasswordLogin(login, password);
-  //   } else {
-  //     this.message = 'Email ou numéro invalide';
-  //     this.loginError = true;
-  //   }
-  // }
 
   onSubmit() {
     if (this.loginForm.invalid) {
@@ -724,6 +701,266 @@ export class LoginModalComponent implements OnDestroy, OnInit {
    isValidPhoneNumber(phone: string): boolean {
     return /^\+?\d{10,15}$/.test(phone);
   }
+
+  
+
+  getFirebaseErrorMessage(error: any): string {
+    switch (error.code) {
+      case 'auth/invalid-phone-number':
+        return 'Invalid phone number format. Please use international format (+country code)';
+      case 'auth/too-many-requests':
+        return 'Too many attempts. Please try again later.';
+      case 'auth/captcha-check-failed':
+        return 'reCAPTCHA verification failed. Please try again.';
+      case 'auth/invalid-verification-code':
+        return 'Invalid OTP code. Please check and try again.';
+      case 'auth/code-expired':
+        return 'OTP code expired. Please request a new one.';
+      case 'auth/quota-exceeded':
+        return 'SMS quota exceeded. Please try again later.';
+      default:
+        return error.message || 'An error occurred. Please try again.';
+    }
+  }
+
+
+
+  isSigningInWithGoogle = false;
+
+
+verifyOTP() {
+    if (this.otpForm.invalid) {
+      this.otpForm.markAllAsTouched();
+      return;
+    }
+
+    const otpValue = this.otpForm.value.digit1 + this.otpForm.value.digit2 + 
+                     this.otpForm.value.digit3 + this.otpForm.value.digit4;
+
+    const otpPayload = {
+      login: this.loginForm.value.login,
+      otp: otpValue
+    };
+
+    console.log('Verifying OTP:', otpPayload); // Debug log
+
+    this.auth.otplogin(otpPayload).subscribe({
+      next: (response) => {
+        console.log('OTP Response:', response); // Debug log
+        this.otpError = false;
+
+        if (response.token) {
+          this.handleSuccessfulLogin(response.token, response.user);
+          this.showOTPModal = false;
+          this.closeModal();
+        }
+      },
+      error: (err) => {
+        console.error('OTP verification error:', err);
+        this.otpError = true;
+      }
+    });
+  }
+
+  isEmail(value: string): boolean {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(value);
+  }
+
+  isPhone(value: string): boolean {
+    // More flexible phone regex for international numbers
+    const phoneRegex = /^[\+]?[0-9\s\-\(\)]{8,20}$/;
+    return phoneRegex.test(value);
+  }
+
+  onLoginInputChange() {
+    const loginValue = this.loginForm.get('login')?.value;
+    const passwordControl = this.loginForm.get('password');
+    
+    if (this.isPhone(loginValue)) {
+      // For phone login, password is optional (will trigger OTP)
+      passwordControl?.clearValidators();
+      passwordControl?.setErrors(null);
+    } else {
+      // For email login, password is required
+      passwordControl?.setValidators([Validators.required, Validators.minLength(6)]);
+    }
+    passwordControl?.updateValueAndValidity();
+  }
+
+  handleSuccessfulLogin(token: string, user?: AuthUser) {
+    this.cookieService.set('token', token, {
+      secure: false,
+      sameSite: 'Strict',
+      path: '/',
+      expires: 7
+    });
+
+    this.auth.saveToken(token);
+    this.auth.setLoggedIn(true);
+    
+    if (this.auth.fetchUserProfile) {
+      this.auth.fetchUserProfile();
+    }
+    
+    this.router.navigate(['/home']);
+  }
+
+  closeModal() {
+    this.close.emit();
+    this.resetComponent();
+  }
+
+  closeOTPModal() {
+    this.showOTPModal = false;
+    this.otpError = false;
+    this.clearOTPForm();
+    this.clearCountdown();
+  }
+
+  resetComponent() {
+    this.showOTPModal = false;
+    this.showRecaptcha = false;
+    this.loginError = false;
+    this.otpError = false;
+    this.message = '';
+    this.currentUser = null;
+    this.pendingUserId = null;
+    this.phoneNumber = '';
+    this.clearOTPForm();
+    this.clearCountdown();
+    
+    // if (this.recaptchaVerifier) {
+    //   this.recaptchaVerifier.clear();
+    //   this.recaptchaVerifier = null;
+    // }
+  }
+
+  clearOTPForm() {
+    this.otpForm.reset();
+  }
+
+  clearCountdown() {
+    if (this.countdownInterval) {
+      clearInterval(this.countdownInterval);
+    }
+  }
+
+  startOTPCountdown() {
+    this.otpResendEnabled = false;
+  this.resendCountdown = 10; // 5 minutes in seconds
+
+  this.countdownInterval = setInterval(() => {
+    this.resendCountdown--;
+    if (this.resendCountdown <= 0) {
+      this.otpResendEnabled = true;
+      this.otpExpired = true;
+      this.clearCountdown();
+    }
+  }, 1000); // Runs every second
+}
+
+resendOTP() {
+  this.isResendingOTP = true;
+  const loginValue = this.loginForm.get('login')?.value;
+  const method = this.isEmail(loginValue) ? 'email' : 'sms';
+
+  const payload = {
+    login: loginValue,
+    method: method
+  };
+
+  this.auth.resendOTP(payload).subscribe({
+    next: (response) => {
+      this.isResendingOTP = false;
+      this.otpError = false;
+      this.otpExpired = false;
+      this.showOTPModal = true;
+      this.startOTPCountdown();
+      this.message = 'Verification code resent successfully';
+    },
+    error: (err) => {
+      this.isResendingOTP = false;
+      console.error('Error resending OTP:', err);
+      this.otpError = true;
+      this.message = 'Failed to resend verification code. Please try again.';
+    }
+  });
+}
+
+
+
+  onOTPInputChange(event: any, nextField?: string) {
+    const input = event.target;
+    const value = input.value;
+    
+    // Only allow numbers
+    if (value && !/^[0-9]$/.test(value)) {
+      input.value = '';
+      return;
+    }
+    
+    // Move to next field if value is entered
+    if (value && nextField) {
+      const nextInput = document.getElementById(nextField) as HTMLInputElement;
+      if (nextInput) {
+        nextInput.focus();
+      }
+    }
+    
+    // Move to previous field on backspace
+    if (!value && event.inputType === 'deleteContentBackward') {
+      const previousFields = ['digit1', 'digit2', 'digit3', 'digit4'];
+      const currentIndex = previousFields.indexOf(input.id);
+      if (currentIndex > 0) {
+        const previousInput = document.getElementById(previousFields[currentIndex - 1]) as HTMLInputElement;
+        if (previousInput) {
+          previousInput.focus();
+        }
+      }
+    }
+  }
+
+  ngOnDestroy() {
+    this.clearCountdown();
+    // if (this.recaptchaVerifier) {
+    //   this.recaptchaVerifier.clear();
+    // }
+  }
+}
+
+
+
+
+  // async onSubmit() {
+  //   if (this.loginForm.invalid) {
+  //     this.loginForm.markAllAsTouched();
+  //     return;
+  //   }
+
+  //   const login = this.loginForm.get('login')?.value?.trim() || '';
+  //   const password = this.loginForm.get('password')?.value?.trim() || '';
+
+  //   if (this.isEmail(login)) {
+  //     this.auth.loginWithEmailPassword(login, password).subscribe({
+  //       next: (res) => {
+  //         this.message = 'Connexion réussie (email)';
+  //         this.closeModal();
+  //       },
+  //       error: (err) => {
+  //         this.message = err.error?.message || 'Erreur email';
+  //         this.loginError = true;
+  //       },
+  //     });
+  //   } else if (this.isPhone(login)) {
+  //     await this.handlePhonePasswordLogin(login, password);
+  //   } else {
+  //     this.message = 'Email ou numéro invalide';
+  //     this.loginError = true;
+  //   }
+  // }
+
+
 
   // async handlePhonePasswordLogin(phone: string, password: string) {
   //   try {
@@ -843,26 +1080,7 @@ export class LoginModalComponent implements OnDestroy, OnInit {
   //   }
   // }
 
-  getFirebaseErrorMessage(error: any): string {
-    switch (error.code) {
-      case 'auth/invalid-phone-number':
-        return 'Invalid phone number format. Please use international format (+country code)';
-      case 'auth/too-many-requests':
-        return 'Too many attempts. Please try again later.';
-      case 'auth/captcha-check-failed':
-        return 'reCAPTCHA verification failed. Please try again.';
-      case 'auth/invalid-verification-code':
-        return 'Invalid OTP code. Please check and try again.';
-      case 'auth/code-expired':
-        return 'OTP code expired. Please request a new one.';
-      case 'auth/quota-exceeded':
-        return 'SMS quota exceeded. Please try again later.';
-      default:
-        return error.message || 'An error occurred. Please try again.';
-    }
-  }
-
-  // async loginWithGoogle() {
+    // async loginWithGoogle() {
   //   const provider = new GoogleAuthProvider();
   //   try {
   //     const result = await signInWithPopup(this.authInstance, provider);
@@ -887,8 +1105,40 @@ export class LoginModalComponent implements OnDestroy, OnInit {
   //   }
   // }
 
-  isSigningInWithGoogle = false;
 
+  
+  // closeRecaptcha() {
+  //   this.showRecaptcha = false;
+  //   if (this.recaptchaVerifier) {
+  //     this.recaptchaVerifier.clear();
+  //     this.recaptchaVerifier = null;
+  //   }
+  // }
+
+
+    // async resendOTP() {
+  //   if (!this.otpResendEnabled) return;
+    
+  //   this.otpExpired = false;
+  //   this.otpError = false;
+  //   this.clearOTPForm();
+    
+  //   // Show reCAPTCHA again for resend
+  //   this.showOTPModal = false;
+  //   this.showRecaptcha = true;
+  //   this.message = 'Complete reCAPTCHA to resend SMS code';
+    
+  //   try {
+  //     await this.initRecaptcha();
+  //   } catch (error: any) {
+  //     console.error('Error initializing reCAPTCHA for resend:', error);
+  //     this.message = 'Error initializing verification. Please try again.';
+  //     this.showRecaptcha = false;
+  //     this.showOTPModal = true;
+  //   }
+  // }
+
+  
 // async loginWithGoogle() {
 //   if (this.isSigningInWithGoogle) return; // prevent multiple triggers
 //   this.isSigningInWithGoogle = true;
@@ -922,204 +1172,3 @@ export class LoginModalComponent implements OnDestroy, OnInit {
 //     this.isSigningInWithGoogle = false;
 //   }
 // }
-
-verifyOTP() {
-    if (this.otpForm.invalid) {
-      this.otpForm.markAllAsTouched();
-      return;
-    }
-
-    const otpValue = this.otpForm.value.digit1 + this.otpForm.value.digit2 + 
-                     this.otpForm.value.digit3 + this.otpForm.value.digit4;
-
-    const otpPayload = {
-      login: this.loginForm.value.login,
-      otp: otpValue
-    };
-
-    console.log('Verifying OTP:', otpPayload); // Debug log
-
-    this.auth.otplogin(otpPayload).subscribe({
-      next: (response) => {
-        console.log('OTP Response:', response); // Debug log
-        this.otpError = false;
-
-        if (response.token) {
-          this.handleSuccessfulLogin(response.token, response.user);
-          this.showOTPModal = false;
-          this.closeModal();
-        }
-      },
-      error: (err) => {
-        console.error('OTP verification error:', err);
-        this.otpError = true;
-      }
-    });
-  }
-
-  isEmail(value: string): boolean {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(value);
-  }
-
-  isPhone(value: string): boolean {
-    // More flexible phone regex for international numbers
-    const phoneRegex = /^[\+]?[0-9\s\-\(\)]{8,20}$/;
-    return phoneRegex.test(value);
-  }
-
-  onLoginInputChange() {
-    const loginValue = this.loginForm.get('login')?.value;
-    const passwordControl = this.loginForm.get('password');
-    
-    if (this.isPhone(loginValue)) {
-      // For phone login, password is optional (will trigger OTP)
-      passwordControl?.clearValidators();
-      passwordControl?.setErrors(null);
-    } else {
-      // For email login, password is required
-      passwordControl?.setValidators([Validators.required, Validators.minLength(6)]);
-    }
-    passwordControl?.updateValueAndValidity();
-  }
-
-  handleSuccessfulLogin(token: string, user?: AuthUser) {
-    this.cookieService.set('token', token, {
-      secure: false,
-      sameSite: 'Strict',
-      path: '/',
-      expires: 7
-    });
-
-    this.auth.saveToken(token);
-    this.auth.setLoggedIn(true);
-    
-    if (this.auth.fetchUserProfile) {
-      this.auth.fetchUserProfile();
-    }
-    
-    this.router.navigate(['/home']);
-  }
-
-  closeModal() {
-    this.close.emit();
-    this.resetComponent();
-  }
-
-  closeOTPModal() {
-    this.showOTPModal = false;
-    this.otpError = false;
-    this.clearOTPForm();
-    this.clearCountdown();
-  }
-
-  // closeRecaptcha() {
-  //   this.showRecaptcha = false;
-  //   if (this.recaptchaVerifier) {
-  //     this.recaptchaVerifier.clear();
-  //     this.recaptchaVerifier = null;
-  //   }
-  // }
-
-  resetComponent() {
-    this.showOTPModal = false;
-    this.showRecaptcha = false;
-    this.loginError = false;
-    this.otpError = false;
-    this.message = '';
-    this.currentUser = null;
-    this.pendingUserId = null;
-    this.phoneNumber = '';
-    this.clearOTPForm();
-    this.clearCountdown();
-    
-    // if (this.recaptchaVerifier) {
-    //   this.recaptchaVerifier.clear();
-    //   this.recaptchaVerifier = null;
-    // }
-  }
-
-  clearOTPForm() {
-    this.otpForm.reset();
-  }
-
-  clearCountdown() {
-    if (this.countdownInterval) {
-      clearInterval(this.countdownInterval);
-    }
-  }
-
-  startOTPCountdown() {
-    this.otpResendEnabled = false;
-    this.resendCountdown = 30;
-    
-    this.countdownInterval = setInterval(() => {
-      this.resendCountdown--;
-      if (this.resendCountdown <= 0) {
-        this.otpResendEnabled = true;
-        this.otpExpired = true;
-        this.clearCountdown();
-      }
-    }, 1000);
-  }
-
-  // async resendOTP() {
-  //   if (!this.otpResendEnabled) return;
-    
-  //   this.otpExpired = false;
-  //   this.otpError = false;
-  //   this.clearOTPForm();
-    
-  //   // Show reCAPTCHA again for resend
-  //   this.showOTPModal = false;
-  //   this.showRecaptcha = true;
-  //   this.message = 'Complete reCAPTCHA to resend SMS code';
-    
-  //   try {
-  //     await this.initRecaptcha();
-  //   } catch (error: any) {
-  //     console.error('Error initializing reCAPTCHA for resend:', error);
-  //     this.message = 'Error initializing verification. Please try again.';
-  //     this.showRecaptcha = false;
-  //     this.showOTPModal = true;
-  //   }
-  // }
-
-  onOTPInputChange(event: any, nextField?: string) {
-    const input = event.target;
-    const value = input.value;
-    
-    // Only allow numbers
-    if (value && !/^[0-9]$/.test(value)) {
-      input.value = '';
-      return;
-    }
-    
-    // Move to next field if value is entered
-    if (value && nextField) {
-      const nextInput = document.getElementById(nextField) as HTMLInputElement;
-      if (nextInput) {
-        nextInput.focus();
-      }
-    }
-    
-    // Move to previous field on backspace
-    if (!value && event.inputType === 'deleteContentBackward') {
-      const previousFields = ['digit1', 'digit2', 'digit3', 'digit4'];
-      const currentIndex = previousFields.indexOf(input.id);
-      if (currentIndex > 0) {
-        const previousInput = document.getElementById(previousFields[currentIndex - 1]) as HTMLInputElement;
-        if (previousInput) {
-          previousInput.focus();
-        }
-      }
-    }
-  }
-
-  ngOnDestroy() {
-    this.clearCountdown();
-    // if (this.recaptchaVerifier) {
-    //   this.recaptchaVerifier.clear();
-    // }
-  }
-}

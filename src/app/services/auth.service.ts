@@ -286,6 +286,9 @@ export class AuthService {
   //   );
   // }
 
+resendOTP(payload: { login: string, method: string }): Observable<any> {
+  return this.http.post(this.baseUrl + 'resend-otp', payload);
+}
   // Request OTP (if needed separately)
   requestOTP(login: string): Observable<any> {
     return this.http.post(this.baseUrl + 'request-otp', { login });
