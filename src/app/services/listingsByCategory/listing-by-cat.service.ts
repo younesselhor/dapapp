@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -32,8 +32,8 @@ getMotorcyclesByCategory(countryId?: string|null): Observable<any> {
   const url = countryId
     ? `${this.baseUrl}listings/by-category/1?country=${countryId}`
     : `${this.baseUrl}listings/by-category/1?country=all`;
-
   return this.http.get(url);
+  
 }
   // getBikePartByCategory(countryId: any) {
   //   return this.http.get(`${this.baseUrl}listings/by-category/2?country=${countryId}`);
@@ -101,22 +101,34 @@ filterSpareParts(params: any): Observable<any> {
   return this.http.get(`${this.baseUrl}filter/spare-parts?${queryParams.toString()}`);
 }
 
-filterLicencePlate(): Observable<any> {
-  // Convert array parameters to the correct format
-  // const queryParams = new URLSearchParams();
+// filterLicencePlate(): Observable<any> {
+//   // Convert array parameters to the correct format
+//   // const queryParams = new URLSearchParams();
   
-  // for (const key in params) {
-  //   if (Array.isArray(params[key])) {
-  //     params[key].forEach((value: any) => {
-  //       queryParams.append(`${key}[]`, value);
-  //     });
-  //   } else {
-  //     queryParams.set(key, params[key]);
-  //   }
-  // }
+//   // for (const key in params) {
+//   //   if (Array.isArray(params[key])) {
+//   //     params[key].forEach((value: any) => {
+//   //       queryParams.append(`${key}[]`, value);
+//   //     });
+//   //   } else {
+//   //     queryParams.set(key, params[key]);
+//   //   }
+//   // }
   
-  return this.http.get(`${this.baseUrl}filter-license-plates`);
-}
+//   return this.http.get(`${this.baseUrl}filter/license-plates`);
+// }
+  filterLicencePlate(params: any = {}): Observable<any> {
+    let httpParams = new HttpParams();
+    
+    // Add each parameter to HttpParams
+    Object.keys(params).forEach(key => {
+      if (params[key] !== null && params[key] !== undefined && params[key] !== '') {
+        httpParams = httpParams.set(key, params[key].toString());
+      }
+    });
+    
+    return this.http.get(`${this.baseUrl}filter/license-plates`, { params: httpParams });
+  }
 
 }
 

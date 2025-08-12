@@ -83,7 +83,6 @@ export class MotorcyclesDetailsComponent implements OnInit, OnDestroy {
 
     viewListing(id: number): void {
   this.router.navigate(['/listing', id]);
-  console.log('click');
 }
   ngOnDestroy(): void {
     this.filterDebouncer.complete();
@@ -160,7 +159,6 @@ export class MotorcyclesDetailsComponent implements OnInit, OnDestroy {
         ...brand,
         checked: false // initialize checked property
       }));
-      console.log('this.brands: ', this.brands);
     });
   }
 
@@ -193,7 +191,6 @@ export class MotorcyclesDetailsComponent implements OnInit, OnDestroy {
             imageLoaded: false
           }));
           
-          console.log('this.motorCyclesDetails: ', this.motorCyclesDetails);
           this.isLoading = false;
           this.cdr.detectChanges();
           

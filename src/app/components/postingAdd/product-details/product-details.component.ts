@@ -116,7 +116,6 @@ get form() {
 loadBrands() {
   this.listingService.getMotorcycleFilters().subscribe(res => {
     this.brands = res.data.brands;
-    console.log('Brands1:', this.brands);
   });
 }
 selectVehicleType(type: number): void {
@@ -146,12 +145,10 @@ onModelChange(modelId: string) {
       brand_id: brandId,
       model_id: modelId
     }).subscribe(res => {
-      console.log('Years data:', res.data.years); // Check what you're receiving
       this.years = res.data.years.map((y: any) => ({
         id: y.id,
         year: y.year
       }));
-      console.log('Processed years:', this.years); // Verify the processed data
     });
   }
 }
@@ -237,13 +234,11 @@ removeImage(index: number): void {
 
 // In ProductFormComponent
 onProductDetailsSubmit(formData: any) {
-  console.log('Received form data from child:', formData);
   this.vehicleFormData = formData;
   this.vehicleForm.patchValue(formData);
 }
 
 goToNextStep() {
-  console.log('Going to next step from', this.currentStep, 'to', this.currentStep + 1);
   this.currentStep++;
 }
 
@@ -254,23 +249,17 @@ previousStep(): void {
 }
 
 nextStep() {
-  console.log('Child component nextStep called');
-  console.log('Form valid:', this.vehicleForm.valid);
-  console.log('Form errors:', this.vehicleForm.errors);
-  console.log('Form value:', this.vehicleForm.value);
+
 
   // Log validation status for each control
   Object.keys(this.vehicleForm.controls).forEach(key => {
     const control = this.vehicleForm.get(key);
-    console.log(`${key} valid: ${control?.valid}, touched: ${control?.touched}, errors:`, control?.errors);
   });
 
   if (this.vehicleForm.valid) {
-    console.log('Form is valid, emitting events');
     this.formSubmitted.emit(this.vehicleForm.value);
     this.nextStepRequested.emit();
   } else {
-    console.log('Form is invalid, marking as touched');
     this.vehicleForm.markAllAsTouched();
   }
 }

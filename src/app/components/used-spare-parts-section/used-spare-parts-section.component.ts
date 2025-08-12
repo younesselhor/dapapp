@@ -54,7 +54,9 @@ export class UsedSparePartsSectionComponent implements OnInit {
     this.locationService.selectedCountry$.subscribe((country) => {
     if (country?.name) {
       this.countryname = country.name;
-      console.log('this.countryname : ', this.countryname );
+      this.getBikePart();
+    }else{
+      this.countryname = 'all'; // Default to 'all' if no country is selected
       this.getBikePart();
     }
   });
@@ -112,7 +114,6 @@ export class UsedSparePartsSectionComponent implements OnInit {
 
     viewListing(id: number): void {
   this.router.navigate(['/listing', id]);
-  console.log('click');
 }
 
   get totalSlides() {

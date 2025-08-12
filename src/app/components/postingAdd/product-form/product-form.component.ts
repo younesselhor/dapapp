@@ -311,7 +311,6 @@ loadDraftData(draftId: number) {
   this.listingService.getSingleDraft(draftId).subscribe({
     next: (res: any) => {
       const draft = res?.data;
-      console.log('draft: ', draft);
       if (!draft) return;
 
       // ✅ 1. Select vehicle type (1: Motorcycle, 2: Spare Part, 3: License Plate)
@@ -566,7 +565,6 @@ patchDynamicFieldValues(fieldValues: FieldValue[]) {
     if (field) {
       const controlName = field.controlName;
       this.platesForm.get(controlName)?.patchValue(fv.field_value);
-      console.log(`✅ Patched ${controlName} with`, fv.field_value);
     } else {
       console.warn(`⚠️ No dynamic field found for id ${fv.plate_format_field_id}`);
     }
@@ -614,16 +612,10 @@ allowOnlyLetters(event: KeyboardEvent, writingSystem: string = 'latin'): void {
 }
 
 logFormStatus(): void {
-  console.log('Form valid:', this.platesForm.valid);
-  console.log('Form errors:', this.platesForm.errors);
+
   Object.keys(this.platesForm.controls).forEach(key => {
     const control = this.platesForm.get(key);
-    console.log(`Control ${key}:`, {
-      value: control?.value,
-      valid: control?.valid,
-      errors: control?.errors,
-      touched: control?.touched
-    });
+
   });
 }
   loadCities(): void {
@@ -726,12 +718,12 @@ onCitySelected(cityId: number): void {
       if (res.formats?.length > 0) {
         this.selectedPlateFormat = res.formats[0];
         this.dynamicFields = this.selectedPlateFormat.fields;
-        console.log('this.dynamicFields: ', this.dynamicFields);
-          console.log('Dynamic fields after API response:', this.dynamicFields.map(f => ({
-          id: f.id, 
-          name: f.field_name, 
-          controlName: f.controlName
-        })));
+
+        //   console.log('Dynamic fields after API response:', this.dynamicFields.map(f => ({
+        //   id: f.id, 
+        //   name: f.field_name, 
+        //   controlName: f.controlName
+        // })));
         
         // Store the format ID in the form
         this.platesForm.patchValue({
@@ -912,13 +904,11 @@ loadPlateForm(fields: any[]) {
   getBrandPartList(){
     this.listingService.getBrandPartList().subscribe((res) => {
       this.brandsPart = res.bike_part_brands;
-      console.log('brandsPart:', this.brandsPart);
     });
   }
   getPartCategoryList(){
     this.listingService.getPartCategoryList().subscribe((res) => {
       this.partCategory = res.bike_part_categories;
-      console.log('partCategory:', this.partCategory);
     });
   }
   // Add this method to check if Soom is selected
@@ -929,7 +919,6 @@ isSoomSelected(): boolean {
 
   selectType(type: 'motorcycle' | 'bike-part' | 'license-plate') {
     this.selectedType = type;
-    console.log('this.selectedType: ', this.selectedType);
   }
   highlightInvalidControls(form: FormGroup) {
     Object.keys(form.controls).forEach((key) => {
@@ -965,7 +954,6 @@ isSoomSelected(): boolean {
   loadBrands() {
     this.listingService.getMotorcycleFilters().subscribe((res) => {
       this.brands = res.data.brands;
-      console.log('Brands:', this.brands);
     });
   }
 
@@ -1000,12 +988,10 @@ isSoomSelected(): boolean {
           model_id: modelId,
         })
         .subscribe((res) => {
-          console.log('Years data:', res.data.years); // Check what you're receiving
           this.years = res.data.years.map((y: any) => ({
             id: y.id,
             year: y.year,
           }));
-          console.log('Processed years:', this.years); // Verify the processed data
         });
     }
   }
@@ -1158,7 +1144,6 @@ removeImage(index: number): void {
     }
 }
   onProductDetailsSubmit(formData: any) {
-    console.log('Parent received form data:', formData);
     this.vehicleFormData = formData;
     // Only update the vehicle form if it exists
     if (this.vehicleForm) {
@@ -1190,7 +1175,6 @@ getPricing() {
   this.listingService.getPricing(pricingParams).subscribe({
     next: (priceData) => {
       this.pricingInfo = priceData;
-      console.log('this.pricingInfo: ', this.pricingInfo);
     },
     error: (err) => {
       console.error('Error fetching pricing:', err);
@@ -1278,10 +1262,8 @@ async goToNextStep() {
 }
 
 logFormValues() {
-  console.log('Current form values:', this.platesForm.value);
   this.dynamicFields.forEach(field => {
     const value = this.platesForm.get(field.controlName)?.value;
-    console.log(`Field ${field.controlName} (${field.field_name}):`, value);
   });
 }
 
@@ -1385,7 +1367,7 @@ private prepareStep1Data(): any {
       //   city_id_lp: Number(this.platesForm.value.city_id_lp),
       //   fields: dynamicFieldValues
       // };
-case 3: // License Plate
+// case 3: // License Plate
   // const dynamicFieldValues = this.dynamicFields.map(field => {
   //   // Convert value to string explicitly
   //   let fieldValue = this.platesForm.value[field.controlName];
@@ -1509,7 +1491,6 @@ private async handleStep3() {
 
   try {
     const res = await this.listingService.addPost(payload).toPromise();
-    console.log('Ad created successfully:', res);
     this.currentStep++;
     this.router.navigate(['/home']);
   } catch (err) {
@@ -1710,7 +1691,6 @@ private logFormErrors(form: FormGroup) {
       next: (response) => {
         this.isPromoApplied = true;
         this.discountedPrice = response.new_price; // Adjust based on actual API response
-        console.log(' this.discountedPrice: ',  this.discountedPrice);
         this.promoLoading = false;
       },
       error: (err) => {

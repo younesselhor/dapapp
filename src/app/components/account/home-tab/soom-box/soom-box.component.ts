@@ -167,7 +167,6 @@ export class SoomBoxComponent implements OnInit {
       .subscribe({
         next: (response) => {
           this.receivedSooms = response.data;
-          console.log('Received sooms:', this.receivedSooms);
         },
         error: (error) => {
           console.error('Error fetching received sooms:', error);
@@ -181,7 +180,6 @@ export class SoomBoxComponent implements OnInit {
       .subscribe({
         next: (response) => {
           this.sentSooms = response.data;
-          console.log('Sent sooms:', this.sentSooms);
         },
         error: (error) => {
           console.error('Error fetching sent sooms:', error);
@@ -205,7 +203,6 @@ export class SoomBoxComponent implements OnInit {
             }
             return item;
           });
-          console.log('Soom accepted successfully');
         },
         error: (error) => {
           console.error('Error accepting soom:', error);
@@ -223,7 +220,6 @@ export class SoomBoxComponent implements OnInit {
           this.receivedSooms = this.receivedSooms.map(item =>
             item.id === submissionId ? { ...item, status: 'rejected' } : item
           );
-          console.log('Soom rejected successfully');
         },
         error: (error) => {
           console.error('Error rejecting soom:', error);

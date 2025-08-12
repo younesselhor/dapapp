@@ -10,6 +10,5 @@ export class NewsletterSignupComponent {
   email: string = '';
 
   subscribe() {
-    console.log('Subscribed with:', this.email);
   }
 }

@@ -149,7 +149,6 @@ export class AuthInterceptor implements HttpInterceptor {
         if (error.status === 401 && !isRefreshEndpoint && !isLoginEndpoint && this.authService.getToken()) {
           return this.authService.refreshToken().pipe(
             switchMap(response => {
-              console.log('refresh token', response);
               this.authService.saveToken(response.token); // Save new access token
               const retryReq = req.clone({
                 setHeaders: {

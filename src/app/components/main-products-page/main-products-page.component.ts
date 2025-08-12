@@ -98,7 +98,6 @@ export class MainProductsPageComponent implements OnInit {
       next: (data) => {
         this.listingId = data.id
         this.listing = data;
-        console.log('this.listing: ', this.listing);
         this.isMotorcycle = !!data.motorcycle;
         this.isSparePart = !!data.spare_part;
         this.loading = false;
@@ -381,7 +380,6 @@ nextImage(): void {
 
   // Check if amount is 10x or more
   if (this.soomAmount >= baseMinimum * 10) {
-    console.log('this.soomAmount: ', this.soomAmount);
    
     this.confirmSoomStep = true;
     return; // Don't submit yet
@@ -404,7 +402,6 @@ performSoomSubmission(): void {
   this.soomError = null;
   this.listingService.submitSoom(this.listing.id, this.soomAmount).subscribe({
     next: (response) => {
-      console.log('Soom submitted successfully:', response);
       this.isSubmittingSoom = false;
       this.lastsoom = response.data.min_soom || 0;
       this.minimumRequired = response.data.min_soom || null;

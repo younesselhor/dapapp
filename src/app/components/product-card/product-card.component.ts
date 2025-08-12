@@ -157,6 +157,5 @@ getSidebarClass(plate: Plate): string {
 }
     viewListing(id: number): void {
   this.router.navigate(['/listing', id]);
-  console.log('click');
 }
 }

@@ -1,4 +1,5 @@
-<section class="bg-white py-16 px-4 sm:px-10">
+<!-- <section class="bg-white py-16 px-4 sm:px-10"> -->
+  <section class="bg-white py-16 px-4 sm:px-10 rtl:direction-rtl ltr:direction-ltr">
   <div class="container mx-auto">
     <div class="flex flex-col lg:flex-row gap-12 items-start">
       <!-- Left Content -->
@@ -42,7 +43,7 @@
 
         <!-- Motorcycles Slider -->
         <div *ngIf="motorcycles.length > 0"
-             class="slider-track" 
+             class="slider-track rtl:flex-row-reverse" 
              [style.transform]="'translateX(' + currentPosition + 'px)'"
              [class.dragging]="isDragging"
              (mousedown)="startDrag($event)"

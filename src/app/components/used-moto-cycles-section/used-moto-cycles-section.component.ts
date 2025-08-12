@@ -188,6 +188,10 @@ export class UsedMotoCyclesSectionComponent {
     if (country?.name) {
       this.countryname = country.name;
       this.getMotorcycles();
+    }else{
+      this.countryname = 'all'; // Default to 'all' if no country is selected
+      this.getMotorcycles();
+
     }
   });
      this.checkMobile();
@@ -196,18 +200,31 @@ export class UsedMotoCyclesSectionComponent {
 
 searchedCountryMessage: string | null = null;
 
+// getMotorcycles() {
+//   if (!this.countryname) return;
+//   this.listings.getMotorcyclesByCategory(this.countryname).subscribe((res: any) => {
+//     this.motorcycles = res.listings || [];
+//     if (res.showing_all_countries && res.searched_country) {
+//       this.searchedCountryMessage = `No listings found for "${res.searched_country}". Showing all countries instead.`;
+//     } else {
+//       this.searchedCountryMessage = null;
+//     }
+//   });
+// }
+
 getMotorcycles() {
-  if (!this.countryname) return;
-  this.listings.getMotorcyclesByCategory(this.countryname).subscribe((res: any) => {
+  const countryToSearch = this.countryname || 'all'; // or '' depending on your API
+  this.listings.getMotorcyclesByCategory(countryToSearch).subscribe((res: any) => {
     this.motorcycles = res.listings || [];
-    if (res.showing_all_countries && res.searched_country) {
+    if (!this.countryname) {
+      this.searchedCountryMessage = 'Showing all countries';
+    } else if (res.showing_all_countries && res.searched_country) {
       this.searchedCountryMessage = `No listings found for "${res.searched_country}". Showing all countries instead.`;
     } else {
       this.searchedCountryMessage = null;
     }
   });
 }
-
 
   get visibleMotorcycles() {
     return this.motorcycles;
@@ -258,23 +275,52 @@ getMotorcycles() {
   }
 
   onDrag(event: MouseEvent | TouchEvent) {
-    if (!this.isDragging) return;
-    const x = this.getX(event);
-    const dragDistance = x - this.startX;
-    this.currentPosition = this.startPosition + dragDistance;
-    
-    // Constrain to boundaries
-    const maxPosition = this.getMaxPosition();
-    if (this.currentPosition > 0) this.currentPosition = 0;
-    if (this.currentPosition < maxPosition) this.currentPosition = maxPosition;
-  }
+  if (!this.isDragging) return;
+  const x = this.getX(event);
+  const dragDistance = x - this.startX;
 
-  endDrag() {
-    this.isDragging = false;
-    // Snap to nearest card
-    const cardWidth = this.getCardWidth();
-    this.currentPosition = Math.round(this.currentPosition / cardWidth) * cardWidth;
-  }
+  const isRTL = document.dir === 'rtl';
+  const adjustedDistance = isRTL ? -dragDistance : dragDistance;
+
+  this.currentPosition = this.startPosition + adjustedDistance;
+
+  const maxPosition = this.getMaxPosition();
+  if (this.currentPosition > 0) this.currentPosition = 0;
+  if (this.currentPosition < maxPosition) this.currentPosition = maxPosition;
+}
+
+endDrag() {
+  this.isDragging = false;
+  const cardWidth = this.getCardWidth();
+
+  const isRTL = document.dir === 'rtl';
+  const adjustment = isRTL ? -cardWidth : cardWidth;
+
+  this.currentPosition = Math.round(this.currentPosition / adjustment) * adjustment;
+
+  const maxPosition = this.getMaxPosition();
+  if (this.currentPosition > 0) this.currentPosition = 0;
+  if (this.currentPosition < maxPosition) this.currentPosition = maxPosition;
+}
+
+  // onDrag(event: MouseEvent | TouchEvent) {
+  //   if (!this.isDragging) return;
+  //   const x = this.getX(event);
+  //   const dragDistance = x - this.startX;
+  //   this.currentPosition = this.startPosition + dragDistance;
+    
+  //   // Constrain to boundaries
+  //   const maxPosition = this.getMaxPosition();
+  //   if (this.currentPosition > 0) this.currentPosition = 0;
+  //   if (this.currentPosition < maxPosition) this.currentPosition = maxPosition;
+  // }
+
+  // endDrag() {
+  //   this.isDragging = false;
+  //   // Snap to nearest card
+  //   const cardWidth = this.getCardWidth();
+  //   this.currentPosition = Math.round(this.currentPosition / cardWidth) * cardWidth;
+  // }
 
   private getX(event: MouseEvent | TouchEvent): number {
     return event instanceof MouseEvent ? event.clientX : event.touches[0].clientX;

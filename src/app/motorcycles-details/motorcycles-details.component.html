@@ -136,11 +136,7 @@
                  (load)="onImageLoad($event)"
                  (error)="onImageError($event)" />
             
-            <!-- Image Loading Placeholder -->
-            <div *ngIf="!part.imageLoaded" 
-                 class="absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center">
-              <div class="w-8 h-8 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
-            </div>
+        
           </div>
 
           <!-- Content -->

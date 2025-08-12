@@ -86,7 +86,6 @@
 //     this.recaptchaVerifier = new RecaptchaVerifier(this.authInstance, 'recaptcha-container', {
 //       'size': 'normal',
 //       'callback': (response: string) => {
-//         console.log('reCAPTCHA verified');
 //         // Automatically send OTP after verification
 //         this.sendFirebaseOTP(); 
 //       },
@@ -565,7 +564,6 @@ export class LoginModalComponent implements OnDestroy, OnInit {
     script.defer = true;
     script.onload = () => {
       this.recaptchaLoaded = true;
-      console.log('reCAPTCHA script loaded');
     };
     script.onerror = () => {
       console.error('Failed to load reCAPTCHA script');
@@ -742,11 +740,9 @@ verifyOTP() {
       otp: otpValue
     };
 
-    console.log('Verifying OTP:', otpPayload); // Debug log
 
     this.auth.otplogin(otpPayload).subscribe({
       next: (response) => {
-        console.log('OTP Response:', response); // Debug log
         this.otpError = false;
 
         if (response.token) {
@@ -763,15 +759,26 @@ verifyOTP() {
   }
 
   isEmail(value: string): boolean {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(value);
-  }
+  if (!value) return false;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(value);
+}
+isPhone(value: string): boolean {
+  if (!value) return false;
+  // More flexible phone regex for international numbers
+  const phoneRegex = /^[\+]?[0-9\s\-\(\)]{8,20}$/;
+  return phoneRegex.test(value);
+}
+  // isEmail(value: string): boolean {
+  //   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  //   return emailRegex.test(value);
+  // }
 
-  isPhone(value: string): boolean {
-    // More flexible phone regex for international numbers
-    const phoneRegex = /^[\+]?[0-9\s\-\(\)]{8,20}$/;
-    return phoneRegex.test(value);
-  }
+  // isPhone(value: string): boolean {
+  //   // More flexible phone regex for international numbers
+  //   const phoneRegex = /^[\+]?[0-9\s\-\(\)]{8,20}$/;
+  //   return phoneRegex.test(value);
+  // }
 
   onLoginInputChange() {
     const loginValue = this.loginForm.get('login')?.value;
@@ -860,10 +867,37 @@ verifyOTP() {
   }, 1000); // Runs every second
 }
 
-resendOTP() {
+// resendOTP() {
+//   this.isResendingOTP = true;
+//   const loginValue = this.loginForm.get('login')?.value;
+//   const method = this.isEmail(loginValue) ? 'email' : 'sms';
+
+//   const payload = {
+//     login: loginValue,
+//     method: method
+//   };
+
+//   this.auth.resendOTP(payload).subscribe({
+//     next: (response) => {
+//       this.isResendingOTP = false;
+//       this.otpError = false;
+//       this.otpExpired = false;
+//       this.showOTPModal = true;
+//       this.startOTPCountdown();
+//       this.message = 'Verification code resent successfully';
+//     },
+//     error: (err) => {
+//       this.isResendingOTP = false;
+//       console.error('Error resending OTP:', err);
+//       this.otpError = true;
+//       this.message = 'Failed to resend verification code. Please try again.';
+//     }
+//   });
+// }
+
+resendOTP(method: 'email' | 'sms') {
   this.isResendingOTP = true;
   const loginValue = this.loginForm.get('login')?.value;
-  const method = this.isEmail(loginValue) ? 'email' : 'sms';
 
   const payload = {
     login: loginValue,
@@ -877,17 +911,16 @@ resendOTP() {
       this.otpExpired = false;
       this.showOTPModal = true;
       this.startOTPCountdown();
-      this.message = 'Verification code resent successfully';
+      this.message = `Verification code resent successfully via ${method === 'email' ? 'Email' : 'SMS'}`;
     },
     error: (err) => {
       this.isResendingOTP = false;
       console.error('Error resending OTP:', err);
       this.otpError = true;
-      this.message = 'Failed to resend verification code. Please try again.';
+      this.message = `Failed to resend via ${method === 'email' ? 'Email' : 'SMS'}. Please try again.`;
     }
   });
 }
-
 
 
   onOTPInputChange(event: any, nextField?: string) {

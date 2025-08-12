@@ -17,7 +17,6 @@ userInfo: AuthUserDetails | null = null;
   loading = true;
   error = '';
   constructor(private fb: FormBuilder,private auth: AuthService) {
-    console.log('AuthService injected:', this.auth);
     this.profileForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -38,7 +37,6 @@ ngOnInit(): void {
     next: (res) => {
       if (res && res.user) {
         this.userInfo = res.user;
-        console.log('this.userInfo:', this.userInfo);
 
         // Populate the form with user data
         this.profileForm.patchValue({

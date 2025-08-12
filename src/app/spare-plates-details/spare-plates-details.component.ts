@@ -111,7 +111,6 @@ applyFilters() {
   this.listingbyService.filterSpareParts(params).subscribe(
     (response) => {
       this.spareParts = response;
-      console.log(' this.spareParts: ',  this.spareParts);
       this.isLoading = false;
       this.cdr.detectChanges();
     },
@@ -274,7 +273,6 @@ applyFilters() {
 
   viewListing(id: number): void {
   this.router.navigate(['/listing', id]);
-  console.log('click');
 }
   // Filter application
   // applyFilters() {

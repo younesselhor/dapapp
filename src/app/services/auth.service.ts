@@ -187,7 +187,6 @@ export class AuthService {
           next: (profile) => {
             this.userProfileSubject.next(profile);
             this.profileLoaded = true;
-            console.log('Profile loaded:', profile);
           }
         });
     }
@@ -256,7 +255,6 @@ export class AuthService {
       otp: otp 
     }).pipe(
       tap((response: any) => {
-        console.log('Backend OTP verification response:', response);
         // Save token after successful verification
         if (response.token) {
           this.saveToken(response.token);

@@ -25,7 +25,6 @@ export class SavedVehiclesComponent implements OnInit {
     next: (res) => {
       if (res && res.user && res.user.wishlists) {
         this.listingarray = res.user.wishlists.map(wishlist => wishlist.listing);
-        console.log('this.listingarray: ', this.listingarray);
       } else {
         this.listingarray = [];
       }

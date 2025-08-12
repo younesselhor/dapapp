@@ -123,8 +123,6 @@ export class SubNavComponent implements OnInit, OnChanges {
   this.selectedCountry = found.name;
   this.locationService.setSelectedCountry(found); // 🔥 Notify globally on login
 
-  console.log(' this.selectedCountry: ', this.selectedCountry);
-  console.log('User country matched:', found.name, '-> code:', found.code);
 }
 
       }
@@ -134,7 +132,6 @@ export class SubNavComponent implements OnInit, OnChanges {
   loadCountries() {
     this.listingService.getCityList().subscribe((res) => {
       this.countries = res.countries;
-      console.log('this.countries: ', this.countries);
       this.allCities = res.cities;
     });
   }

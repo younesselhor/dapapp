@@ -226,3 +226,24 @@ button:hover {
 .card-content button:hover {
   background: #f3f4f6;
 }
+
+.slider-track {
+  display: flex;
+  gap: 16px;
+  transition: transform 0.3s ease;
+  cursor: grab;
+  user-select: none;
+}
+
+.slider-card {
+  width: 324px;
+  flex-shrink: 0;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: white;
+}
+
+.rtl .slider-track {
+  flex-direction: row-reverse;
+}

@@ -5,7 +5,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { SubNavComponent } from './components/sub-nav/sub-nav.component';
 import { AuthService } from './services/auth.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { isPlatformBrowser } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { LoginModalComponent } from './components/login-modal.component';
 // import { SidebarComponent } from './components/sidebar/sidebar.component';
 // import { ProductsComponent } from './components/products/products.component';
@@ -31,7 +31,8 @@ export class AppComponent implements OnInit {
  constructor(
     private auth: AuthService,
     private translate: TranslateService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    @Inject(DOCUMENT) private document: Document
   ) {
 
     this.translate.setDefaultLang('en');
@@ -39,6 +40,9 @@ export class AppComponent implements OnInit {
     //   this.showLoginModal = true;
     // });
     // Only access localStorage/tokens on browser side
+    const lang = this.translate.currentLang || 'en';
+this.document.documentElement.lang = lang;
+this.document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
     if (isPlatformBrowser(this.platformId)) {
       const hasToken = this.auth.getToken();
       this.auth.setLoggedIn(!!hasToken);

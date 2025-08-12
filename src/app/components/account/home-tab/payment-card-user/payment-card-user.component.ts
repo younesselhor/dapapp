@@ -77,7 +77,6 @@ onInputChange(event: Event) {
     this.cardService.getCards().subscribe({
       next: (res) => {
         this.bankCards = res;
-        console.log('this.bankCards: ', this.bankCards);
         this.loading = false;
       },
       error: (err) => {
@@ -136,7 +135,6 @@ onInputChange(event: Event) {
   this.cardForm.reset();
   this.showAddCardForm = false;
   this.bankCards = [...this.bankCards, newCard];
-  console.log('New card added:', newCard);
   this.getCard(); // Refresh the card list
         },
         error: (err) => {

@@ -1,12 +1,483 @@
 <div class="main-container">
   <div class="content-container">
-    <app-sidebar></app-sidebar>
-   <div class="products-grid flex flex-wrap gap-4" style="width: 75%;">
-  <app-product-card *ngFor="let plate of plates" [plateData]="plate"></app-product-card>
+    <!-- Sidebar Filters -->
+    <div class="sidebar" style="width: 25%;">
+      <div class="flex justify-between items-center mb-4">
+        <h2>FILTERS</h2>
+        <button (click)="resetFilters()" class="text-sm text-blue-500 hover:underline">
+          Reset All
+        </button>
+      </div>
+
+      <!-- Search Input -->
+      <div class="filter-section">
+        <div class="filter-header">
+          <span>Search Plates</span>
+        </div>
+        <div class="filter-content">
+          <div class="search-box">
+            <input type="text" [(ngModel)]="searchQuery" 
+                   (keyup.enter)="applyFilters()"
+                   placeholder="Enter plate number or text...">
+            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 30 30" fill="none">
+              <path d="M25.8648 23.122L20.4231 17.6803C21.2439 16.3339 21.7162 14.7499 21.7162 13.0579C21.7162 8.1374 17.4523 3.875 12.5319 3.875C7.61138 3.875 3.62402 7.86236 3.62402 12.7828C3.62402 17.7019 7.88786 21.9657 12.8069 21.9657C14.4442 21.9657 15.9749 21.5208 17.2925 20.7504L22.7631 26.2238C23.2987 26.758 24.1671 26.758 24.7013 26.2238L26.0592 24.8659C26.5935 24.3316 26.3991 23.6563 25.8648 23.122ZM6.36578 12.7828C6.36578 9.3758 9.12626 6.61532 12.5319 6.61532C15.9375 6.61532 18.9744 9.6494 18.9744 13.0579C18.9744 16.4635 16.2125 19.2254 12.8069 19.2254C9.4013 19.2254 6.36578 16.1884 6.36578 12.7828Z" fill="#FA4C06"/>
+            </svg>
+          </div>
+          <button (click)="applyFilters()" 
+                  class="mt-2 w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition">
+            Search
+          </button>
+        </div>
+      </div>
+
+      <!-- Country Filter -->
+      <div class="filter-section">
+        <div class="filter-header" (click)="toggleCountry()">
+          <span>Country</span>
+          <span class="toggle-icon">{{ isCountryOpen ? '−' : '+' }}</span>
+        </div>
+
+        <div class="filter-content" *ngIf="isCountryOpen">
+          <div class="search-box">
+            <input type="text" placeholder="Search countries..." [(ngModel)]="searchQuery" 
+                   >
+            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 30 30" fill="none">
+              <path d="M25.8648 23.122L20.4231 17.6803C21.2439 16.3339 21.7162 14.7499 21.7162 13.0579C21.7162 8.1374 17.4523 3.875 12.5319 3.875C7.61138 3.875 3.62402 7.86236 3.62402 12.7828C3.62402 17.7019 7.88786 21.9657 12.8069 21.9657C14.4442 21.9657 15.9749 21.5208 17.2925 20.7504L22.7631 26.2238C23.2987 26.758 24.1671 26.758 24.7013 26.2238L26.0592 24.8659C26.5935 24.3316 26.3991 23.6563 25.8648 23.122ZM6.36578 12.7828C6.36578 9.3758 9.12626 6.61532 12.5319 6.61532C15.9375 6.61532 18.9744 9.6494 18.9744 13.0579C18.9744 16.4635 16.2125 19.2254 12.8069 19.2254C9.4013 19.2254 6.36578 16.1884 6.36578 12.7828Z" fill="#FA4C06"/>
+            </svg>
+          </div>
+          
+          <div class="scrollable-list">
+            <div class="checkbox-item" *ngFor="let country of countries">
+              <input type="checkbox" [id]="'country-' + country.code" 
+                     [checked]="country.checked" 
+                     (change)="country.checked = !country.checked; onCheckboxChange()">
+              <label [for]="'country-' + country.code">
+                {{ country.name }} 
+                <!-- <span class="count">({{ country.listings_count || 0 }})</span> -->
+              </label>
+            </div>
+          </div>
+          
+          <!-- <button class="show-more-btn" *ngIf="countries.length > displayCount" 
+                  (click)="showMoreCountries()">
+            Show More Countries
+          </button> -->
+        </div>
+      </div>
+
+      <!-- Price Range Filter -->
+      <div class="filter-section">
+        <div class="filter-header">
+          <span>Price Range</span>
+        </div>
+
+        <div class="price-range">
+          <div class="slider-container">
+            <input type="range" [min]="absoluteMin" [max]="absoluteMax" [(ngModel)]="priceRange.min"
+              (input)="onMinSliderChange($event)" class="slider">
+            <input type="range" [min]="absoluteMin" [max]="absoluteMax" [(ngModel)]="priceRange.max"
+              (input)="onMaxSliderChange($event)" class="slider">
+          </div>
+
+          <div class="price-inputs">
+            <div class="price-input">
+              <label>Min</label>
+              <input type="number" [(ngModel)]="priceRange.min" [min]="absoluteMin" [max]="absoluteMax"
+                    (change)="onMinInputChange()">
+            </div>
+            <div class="price-input">
+              <label>MAX</label>
+              <input type="number" [(ngModel)]="priceRange.max" [min]="absoluteMin" [max]="absoluteMax"
+                    (change)="onMaxInputChange()">
+            </div>
+          </div>
+          <button (click)="applyFilters()" 
+                  class="mt-2 w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition">
+            Apply Price Filter
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+      <!-- Products Grid -->
+      <div class="products-grid">
+        <!-- Loading Indicator -->
+        <div *ngIf="isLoading" class="w-full flex justify-center items-center">
+          <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
+
+        <!-- No Results -->
+        <div *ngIf="!isLoading && filteredPlates.length === 0" class="flex flex-col items-center justify-center py-12 px-4 text-center">
+          <div class="max-w-md mx-auto">
+            <h3 class="text-xl font-medium text-gray-800 mb-2">No plates found</h3>
+            <p class="text-gray-600 mb-6">
+              We couldn't find any plates that match your filter, change or clear filters
+            </p>
+            <button (click)="resetFilters()" class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+              Clear Filter
+            </button>
+          </div>
+        </div>
+
+        <!-- Plate Cards -->
+        <div *ngFor="let plate of filteredPlates" 
+             class="product-card">
+          
+          <!-- Plate display -->
+          <div class="product-image" [class]="getPlateBackgroundClass(plate)">
+            <!-- Saudi Plate -->
+            <ng-container *ngIf="getCountryCode(plate) === 'KSA'; else NonSaudi">
+              <div *ngIf="getSaudiPlateParts(plate) as parts">
+                <div class="flex border-[2px] border-black rounded-md overflow-hidden shadow-sm bg-white">
+                  <div class="grid grid-cols-2 grid-rows-2 w-[180px] h-[90px]">
+                    <div class="flex items-center justify-center border border-black text-base font-bold text-black">{{ parts.arNumbers }}</div>
+                    <div class="flex items-center justify-center border border-black text-base font-bold text-black">{{ parts.arLetters }}</div>
+                    <div class="flex items-center justify-center border border-black text-base font-bold text-black">{{ parts.enNumbers }}</div>
+                    <div class="flex items-center justify-center border border-black text-base font-bold text-black uppercase">{{ parts.enLetters }}</div>
+                  </div>
+                  <div class="flex flex-col items-center justify-center bg-[#138c36] text-white px-1 py-1 w-[36px]">
+                    <img src="/pictures/simple-icons_saudia.svg" alt="KSA" class="w-4 h-4 mb-0.5" />
+                    <span class="text-[10px] font-bold">KSA</span>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+
+            <!-- Non-Saudi Plate -->
+            <ng-template #NonSaudi>
+              <div class="relative w-[216px] h-[90px] bg-white border-2 border-black rounded-md shadow-sm flex">
+                <!-- Fields -->
+                <div class="flex-1 relative">
+                  <ng-container *ngIf="getPlateFieldMap(plate) as fieldMap">
+                    <div class="absolute top-1 left-1/2 transform -translate-x-1/2 text-[10px] font-semibold text-gray-600 uppercase">
+                      {{ plate.license_plate?.city }}
+                    </div>
+                    <div class="absolute bottom-1 left-1/2 transform -translate-x-1/2 text-[10px] font-semibold text-gray-600 uppercase">
+                      {{ getCountryName(plate) }}
+                    </div>
+                    <ng-container *ngFor="let pos of allPositions">
+                      <div *ngIf="fieldMap[pos]" [ngClass]="getPositionClass(pos)" class="absolute text-[14px] font-bold text-gray-800">
+                        {{ fieldMap[pos] }}
+                      </div>
+                    </ng-container>
+                  </ng-container>
+                </div>
+                <!-- Sidebar -->
+                <div [ngClass]="getSidebarClass(plate)" class="flex flex-col items-center justify-center text-white px-1 py-1 w-[36px]">
+                  <ng-container [ngSwitch]="getCountryCode(plate)">
+                    <ng-container *ngSwitchCase="'UAE'">
+                      <img src="/pictures/simple-icons_emirates.svg" class="w-4 h-4 mb-0.5" />
+                      <span class="text-[10px] font-bold">UAE</span>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'KW'">
+                      <div class="text-[10px] font-bold flex flex-col items-center space-y-[1px]">
+                        <span>K</span><span>W</span><span>T</span>
+                      </div>
+                    </ng-container>
+                    <ng-container *ngSwitchDefault>
+                      <img src="/pictures/simple-icons_saudia.svg" class="w-4 h-4 mb-0.5" />
+                      <span class="text-[10px] font-bold">KSA</span>
+                    </ng-container>
+                  </ng-container>
+                </div>
+              </div>
+            </ng-template>
+          </div>
+
+          <!-- Plate Details -->
+          <div class="product-content">
+            <h3 class="product-title" [title]="plate.title">{{ plate.title }}</h3>
+            <p class="product-description">{{ getCountryName(plate) }}</p>
+
+            <div class="product-footer">
+              <p class="price-label">PRICE</p>
+              <p class="price-value">
+                {{ plate.price || '0' }}
+                <span class="price-currency">
+                  {{ getCountryCode(plate) === 'UAE' ? 'AED' : 'SAR' }}
+                </span>
+              </p>
+
+              <button
+                (click)="viewListing(plate.id)"
+                class="view-button"
+              >
+                View Plate
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
+<style>
+.main-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f8fafc;
+}
 
-</div>
+.content-container {
+  display: flex;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
 
+.sidebar {
+  width: 280px;
+  flex-shrink: 0;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  height: fit-content;
+  position: sticky;
+  top: 2rem;
+}
 
-</div>
+.main-content {
+  flex: 1;
+}
+
+/* .products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+} */
+
+.filter-section {
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 1.5rem;
+}
+
+.filter-section:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+
+.filter-content {
+  margin-top: 1rem;
+}
+
+.search-box {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 0.5rem 2rem 0.5rem 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+}
+
+.search-icon {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+}
+
+.scrollable-list {
+  max-height: 200px;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.checkbox-item input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+}
+
+.count {
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+.show-more-btn {
+  color: #3b82f6;
+  font-size: 0.875rem;
+  text-decoration: underline;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.price-range {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.slider-container {
+  position: relative;
+  height: 20px;
+}
+
+.slider {
+  width: 100%;
+  position: absolute;
+  top: 0;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #3b82f6;
+  cursor: pointer;
+}
+
+.price-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.price-input label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.price-input input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+}
+
+.product-card {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.product-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.product-image {
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.product-content {
+  padding: 1rem;
+}
+
+.product-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.product-description {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin-bottom: 1rem;
+}
+
+.product-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.price-label {
+  font-size: 0.75rem;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+.price-value {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.price-currency {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin-left: 0.25rem;
+}
+
+.view-button {
+  width: 100%;
+  padding: 0.5rem;
+  background: white;
+  border: 1px solid #F03D24;
+  color: #F03D24;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.view-button:hover {
+  background: #ffebee;
+}
+
+.saudi-bg { background-color: #f0f9ff; }
+.uae-bg { background-color: #faf5ff; }
+.kuwait-bg { background-color: #fef2f2; }
+.default-bg { background-color: #f9fafb; }
+
+@media (max-width: 768px) {
+  .content-container {
+    flex-direction: column;
+    padding: 1rem;
+  }
+  
+  .sidebar {
+    width: 100%;
+    position: relative;
+    top: 0;
+  }
+  
+  /* .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  } */
+}
+</style>

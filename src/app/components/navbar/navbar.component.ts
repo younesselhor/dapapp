@@ -1,6 +1,6 @@
 
 
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output, signal, Inject, PLATFORM_ID } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink, RouterModule } from '@angular/router';
@@ -68,7 +68,8 @@ constructor(
     private auth: AuthService,
     private cookieService: CookieService,
     private translate: TranslateService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    @Inject(DOCUMENT) private document: Document
   ) {
     this.translate.setDefaultLang('en');
     
@@ -102,16 +103,27 @@ ngOnInit() {
         ];
 }
 
+switchLang(lang: string): void {
+  this.translate.use(lang);
+
+  if (isPlatformBrowser(this.platformId)) {
+    localStorage.setItem('lang', lang);
 
 
- switchLang(lang: string): void {
-    this.translate.use(lang);
-    
-    // Only access localStorage on browser side
-    if (isPlatformBrowser(this.platformId)) {
-      localStorage.setItem('lang', lang);
-    }
+    // تحديث اتجاه اللغة والاتجاه فـ <html>
+    this.document.documentElement.lang = lang;
+    this.document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
   }
+}
+
+//  switchLang(lang: string): void {
+//     this.translate.use(lang);
+    
+//     // Only access localStorage on browser side
+//     if (isPlatformBrowser(this.platformId)) {
+//       localStorage.setItem('lang', lang);
+//     }
+//   }
 
 selectMenu(menu: string) {
   this.menuSelected.emit(menu);

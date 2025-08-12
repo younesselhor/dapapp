@@ -65,7 +65,6 @@ export class DraftProductComponent implements OnInit{
     next: (response) => {
       if (response && Array.isArray(response.data)) {
         this.drafts = response.data;
-        console.log('this.drafts: ', this.drafts);
       } else {
         console.warn('Unexpected response format:', response);
         this.drafts = [];

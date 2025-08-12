@@ -39,6 +39,5 @@ export class ImageGalleryComponent {
   }
   selectSize(size: string) {
     this.selectedSize = size;
-    console.log('Selected Size:', size); // You can send this value to your backend or use it as needed
   }
 }

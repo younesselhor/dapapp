@@ -140,7 +140,6 @@ ngOnInit(): void {
   this.locationService.selectedCountry$.subscribe((country) => {
     if (country?.name) {
       this.countryname = country.name;
-      console.log('this.countryname : ', this.countryname);
       this.fetchPlates();
     }
   });
@@ -216,7 +215,6 @@ fetchPlates(): void {
 
   viewListing(id: number): void {
   this.router.navigate(['/listing', id]);
-  console.log('click');
 }
   getPlateNumber(plate: Plate): string {
     if (!plate.license_plate) return '';
