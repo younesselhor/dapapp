@@ -524,6 +524,12 @@ export class LoginModalComponent implements OnDestroy, OnInit {
    // Store user info when OTP is required
   pendingUserInfo: any = null;
 
+
+  showForgotPasswordModal = false;
+forgotPasswordForm: FormGroup;
+showResetPasswordModal = false;
+resetPasswordForm: FormGroup;
+
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
@@ -543,6 +549,17 @@ export class LoginModalComponent implements OnDestroy, OnInit {
       // digit5: ['', [Validators.required, Validators.pattern(/^[0-9]$/)]],
       // digit6: ['', [Validators.required, Validators.pattern(/^[0-9]$/)]],
     });
+
+    this.forgotPasswordForm = this.fb.group({
+  login: ['', [Validators.required]],
+  method: ['whatsapp', [Validators.required]] // Default to whatsapp
+});
+
+this.resetPasswordForm = this.fb.group({
+  code: ['', [Validators.required, Validators.pattern(/^[0-9]{4,6}$/)]],
+  password: ['', [Validators.required, Validators.minLength(6)]],
+  password_confirmation: ['', [Validators.required]]
+}, { validator: this.passwordMatchValidator });
   }
 
   ngOnInit() {
@@ -757,6 +774,82 @@ verifyOTP() {
       }
     });
   }
+
+
+
+passwordMatchValidator(form: FormGroup) {
+  return form.get('password')?.value === form.get('password_confirmation')?.value 
+    ? null 
+    : { mismatch: true };
+}
+
+// Add these methods
+openForgotPassword() {
+  this.showForgotPasswordModal = true;
+  this.loginError = false;
+  this.message = '';
+}
+
+closeForgotPasswordModal() {
+  this.showForgotPasswordModal = false;
+  this.forgotPasswordForm.reset({ method: 'whatsapp' });
+}
+
+requestPasswordReset() {
+  if (this.forgotPasswordForm.invalid) {
+    this.forgotPasswordForm.markAllAsTouched();
+    return;
+  }
+
+  const payload = this.forgotPasswordForm.value;
+  this.auth.forgotPassword(payload).subscribe({
+    next: (response) => {
+      this.message = 'OTP code sent successfully to your WhatsApp';
+      this.showForgotPasswordModal = false;
+      this.showResetPasswordModal = true;
+      this.startOTPCountdown();
+    },
+    error: (err) => {
+      this.loginError = true;
+      this.message = err.error?.message || 'Failed to send OTP. Please try again.';
+      console.error('Forgot password error:', err);
+    }
+  });
+}
+
+resetPassword() {
+  if (this.resetPasswordForm.invalid) {
+    this.resetPasswordForm.markAllAsTouched();
+    return;
+  }
+
+  const payload = {
+    login: this.forgotPasswordForm.value.login,
+    code: this.resetPasswordForm.value.code,
+    password: this.resetPasswordForm.value.password,
+    password_confirmation: this.resetPasswordForm.value.password_confirmation
+  };
+
+  this.auth.resetPassword(payload).subscribe({
+    next: (response) => {
+      this.message = 'Password reset successfully. You can now login with your new password.';
+      this.showResetPasswordModal = false;
+      this.resetPasswordForm.reset();
+      this.forgotPasswordForm.reset({ method: 'whatsapp' });
+    },
+    error: (err) => {
+      this.loginError = true;
+      this.message = err.error?.message || 'Failed to reset password. Please try again.';
+      console.error('Reset password error:', err);
+    }
+  });
+}
+
+closeResetPasswordModal() {
+  this.showResetPasswordModal = false;
+  this.resetPasswordForm.reset();
+}
+
 
   isEmail(value: string): boolean {
   if (!value) return false;

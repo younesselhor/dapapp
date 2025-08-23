@@ -1,5 +1,7 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Component, Inject, PLATFORM_ID } from '@angular/core';
+import { ListingByCatService } from '../../services/listingsByCategory/listing-by-cat.service';
+import { Router } from '@angular/router';
 
 
 interface Product {
@@ -9,6 +11,24 @@ interface Product {
   currency: string;
   imageUrl: string;
   type: 'motorcycle' | 'part' | 'plate';
+}
+
+interface Listing {
+  id: number;
+  title: string;
+  description: string;
+  price: string;
+  category_id: number;
+  images: string[];
+  // Add other properties you need from the listing
+}
+
+interface RecentlyAddedResponse {
+  message: string;
+  searched_country: string | null;
+  showing_all_countries: boolean;
+  total_listings: number;
+  listings: Listing[];
 }
 @Component({
   selector: 'app-recently-added-products',
@@ -157,7 +177,7 @@ export class RecentlyAddedProductsComponent {
   totalSlides: number = this.recentProducts.length;
   dotsArray: number[] = [];
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+  constructor(@Inject(PLATFORM_ID) private platformId: Object,private listingbyService :ListingByCatService, private router: Router) {}
   // Computed property for CSS transform
   get currentSlidePosition(): number {
     return (this.currentSlide * 100) / this.slidesToShow;
@@ -208,7 +228,114 @@ export class RecentlyAddedProductsComponent {
         }
       });
   }
+  this.recentlyadd();
   }
+  // recentlyadd(){
+  //   this.listingbyService.getRecentlyAdd().subscribe((data) => {
+  //     console.log('data recent ',data);
+  //   });
+  // }
+//   recentlyadd() {
+//   this.listingbyService.getRecentlyAdd().subscribe((data) => {
+//     console.log('data recent ', data);
+    
+//     // Map the API response to your Product interface format
+//     this.recentProducts = data.listings.map((listing: any) => {
+//       // Determine the image URL - using first image if available, otherwise a placeholder
+//       const imageUrl = listing.images && listing.images.length > 0 
+//         ? listing.images[0] 
+//         : '/pictures/placeholder.png'; // You should have a placeholder image
+    
+//       return {
+//         id: listing.id,
+//         title: listing.title,
+//         price: parseFloat(listing.price),
+//         currency: 'SAR', // Assuming SAR as default currency
+//         imageUrl: imageUrl,
+//         type: this.getProductType(listing.category_id)
+//       };
+//     });
+
+//     // Update slider calculations after data is loaded
+//     this.totalSlides = this.recentProducts.length;
+//     this.updateDotsArray();
+//   });
+// }
+recentlyadd() {
+  // this.listingbyService.getRecentlyAdd().subscribe((data) => {
+  //   console.log('data recent ', data);
+    
+  //   if (data && data.listings) {
+  //     // Map the API response to your Product interface format
+  //     this.recentProducts = data.listings.map((listing: Listing) => {
+  //       // Determine the image URL - using first image if available, otherwise a placeholder
+  //       const imageUrl = listing.images && listing.images.length > 0 
+  //         ? listing.images[0] 
+  //         : '/pictures/placeholder.png';
+        
+  //       return {
+  //         id: listing.id,
+  //         title: listing.title,
+  //         price: parseFloat(listing.price),
+  //         currency: 'SAR',
+  //         imageUrl: imageUrl,
+  //         type: this.getProductType(listing.category_id)
+  //       };
+  //     });
+
+  //     // Update slider calculations after data is loaded
+  //     this.totalSlides = this.recentProducts.length;
+  //     this.updateDotsArray();
+  //   }
+  // });
+this.listingbyService.getRecentlyAdd().subscribe((data: any) => {
+    const response = data as RecentlyAddedResponse;
+   
+    if (response && response.listings) {
+      this.recentProducts = response.listings.map((listing: Listing) => {
+        // / Determine the image URL - using first image if available, otherwise a placeholder
+        const imageUrl = listing.images && listing.images.length > 0 
+          ? listing.images[0] 
+          : '/pictures/moto.png'; // You should have a placeholder image
+        
+        return {
+          id: listing.id,
+          title: listing.title,
+          price: parseFloat(listing.price),
+          currency: 'SAR',
+          imageUrl: imageUrl,
+          type: this.getProductType(listing.category_id)
+        };
+      });
+         // Update slider calculations after data is loaded
+      this.totalSlides = this.recentProducts.length;
+      this.updateDotsArray();
+    }
+    
+  });
+}
+
+private getProductType(categoryId: number): 'motorcycle' | 'part' | 'plate' {
+  // Adjust these mappings based on your actual category IDs
+  switch(categoryId) {
+    case 1: return 'motorcycle';
+    case 2: return 'part';
+    case 3: return 'plate';
+    default: return 'motorcycle'; // default fallback
+  }
+}
+  // viewListing(id: number): void {
+  //   this.router.navigate(['/listing', id]);
+  //   console.log('click');
+  //   console.log('id',id);
+  // }
+  viewListing(id: number): void {
+  if (!id || isNaN(id)) {
+    console.error('Invalid ID:', id);
+    return;
+  }
+  this.router.navigate(['/listing', id]);
+}
   // updateSlidesToShow(): void {
   //   if (window.innerWidth < 640) {
   //     this.slidesToShow = 1;

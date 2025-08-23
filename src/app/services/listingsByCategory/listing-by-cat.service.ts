@@ -130,6 +130,9 @@ filterSpareParts(params: any): Observable<any> {
     return this.http.get(`${this.baseUrl}filter/license-plates`, { params: httpParams });
   }
 
+  getRecentlyAdd(){
+    return this.http.get(`${this.baseUrl}recent`);
+  }
 }
 
 

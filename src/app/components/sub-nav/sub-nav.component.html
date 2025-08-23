@@ -9,9 +9,13 @@
     (change)="onCountryChange($event)"
     class="w-full min-w-[200px] p-2 rounded-md hover:border-blue-500 focus:border-blue-500 focus:ring-blue-500 transition-colors appearance-none bg-white">
     <option value="" disabled selected>Select a Country</option>
-   <option *ngFor="let country of countries" [value]="country.name">
+   <!-- <option *ngFor="let country of countries" [value]="country.name">
+  {{ country.name }}
+</option> -->
+<option *ngFor="let country of countries" [value]="country.name">
   {{ country.name }}
 </option>
+
   </select>
   <i class="pi pi-chevron-down text-gray-500 ml-[-1.5rem] pointer-events-none"></i>
 </div>

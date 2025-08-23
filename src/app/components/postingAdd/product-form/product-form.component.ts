@@ -1194,52 +1194,7 @@ getPricing() {
   }
 
 
-// private async handleStep1() {
-//   if (!this.validateStep1()) return;
 
-//   const step1Data = this.prepareStep1Data();
-//   if (!step1Data) return;
-
-//   this.sharedFormDataService.setStep1Data(step1Data);
-//   this.currentStep++;
-// }
-
-
-// private async handleStep2() {
-//   if (!this.adDetailsForm.valid) {
-//     this.adDetailsForm.markAllAsTouched();
-//     return;
-//   }
-
-//   const step2Data = {
-//     step: 2,
-//     title: this.adDetailsForm.value.title,
-//     description: this.adDetailsForm.value.description,
-//     price: parseFloat(this.adDetailsForm.value.price),
-//     allow_submission: this.adDetailsForm.value.allow_submission === 'true',
-//     contacting_channel: this.adDetailsForm.value.contacting_channel,
-//     country_id: Number(this.adDetailsForm.value.country),
-//     city_id: parseInt(this.adDetailsForm.value.city),
-//     seller_type: this.adDetailsForm.value.seller_type,
-//     listing_type_id: 1,
-//     auction_enabled: this.adDetailsForm.value.allow_submission === 'true',
-//     minimum_bid: this.adDetailsForm.value.minimum_bid,
-//   };
-
-//   this.sharedFormDataService.setStep2Data(step2Data);
-//   this.currentStep++;
-
-//   try {
-//     const step1Data = this.sharedFormDataService.getStep1Data();
-//     const priceData = await this.getPricingInfo(step1Data, step2Data);
-//     this.pricingInfo = priceData;
-//     await this.buildAndSubmitPayload(step1Data, step2Data, priceData);
-//   } catch (error) {
-//     console.error('Error in pricing:', error);
-//     alert('Failed to get pricing information. Please try again.');
-//     this.currentStep--; // Go back if pricing fails
-//   }
-// }
 async goToNextStep() {
   try {
     switch (this.currentStep) {
@@ -1353,49 +1308,7 @@ private prepareStep1Data(): any {
         description: this.bikeForm.value.description,
         images: this.uploadedImageUrls.filter(url => url !== null)
       };
-      //     case 3: // License Plate (updated)
-      // const dynamicFieldValues = this.dynamicFields.map(field => ({
-      //   field_id: field.id,
-      //   value: this.platesForm.value[field.controlName]
-      // }));
 
-      // return {
-      //   category_id: 3,
-      //   // type_id: this.platesForm.value.type_id,
-      //   plate_format_id: this.selectedPlateFormat?.id,  // Changed from platesForm.value.plateFormat to selectedPlateFormat.id
-      //   country_id_lp: Number(this.platesForm.value.country_id_lp),
-      //   city_id_lp: Number(this.platesForm.value.city_id_lp),
-      //   fields: dynamicFieldValues
-      // };
-// case 3: // License Plate
-  // const dynamicFieldValues = this.dynamicFields.map(field => {
-  //   // Convert value to string explicitly
-  //   let fieldValue = this.platesForm.value[field.controlName];
-    
-  //   // Handle different value types
-  //   if (fieldValue === null || fieldValue === undefined) {
-  //     fieldValue = ''; // Default empty string
-  //   } else if (typeof fieldValue === 'number') {
-  //     fieldValue = fieldValue.toString();
-  //   } else if (typeof fieldValue !== 'string') {
-  //     fieldValue = String(fieldValue);
-  //   }
-
-  //   return {
-  //     field_id: field.id,
-  //     value: fieldValue // Now guaranteed to be a string
-  //   };
-  // });
-
-  // return {
-  //   category_id: 3,
-  //   step: 1,
-  //   type_id: this.platesForm.value.type_id,
-  //   plate_format_id: this.selectedPlateFormat?.id,
-  //   country_id_lp: Number(this.platesForm.value.country_id_lp),
-  //   city_id_lp: Number(this.platesForm.value.city_id_lp),
-  //   fields: dynamicFieldValues
-  // };
       case 3: // License Plate
       const dynamicFieldValues = this.dynamicFields.map(field => {
         // Get the raw value from the form control
@@ -1469,6 +1382,38 @@ private async handleStep2() {
   }
 }
 
+// private async handleStep3() {
+//   const step1Data = this.sharedFormDataService.getStep1Data();
+//   const step2Data = this.sharedFormDataService.getStep2Data();
+
+//   const payload = {
+//     step: 3,
+//     listing_id: this.listingId,
+//     title: step2Data.title,
+//     description: step2Data.description,
+//     price: step2Data.price,
+//     listing_type_id: step2Data.listing_type_id,
+//     city_id: step2Data.city_id,
+//     auction_enabled: step2Data.auction_enabled,
+//     minimum_bid: step2Data.minimum_bid,
+//     allow_submission: step2Data.allow_submission,
+//     contacting_channel: step2Data.contacting_channel,
+//     seller_type: step2Data.seller_type,
+//     ...this.getTypeSpecificPayload(step1Data),
+//     amount: 19.6,
+//   bank_card_id: 5
+//   };
+
+//   try {
+//     const res = await this.listingService.addPost(payload).toPromise();
+//     this.currentStep++;
+//     this.router.navigate(['/home']);
+//   } catch (err) {
+//     console.error('Error creating ad:', err);
+//     alert('Failed to create ad. Please try again.');
+//   }
+// }
+
 private async handleStep3() {
   const step1Data = this.sharedFormDataService.getStep1Data();
   const step2Data = this.sharedFormDataService.getStep2Data();
@@ -1486,19 +1431,28 @@ private async handleStep3() {
     allow_submission: step2Data.allow_submission,
     contacting_channel: step2Data.contacting_channel,
     seller_type: step2Data.seller_type,
-    ...this.getTypeSpecificPayload(step1Data)
+    ...this.getTypeSpecificPayload(step1Data),
+    amount: 19.6,
+    bank_card_id: 5
   };
 
   try {
     const res = await this.listingService.addPost(payload).toPromise();
-    this.currentStep++;
-    this.router.navigate(['/home']);
+    
+    // Check if we have a redirect URL for payment
+    if (res && res.redirect_url) {
+      // Redirect to the payment URL
+      window.location.href = res.redirect_url;
+    } else {
+      // Fallback: navigate to home if no redirect URL
+      console.warn('No redirect URL provided, navigating to home');
+      this.router.navigate(['/home']);
+    }
   } catch (err) {
     console.error('Error creating ad:', err);
     alert('Failed to create ad. Please try again.');
   }
 }
-
 private getTypeSpecificPayload(step1Data: any): any {
   const basePayload = {
     images: this.uploadedImageUrls.filter(url => url !== null)
@@ -1711,6 +1665,53 @@ private logFormErrors(form: FormGroup) {
 }
 
 
+
+// private async handleStep1() {
+//   if (!this.validateStep1()) return;
+
+//   const step1Data = this.prepareStep1Data();
+//   if (!step1Data) return;
+
+//   this.sharedFormDataService.setStep1Data(step1Data);
+//   this.currentStep++;
+// }
+
+
+// private async handleStep2() {
+//   if (!this.adDetailsForm.valid) {
+//     this.adDetailsForm.markAllAsTouched();
+//     return;
+//   }
+
+//   const step2Data = {
+//     step: 2,
+//     title: this.adDetailsForm.value.title,
+//     description: this.adDetailsForm.value.description,
+//     price: parseFloat(this.adDetailsForm.value.price),
+//     allow_submission: this.adDetailsForm.value.allow_submission === 'true',
+//     contacting_channel: this.adDetailsForm.value.contacting_channel,
+//     country_id: Number(this.adDetailsForm.value.country),
+//     city_id: parseInt(this.adDetailsForm.value.city),
+//     seller_type: this.adDetailsForm.value.seller_type,
+//     listing_type_id: 1,
+//     auction_enabled: this.adDetailsForm.value.allow_submission === 'true',
+//     minimum_bid: this.adDetailsForm.value.minimum_bid,
+//   };
+
+//   this.sharedFormDataService.setStep2Data(step2Data);
+//   this.currentStep++;
+
+//   try {
+//     const step1Data = this.sharedFormDataService.getStep1Data();
+//     const priceData = await this.getPricingInfo(step1Data, step2Data);
+//     this.pricingInfo = priceData;
+//     await this.buildAndSubmitPayload(step1Data, step2Data, priceData);
+//   } catch (error) {
+//     console.error('Error in pricing:', error);
+//     alert('Failed to get pricing information. Please try again.');
+//     this.currentStep--; // Go back if pricing fails
+//   }
+// }
 // private async handleStep3() {
 //   const step1Data = this.sharedFormDataService.getStep1Data();
 //   const step2Data = this.sharedFormDataService.getStep2Data();
@@ -2239,3 +2240,47 @@ private logFormErrors(form: FormGroup) {
 //   // Force form validation check
 //   this.platesForm.updateValueAndValidity();
 // }
+
+      //     case 3: // License Plate (updated)
+      // const dynamicFieldValues = this.dynamicFields.map(field => ({
+      //   field_id: field.id,
+      //   value: this.platesForm.value[field.controlName]
+      // }));
+
+      // return {
+      //   category_id: 3,
+      //   // type_id: this.platesForm.value.type_id,
+      //   plate_format_id: this.selectedPlateFormat?.id,  // Changed from platesForm.value.plateFormat to selectedPlateFormat.id
+      //   country_id_lp: Number(this.platesForm.value.country_id_lp),
+      //   city_id_lp: Number(this.platesForm.value.city_id_lp),
+      //   fields: dynamicFieldValues
+      // };
+// case 3: // License Plate
+  // const dynamicFieldValues = this.dynamicFields.map(field => {
+  //   // Convert value to string explicitly
+  //   let fieldValue = this.platesForm.value[field.controlName];
+    
+  //   // Handle different value types
+  //   if (fieldValue === null || fieldValue === undefined) {
+  //     fieldValue = ''; // Default empty string
+  //   } else if (typeof fieldValue === 'number') {
+  //     fieldValue = fieldValue.toString();
+  //   } else if (typeof fieldValue !== 'string') {
+  //     fieldValue = String(fieldValue);
+  //   }
+
+  //   return {
+  //     field_id: field.id,
+  //     value: fieldValue // Now guaranteed to be a string
+  //   };
+  // });
+
+  // return {
+  //   category_id: 3,
+  //   step: 1,
+  //   type_id: this.platesForm.value.type_id,
+  //   plate_format_id: this.selectedPlateFormat?.id,
+  //   country_id_lp: Number(this.platesForm.value.country_id_lp),
+  //   city_id_lp: Number(this.platesForm.value.city_id_lp),
+  //   fields: dynamicFieldValues
+  // };

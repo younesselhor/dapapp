@@ -130,6 +130,11 @@ checkPromo(body: { code: string, total_price: number }): Observable<any> {
 getSingleDraft(id: number): Observable<{ data: any }> {
   return this.http.get<{ data: any }>(this.baseUrl +`listings/draft/${id}`);
 }
+
+getCountry(): Observable<any> {
+  return this.http.get<any>(`${this.baseUrl}get-country`);
+}
+
 // getSingleDraft(id: number):Observable<any[]> {
 //   return this.http.get<any[]>(this.baseUrl +`listings/draft/${id}`);
 // }

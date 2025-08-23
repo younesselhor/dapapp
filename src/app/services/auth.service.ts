@@ -291,4 +291,19 @@ resendOTP(payload: { login: string, method: string }): Observable<any> {
   requestOTP(login: string): Observable<any> {
     return this.http.post(this.baseUrl + 'request-otp', { login });
   }
+
+
+  // Add these to your AuthService
+forgotPassword(data: { login: string; method: string }) {
+  return this.http.post(this.baseUrl + 'forgot-password', data);
+}
+
+resetPassword(data: { 
+  login: string; 
+  code: string; 
+  password: string; 
+  password_confirmation: string 
+}) {
+  return this.http.post(this.baseUrl + 'reset-password', data);
+}
 }

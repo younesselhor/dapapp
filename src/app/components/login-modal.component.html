@@ -62,7 +62,10 @@
         <strong class="font-medium">Incorrect email or password.<br/></strong> Please try again.<br />
         <span class="block mt-1">That doesn't look right. Doublecheck your email and password, or
           reset your password if you've forgotten it.</span>
-        <a href="#" class="text-red-500 font-semibold block mt-2">Forgot Password?</a>
+        <!-- <a href="#" class="text-red-500 font-semibold block mt-2">Forgot Password?</a> -->
+         <a href="javascript:void(0)" class="text-red-500 font-semibold block mt-2" (click)="openForgotPassword()">
+  Forgot Password?
+</a>
       </div>
       }
 
@@ -317,3 +320,179 @@
   </div>
   }
 </div>
+<!-- Forgot Password Modal -->
+@if(showForgotPasswordModal) {
+<div class="fixed inset-0 z-50 bg-gray bg-opacity-50 backdrop-blur-sm flex items-center justify-center">
+  <div class="bg-white rounded-xl shadow-lg w-full max-w-sm p-6">
+    <div class="text-center mb-6">
+      <h2 class="text-lg font-semibold text-gray-800">🔒 Forgot Password</h2>
+      <p class="text-sm text-gray-600 mt-2">Enter your email or phone number to reset your password</p>
+    </div>
+
+    <form [formGroup]="forgotPasswordForm" (ngSubmit)="requestPasswordReset()">
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700">Email or Phone Number</label>
+        <input
+          type="text"
+          class="w-full mt-1 px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+          placeholder="Email or phone number"
+          formControlName="login"
+          required
+        />
+        @if(forgotPasswordForm.get('login')?.invalid && forgotPasswordForm.get('login')?.touched) {
+        <p class="text-sm text-red-600 mt-1">
+          Please enter a valid email or phone number
+        </p>
+        }
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700">Verification Method</label>
+        <select
+          class="w-full mt-1 px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+          formControlName="method"
+        >
+          <option value="whatsapp">WhatsApp</option>
+          <option value="sms">SMS</option>
+          <option value="email">Email</option>
+        </select>
+      </div>
+
+      @if(message) {
+      <div class="mb-4 p-3 rounded-lg text-sm" 
+           [class.bg-green-100]="!loginError"
+           [class.bg-red-100]="loginError"
+           [class.text-green-800]="!loginError"
+           [class.text-red-800]="loginError">
+        {{ message }}
+      </div>
+      }
+
+      <div class="flex space-x-3">
+        <button
+          type="button"
+          (click)="closeForgotPasswordModal()"
+          class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-lg border border-gray-300"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          [disabled]="forgotPasswordForm.invalid"
+          class="flex-1 bg-red-500 hover:bg-red-600 disabled:bg-gray-300 text-white font-semibold py-2 px-4 rounded-lg"
+        >
+          Continue
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+}
+
+<!-- Reset Password Modal -->
+@if(showResetPasswordModal) {
+<div class="fixed inset-0 z-50 bg-gray bg-opacity-50 backdrop-blur-sm flex items-center justify-center">
+  <div class="bg-white rounded-xl shadow-lg w-full max-w-sm p-6">
+    <div class="text-center mb-6">
+      <h2 class="text-lg font-semibold text-gray-800">🔑 Reset Password</h2>
+      <p class="text-sm text-gray-600 mt-2">Enter the OTP code sent to your WhatsApp and your new password</p>
+    </div>
+
+    <form [formGroup]="resetPasswordForm" (ngSubmit)="resetPassword()">
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700">OTP Code</label>
+        <input
+          type="text"
+          class="w-full mt-1 px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+          placeholder="Enter OTP code"
+          formControlName="code"
+          required
+        />
+        @if(resetPasswordForm.get('code')?.invalid && resetPasswordForm.get('code')?.touched) {
+        <p class="text-sm text-red-600 mt-1">
+          Please enter a valid OTP code
+        </p>
+        }
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700">New Password</label>
+        <input
+          type="password"
+          class="w-full mt-1 px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+          placeholder="Enter new password"
+          formControlName="password"
+          required
+        />
+        @if(resetPasswordForm.get('password')?.invalid && resetPasswordForm.get('password')?.touched) {
+        <p class="text-sm text-red-600 mt-1">
+          Password must be at least 6 characters
+        </p>
+        }
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700">Confirm Password</label>
+        <input
+          type="password"
+          class="w-full mt-1 px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+          placeholder="Confirm new password"
+          formControlName="password_confirmation"
+          required
+        />
+        @if(resetPasswordForm.hasError('mismatch')) {
+        <p class="text-sm text-red-600 mt-1">
+          Passwords do not match
+        </p>
+        }
+      </div>
+
+      @if(message) {
+      <div class="mb-4 p-3 rounded-lg text-sm" 
+           [class.bg-green-100]="!loginError"
+           [class.bg-red-100]="loginError"
+           [class.text-green-800]="!loginError"
+           [class.text-red-800]="loginError">
+        {{ message }}
+      </div>
+      }
+
+      @if(!otpResendEnabled && !otpExpired) {
+      <div class="mb-4 text-center">
+        <p class="text-sm text-gray-600">Didn't receive code? Resend in {{ resendCountdown }}s</p>
+      </div>
+      }
+
+      @if(otpExpired) {
+      <div class="mb-4 text-center">
+        <button 
+          type="button" 
+          [disabled]="!otpResendEnabled || isResendingOTP"
+          class="text-sm text-blue-600 hover:text-blue-800 disabled:text-gray-400" 
+          (click)="requestPasswordReset()"
+        >
+          {{ isResendingOTP ? 'Sending...' : 'Resend OTP' }}
+        </button>
+      </div>
+      }
+
+      <div class="flex space-x-3">
+        <button
+          type="button"
+          (click)="closeResetPasswordModal()"
+          class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-lg border border-gray-300"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          [disabled]="resetPasswordForm.invalid"
+          class="flex-1 bg-red-500 hover:bg-red-600 disabled:bg-gray-300 text-white font-semibold py-2 px-4 rounded-lg"
+        >
+          Reset Password
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+}

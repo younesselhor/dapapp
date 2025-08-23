@@ -109,6 +109,7 @@ export class SubNavComponent implements OnInit, OnChanges {
 
 
   ngOnInit() {
+    this.getCountry();
     this.loadCountries();
 
     this.userSub = this.authService.currentUser$.subscribe((user) => {
@@ -136,6 +137,29 @@ export class SubNavComponent implements OnInit, OnChanges {
     });
   }
 
+  getCountry() {
+  this.listingService.getCountry().subscribe((res) => {
+    // Convert API response { country: "Morocco", continent: "...", ip: "..." }
+    this.countries = [{
+      id: 1,                     // you can generate or omit if not used
+      name: res.country,
+      code: res.continent || ''  // or use some mapping if you want real ISO code
+    }];
+
+    // auto-select the detected country
+    this.selectedCountry = res.country;
+    // this.locationService.setSelectedCountry(this.countries[0]);
+
+    console.log('Countries:', this.countries);
+  });
+}
+
+  // getCountry(){
+  //   this.listingService.getCountry().subscribe((res) => {
+  //     this.countries = res.country;
+  //     console.log(' : ',  this.countries);
+  //   });
+  // }
 onCountryChange(event: Event) {
   const selectedName = (event.target as HTMLSelectElement).value;
   const selected = this.countries.find(c => c.name === selectedName);

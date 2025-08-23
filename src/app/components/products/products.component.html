@@ -4,7 +4,7 @@
     <div class="sidebar" style="width: 25%;">
       <div class="flex justify-between items-center mb-4">
         <h2>FILTERS</h2>
-        <button (click)="resetFilters()" class="text-sm text-blue-500 hover:underline">
+        <button (click)="resetFilters()" class="text-sm [color:var(--Primary,#F03D24)] hover:underline">
           Reset All
         </button>
       </div>
@@ -24,7 +24,7 @@
             </svg>
           </div>
           <button (click)="applyFilters()" 
-                  class="mt-2 w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition">
+                  class="mt-2 w-full [background:var(--Primary,#F03D24)] text-white py-2 rounded hover:bg-blue-600 transition">
             Search
           </button>
         </div>
@@ -66,37 +66,33 @@
       </div>
 
       <!-- Price Range Filter -->
-      <div class="filter-section">
-        <div class="filter-header">
-          <span>Price Range</span>
-        </div>
+    <div class="filter-section">
+  <div class="filter-header">
+    <span>Price Range</span>
+  </div>
 
-        <div class="price-range">
-          <div class="slider-container">
-            <input type="range" [min]="absoluteMin" [max]="absoluteMax" [(ngModel)]="priceRange.min"
-              (input)="onMinSliderChange($event)" class="slider">
-            <input type="range" [min]="absoluteMin" [max]="absoluteMax" [(ngModel)]="priceRange.max"
-              (input)="onMaxSliderChange($event)" class="slider">
-          </div>
+  <div class="price-range">
+    <div class="slider-container">
+      <input type="range" [min]="absoluteMin" [max]="absoluteMax" [(ngModel)]="priceRange.min"
+        (input)="onMinSliderChange($event)" class="slider">
+      <input type="range" [min]="absoluteMin" [max]="absoluteMax" [(ngModel)]="priceRange.max"
+        (input)="onMaxSliderChange($event)" class="slider">
+    </div>
 
-          <div class="price-inputs">
-            <div class="price-input">
-              <label>Min</label>
-              <input type="number" [(ngModel)]="priceRange.min" [min]="absoluteMin" [max]="absoluteMax"
-                    (change)="onMinInputChange()">
-            </div>
-            <div class="price-input">
-              <label>MAX</label>
-              <input type="number" [(ngModel)]="priceRange.max" [min]="absoluteMin" [max]="absoluteMax"
-                    (change)="onMaxInputChange()">
-            </div>
-          </div>
-          <button (click)="applyFilters()" 
-                  class="mt-2 w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition">
-            Apply Price Filter
-          </button>
-        </div>
+    <div class="price-inputs">
+      <div class="price-input">
+        <label>Min</label>
+        <input type="number" [(ngModel)]="priceRange.min" [min]="absoluteMin" [max]="absoluteMax"
+          (change)="onMinInputChange()">
       </div>
+      <div class="price-input">
+        <label>MAX</label>
+        <input type="number" [(ngModel)]="priceRange.max" [min]="absoluteMin" [max]="absoluteMax"
+          (change)="onMaxInputChange()">
+      </div>
+    </div>
+  </div>
+</div>
     </div>
 
     <!-- Main Content Area -->
@@ -219,7 +215,7 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #f8fafc;
+  /* background-color: #f8fafc; */
 }
 
 .content-container {
@@ -234,12 +230,12 @@
   width: 280px;
   flex-shrink: 0;
   background: white;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  /* border-radius: 8px; */
+  /* box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); */
   height: fit-content;
-  position: sticky;
-  top: 2rem;
+  /* position: sticky; */
+  top: 1rem;
 }
 
 .main-content {
