@@ -1414,6 +1414,45 @@ private async handleStep2() {
 //   }
 // }
 
+// private async handleStep3() {
+//   const step1Data = this.sharedFormDataService.getStep1Data();
+//   const step2Data = this.sharedFormDataService.getStep2Data();
+
+//   const payload = {
+//     step: 3,
+//     listing_id: this.listingId,
+//     title: step2Data.title,
+//     description: step2Data.description,
+//     price: step2Data.price,
+//     listing_type_id: step2Data.listing_type_id,
+//     city_id: step2Data.city_id,
+//     auction_enabled: step2Data.auction_enabled,
+//     minimum_bid: step2Data.minimum_bid,
+//     allow_submission: step2Data.allow_submission,
+//     contacting_channel: step2Data.contacting_channel,
+//     seller_type: step2Data.seller_type,
+//     ...this.getTypeSpecificPayload(step1Data),
+//     amount: 19.6,
+//     bank_card_id: 5
+//   };
+
+//   try {
+//     const res = await this.listingService.addPost(payload).toPromise();
+    
+//     // Check if we have a redirect URL for payment
+//     if (res && res.redirect_url) {
+//       // Redirect to the payment URL
+//       window.location.href = res.redirect_url;
+//     } else {
+//       // Fallback: navigate to home if no redirect URL
+//       console.warn('No redirect URL provided, navigating to home');
+//       this.router.navigate(['/home']);
+//     }
+//   } catch (err) {
+//     console.error('Error creating ad:', err);
+//     alert('Failed to create ad. Please try again.');
+//   }
+// }
 private async handleStep3() {
   const step1Data = this.sharedFormDataService.getStep1Data();
   const step2Data = this.sharedFormDataService.getStep2Data();
@@ -1441,8 +1480,31 @@ private async handleStep3() {
     
     // Check if we have a redirect URL for payment
     if (res && res.redirect_url) {
-      // Redirect to the payment URL
-      window.location.href = res.redirect_url;
+      // Open payment in a new window
+      const paymentWindow = window.open(res.redirect_url, '_blank', 'width=800,height=600');
+      
+      if (!paymentWindow) {
+        // If popup was blocked, fall back to redirecting current tab
+        alert('Popup blocked. Please allow popups for this site to complete payment.');
+        window.location.href = res.redirect_url;
+      } else {
+        // Optional: Add a message or navigate to a "payment in progress" page
+        this.router.navigate(['/payment-processing'], { 
+          queryParams: { 
+            listingId: res.listing_id,
+            paymentId: res.payment_id 
+          } 
+        });
+        
+        // Optional: Set up a listener to check if the payment window was closed
+        // const checkWindowClosed = setInterval(() => {
+        //   if (paymentWindow.closed) {
+        //     clearInterval(checkWindowClosed);
+        //     // Payment window was closed, check payment status
+        //     this.checkPaymentStatus(res.listing_id, res.payment_id);
+        //   }
+        // }, 1000);
+      }
     } else {
       // Fallback: navigate to home if no redirect URL
       console.warn('No redirect URL provided, navigating to home');
@@ -1453,6 +1515,29 @@ private async handleStep3() {
     alert('Failed to create ad. Please try again.');
   }
 }
+
+// Optional: Method to check payment status after window is closed
+// private checkPaymentStatus(listingId: number, paymentId: number) {
+//   this.listingService.checkPaymentStatus(paymentId).subscribe({
+//     next: (status) => {
+//       if (status === 'success') {
+//         this.router.navigate(['/success'], { 
+//           queryParams: { listingId } 
+//         });
+//       } else {
+//         this.router.navigate(['/payment-failed'], { 
+//           queryParams: { listingId, paymentId } 
+//         });
+//       }
+//     },
+//     error: (err) => {
+//       console.error('Error checking payment status:', err);
+//       this.router.navigate(['/payment-unknown'], { 
+//         queryParams: { listingId, paymentId } 
+//       });
+//     }
+//   });
+// }
 private getTypeSpecificPayload(step1Data: any): any {
   const basePayload = {
     images: this.uploadedImageUrls.filter(url => url !== null)
