@@ -708,33 +708,33 @@
   </div>
 
   <!-- Step 2: Contact details (placeholder for next step) -->
-  <div *ngIf="currentStep === 2" class="mb-8">
+<div *ngIf="currentStep === 2" class="mb-8">
     <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
-      <h2 class="text-xl text-blue-600 font-medium mb-6">2. AD Details</h2>
+      <h2 class="text-xl text-blue-600 font-medium mb-6">2. {{ 'FORM.AD_DETAILS' | translate }}</h2>
 
       <form [formGroup]="adDetailsForm">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           <div class="bg-gray-50 rounded p-4">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Your Name</label>
-            <div class="text-gray-800">Ashraf Mahmoud</div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ 'FORM.YOUR_NAME' | translate }}</label>
+            <div class="text-gray-800">أشرف محمود</div>
           </div>
 
           <div class="bg-gray-50 rounded p-4">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number
-              <span class="text-gray-400">(helps users contact you)</span></label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ 'FORM.PHONE_NUMBER' | translate }}
+              <span class="text-gray-400">({{ 'FORM.HELPS_CONTACT' | translate }})</span></label>
             <div class="text-gray-800">+966 23849021</div>
           </div>
         </div>
 
         <div class="mb-6">
-          <label for="adName" class="block text-sm font-medium text-gray-700 mb-1">Ad Name</label>
-          <input type="text" id="adName" formControlName="title" placeholder="Try to be brief but concise"
+          <label for="adName" class="block text-sm font-medium text-gray-700 mb-1">{{ 'FORM.AD_NAME' | translate }}</label>
+          <input type="text" id="adName" formControlName="title" placeholder="{{ 'FORM.AD_NAME_PLACEHOLDER' | translate }}"
             class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500" />
         </div>
 
         <div class="mb-6">
           <label for="description" class="block text-sm font-medium text-gray-700 mb-1 flex items-center">
-            Description
+            {{ 'FORM.DESCRIPTION' | translate }}
             <span class="ml-1 text-gray-400">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor">
@@ -744,12 +744,12 @@
             </span>
           </label>
           <textarea id="description" formControlName="description" rows="4"
-            placeholder="This is a free text to add any comments or things that might be useful for the buyers"
+            placeholder="{{ 'FORM.DESCRIPTION_PLACEHOLDER' | translate }}"
             class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"></textarea>
         </div>
 
 <div class="mb-6">
-  <label class="block mb-2 font-medium">Preferred contact submission method</label>
+  <label class="block mb-2 font-medium">{{ 'FORM.CONTACT_METHOD' | translate }}</label>
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <!-- Direct Contact Option -->
     <div class="block">
@@ -759,7 +759,7 @@
       }" (click)="adDetailsForm.get('allow_submission')?.setValue('false')"
         class="border-2 rounded-lg p-4 cursor-pointer transition-colors h-full">
         <div class="flex items-center justify-between h-full">
-          <span class="text-gray-700">Direct</span>
+          <span class="text-gray-700">{{ 'FORM.DIRECT' | translate }}</span>
           <div *ngIf="adDetailsForm.get('allow_submission')?.value === 'false'"
             class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
             <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -781,7 +781,7 @@
       }" (click)="adDetailsForm.get('allow_submission')?.setValue('true')"
         class="border-2 rounded-lg p-4 cursor-pointer transition-colors h-full">
         <div class="flex items-center justify-between h-full">
-          <span class="text-gray-700">Soom</span>
+          <span class="text-gray-700">{{ 'FORM.SOOM' | translate }}</span>
           <div *ngIf="adDetailsForm.get('allow_submission')?.value === 'true'"
             class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
             <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -798,7 +798,7 @@
 </div>
 
 <div class="mb-6">
-  <label class="block mb-2 font-medium">Preferred contacting channels</label>
+  <label class="block mb-2 font-medium">{{ 'FORM.CONTACT_CHANNELS' | translate }}</label>
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <!-- Phone Option -->
     <div class="block">
@@ -808,7 +808,7 @@
       }" (click)="adDetailsForm.get('contacting_channel')?.setValue('phone')"
         class="border-2 rounded-lg p-4 cursor-pointer transition-colors h-full">
         <div class="flex items-center justify-between h-full">
-          <span class="text-gray-700">Phone</span>
+          <span class="text-gray-700">{{ 'FORM.PHONE' | translate }}</span>
           <div *ngIf="adDetailsForm.get('contacting_channel')?.value === 'phone'"
             class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
             <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -830,7 +830,7 @@
       }" (click)="adDetailsForm.get('contacting_channel')?.setValue('whatsapp')"
         class="border-2 rounded-lg p-4 cursor-pointer transition-colors h-full">
         <div class="flex items-center justify-between h-full">
-          <span class="text-gray-700">WhatsApp</span>
+          <span class="text-gray-700">{{ 'FORM.WHATSAPP' | translate }}</span>
           <div *ngIf="adDetailsForm.get('contacting_channel')?.value === 'whatsapp'"
             class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
             <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -847,19 +847,18 @@
 
   <!-- Soom Settings Section -->
   <div *ngIf="isSoomSelected()" class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-md">
-    <h4 class="text-sm font-medium text-blue-900 mb-2">Soom Settings</h4>
+    <h4 class="text-sm font-medium text-blue-900 mb-2">{{ 'FORM.SOOM_SETTINGS' | translate }}</h4>
     <p class="text-sm text-blue-700 mb-3">
-      We can tell users here some information about Soom, and how it works and the expiration period of ads or
-      requests.
+      {{ 'FORM.SOOM_DESCRIPTION' | translate }}
     </p>
 
     <div class="mb-3">
       <label for="autoDecline" class="block text-sm font-medium text-blue-900 mb-1">
-        Automatically decline offers under
+        {{ 'FORM.AUTO_DECLINE' | translate }}
       </label>
       <div class="relative rounded-md shadow-sm">
         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <span class="text-gray-500 sm:text-sm">SAR</span>
+          <span class="text-gray-500 sm:text-sm">{{ 'COMMON.CURRENCY' | translate }}</span>
         </div>
         <input type="number" id="autoDecline" formControlName="minimum_bid" placeholder="0"
           class="pl-12 block w-full px-3 py-2 border border-blue-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
@@ -868,66 +867,11 @@
   </div>
 </div>
 
-        <!-- <div class="mb-6">
-          <label class="block text-sm font-medium text-gray-700 mb-3">Preferred contacting channels</label>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="flex items-center justify-between border border-gray-300 rounded-md px-4 py-3"
-                 [class.opacity-50]="isSoomSelected()"
-                 [class.cursor-not-allowed]="isSoomSelected()">
-              <span class="text-gray-700">Phone</span>
-              <input type="radio" formControlName="contacting_channel" value="phone"
-                [disabled]="isSoomSelected()"
-                class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded" />
-            </div>
-
-            <div class="flex items-center justify-between border border-gray-300 rounded-md px-4 py-3"
-                 [class.opacity-50]="isSoomSelected()"
-                 [class.cursor-not-allowed]="isSoomSelected()">
-              <span class="text-gray-700">Whatsapp</span>
-              <input type="radio" formControlName="contacting_channel" value="whatsapp"
-                [disabled]="isSoomSelected()"
-                class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded" />
-            </div>
-          </div>
-
-
-          <div *ngIf="isSoomSelected()" class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-md">
-            <h4 class="text-sm font-medium text-blue-900 mb-2">Soom Settings</h4>
-            <p class="text-sm text-blue-700 mb-3">
-              We can tell users here some information about Soom, and how it works and the expiration period of ads or requests.
-            </p>
-
-            <div class="mb-3">
-              <label for="autoDecline" class="block text-sm font-medium text-blue-900 mb-1">
-                Automatically decline offers under
-              </label>
-              <div class="relative rounded-md shadow-sm">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <span class="text-gray-500 sm:text-sm">SAR</span>
-                </div>
-                <input type="number" id="autoDecline" formControlName="auto_decline_threshold"
-                       placeholder="0"
-                       class="pl-12 block w-full px-3 py-2 border border-blue-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
-              </div>
-            </div>
-          </div>
-        </div> -->
-   
-        <!-- <div class="mb-6">
-          <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Price</label>
-          <div class="relative rounded-md shadow-sm">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <span class="text-gray-500 sm:text-sm">SAR</span>
-            </div>
-            <input type="text" id="price" formControlName="price" placeholder="500"
-              class="pl-12 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500" />
-          </div>
-        </div> -->
         <div class="mb-6" *ngIf="!isSoomSelected()">
-          <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Price</label>
+          <label for="price" class="block text-sm font-medium text-gray-700 mb-1">{{ 'COMMON.PRICE' | translate }}</label>
           <div class="relative rounded-md shadow-sm">
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <span class="text-gray-500 sm:text-sm">SAR</span>
+              <span class="text-gray-500 sm:text-sm">{{ 'COMMON.CURRENCY' | translate }}</span>
             </div>
             <input type="text" id="price" formControlName="price" placeholder="500"
               class="pl-12 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500" />
@@ -935,10 +879,10 @@
         </div>
 
         <div class="mb-6">
-          <label class="block mb-2 font-medium">Country</label>
+          <label class="block mb-2 font-medium">{{ 'FORM.COUNTRY' | translate }}</label>
           <select formControlName="country" 
             class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition">
-            <option value="" disabled selected>Select the country</option>
+            <option value="" disabled selected>{{ 'FORM.SELECT_COUNTRY' | translate }}</option>
             <option *ngFor="let country of countries" [value]="country.id">
               {{ country.name }}
             </option>
@@ -946,13 +890,12 @@
         </div>
 
         <div class="mb-6">
-          <label for="city" class="block text-sm font-medium text-gray-700 mb-1">City</label>
+          <label for="city" class="block text-sm font-medium text-gray-700 mb-1">{{ 'FORM.CITY' | translate }}</label>
           <div class="relative">
             <select id="city" formControlName="city"
               class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition">
-              <option value="" disabled>Select a City</option>
+              <option value="" disabled>{{ 'FORM.SELECT_CITY' | translate }}</option>
               <option *ngFor="let city of allCities" [value]="city.id">
-                <!-- <option *ngFor="let city of filteredCities" [value]="city.id"> -->
                 {{ city.name }}
               </option>
             </select>
@@ -961,55 +904,31 @@
           </div>
         </div>
 
-
-
         <div class="mb-6">
-          <label class="block text-sm font-medium text-gray-700 mb-3">Are you?</label>
+          <label class="block text-sm font-medium text-gray-700 mb-3">{{ 'FORM.SELLER_TYPE' | translate }}</label>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="flex items-center justify-between border border-gray-300 rounded-md px-4 py-3">
-              <span class="text-gray-700">Middleman</span>
+              <span class="text-gray-700">{{ 'FORM.MIDDLEMAN' | translate }}</span>
               <input type="radio" formControlName="seller_type" value="middleman"
                 class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300" />
             </div>
 
             <div class="flex items-center justify-between border border-gray-300 rounded-md px-4 py-3">
-              <span class="text-gray-700">Selling your own vehicle</span>
+              <span class="text-gray-700">{{ 'FORM.OWNER' | translate }}</span>
               <input type="radio" formControlName="seller_type" value="owner"
                 class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300" />
             </div>
           </div>
         </div>
-        <!-- <div class="mb-6">
-  <label class="block text-sm font-medium text-gray-700 mb-2">Are you?</label>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <div *ngFor="let option of sellerTypeOptions" class="block">
-      <div [ngClass]="{'border-red-500 bg-red-50': vehicleForm.get('seller_type')?.value === option.value, 'border-gray-200': vehicleForm.get('seller_type')?.value !== option.value}"
-           (click)="vehicleForm.get('seller_type')?.setValue(option.value)"
-           class="border-2 rounded-lg p-3 cursor-pointer transition-colors">
-        <div class="flex items-center justify-between">
-          <span class="text-gray-700">{{ option.label }}</span>
-          <input type="radio" [checked]="vehicleForm.get('seller_type')?.value === option.value" class="hidden" formControlName="seller_type" [value]="option.value"/>
-          <div *ngIf="vehicleForm.get('seller_type')?.value === option.value"
-            class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
-            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-            </svg>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div> -->
 
         <div class="flex justify-between mt-8">
           <button (click)="previousStep()" *ngIf="currentStep > 1" type="button"
             class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-            Back
+            {{ 'FORM.BACK' | translate }}
           </button>
           <button (click)="goToNextStep()" type="button"
             class="bg-red-500 border border-transparent rounded-md shadow-sm py-2 px-10 inline-flex justify-center text-sm font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-            Next
+            {{ 'FORM.NEXT' | translate }}
           </button>
         </div>
       </form>
