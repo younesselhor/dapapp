@@ -8,7 +8,7 @@ import { MotorcycleListing } from '../postingAdd-interface';
 })
 export class ListingService {
   private baseUrl = 'https://be.dabapp.co/api/';
-  private filterbaseUrl = 'motorcycle/filter';
+  private filterbaseUrl = '/api/motorcycle/brands';
 
   constructor(private http: HttpClient) { }
 
@@ -118,6 +118,18 @@ checkPromo(body: { code: string, total_price: number }): Observable<any> {
     return this.http.get<any>(this.baseUrl +this.filterbaseUrl, { params: httpParams });
   }
 
+  getMotorcycleBrands(): Observable<any> {
+  return this.http.get<any>(this.baseUrl + 'motorcycle/brands');
+}
+
+getMotorcycleModels(brandId: number): Observable<any> {
+  return this.http.get<any>(`${this.baseUrl}motorcycle/models/${brandId}`);
+}
+
+getMotorcycleYears(modelId: number): Observable<any> {
+  return this.http.get<any>(`${this.baseUrl}motorcycle/years/${modelId}`);
+}
+
   getCityList(): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}locations`);
   }
@@ -133,6 +145,10 @@ getSingleDraft(id: number): Observable<{ data: any }> {
 
 getCountry(): Observable<any> {
   return this.http.get<any>(`${this.baseUrl}get-country`);
+}
+
+checkPaymentStatus(paymentId: number): Observable<any> {
+  return this.http.get(`${this.baseUrl}payment/status/${paymentId}`);
 }
 
 // getSingleDraft(id: number):Observable<any[]> {

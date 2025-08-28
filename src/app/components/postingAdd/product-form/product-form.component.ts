@@ -192,8 +192,7 @@ discountedPrice: number | null = null;
 
   draftLicensePlateFieldValues: any[] = [];
 
-
-   platesForm: FormGroup;
+  platesForm: FormGroup;
   countries: any[] = [];
   allCities: any[] = [];
   filteredCities: any[] = [];
@@ -701,10 +700,6 @@ getValidatorsForField(field: any): ValidatorFn[] {
     this.selectedPlateFormat = null;
   }
 
-
-
-
-
 onCitySelected(cityId: number): void {
   this.clearDynamicFields();
   
@@ -951,50 +946,85 @@ isSoomSelected(): boolean {
       : { noContactMethod: true };
   }
 
-  loadBrands() {
-    this.listingService.getMotorcycleFilters().subscribe((res) => {
-      this.brands = res.data.brands;
+  // Load brands on init
+loadBrands() {
+  this.listingService.getMotorcycleBrands().subscribe((res) => {
+    this.brands = res.data;   // assuming backend returns { data: [...] }
+  });
+}
+
+onBrandChange(brandId: number) {
+  this.models = [];
+  this.years = [];
+  this.vehicleForm.patchValue({ model_id: '', year_id: '' });
+  this.bikeForm.patchValue({ model_id: '', year_id: '' });
+
+  if (brandId) {
+    this.listingService.getMotorcycleModels(brandId).subscribe((res) => {
+      this.models = res.data;   // assuming { data: [...] }
     });
   }
+}
 
-  onBrandChange(brandId: string) {
-    this.models = [];
-    this.years = [];
-    this.vehicleForm.patchValue({ model_id: '', year_id: '' });
-    this.bikeForm.patchValue({ model_id: '', year_id: '' });
-    if (brandId) {
-      this.listingService
-        .getMotorcycleFilters({ brand_id: brandId })
-        .subscribe((res) => {
-          this.models = res.data.models;
-        });
-    }
+onModelChange(modelId: number) {
+  this.years = [];
+  this.vehicleForm.patchValue({ year_id: '' });
+  this.bikeForm.patchValue({ year_id: '' });
+
+  if (modelId) {
+    this.listingService.getMotorcycleYears(modelId).subscribe((res) => {
+      this.years = res.data;   // assuming { data: [...] }
+    });
   }
+}
+
+
+  // loadBrands() {
+  //   this.listingService.getMotorcycleFilters().subscribe((res) => {
+  //     this.brands = res.data.brands;
+  //   });
+  // }
+
+  // onBrandChange(brandId: string) {
+  //   this.models = [];
+  //   this.years = [];
+  //   this.vehicleForm.patchValue({ model_id: '', year_id: '' });
+  //   this.bikeForm.patchValue({ model_id: '', year_id: '' });
+  //   if (brandId) {
+  //     this.listingService
+  //       .getMotorcycleFilters({ brand_id: brandId })
+  //       .subscribe((res) => {
+  //         this.models = res.data.models;
+  //       });
+  //   }
+  // }
+
+  //   onModelChange(modelId: string) {
+  //   this.years = [];
+  //   this.vehicleForm.patchValue({ year_id: '' });
+  //   this.bikeForm.patchValue({ year_id: '' });
+
+  //   const brandId = this.vehicleForm.value.brand_id || this.bikeForm.value.brand_id;
+  //   if (modelId && brandId) {
+  //     this.listingService
+  //       .getMotorcycleFilters({
+  //         brand_id: brandId,
+  //         model_id: modelId,
+  //       })
+  //       .subscribe((res) => {
+  //         this.years = res.data.years.map((y: any) => ({
+  //           id: y.id,
+  //           year: y.year,
+  //         }));
+  //       });
+  //   }
+  // }
 
   get contactMethodsFormGroup(): FormGroup {
     return this.adDetailsForm.get('contactMethods') as FormGroup;
   }
 
-  onModelChange(modelId: string) {
-    this.years = [];
-    this.vehicleForm.patchValue({ year_id: '' });
-    this.bikeForm.patchValue({ year_id: '' });
 
-    const brandId = this.vehicleForm.value.brand_id || this.bikeForm.value.brand_id;
-    if (modelId && brandId) {
-      this.listingService
-        .getMotorcycleFilters({
-          brand_id: brandId,
-          model_id: modelId,
-        })
-        .subscribe((res) => {
-          this.years = res.data.years.map((y: any) => ({
-            id: y.id,
-            year: y.year,
-          }));
-        });
-    }
-  }
 
 handleFileInput(event: Event): void {
   const input = event.target as HTMLInputElement;
@@ -1382,37 +1412,6 @@ private async handleStep2() {
   }
 }
 
-// private async handleStep3() {
-//   const step1Data = this.sharedFormDataService.getStep1Data();
-//   const step2Data = this.sharedFormDataService.getStep2Data();
-
-//   const payload = {
-//     step: 3,
-//     listing_id: this.listingId,
-//     title: step2Data.title,
-//     description: step2Data.description,
-//     price: step2Data.price,
-//     listing_type_id: step2Data.listing_type_id,
-//     city_id: step2Data.city_id,
-//     auction_enabled: step2Data.auction_enabled,
-//     minimum_bid: step2Data.minimum_bid,
-//     allow_submission: step2Data.allow_submission,
-//     contacting_channel: step2Data.contacting_channel,
-//     seller_type: step2Data.seller_type,
-//     ...this.getTypeSpecificPayload(step1Data),
-//     amount: 19.6,
-//   bank_card_id: 5
-//   };
-
-//   try {
-//     const res = await this.listingService.addPost(payload).toPromise();
-//     this.currentStep++;
-//     this.router.navigate(['/home']);
-//   } catch (err) {
-//     console.error('Error creating ad:', err);
-//     alert('Failed to create ad. Please try again.');
-//   }
-// }
 
 // private async handleStep3() {
 //   const step1Data = this.sharedFormDataService.getStep1Data();
@@ -1433,7 +1432,7 @@ private async handleStep2() {
 //     seller_type: step2Data.seller_type,
 //     ...this.getTypeSpecificPayload(step1Data),
 //     amount: 19.6,
-//     bank_card_id: 5
+//     bank_card_id: 6
 //   };
 
 //   try {
@@ -1441,8 +1440,31 @@ private async handleStep2() {
     
 //     // Check if we have a redirect URL for payment
 //     if (res && res.redirect_url) {
-//       // Redirect to the payment URL
-//       window.location.href = res.redirect_url;
+//       // Open payment in a new window
+//       const paymentWindow = window.open(res.redirect_url, '_blank', 'width=800,height=600');
+      
+//       if (!paymentWindow) {
+//         // If popup was blocked, fall back to redirecting current tab
+//         alert('Popup blocked. Please allow popups for this site to complete payment.');
+//         window.location.href = res.redirect_url;
+//       } else {
+//         // Optional: Add a message or navigate to a "payment in progress" page
+//         this.router.navigate(['/payment-processing'], { 
+//           queryParams: { 
+//             listingId: res.listing_id,
+//             paymentId: res.payment_id 
+//           } 
+//         });
+        
+//         // Optional: Set up a listener to check if the payment window was closed
+//         // const checkWindowClosed = setInterval(() => {
+//         //   if (paymentWindow.closed) {
+//         //     clearInterval(checkWindowClosed);
+//         //     // Payment window was closed, check payment status
+//         //     this.checkPaymentStatus(res.listing_id, res.payment_id);
+//         //   }
+//         // }, 1000);
+//       }
 //     } else {
 //       // Fallback: navigate to home if no redirect URL
 //       console.warn('No redirect URL provided, navigating to home');
@@ -1453,6 +1475,7 @@ private async handleStep2() {
 //     alert('Failed to create ad. Please try again.');
 //   }
 // }
+
 private async handleStep3() {
   const step1Data = this.sharedFormDataService.getStep1Data();
   const step2Data = this.sharedFormDataService.getStep2Data();
@@ -1472,7 +1495,7 @@ private async handleStep3() {
     seller_type: step2Data.seller_type,
     ...this.getTypeSpecificPayload(step1Data),
     amount: 19.6,
-    bank_card_id: 5
+    bank_card_id: 6
   };
 
   try {
@@ -1480,6 +1503,13 @@ private async handleStep3() {
     
     // Check if we have a redirect URL for payment
     if (res && res.redirect_url) {
+      // Store payment information for later verification
+      localStorage.setItem('pendingPayment', JSON.stringify({
+        payment_id: res.payment_id,
+        listing_id: res.listing_id,
+        timestamp: new Date().getTime()
+      }));
+      
       // Open payment in a new window
       const paymentWindow = window.open(res.redirect_url, '_blank', 'width=800,height=600');
       
@@ -1488,7 +1518,7 @@ private async handleStep3() {
         alert('Popup blocked. Please allow popups for this site to complete payment.');
         window.location.href = res.redirect_url;
       } else {
-        // Optional: Add a message or navigate to a "payment in progress" page
+        // Navigate to payment processing page
         this.router.navigate(['/payment-processing'], { 
           queryParams: { 
             listingId: res.listing_id,
@@ -1496,14 +1526,8 @@ private async handleStep3() {
           } 
         });
         
-        // Optional: Set up a listener to check if the payment window was closed
-        // const checkWindowClosed = setInterval(() => {
-        //   if (paymentWindow.closed) {
-        //     clearInterval(checkWindowClosed);
-        //     // Payment window was closed, check payment status
-        //     this.checkPaymentStatus(res.listing_id, res.payment_id);
-        //   }
-        // }, 1000);
+        // Start polling for payment status
+        // this.startPaymentStatusPolling(res.payment_id);
       }
     } else {
       // Fallback: navigate to home if no redirect URL
@@ -1516,6 +1540,33 @@ private async handleStep3() {
   }
 }
 
+// In your ProductFormComponent
+startPaymentStatusPolling(paymentId: number) {
+  const pollingInterval = setInterval(() => {
+    this.listingService.checkPaymentStatus(paymentId).subscribe({
+      next: (response: any) => {
+        if (response.status === 'completed') {
+          clearInterval(pollingInterval);
+          this.router.navigate(['/home']);
+        } else if (response.status === 'failed') {
+          clearInterval(pollingInterval);
+          this.router.navigate(['/payment-failed']);
+        }
+        // Continue polling if status is still pending
+      },
+      error: (err) => {
+        console.error('Error checking payment status:', err);
+        clearInterval(pollingInterval);
+      }
+    });
+  }, 3000); // Check every 3 seconds
+
+  // Timeout after 5 minutes
+  setTimeout(() => {
+    clearInterval(pollingInterval);
+    this.router.navigate(['/payment-unknown']);
+  }, 300000);
+}
 // Optional: Method to check payment status after window is closed
 // private checkPaymentStatus(listingId: number, paymentId: number) {
 //   this.listingService.checkPaymentStatus(paymentId).subscribe({
