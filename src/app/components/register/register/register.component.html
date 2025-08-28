@@ -11,8 +11,8 @@
         id="firstName"
           type="text"
           formControlName="first_name"
-          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="ex. Ahmed"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
+          placeholder="first name"
         >
         @if(registerForm.get('first_name')?.invalid && registerForm.get('first_name')?.touched){
         <div class="text-red-500 text-xs mt-1">
@@ -26,8 +26,8 @@
         id="lastName"
           type="text"
           formControlName="last_name"
-          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="ex. Mohamed"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
+          placeholder="last name"
         >
         @if(registerForm.get('last_name')?.invalid && registerForm.get('last_name')?.touched){
         <div
@@ -70,8 +70,8 @@
         id="email"
         type="email"
         formControlName="email"
-        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        placeholder="ex. Ashraf@gmail.com"
+        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
+        placeholder="email"
       >
 
       @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
@@ -97,7 +97,7 @@
       <input
         type="tel"
         formControlName="phone"
-        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
         placeholder="ex. +966500000000"
       >
       @if(registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched){
@@ -124,8 +124,8 @@
       id="password"
         type="password"
         formControlName="password"
-        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        placeholder="••••••••"
+        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
+        placeholder=""
       >
       @if(registerForm.get('password')?.invalid && registerForm.get('password')?.touched){
       <div class="text-red-500 text-xs mt-1">
@@ -145,8 +145,8 @@
       id="confirmPassword"
         type="password"
         formControlName="password_confirmation"
-        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        placeholder="••••••••"
+        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
+        placeholder=""
       >
       @if(registerForm.hasError('passwordMismatch') && registerForm.get('password_confirmation')?.touched){
       <div class="text-red-500 text-xs mt-1">
