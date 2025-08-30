@@ -270,9 +270,9 @@
       type="button" 
       [disabled]="!otpResendEnabled || isResendingOTP"
       class="text-sm text-blue-600 hover:text-blue-800 disabled:text-gray-400" 
-      (click)="resendOTP('sms')"
+      (click)="resendOTP('whatsapp')"
     >
-      {{ isResendingOTP ? 'Sending SMS...' : 'Resend via SMS' }}
+      {{ isResendingOTP ? 'Sending WhatsApp...' : 'Resend via WhatsApp' }}
     </button>
     }
   </div>

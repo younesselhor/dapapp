@@ -16,6 +16,7 @@ import { SharedFormDataService } from '../../../services/shared-form-data.servic
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FormatFieldNamePipe } from './FormatFieldNamePipe';
 import { ActivatedRoute, Route, Router } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
 
 interface UploadedImage {
   preview: string;  // taswira 9bl ma tuploadi
@@ -58,6 +59,11 @@ interface FieldValue {
 
 interface DynamicField extends FormatField {
   controlName: string;
+}
+
+interface PaymentMethod {
+  type: 'card' | 'tamara' | 'tabby';
+  id?: number; // For card payments, this will be the card ID
 }
 @Component({
   selector: 'app-product-form',
@@ -190,6 +196,8 @@ discountedPrice: number | null = null;
     { id: 'tabby', name: 'Tabby', selected: false, badge: 'tabby' },
   ];
 
+
+  
   draftLicensePlateFieldValues: any[] = [];
 
   platesForm: FormGroup;
@@ -200,7 +208,11 @@ discountedPrice: number | null = null;
   selectedPlateFormat: any = null;
   listingId: number | null = null;
 
+  user: any | null = null;
   isLoadingDraft = false;
+
+  selectedPaymentMethod: PaymentMethod | null = null;
+showAddCardForm = false;
 
   constructor(
     private fb: FormBuilder,
@@ -209,6 +221,7 @@ discountedPrice: number | null = null;
     private translate: TranslateService,
     private router : Router, 
     private route: ActivatedRoute,
+    private userService: AuthService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) 
   {
@@ -280,6 +293,14 @@ discountedPrice: number | null = null;
   }
 
 ngOnInit(): void {
+
+  this.userService.userProfile$.subscribe(profile => {
+  if (profile) {
+    this.user = profile.user; // ✅ profile.user has first_name, last_name, etc.
+    console.log('this.user: ', this.user);
+  }
+});
+  
  const draftId = this.route.snapshot.queryParamMap.get('draftId');
   
   if (draftId) {
@@ -305,6 +326,45 @@ this.platesForm.get('city_id_lp')?.valueChanges.subscribe((cityId) => {
 });
 
 }
+
+private getDefaultBankCardId(): number | null {
+  if (!this.user || !this.user.bank_cards || this.user.bank_cards.length === 0) {
+    console.warn('No bank cards found for user');
+    return null;
+  }
+
+  // Try to find the default card first
+  const defaultCard = this.user.bank_cards.find((card: any) => card.is_default);
+  if (defaultCard) {
+    return defaultCard.id;
+  }
+
+  // If no default card, use the first one
+  return this.user.bank_cards[0].id;
+}
+
+
+selectPaymentMethod(type: 'card' | 'tamara' | 'tabby', cardId?: number) {
+  this.selectedPaymentMethod = { type, id: cardId };
+  
+  // Auto-select default card if choosing card payment without specific card
+  if (type === 'card' && !cardId && this.user?.bank_cards?.length) {
+    const defaultCard = this.user.bank_cards.find((card: any) => card.is_default);
+    if (defaultCard) {
+      this.selectedPaymentMethod.id = defaultCard.id;
+    } else {
+      this.selectedPaymentMethod.id = this.user.bank_cards[0].id;
+    }
+  }
+}
+
+addNewCard() {
+  // Implement navigation to add card page or show form
+  this.router.navigate(['/payment-methods/add']);
+  // Or show an inline form:
+  // this.showAddCardForm = true;
+}
+
 
 loadDraftData(draftId: number) {
   this.listingService.getSingleDraft(draftId).subscribe({
@@ -385,45 +445,14 @@ this.addDynamicFieldsToForm(); // <-- ensures form controls exist
           interface DynamicField extends FormatField {
             controlName: string;
           }
-
-          // this.dynamicFields = fieldValues.map((fv: FieldValue): DynamicField => {
-          //   const field = fv.format_field;
-          //   return {
-          //     ...field,
-          //     controlName: `${field.field_name}_${field.id}`
-          //   };
-          // });
-
-          // ✅ Add dynamic controls to form
           this.addDynamicFieldsToForm();
 
-          // ✅ Patch values
-          // this.patchDynamicFieldValues(fieldValues);
+      
           Promise.resolve().then(() => {
   this.patchDynamicFieldValues(fieldValues);
 });
         }
       }
-
-      // ✅ 3. Handle MOTORCYCLE case
-      // if (draft.motorcycle) {
-      //   this.vehicleForm.patchValue({
-      //     brand_id: draft.motorcycle.brand_id,
-      //     model_id: draft.motorcycle.model_id,
-      //     year_id: draft.motorcycle.year_id,
-      //     engine: parseInt(draft.motorcycle.engine),
-      //     mileage: draft.motorcycle.mileage,
-      //     body_condition: draft.motorcycle.body_condition,
-      //     modified: draft.motorcycle.modified ? 'Yes' : 'No',
-      //     insurance: draft.motorcycle.insurance ? 'Yes' : 'No',
-      //     general_condition: draft.motorcycle.general_condition,
-      //     vehicle_care: draft.motorcycle.vehicle_care,
-      //     transmission: draft.motorcycle.transmission
-      //   });
-
-      //   this.uploadedImageUrls = draft.images.map((img: any) => img.image_url);
-      //   console.log('📸 Uploaded image URLs:', this.uploadedImageUrls);
-      // }
 if (draft.motorcycle) {
   const { brand_id, model_id, year_id } = draft.motorcycle;
 
@@ -536,13 +565,7 @@ this.uploadedImageUrls = draft.images.map((img: any) => img.image_url);
         allow_submission: draft.allow_submission ? 'true' : 'false',
         minimum_bid: draft.minimum_bid
       });
-//  this.uploadedImages = draft.images.image_url || [];
-// this.imageList = draft.images || [];
 
-// this.uploadedImages = (draft.images || []).map((img: any) => ({
-//   file: null,
-//   preview: img.image_url
-// }));
 this.uploadedImages = (draft.images || []).map((img: any) => ({
   preview: img.image_url,
   serverUrl: img.image_url,
@@ -713,14 +736,6 @@ onCitySelected(cityId: number): void {
       if (res.formats?.length > 0) {
         this.selectedPlateFormat = res.formats[0];
         this.dynamicFields = this.selectedPlateFormat.fields;
-
-        //   console.log('Dynamic fields after API response:', this.dynamicFields.map(f => ({
-        //   id: f.id, 
-        //   name: f.field_name, 
-        //   controlName: f.controlName
-        // })));
-        
-        // Store the format ID in the form
         this.platesForm.patchValue({
           plate_format_id: this.selectedPlateFormat.id,  // This is the ID you need
           type_id: this.selectedPlateFormat.type_id || 1 // Fallback to 1 if undefined
@@ -742,23 +757,7 @@ onCitySelected(cityId: number): void {
   });
 }
 
-// addDynamicFieldsToForm(): void {
-//   this.dynamicFields.forEach(field => {
-//     const controlName = field.controlName;
-//     const validators = [];
 
-//     if (field.is_required) validators.push(Validators.required);
-//     if (field.min_length) validators.push(Validators.minLength(field.min_length));
-//     if (field.max_length) validators.push(Validators.maxLength(field.max_length));
-//     if (field.validation_pattern) validators.push(Validators.pattern(field.validation_pattern));
-
-//     if (!this.platesForm.contains(controlName)) {
-//       this.platesForm.addControl(controlName, new FormControl('', validators));
-//     }
-//   });
-
-//   this.platesForm.updateValueAndValidity();
-// }
 addDynamicFieldsToForm(): void {
   this.dynamicFields.forEach(field => {
     // Create a unique control name using field ID
@@ -978,47 +977,6 @@ onModelChange(modelId: number) {
   }
 }
 
-
-  // loadBrands() {
-  //   this.listingService.getMotorcycleFilters().subscribe((res) => {
-  //     this.brands = res.data.brands;
-  //   });
-  // }
-
-  // onBrandChange(brandId: string) {
-  //   this.models = [];
-  //   this.years = [];
-  //   this.vehicleForm.patchValue({ model_id: '', year_id: '' });
-  //   this.bikeForm.patchValue({ model_id: '', year_id: '' });
-  //   if (brandId) {
-  //     this.listingService
-  //       .getMotorcycleFilters({ brand_id: brandId })
-  //       .subscribe((res) => {
-  //         this.models = res.data.models;
-  //       });
-  //   }
-  // }
-
-  //   onModelChange(modelId: string) {
-  //   this.years = [];
-  //   this.vehicleForm.patchValue({ year_id: '' });
-  //   this.bikeForm.patchValue({ year_id: '' });
-
-  //   const brandId = this.vehicleForm.value.brand_id || this.bikeForm.value.brand_id;
-  //   if (modelId && brandId) {
-  //     this.listingService
-  //       .getMotorcycleFilters({
-  //         brand_id: brandId,
-  //         model_id: modelId,
-  //       })
-  //       .subscribe((res) => {
-  //         this.years = res.data.years.map((y: any) => ({
-  //           id: y.id,
-  //           year: y.year,
-  //         }));
-  //       });
-  //   }
-  // }
 
   get contactMethodsFormGroup(): FormGroup {
     return this.adDetailsForm.get('contactMethods') as FormGroup;
@@ -1412,73 +1370,15 @@ private async handleStep2() {
   }
 }
 
-
-// private async handleStep3() {
-//   const step1Data = this.sharedFormDataService.getStep1Data();
-//   const step2Data = this.sharedFormDataService.getStep2Data();
-
-//   const payload = {
-//     step: 3,
-//     listing_id: this.listingId,
-//     title: step2Data.title,
-//     description: step2Data.description,
-//     price: step2Data.price,
-//     listing_type_id: step2Data.listing_type_id,
-//     city_id: step2Data.city_id,
-//     auction_enabled: step2Data.auction_enabled,
-//     minimum_bid: step2Data.minimum_bid,
-//     allow_submission: step2Data.allow_submission,
-//     contacting_channel: step2Data.contacting_channel,
-//     seller_type: step2Data.seller_type,
-//     ...this.getTypeSpecificPayload(step1Data),
-//     amount: 19.6,
-//     bank_card_id: 6
-//   };
-
-//   try {
-//     const res = await this.listingService.addPost(payload).toPromise();
-    
-//     // Check if we have a redirect URL for payment
-//     if (res && res.redirect_url) {
-//       // Open payment in a new window
-//       const paymentWindow = window.open(res.redirect_url, '_blank', 'width=800,height=600');
-      
-//       if (!paymentWindow) {
-//         // If popup was blocked, fall back to redirecting current tab
-//         alert('Popup blocked. Please allow popups for this site to complete payment.');
-//         window.location.href = res.redirect_url;
-//       } else {
-//         // Optional: Add a message or navigate to a "payment in progress" page
-//         this.router.navigate(['/payment-processing'], { 
-//           queryParams: { 
-//             listingId: res.listing_id,
-//             paymentId: res.payment_id 
-//           } 
-//         });
-        
-//         // Optional: Set up a listener to check if the payment window was closed
-//         // const checkWindowClosed = setInterval(() => {
-//         //   if (paymentWindow.closed) {
-//         //     clearInterval(checkWindowClosed);
-//         //     // Payment window was closed, check payment status
-//         //     this.checkPaymentStatus(res.listing_id, res.payment_id);
-//         //   }
-//         // }, 1000);
-//       }
-//     } else {
-//       // Fallback: navigate to home if no redirect URL
-//       console.warn('No redirect URL provided, navigating to home');
-//       this.router.navigate(['/home']);
-//     }
-//   } catch (err) {
-//     console.error('Error creating ad:', err);
-//     alert('Failed to create ad. Please try again.');
-//   }
-// }
-
 private async handleStep3() {
   const step1Data = this.sharedFormDataService.getStep1Data();
   const step2Data = this.sharedFormDataService.getStep2Data();
+  const bankCardId = this.getDefaultBankCardId();
+  
+  if (!bankCardId) {
+    alert('Please add a payment method before proceeding');
+    return;
+  }
 
   const payload = {
     step: 3,
@@ -1495,7 +1395,8 @@ private async handleStep3() {
     seller_type: step2Data.seller_type,
     ...this.getTypeSpecificPayload(step1Data),
     amount: 19.6,
-    bank_card_id: 6
+     bank_card_id: bankCardId
+    // bank_card_id: 6
   };
 
   try {
@@ -1567,28 +1468,7 @@ startPaymentStatusPolling(paymentId: number) {
     this.router.navigate(['/payment-unknown']);
   }, 300000);
 }
-// Optional: Method to check payment status after window is closed
-// private checkPaymentStatus(listingId: number, paymentId: number) {
-//   this.listingService.checkPaymentStatus(paymentId).subscribe({
-//     next: (status) => {
-//       if (status === 'success') {
-//         this.router.navigate(['/success'], { 
-//           queryParams: { listingId } 
-//         });
-//       } else {
-//         this.router.navigate(['/payment-failed'], { 
-//           queryParams: { listingId, paymentId } 
-//         });
-//       }
-//     },
-//     error: (err) => {
-//       console.error('Error checking payment status:', err);
-//       this.router.navigate(['/payment-unknown'], { 
-//         queryParams: { listingId, paymentId } 
-//       });
-//     }
-//   });
-// }
+
 private getTypeSpecificPayload(step1Data: any): any {
   const basePayload = {
     images: this.uploadedImageUrls.filter(url => url !== null)
@@ -1760,11 +1640,11 @@ private logFormErrors(form: FormGroup) {
     this.adFees.discounted = this.adFees.original;
   }
 
-  selectPaymentMethod(id: string) {
-    this.paymentMethods.forEach((method) => {
-      method.selected = method.id === id;
-    });
-  }
+  // selectPaymentMethod(id: string) {
+  //   this.paymentMethods.forEach((method) => {
+  //     method.selected = method.id === id;
+  //   });
+  // }
 
   applyPromoCode() {
     if (!this.promoCode || !this.pricingInfo) return;

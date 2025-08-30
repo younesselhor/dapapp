@@ -948,7 +948,7 @@ isPhone(value: string): boolean {
 
   startOTPCountdown() {
     this.otpResendEnabled = false;
-  this.resendCountdown = 10; // 5 minutes in seconds
+  this.resendCountdown = 300; // 5 minutes in seconds
 
   this.countdownInterval = setInterval(() => {
     this.resendCountdown--;
@@ -988,13 +988,13 @@ isPhone(value: string): boolean {
 //   });
 // }
 
-resendOTP(method: 'email' | 'sms') {
+resendOTP(method: 'email' | 'whatsapp') {
   this.isResendingOTP = true;
   const loginValue = this.loginForm.get('login')?.value;
 
   const payload = {
     login: loginValue,
-    method: method
+    // method: method
   };
 
   this.auth.resendOTP(payload).subscribe({

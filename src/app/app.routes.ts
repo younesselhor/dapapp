@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   { 
@@ -36,7 +37,8 @@ export const routes: Routes = [
   },
   {
     path: 'add-product',
-    loadComponent: () => import('./components/postingAdd/product-form/product-form.component').then(m => m.ProductFormComponent)
+    loadComponent: () => import('./components/postingAdd/product-form/product-form.component').then(m => m.ProductFormComponent),
+    canActivate: [AuthGuard] 
   },
   { 
     path: 'listing/:id', 

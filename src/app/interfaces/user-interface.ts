@@ -57,8 +57,17 @@ export interface RegistrationRequest {
 }
 
 export interface RegistrationResponse {
+  message: string;
   user: RegisteredUser;
   token: string;
+  requiresOTP?: boolean;
+  user_id?: number;
+  country?: string;
+  country_code?: string;
+  country_id?: number;
+  formatted_phone?: string;
+  otp_sent_via?: string; // 'email' | 'whatsapp'
+  expires_at?: string;
 }
 
 export interface RegisteredUser {
@@ -73,6 +82,7 @@ export interface RegisteredUser {
 }
 
 export interface MeResponse {
+  
   user: AuthUserDetails;
 }
 

@@ -109,21 +109,21 @@ export class AuthService {
     return this.http.post<{ message: string }>(this.baseUrl + 'logout', {});
   }
 
-  verifyCode(code: string): Observable<any> {
-    if (code === '3066') {
-      return of({ success: true }).pipe(
-        delay(800),
-        tap(() => {
-          this.currentUserSubject.next({
-            phoneOrEmail: this.verificationPhoneNumber,
-            verified: true
-          });
-        })
-      );
-    } else {
-      return throwError(() => new Error('Invalid verification code.'));
-    }
-  }
+  // verifyCode(code: string): Observable<any> {
+  //   if (code === '3066') {
+  //     return of({ success: true }).pipe(
+  //       delay(800),
+  //       tap(() => {
+  //         this.currentUserSubject.next({
+  //           phoneOrEmail: this.verificationPhoneNumber,
+  //           verified: true
+  //         });
+  //       })
+  //     );
+  //   } else {
+  //     return throwError(() => new Error('Invalid verification code.'));
+  //   }
+  // }
 
   saveToken(token: string): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -249,21 +249,21 @@ export class AuthService {
   // }
 
   // Verify OTP from backend
-  verifyOtp(userId: number, otp: string): Observable<any> {
-    return this.http.post(this.baseUrl + 'verify-otp', { 
-      user_id: userId, 
-      otp: otp 
-    }).pipe(
-      tap((response: any) => {
-        // Save token after successful verification
-        if (response.token) {
-          this.saveToken(response.token);
-          this.currentUserSubject.next(response);
-          this.setLoggedIn(true);
-        }
-      })
-    );
-  }
+  // verifyOtp(userId: number, otp: string): Observable<any> {
+  //   return this.http.post(this.baseUrl + 'verify-otp', { 
+  //     user_id: userId, 
+  //     otp: otp 
+  //   }).pipe(
+  //     tap((response: any) => {
+  //       // Save token after successful verification
+  //       if (response.token) {
+  //         this.saveToken(response.token);
+  //         this.currentUserSubject.next(response);
+  //         this.setLoggedIn(true);
+  //       }
+  //     })
+  //   );
+  // }
 
   // Complete Firebase authentication
   // completeFirebaseAuth(userId: number, idToken: string): Observable<any> {
@@ -284,7 +284,7 @@ export class AuthService {
   //   );
   // }
 
-resendOTP(payload: { login: string, method: string }): Observable<any> {
+resendOTP(payload: { login: string}): Observable<any> {
   return this.http.post(this.baseUrl + 'resend-otp', payload);
 }
   // Request OTP (if needed separately)
@@ -305,5 +305,14 @@ resetPassword(data: {
   password_confirmation: string 
 }) {
   return this.http.post(this.baseUrl + 'reset-password', data);
+}
+
+
+setUserProfile(profile: any) {
+  this.userProfileSubject.next(profile);
+}
+
+getUserProfile() {
+  return this.userProfileSubject.value;
 }
 }

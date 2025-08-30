@@ -38,32 +38,6 @@
       </div>
     </div>
 
-    <!-- <div class="mb-4">
-      <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-      <input
-      id="email"
-        type="email"
-        formControlName="email"
-        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        placeholder="ex. Ashraf@gmail.com"
-      >
-      @if(apiErrors['email']) {
-        <div class="text-red-500 text-xs mt-1">
-          {{ apiErrors['email'] }}
-        </div>
-      }
-      @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
-      <div class="text-red-500 text-xs mt-1">
-        @if(registerForm.get('email')?.errors?.['required']){
-        <span>Email is required</span>
-      }
-      @if (registerForm.get('email')?.errors?.['email']) {
-        <span>Please enter a valid email</span>
-      }
-      </div>
-    }
-    </div> -->
-
     <div class="mb-4">
       <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
       <input
@@ -165,21 +139,104 @@
       </button>
       <button
         type="submit"
-        [disabled]="!registerForm.valid"
+        [disabled]="!registerForm.valid || submitted"
         class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        Confirm
+        @if(submitted) {
+          <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          Registering...
+        } @else {
+          Confirm
+        }
       </button>
     </div>
   </form>
+</div>
 
-  <!-- @if(showModal){
-  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white rounded-lg shadow-lg p-6 w-96 relative">
-      <button (click)="closeModal()" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">&times;</button>
-      <h2 class="text-xl font-semibold mb-4 text-red-600">Registration Error</h2>
-      <p class="text-gray-700">{{ modalMessage }}</p>
+<!-- OTP Verification Modal -->
+<!-- @if(showOtpModal) { -->
+  <div *ngIf="showOtpModal" class="fixed inset-0 z-50 bg-gray bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl p-8 w-96 max-w-md mx-4 relative">
+      <!-- Close Button -->
+      <button 
+        (click)="closeOtpModal()" 
+        class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+        [disabled]="isVerifyingOtp">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+
+      <!-- Header -->
+      <div class="text-center mb-6">
+        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 mb-4">
+          <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">Verify Your Account</h3>
+        <p class="text-sm text-gray-600">
+          We've sent a 4-digit verification code to your 
+          <span class="font-medium">{{ otpSentVia === 'email' ? 'email' : 'WhatsApp' }}</span>
+        </p>
+        @if(tempUser) {
+          <p class="text-xs text-gray-500 mt-1">
+            {{ otpSentVia === 'email' ? tempUser.email : tempUser.phone }}
+          </p>
+        }
+      </div>
+
+      <!-- OTP Input -->
+      <div class="mb-6">
+        <label class="block text-sm font-medium text-gray-700 mb-2">Enter Verification Code</label>
+        <input 
+          type="text" 
+          [(ngModel)]="otpCode"
+          (input)="onOtpInput($event)"
+          maxlength="4"
+          placeholder="0000"
+          [disabled]="isVerifyingOtp"
+          class="w-full px-4 py-3 text-center text-2xl font-bold border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 tracking-widest"
+          [class.border-red-300]="otpError"
+          [class.focus:ring-red-500]="otpError"
+          [class.focus:border-red-500]="otpError">
+        
+        @if(otpError) {
+          <p class="mt-2 text-sm text-red-600">{{ otpError }}</p>
+        }
+      </div>
+
+      <!-- Verify Button -->
+      <button 
+        (click)="verifyOtp()"
+        [disabled]="isVerifyingOtp || otpCode.length !== 4"
+        class="w-full bg-red-600 text-white py-3 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors mb-4">
+        @if(isVerifyingOtp) {
+          <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          Verifying...
+        } @else {
+          Verify Code
+        }
+      </button>
+
+      <!-- Resend Option -->
+      <div class="text-center">
+        <p class="text-sm text-gray-600 mb-2">Didn't receive the code?</p>
+        <button 
+          (click)="resendOTP()"
+          [disabled]="isVerifyingOtp"
+          class="text-blue-600 hover:text-blue-800 text-sm font-medium disabled:opacity-50">
+          Resend via {{ otpSentVia === 'email' ? 'Email' : 'WhatsApp' }}
+        </button>
+      </div>
     </div>
   </div>
-} -->
-</div>
+<!-- } -->
+
+<!-- fixed inset-0 z-50 bg-gray bg-opacity-50 backdrop-blur-sm flex items-center justify-center -->
