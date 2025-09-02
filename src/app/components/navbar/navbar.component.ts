@@ -63,6 +63,9 @@ currentUser: AuthUserDetails | undefined
 isLoggedIn = false;
 showLoginModal = false;
 
+
+ private dropdownClickListener: (() => void) | null = null;
+
 constructor(
     private router: Router,
     private auth: AuthService,
@@ -135,9 +138,43 @@ navigateToProfile(): void {
   this.router.navigate(['/account']);
 }
 
-toggleDropdown(): void {
-  this.showDropdown = !this.showDropdown;
-}
+// toggleDropdown(): void {
+//   this.showDropdown = !this.showDropdown;
+// }
+
+
+  toggleDropdown(): void {
+    this.showDropdown = !this.showDropdown;
+    
+    if (this.showDropdown) {
+      // Add click listener when dropdown opens
+      setTimeout(() => {
+        this.dropdownClickListener = this.listenForDropdownClicks();
+      });
+    } else if (this.dropdownClickListener) {
+      // Remove click listener when dropdown closes
+      this.dropdownClickListener();
+      this.dropdownClickListener = null;
+    }
+  }
+
+   private listenForDropdownClicks(): () => void {
+    const handler = (event: MouseEvent) => {
+      const dropdown = this.document.querySelector('.profile-dropdown');
+      if (dropdown && !dropdown.contains(event.target as Node)) {
+        this.showDropdown = false;
+        if (this.dropdownClickListener) {
+          this.dropdownClickListener();
+          this.dropdownClickListener = null;
+        }
+      }
+    };
+
+    this.document.addEventListener('click', handler);
+    
+    // Return cleanup function
+    return () => this.document.removeEventListener('click', handler);
+  }
 
 
 toggleMobileMenu(): void {

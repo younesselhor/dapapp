@@ -151,20 +151,24 @@
 <div
   *ngIf="isModalOpen"
   class="fixed inset-0 z-50 flex items-center justify-center bg-gray bg-opacity-100"
+  (click)="closeModalImages()"
 >
-  <!-- Close button -->
-  <button
-    class="absolute top-4 right-4 text-white text-2xl"
-    (click)="closeModalImages()"
+  <!-- Modal content - stops propagation to prevent closing when clicking inside -->
+  <div 
+    class="relative max-w-4xl w-full px-4"
+    (click)="$event.stopPropagation()"
   >
-    &times;
-  </button>
+    <!-- Close button -->
+    <button
+      class="absolute -top-10 right-0 text-white text-3xl hover:text-gray-300 transition-colors"
+      (click)="closeModalImages()"
+    >
+      &times;
+    </button>
 
-  <!-- Image viewer container -->
-  <div class="relative max-w-4xl w-full px-4">
     <!-- Previous arrow -->
     <button
-      class="absolute left-0 top-1/2 transform -translate-y-1/2 text-white text-4xl z-10"
+      class="absolute left-0 top-1/2 transform -translate-y-1/2 text-white text-4xl z-10 hover:text-gray-300 transition-colors"
       (click)="prevImage()"
     >
       &#10094;
@@ -178,7 +182,7 @@
 
     <!-- Next arrow -->
     <button
-      class="absolute right-0 top-1/2 transform -translate-y-1/2 text-white text-4xl z-10"
+      class="absolute right-0 top-1/2 transform -translate-y-1/2 text-white text-4xl z-10 hover:text-gray-300 transition-colors"
       (click)="nextImage()"
     >
       &#10095;

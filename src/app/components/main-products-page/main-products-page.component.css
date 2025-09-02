@@ -1,3 +1,14 @@
 .bg-gray {
     background: rgba(52, 64, 84, 0.6);
 }
+
+/* Smooth transitions for modal */
+.fixed {
+  transition: opacity 0.3s ease;
+}
+
+/* Hover effects for buttons */
+button:hover {
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
+}

@@ -336,7 +336,7 @@
                   CC
                 </span>
                 <input type="number" formControlName="engine" placeholder="650"
-                  class="flex-grow border border-gray-300 rounded-r-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                  class="flex-grow border border-gray-300 rounded-r-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400" />
               </div>
             </div>
 
@@ -348,7 +348,7 @@
                   KM
                 </span>
                 <input type="number" formControlName="mileage" placeholder="8500"
-                  class="flex-grow border border-gray-300 rounded-r-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                  class="flex-grow border border-gray-300 rounded-r-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400" />
               </div>
             </div>
           </div>
@@ -529,7 +529,7 @@
             </label>
             <textarea id="description" formControlName="description" rows="4"
               placeholder="This is a free text to add any comments or things that might be useful for the buyers"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"></textarea>
+              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 placeholder-gray-400"></textarea>
           </div>
         </div>
 
@@ -648,7 +648,7 @@
             type="text"
             [placeholder]="'Enter ' + (field.field_name | formatFieldName)"
             [attr.maxlength]="field.max_length"
-            class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+            class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition placeholder-gray-400"
             (keypress)="allowOnlyLetters($event, field.writing_system)"
             />
 
@@ -729,7 +729,7 @@
         <div class="mb-6">
           <label for="adName" class="block text-sm font-medium text-gray-700 mb-1">{{ 'FORM.AD_NAME' | translate }}</label>
           <input type="text" id="adName" formControlName="title" placeholder="{{ 'FORM.AD_NAME_PLACEHOLDER' | translate }}"
-            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500" />
+            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 placeholder-gray-400" />
         </div>
 
         <div class="mb-6">
@@ -745,7 +745,7 @@
           </label>
           <textarea id="description" formControlName="description" rows="4"
             placeholder="{{ 'FORM.DESCRIPTION_PLACEHOLDER' | translate }}"
-            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"></textarea>
+            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 placeholder-gray-400"></textarea>
         </div>
 
 <div class="mb-6">
@@ -861,7 +861,7 @@
           <span class="text-gray-500 sm:text-sm">{{ 'COMMON.CURRENCY' | translate }}</span>
         </div>
         <input type="number" id="autoDecline" formControlName="minimum_bid" placeholder="0"
-          class="pl-12 block w-full px-3 py-2 border border-blue-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
+          class="pl-12 block w-full px-3 py-2 border border-blue-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm placeholder-gray-400" />
       </div>
     </div>
   </div>
@@ -874,7 +874,7 @@
               <span class="text-gray-500 sm:text-sm">{{ 'COMMON.CURRENCY' | translate }}</span>
             </div>
             <input type="text" id="price" formControlName="price" placeholder="500"
-              class="pl-12 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500" />
+              class="pl-12 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 placeholder-gray-400" />
           </div>
         </div>
 
@@ -986,7 +986,7 @@
       <div class="flex mb-2">
         <div class="flex-1 border rounded-l-lg flex items-center px-4">
           <input type="text" [(ngModel)]="promoCode" [readonly]="isPromoApplied" placeholder="Enter promo code"
-            class="w-full focus:outline-none py-3" />
+            class="w-full focus:outline-none py-3 placeholder-gray-400" />
         </div>
         <button *ngIf="!isPromoApplied" (click)="applyPromoCode()" [disabled]="promoLoading || !promoCode"
           class="border border-l-0 rounded-r-lg px-4 py-3 text-blue-600 hover:bg-gray-50 disabled:opacity-50">

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { ListingService } from './listingProduct.service';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
@@ -323,10 +323,23 @@ getSaudiPlateParts(plate: any): {
   this.isModalOpen = true;
 }
 
-closeModalImages(): void {
-  this.isModalOpen = false;
+openModalImages(index: number): void {
+  this.activeImageIndex = index;
+  this.isModalOpen = true;
+  // Prevent body scrolling when modal is open
+  document.body.style.overflow = 'hidden';
 }
 
+
+// closeModalImages(): void {
+//   this.isModalOpen = false;
+// }
+
+closeModalImages(): void {
+  this.isModalOpen = false;
+  // Re-enable body scrolling
+  document.body.style.overflow = 'auto';
+}
 
 prevImage(): void {
   if (this.listing?.images?.length > 0) {
@@ -441,6 +454,19 @@ getPlateFieldMap(plate: Plate): { [position: string]: string } {
     }
   });
   return map;
+}
+
+@HostListener('document:keydown', ['$event'])
+handleKeyboardEvent(event: KeyboardEvent) {
+  if (this.isModalOpen) {
+    if (event.key === 'Escape') {
+      this.closeModalImages();
+    } else if (event.key === 'ArrowRight') {
+      this.nextImage();
+    } else if (event.key === 'ArrowLeft') {
+      this.prevImage();
+    }
+  }
 }
 }
 
