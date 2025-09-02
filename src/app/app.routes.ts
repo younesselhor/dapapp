@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
+import { AdSubmissionSuccessComponent } from './ad-submission-success/ad-submission-success.component';
 
 export const routes: Routes = [
   { 
@@ -43,5 +44,7 @@ export const routes: Routes = [
   { 
     path: 'listing/:id', 
     loadComponent: () => import('./components/main-products-page/main-products-page.component').then(m => m.MainProductsPageComponent)
-  }
+  },
+    { path: 'submission-success', component: AdSubmissionSuccessComponent },
+  // { path: 'payment-processing', component: PaymentProcessingComponent }
 ];
