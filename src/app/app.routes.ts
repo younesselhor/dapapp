@@ -43,7 +43,8 @@ export const routes: Routes = [
   },
   { 
     path: 'listing/:id', 
-    loadComponent: () => import('./components/main-products-page/main-products-page.component').then(m => m.MainProductsPageComponent)
+    loadComponent: () => import('./components/main-products-page/main-products-page.component').then(m => m.MainProductsPageComponent),
+     canActivate: [AuthGuard] 
   },
     { path: 'submission-success', component: AdSubmissionSuccessComponent },
   // { path: 'payment-processing', component: PaymentProcessingComponent }

@@ -42,7 +42,7 @@
         </div>
 
         <!-- Motorcycles Slider -->
-        <div *ngIf="motorcycles.length > 0"
+        <!-- <div *ngIf="motorcycles.length > 0"
              class="slider-track rtl:flex-row-reverse" 
              [style.transform]="'translateX(' + currentPosition + 'px)'"
              [class.dragging]="isDragging"
@@ -65,8 +65,35 @@
               <button (click)="viewListing(bike.id)">{{ 'COMMON.VIEW_BIKE' | translate }}</button>
             </div>
           </div>
-        </div>
+        </div> -->
+    
+    <div *ngIf="motorcycles.length > 0"
+     class="slider-track rtl:flex-row-reverse" 
+     [style.transform]="'translateX(' + currentPosition + 'px)'"
+     [class.dragging]="isDragging"
+     (mousedown)="shouldSlide ? startDrag($event) : null"
+     (touchstart)="shouldSlide ? startDrag($event) : null"
+     (mousemove)="shouldSlide ? onDrag($event) : null"
+     (touchmove)="shouldSlide ? onDrag($event) : null"
+     (mouseup)="shouldSlide ? endDrag() : null"
+     (mouseleave)="shouldSlide ? endDrag() : null"
+     (touchend)="shouldSlide ? endDrag() : null">
+     
+  <div *ngFor="let bike of motorcycles" class="slider-card">
+    <img [src]="bike.images[0]" draggable="false" class="card-image">
+    <div class="card-content">
+      <h3>{{bike.title}}</h3>
+      <p class="price-label">{{ 'COMMON.PRICE' | translate }}</p>
+      <p class="price-value">
+        {{bike.price > 0 ? bike.price : bike.minimum_bid}} {{bike.currency}}
+      </p>
+      <button (click)="viewListing(bike.id)">{{ 'COMMON.VIEW_BIKE' | translate }}</button>
+
+    </div>
+  </div>
+</div>
       </div>
     </div>
   </div>
 </section>
+      <app-login-modal *ngIf="showLoginModal" (close)="closeLoginModal()"></app-login-modal>

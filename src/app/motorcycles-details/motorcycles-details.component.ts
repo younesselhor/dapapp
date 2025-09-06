@@ -5,6 +5,8 @@ import { Router, RouterModule } from '@angular/router';
 import { SidebarComponent } from '../components/sidebar/sidebar.component';
 import { FormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { AuthService } from '../services/auth.service';
+import { LoginModalComponent } from '../components/login-modal.component';
 
 interface Motorcycle {
   id: number;
@@ -27,7 +29,7 @@ interface Brand {
 @Component({
   selector: 'app-motorcycles-details',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule,LoginModalComponent],
   templateUrl: './motorcycles-details.component.html',
   styleUrls: ['./motorcycles-details.component.css', '../components/sidebar/sidebar.component.css']
 })
@@ -55,20 +57,27 @@ export class MotorcyclesDetailsComponent implements OnInit, OnDestroy {
   selectedBrands: number[] = [];
   priceRange = {
     min: 0,
-    max: 50000
+    max: 9000000
   };
   absoluteMin = 0;
   absoluteMax = 0;
   isLoading = false;
   private filterDebouncer = new Subject<void>();
 
+  showLoginModal = false;
+  isLoggedIn = false;
+
   constructor(
     private listingbyService: ListingByCatService,  
     private cdr: ChangeDetectorRef,
-    private router : Router
+    private router : Router,
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
+     this.authService.isLoggedIn$.subscribe(status => {
+      this.isLoggedIn = status;
+    });
     // this.filterDebouncer.pipe(
     //   debounceTime(300), // Wait 300ms after last change
     //   distinctUntilChanged() // Only emit if value changed
@@ -81,9 +90,24 @@ export class MotorcyclesDetailsComponent implements OnInit, OnDestroy {
     this.getBrands();
   }
 
-    viewListing(id: number): void {
-  this.router.navigate(['/listing', id]);
-}
+//     viewListing(id: number): void {
+//   this.router.navigate(['/listing', id]);
+// }
+ viewListing(id: number): void {
+    if (this.isLoggedIn) {
+      this.router.navigate(['/listing', id]);
+    } else {
+      this.openLoginModal();
+    }
+  }
+
+  openLoginModal(): void {
+    this.showLoginModal = true;
+  }
+
+  closeLoginModal(): void {
+    this.showLoginModal = false;
+  }
   ngOnDestroy(): void {
     this.filterDebouncer.complete();
   }
@@ -145,7 +169,6 @@ export class MotorcyclesDetailsComponent implements OnInit, OnDestroy {
   }
 
   onBrandChange(): void {
-    // No debounce for brand changes as they're discrete clicks
     this.executeFilter();
   }
 
@@ -157,7 +180,7 @@ export class MotorcyclesDetailsComponent implements OnInit, OnDestroy {
     this.listingbyService.getBrandsListing().subscribe((res: { motorcycle_brands: Brand[] }) => {
       this.brands = res.motorcycle_brands.map(brand => ({
         ...brand,
-        checked: false // initialize checked property
+        checked: false
       }));
     });
   }
@@ -224,7 +247,7 @@ export class MotorcyclesDetailsComponent implements OnInit, OnDestroy {
         // Set default minimum if 0
         this.absoluteMin = res.min_price > 0 ? res.min_price : 0; 
         // Set default maximum if 0
-        this.absoluteMax = res.max_price > 0 ? res.max_price : 50000;
+        this.absoluteMax = res.max_price > 0 ? res.max_price : 9000000;
         
         this.priceRange = {
           min: this.absoluteMin,

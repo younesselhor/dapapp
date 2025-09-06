@@ -530,6 +530,8 @@ forgotPasswordForm: FormGroup;
 showResetPasswordModal = false;
 resetPasswordForm: FormGroup;
 
+showPassword = false;
+
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
@@ -677,37 +679,84 @@ this.resetPasswordForm = this.fb.group({
 
 
 
-  onSubmit() {
-    if (this.loginForm.invalid) {
-      this.loginForm.markAllAsTouched();
-      return;
-    }
+  // onSubmit() {
+  //   if (this.loginForm.invalid) {
+  //     this.loginForm.markAllAsTouched();
+  //     return;
+  //   }
 
-    const login = this.loginForm.value;
-    this.userLogin = login.login;
+  //   const login = this.loginForm.value;
+  //   this.userLogin = login.login;
 
-    this.auth.login(login).subscribe({
-      next: (response) => {
-        this.loginError = false;
+  //   this.auth.login(login).subscribe({
+  //     next: (response) => {
+  //       this.loginError = false;
 
-        // Check if OTP is required
-        if (response.requiresOTP) {
-          // Store pending user info but don't save token or set logged in yet
-          this.pendingUserInfo = response;
-          this.phoneNumber = this.extractPhoneNumber(login.login);
-          this.showOTPModal = true;
-          this.startOTPCountdown();
-        } else {
-          // Normal login without OTP
-          this.handleSuccessfulLogin(response.token, response.user);
-        }
-      },
-      error: (err) => {
-        this.loginError = true;
-        console.error('Login error:', err);
-      }
-    });
+  //       // Check if OTP is required
+  //       if (response.requiresOTP) {
+  //         // Store pending user info but don't save token or set logged in yet
+  //         this.pendingUserInfo = response;
+  //         this.phoneNumber = this.extractPhoneNumber(login.login);
+  //         this.showOTPModal = true;
+  //         this.startOTPCountdown();
+  //       } else {
+  //         // Normal login without OTP
+  //         this.handleSuccessfulLogin(response.token, response.user);
+  //       }
+  //     },
+  //     error: (err) => {
+  //       this.loginError = true;
+  //       console.error('Login error:', err);
+  //     }
+  //   });
+  // }
+
+  
+onSubmit() {
+  if (this.loginForm.invalid) {
+    this.loginForm.markAllAsTouched();
+    return;
   }
+
+  // Clear previous messages
+  this.message = '';
+  this.loginError = false;
+
+  const login = this.loginForm.value;
+  this.userLogin = login.login;
+
+  this.auth.login(login).subscribe({
+    next: (response) => {
+      this.loginError = false;
+
+      if (response.requiresOTP) {
+        this.pendingUserInfo = response;
+        this.phoneNumber = this.extractPhoneNumber(login.login);
+        this.message = 'OTP sent successfully. Please check your phone.';
+        this.showOTPModal = true;
+        this.startOTPCountdown();
+      } else {
+        this.handleSuccessfulLogin(response.token, response.user);
+      }
+    },
+    error: (err) => {
+      this.loginError = true;
+      // Set specific error message based on error type
+      if (err.error?.message) {
+        this.message = err.error.message;
+      } else if (err.status === 401) {
+        this.message = 'Invalid credentials. Please check your email/phone and password.';
+      } else if (err.status === 422) {
+        this.message = 'Please check your input and try again.';
+      } else {
+        this.message = 'Login failed. Please try again.';
+      }
+      console.error('Login error:', err);
+    }
+  });
+}
+
+
   extractPhoneNumber(login: string): string {
     // If login is a phone number, return it, otherwise return empty string
     return this.isValidPhoneNumber(login) ? login : '';
@@ -743,37 +792,37 @@ this.resetPasswordForm = this.fb.group({
   isSigningInWithGoogle = false;
 
 
-verifyOTP() {
-    if (this.otpForm.invalid) {
-      this.otpForm.markAllAsTouched();
-      return;
-    }
+// verifyOTP() {
+//     if (this.otpForm.invalid) {
+//       this.otpForm.markAllAsTouched();
+//       return;
+//     }
 
-    const otpValue = this.otpForm.value.digit1 + this.otpForm.value.digit2 + 
-                     this.otpForm.value.digit3 + this.otpForm.value.digit4;
+//     const otpValue = this.otpForm.value.digit1 + this.otpForm.value.digit2 + 
+//                      this.otpForm.value.digit3 + this.otpForm.value.digit4;
 
-    const otpPayload = {
-      login: this.loginForm.value.login,
-      otp: otpValue
-    };
+//     const otpPayload = {
+//       login: this.loginForm.value.login,
+//       otp: otpValue
+//     };
 
 
-    this.auth.otplogin(otpPayload).subscribe({
-      next: (response) => {
-        this.otpError = false;
+//     this.auth.otplogin(otpPayload).subscribe({
+//       next: (response) => {
+//         this.otpError = false;
 
-        if (response.token) {
-          this.handleSuccessfulLogin(response.token, response.user);
-          this.showOTPModal = false;
-          this.closeModal();
-        }
-      },
-      error: (err) => {
-        console.error('OTP verification error:', err);
-        this.otpError = true;
-      }
-    });
-  }
+//         if (response.token) {
+//           this.handleSuccessfulLogin(response.token, response.user);
+//           this.showOTPModal = false;
+//           this.closeModal();
+//         }
+//       },
+//       error: (err) => {
+//         console.error('OTP verification error:', err);
+//         this.otpError = true;
+//       }
+//     });
+//   }
 
 
 
@@ -873,21 +922,43 @@ isPhone(value: string): boolean {
   //   return phoneRegex.test(value);
   // }
 
-  onLoginInputChange() {
-    const loginValue = this.loginForm.get('login')?.value;
-    const passwordControl = this.loginForm.get('password');
+  // onLoginInputChange() {
+  //   const loginValue = this.loginForm.get('login')?.value;
+  //   const passwordControl = this.loginForm.get('password');
     
-    if (this.isPhone(loginValue)) {
-      // For phone login, password is optional (will trigger OTP)
-      passwordControl?.clearValidators();
-      passwordControl?.setErrors(null);
-    } else {
-      // For email login, password is required
-      passwordControl?.setValidators([Validators.required, Validators.minLength(6)]);
-    }
-    passwordControl?.updateValueAndValidity();
-  }
+  //   if (this.isPhone(loginValue)) {
+  //     // For phone login, password is optional (will trigger OTP)
+  //     passwordControl?.clearValidators();
+  //     passwordControl?.setErrors(null);
+  //   } else {
+  //     // For email login, password is required
+  //     passwordControl?.setValidators([Validators.required, Validators.minLength(6)]);
+  //   }
+  //   passwordControl?.updateValueAndValidity();
+  // }
 
+clearMessages() {
+  this.message = '';
+  this.loginError = false;
+  this.otpError = false;
+}
+  onLoginInputChange() {
+  const loginValue = this.loginForm.get('login')?.value;
+  const passwordControl = this.loginForm.get('password');
+  
+  // Clear previous error messages when user starts typing
+  if (this.loginError) {
+    this.clearMessages();
+  }
+  
+  if (this.isPhone(loginValue)) {
+    passwordControl?.clearValidators();
+    passwordControl?.setErrors(null);
+  } else {
+    passwordControl?.setValidators([Validators.required, Validators.minLength(6)]);
+  }
+  passwordControl?.updateValueAndValidity();
+}
   handleSuccessfulLogin(token: string, user?: AuthUser) {
     this.cookieService.set('token', token, {
       secure: false,
@@ -930,12 +1001,57 @@ isPhone(value: string): boolean {
     this.clearOTPForm();
     this.clearCountdown();
     
-    // if (this.recaptchaVerifier) {
-    //   this.recaptchaVerifier.clear();
-    //   this.recaptchaVerifier = null;
-    // }
+
   }
 
+
+// Fix the verifyOTP method:
+verifyOTP() {
+  if (this.otpForm.invalid) {
+    this.otpForm.markAllAsTouched();
+    return;
+  }
+
+  // Clear previous messages
+  this.message = '';
+  this.otpError = false;
+
+  const otpValue = this.otpForm.value.digit1 + this.otpForm.value.digit2 + 
+                   this.otpForm.value.digit3 + this.otpForm.value.digit4;
+
+  const otpPayload = {
+    login: this.loginForm.value.login,
+    otp: otpValue
+  };
+
+  this.auth.otplogin(otpPayload).subscribe({
+    next: (response) => {
+      this.otpError = false;
+      if (response.token) {
+        this.message = 'Login successful!';
+        this.handleSuccessfulLogin(response.token, response.user);
+        this.showOTPModal = false;
+        this.closeModal();
+      }
+    },
+    error: (err) => {
+      console.error('OTP verification error:', err);
+      this.otpError = true;
+      
+      // Set specific error message
+      if (err.error?.message) {
+        this.message = err.error.message;
+      } else if (err.status === 400) {
+        this.message = 'Invalid OTP code. Please try again.';
+      } else if (err.status === 410) {
+        this.message = 'OTP code has expired. Please request a new one.';
+        this.otpExpired = true;
+      } else {
+        this.message = 'OTP verification failed. Please try again.';
+      }
+    }
+  });
+}
   clearOTPForm() {
     this.otpForm.reset();
   }
