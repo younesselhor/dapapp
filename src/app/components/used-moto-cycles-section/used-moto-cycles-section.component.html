@@ -1,43 +1,140 @@
 <!-- <section class="bg-white py-16 px-4 sm:px-10"> -->
-  <section class="bg-white py-16 px-4 sm:px-10 rtl:direction-rtl ltr:direction-ltr">
-  <div class="container mx-auto">
-    <div class="flex flex-col lg:flex-row gap-12 items-start">
+<!-- <section class="bg-white rtl:direction-rtl ltr:direction-ltr"> -->
+<section class="main-section">
+  <div class="container">
+    <!-- class="flex flex-col lg:flex-row gap-12 items-start" -->
+    <div style="display: flex; padding: 24px; align-items: center; gap: 72px">
       <!-- Left Content -->
-      <div class="lg:w-[495px] flex flex-col gap-10">
-        <h2 class="font-manrope text-[#18181B] text-[52px] font-bold leading-[66px]">
-          {{ 'USED_MOTORCYCLES.TITLE' | translate }}<br />{{ 'USED_MOTORCYCLES.SUBTITLE' | translate }}
-        </h2>
-        
-        <p class="font-manrope text-[#18181B] text-[18px] font-medium leading-[30px]">
-          {{ 'USED_MOTORCYCLES.DESCRIPTION' | translate }}
-        </p>
-
-        <div class="flex flex-col gap-12">
-          <button routerLink="/motorcycles" 
-                  class="w-fit h-[48px] px-[57.63px] py-[14.75px] border border-gray-800 text-gray-800 hover:bg-gray-100 transition cursor-pointer">
-            {{ 'COMMON.VIEW_ALL' | translate }}
-          </button>
-          <div class="flex gap-12">
-            <div>
-              <p class="text-2xl font-bold">50k+</p>
-              <p class="text-gray-500">{{ 'USED_MOTORCYCLES.SOLD' | translate }}</p>
-            </div>
-            <div>
-              <p class="text-2xl font-bold">17k+</p>
-              <p class="text-gray-500">{{ 'USED_MOTORCYCLES.AVAILABLE' | translate }}</p>
+      <!-- class="lg:w-[495px] flex flex-col gap-10" -->
+      <div style="width: 495px; height: 412px">
+        <div
+          style="
+            display: flex;
+            width: 495px;
+            align-items: flex-start;
+            align-content: flex-start;
+            gap: 40px 45px;
+            flex-wrap: wrap;
+          "
+        >
+          <!-- <h2 class="font-manrope text-[#18181B] text-[52px] font-bold leading-[66px]"> -->
+          <div
+            style="
+              width: 465px;
+              flex-shrink: 0;
+              color: var(--gray-900, #18181b);
+              font-family: Manrope;
+              font-size: 52px;
+              font-style: normal;
+              font-weight: 700;
+              line-height: 66px; /* 126.923% */
+            "
+          >
+            {{ "USED_MOTORCYCLES.TITLE" | translate }}<br />{{
+              "USED_MOTORCYCLES.SUBTITLE" | translate
+            }}
+          </div>
+          <!-- </h2> -->
+          <!-- class="font-manrope text-[#18181B] text-[18px] font-medium leading-[30px]" -->
+          <div
+            style="
+              color: var(--gray-900, #18181b);
+              font-family: Manrope;
+              font-size: 18px;
+              font-style: normal;
+              font-weight: 500;
+              line-height: 30px; /* 166.667% */
+            "
+          >
+            {{ "USED_MOTORCYCLES.DESCRIPTION" | translate }}
+          </div>
+<!-- class="flex flex-col gap-12" -->
+          <div style="display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: flex-start;
+gap: 45px;
+flex: 1 0 0;">
+<div style="display: flex;
+align-items: flex-start;
+gap: 24px;">
+ <!-- class="w-fit h-[48px] px-[57.63px] py-[14.75px] border border-gray-800 text-gray-800 hover:bg-gray-100 transition cursor-pointer" -->
+   <button style="display: flex;
+height: 48px;
+padding: 17.25px 57.63px 14.75px 57.63px;
+justify-content: center;
+align-items: center;
+border-radius: 4px;
+border: 2px solid var(--Primary---Navy, #032C40);"
+              routerLink="/motorcycles"
+             
+            >
+            <p style="color: var(--Primary---Navy, #032C40);
+text-align: center;
+font-family: Manrope;
+font-size: 16px;
+font-style: normal;
+font-weight: 700;
+line-height: 16px; /* 100% */">{{ "COMMON.VIEW_ALL" | translate }}</p>
+            </button>
+</div>
+           
+<!-- class="flex gap-12" -->
+            <div style="display: flex;
+align-items: center;
+gap: 45px;">
+              <div style="width: 86px;
+height: 77px;">
+                <p style="color: var(--gray-900, #18181B);
+font-family: Manrope;
+font-size: 36px;
+font-style: normal;
+font-weight: 800;
+line-height: 46px; /* 127.778% */">50k+</p>
+                <p style="color: var(--gray-500, #71717A);
+font-family: Manrope;
+font-size: 18px;
+font-style: normal;
+font-weight: 400;
+line-height: 24px; /* 133.333% */">
+                  {{ "USED_MOTORCYCLES.SOLD" | translate }}
+                </p>
+              </div>
+              <div style="width: 129px;
+height: 77px;">
+                <p style="color: var(--gray-900, #18181B);
+font-family: Manrope;
+font-size: 36px;
+font-style: normal;
+font-weight: 800;
+line-height: 46px; /* 127.778% */">17k+</p>
+                <p style="color: var(--gray-500, #71717A);
+font-family: Manrope;
+font-size: 18px;
+font-style: normal;
+font-weight: 400;
+line-height: 24px; /* 133.333% */">
+                  {{ "USED_MOTORCYCLES.AVAILABLE" | translate }}
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Right Content - Swipeable Cards -->
-      <div class="flex-1 w-full overflow-hidden -mr-4" style="width: 1034px;">
-        
+      <div class="slider-container" style="display: flex;
+align-items: center;
+gap: 31px;">
         <!-- No Results Message -->
-        <div *ngIf="motorcycles.length === 0" 
-             class="flex items-center justify-center min-h-[300px] bg-gray-50 rounded-lg border border-gray-200">
+        <div
+          *ngIf="motorcycles.length === 0"
+          class="flex items-center justify-center min-h-[300px] bg-gray-50 rounded-lg border border-gray-200"
+        >
           <div class="text-center">
-            <p class="text-lg text-gray-600 font-medium">{{ 'COMMON.NO_RESULTS' | translate }}</p>
+            <p class="text-lg text-gray-600 font-medium">
+              {{ "COMMON.NO_RESULTS" | translate }}
+            </p>
           </div>
         </div>
 
@@ -66,34 +163,45 @@
             </div>
           </div>
         </div> -->
-    
-    <div *ngIf="motorcycles.length > 0"
-     class="slider-track rtl:flex-row-reverse" 
-     [style.transform]="'translateX(' + currentPosition + 'px)'"
-     [class.dragging]="isDragging"
-     (mousedown)="shouldSlide ? startDrag($event) : null"
-     (touchstart)="shouldSlide ? startDrag($event) : null"
-     (mousemove)="shouldSlide ? onDrag($event) : null"
-     (touchmove)="shouldSlide ? onDrag($event) : null"
-     (mouseup)="shouldSlide ? endDrag() : null"
-     (mouseleave)="shouldSlide ? endDrag() : null"
-     (touchend)="shouldSlide ? endDrag() : null">
-     
-  <div *ngFor="let bike of motorcycles" class="slider-card">
-    <img [src]="bike.images[0]" draggable="false" class="card-image">
-    <div class="card-content">
-      <h3>{{bike.title}}</h3>
-      <p class="price-label">{{ 'COMMON.PRICE' | translate }}</p>
-      <p class="price-value">
-        {{bike.price > 0 ? bike.price : bike.minimum_bid}} {{bike.currency}}
-      </p>
-      <button (click)="viewListing(bike.id)">{{ 'COMMON.VIEW_BIKE' | translate }}</button>
 
-    </div>
-  </div>
-</div>
+         <!-- class="slider-track rtl:flex-row-reverse" -->
+        <div
+        class="slider-track"
+          *ngIf="motorcycles.length > 0"
+         
+          [style.transform]="'translateX(' + currentPosition + 'px)'"
+          [class.dragging]="isDragging"
+          (mousedown)="shouldSlide ? startDrag($event) : null"
+          (touchstart)="shouldSlide ? startDrag($event) : null"
+          (mousemove)="shouldSlide ? onDrag($event) : null"
+          (touchmove)="shouldSlide ? onDrag($event) : null"
+          (mouseup)="shouldSlide ? endDrag() : null"
+          (mouseleave)="shouldSlide ? endDrag() : null"
+          (touchend)="shouldSlide ? endDrag() : null"
+        >
+          <div *ngFor="let bike of motorcycles" class="slider-card">
+
+            <img [src]="bike.images[0]" draggable="false" class="card-image" />
+            <div class="card-content">
+              <h3 class="title">{{ bike.title }}</h3>
+              <p class="price-label">{{ "COMMON.PRICE" | translate }}</p>
+              <p class="price-value">
+                {{ bike.price > 0 ? bike.price : bike.minimum_bid }}
+                {{ bike.currency }}
+              </p>
+              <button class="button" (click)="viewListing(bike.id)">
+                {{ "COMMON.VIEW_BIKE" | translate }}
+              </button>
+            </div>
+
+
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
-      <app-login-modal *ngIf="showLoginModal" (close)="closeLoginModal()"></app-login-modal>
+<app-login-modal
+  *ngIf="showLoginModal"
+  (close)="closeLoginModal()"
+></app-login-modal>

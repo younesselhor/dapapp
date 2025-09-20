@@ -1,113 +1,130 @@
-<section class="bg-white py-16 px-4 sm:px-10">
-  <div class="container mx-auto">
-    <div class="flex flex-col lg:flex-row gap-12 items-start">
+<!-- plates section -->
+<section class="main-section">
+  <div class="container">
+    <div class="content-wrapper">
       <!-- Left Content -->
-      <div class="lg:w-[495px] flex flex-col gap-10">
-        <h2 class="font-manrope text-[#18181B] text-[52px] font-bold leading-[66px]">
-          {{ 'PLATES.TITLE' | translate }}
-        </h2>
-        
-        <div class="mb-6">
-          <span class="bg-gradient-to-r from-yellow-400 to-orange-400 text-black text-sm font-semibold px-4 py-2 rounded-full shadow-sm">
-            ✨ {{ 'PLATES.GCC_BADGE' | translate }}
-          </span>
-        </div>
-
-        <p class="font-manrope text-[#18181B] text-[18px] font-medium leading-[30px]">
-          {{ 'PLATES.DESCRIPTION' | translate }}
-        </p>
-
-        <div class="flex flex-col gap-12">
-          <button routerLink="/plates" 
-                  class="w-fit h-[48px] px-[57.63px] py-[14.75px] border border-gray-800 text-gray-800 hover:bg-gray-100 transition"
-                  style="cursor: pointer;">
-            {{ 'COMMON.VIEW_ALL' | translate }}
-          </button>
+      <div class="left-content">
+        <div class="left-inner">
+          <div class="title-section">
+            {{ "PLATES.TITLE" | translate }}
+          </div>
           
-          <div class="flex gap-12">
-            <div class="bg-white p-4 rounded-xl">
-              <p class="text-2xl font-bold">{{ soldCount }}+</p>
-              <p class="text-gray-500">{{ 'PLATES.SUCCESSFULLY_SOLD' | translate }}</p>
+          <div class="badge-section">
+            <span class="gcc-badge">
+              ✨ {{ "PLATES.GCC_BADGE" | translate }}
+            </span>
+          </div>
+          
+          <div class="description-section">
+            {{ "PLATES.DESCRIPTION" | translate }}
+          </div>
+
+          <div class="actions-section">
+            <div class="button-wrapper">
+              <button class="view-all-button" routerLink="/plates">
+                <p class="button-text">{{ "COMMON.VIEW_ALL" | translate }}</p>
+              </button>
             </div>
-            <div class="bg-white p-4 rounded-xl">
-              <p class="text-2xl font-bold">{{ availableCount }}+</p>
-              <p class="text-gray-500">{{ 'PLATES.AVAILABLE_NOW' | translate }}</p>
+           
+            <div class="stats-wrapper">
+              <div class="stat-item">
+                <div class="stat-card">
+                  <p class="stat-number">{{ soldCount }}+</p>
+                  <p class="stat-label">
+                    {{ "PLATES.SUCCESSFULLY_SOLD" | translate }}
+                  </p>
+                </div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-card">
+                  <p class="stat-number">{{ availableCount }}+</p>
+                  <p class="stat-label">
+                    {{ "PLATES.AVAILABLE_NOW" | translate }}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Right Content - Swipeable Cards -->
-      <div class="flex-1 w-full overflow-x-hidden relative -mr-4" style="width: 1034px;">
+      <div class="slider-container">
         <!-- No Results Message -->
-        <div *ngIf="plates?.length === 0" 
-             class="flex items-center justify-center min-h-[300px] bg-gray-50 rounded-lg border border-gray-200">
-          <div class="text-center">
-            <p class="text-lg text-gray-600 font-medium">{{ 'COMMON.NO_RESULTS' | translate }}</p>
+        <div
+          *ngIf="plates?.length === 0"
+          class="no-results"
+        >
+          <div class="no-results-content">
+            <p class="no-results-text">
+              {{ "COMMON.NO_RESULTS" | translate }}
+            </p>
           </div>
         </div>
 
-        <!-- Slider Container -->
-        <div class="slider-track" 
-             [style.transform]="'translateX(' + currentPosition + 'px)'"
-             [class.dragging]="isDragging"
-             (mousedown)="startDrag($event)"
-             (touchstart)="startDrag($event)"
-             (mousemove)="onDrag($event)"
-             (touchmove)="onDrag($event)"
-             (mouseup)="endDrag()"
-             (mouseleave)="endDrag()"
-             (touchend)="endDrag()">
-             
+        <!-- Plates Slider -->
+        <div
+          class="slider-track"
+          *ngIf="plates.length > 0"
+          [style.transform]="'translateX(' + currentPosition + 'px)'"
+          [class.dragging]="isDragging"
+          (mousedown)="startDrag($event)"
+          (touchstart)="startDrag($event)"
+          (mousemove)="onDrag($event)"
+          (touchmove)="onDrag($event)"
+          (mouseup)="endDrag()"
+          (mouseleave)="endDrag()"
+          (touchend)="endDrag()"
+        >
           <div *ngFor="let plate of plates" class="slider-card">
             <!-- Plate display section -->
             <div class="plate-display" [ngClass]="getPlateBackgroundClass(plate)">
               <!-- Non-Saudi -->
               <div *ngIf="plate.license_plate?.plate_format?.country?.code !== 'SA'"
-                class="relative w-[216px] h-[90px] bg-white border-2 border-black rounded-md shadow-sm flex">
+                class="non-saudi-plate">
                 
                 <!-- Plate Fields -->
-                <div class="flex-1 relative">
+                <div class="plate-main">
                   <ng-container *ngIf="getPlateFieldMap(plate) as fieldMap">
                     <!-- City (top-center) -->
-                    <div class="absolute top-1 left-1/2 transform -translate-x-1/2 text-[10px] font-semibold text-gray-600 uppercase tracking-widest">
+                    <div class="city-label">
                       {{ plate.city }}
                     </div>
 
                     <!-- Country (bottom-center) -->
-                    <div class="absolute bottom-1 left-1/2 transform -translate-x-1/2 text-[10px] font-semibold text-gray-600 uppercase tracking-widest">
+                    <div class="country-label">
                       {{ getCountryName(plate) }}
                     </div>
 
                     <!-- Dynamic fields -->
                     <ng-container *ngFor="let pos of allPositions">
-                      <div *ngIf="fieldMap[pos]" [ngClass]="getPositionClass(pos)" class="absolute text-[14px] font-bold text-gray-800">
+                      <div *ngIf="fieldMap[pos]" [ngClass]="getPositionClass(pos)" class="plate-field">
                         {{ fieldMap[pos] }}
                       </div>
                     </ng-container>
 
                     <!-- Optional separator -->
                     <div *ngIf="fieldMap['left-center'] && fieldMap['right-center']"
-                      class="absolute top-1/2 left-1/2 w-px h-6 bg-gray-400 transform -translate-y-1/2 -translate-x-1/2">
+                      class="plate-separator">
                     </div>
                   </ng-container>
                 </div>
 
                 <!-- Country Sidebar -->
-                <div [ngClass]="getSidebarClass(plate)" class="flex flex-col items-center justify-center text-white px-1 py-1 w-[36px]">
+                <div [ngClass]="getSidebarClass(plate)" class="country-sidebar">
                   <ng-container [ngSwitch]="plate.license_plate?.plate_format?.country?.code">
                     <ng-container *ngSwitchCase="'AE'">
-                      <img src="/pictures/simple-icons_emirates.svg" [alt]="'PLATES.UAE_ICON' | translate" class="w-4 h-4 mb-0.5" />
-                      <span class="text-[10px] font-bold tracking-widest leading-tight">UAE</span>
+                      <img src="/pictures/simple-icons_emirates.svg" [alt]="'PLATES.UAE_ICON' | translate" class="country-icon" />
+                      <span class="country-code">UAE</span>
                     </ng-container>
                     <ng-container *ngSwitchCase="'KW'">
-                      <div class="text-[10px] font-bold tracking-widest leading-tight flex flex-col items-center space-y-[1px]">
+                      <div class="kuwait-text">
                         <span>K</span><span>W</span><span>T</span>
                       </div>
                     </ng-container>
                     <ng-container *ngSwitchDefault>
-                      <img src="/pictures/simple-icons_saudia.svg" [alt]="'PLATES.SAUDI_ICON' | translate" class="w-4 h-4 mb-0.5" />
-                      <span class="text-[10px] font-bold tracking-widest leading-tight">KSA</span>
+                      <img src="/pictures/simple-icons_saudia.svg" [alt]="'PLATES.SAUDI_ICON' | translate" class="country-icon" />
+                      <span class="country-code">KSA</span>
                     </ng-container>
                   </ng-container>
                 </div>
@@ -116,17 +133,17 @@
               <!-- Saudi plate -->
               <div *ngIf="plate.license_plate?.plate_format?.country?.code === 'SA'">
                 <div *ngIf="getSaudiPlateParts(plate) as parts">
-                  <div class="flex items-center justify-center">
-                    <div class="flex border-[2px] border-black rounded-md overflow-hidden shadow-sm bg-white">
-                      <div class="grid grid-cols-2 grid-rows-2 w-[180px] h-[90px]">
-                        <div class="flex items-center justify-center border border-black text-base font-bold text-black">{{ parts.arNumbers }}</div>
-                        <div class="flex items-center justify-center border border-black text-base font-bold text-black">{{ parts.arLetters }}</div>
-                        <div class="flex items-center justify-center border border-black text-base font-bold text-black">{{ parts.enNumbers }}</div>
-                        <div class="flex items-center justify-center border border-black text-base font-bold text-black uppercase">{{ parts.enLetters }}</div>
+                  <div class="saudi-plate-container">
+                    <div class="saudi-plate">
+                      <div class="saudi-grid">
+                        <div class="saudi-cell">{{ parts.arNumbers }}</div>
+                        <div class="saudi-cell">{{ parts.arLetters }}</div>
+                        <div class="saudi-cell">{{ parts.enNumbers }}</div>
+                        <div class="saudi-cell saudi-en-letters">{{ parts.enLetters }}</div>
                       </div>
-                      <div class="flex flex-col items-center justify-center bg-[#138c36] text-white px-1 py-1 w-[36px]">
-                        <img src="/pictures/simple-icons_saudia.svg" [alt]="'PLATES.SAUDI_ICON' | translate" class="w-4 h-4 mb-0.5" />
-                        <span class="text-[10px] font-bold tracking-widest leading-tight">KSA</span>
+                      <div class="saudi-sidebar">
+                        <img src="/pictures/simple-icons_saudia.svg" [alt]="'PLATES.SAUDI_ICON' | translate" class="country-icon" />
+                        <span class="country-code">KSA</span>
                       </div>
                     </div>
                   </div>
@@ -136,32 +153,35 @@
 
             <!-- Card details -->
             <div class="card-content">
-              <div class="mb-4">
-                <h3 class="font-bold text-lg text-gray-900 mb-1 line-clamp-2">{{ plate.title }}</h3>
-                <p class="text-gray-500 text-sm flex items-center gap-1">
-                  <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+              <div class="plate-info">
+                <h3 class="plate-title line-clamp-2">{{ plate.title }}</h3>
+                <p class="plate-country">
+                  <span class="status-dot"></span>
                   {{ getCountryName(plate) }}
                 </p>
               </div>
 
               <!-- Price section -->
-              <div class="mb-4">
-                <p class="text-2xl font-bold text-gray-900">
+              <div class="price-section">
+                <p class="price-value">
                   {{ isAuction(plate) ? plate.minimum_bid : plate.price }}
-                  <span class="text-sm font-medium text-gray-600 ml-1">
+                  <span class="currency">
                     {{ plate.license_plate?.plate_format?.country?.code === 'AE' ? 'AED' : 'SAR' }}
                   </span>
                 </p>
               </div>
 
               <!-- Action button -->
-              <button (click)="viewListing(plate.id)" class="w-full mt-2 py-2 border border-gray-300 rounded hover:bg-gray-50 transition">
-                {{ 'PLATES.VIEW_PLATE' | translate }}
+              <button class="button" (click)="viewListing(plate.id)">
+                {{ "PLATES.VIEW_PLATE" | translate }}
               </button>
             </div>
           </div>
         </div>
+
+
       </div>
     </div>
   </div>
 </section>
+

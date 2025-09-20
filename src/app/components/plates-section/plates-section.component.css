@@ -1,21 +1,363 @@
-/* <!-- Add this CSS to your component's styles or global styles -->
-<style> */
-/* Country-specific background colors */
-.uae-bg {
-  background: var(--Purple-100, #EBE9FE);
+/* Clean Fixed Responsive Plates Section Styles */
+
+/* Mobile First Approach */
+.main-section {
+  display: flex;
+  padding: 20px 16px 32px 16px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 32px;
+  background: #FFF;
 }
 
-.saudi-bg {
-  background: #E2FFEA;
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 32px;
+  width: 100%;
 }
 
-.kuwait-bg {
-  background: var(--Error-100, #FEE4E2);
+.content-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  width: 100%;
 }
 
-.default-bg {
-  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+/* Left Content */
+.left-content {
+  width: 100%;
 }
+
+.left-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.title-section {
+  color: var(--gray-900, #18181b);
+  font-family: Manrope;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 36px;
+}
+
+.badge-section {
+  margin-bottom: 8px;
+}
+
+.gcc-badge {
+  background: linear-gradient(to right, #fbbf24, #f59e0b);
+  color: #000;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: inline-block;
+}
+
+.description-section {
+  color: var(--gray-900, #18181b);
+  font-family: Manrope;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 26px;
+}
+
+.actions-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.button-wrapper {
+  display: flex;
+  align-items: flex-start;
+}
+
+.view-all-button {
+  display: flex;
+  height: 44px;
+  padding: 12px 32px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  border: 2px solid var(--Primary---Navy, #032C40);
+  background: transparent;
+  cursor: pointer;
+}
+
+.button-text {
+  color: var(--Primary---Navy, #032C40);
+  text-align: center;
+  font-family: Manrope;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 14px;
+  margin: 0;
+}
+
+.stats-wrapper {
+  display: flex;
+  gap: 20px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-card {
+  background: white;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.stat-number {
+  color: var(--gray-900, #18181B);
+  font-family: Manrope;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 28px;
+  margin: 0 0 4px 0;
+}
+
+.stat-label {
+  color: var(--gray-500, #71717A);
+  font-family: Manrope;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  margin: 0;
+}
+
+/* CLEAN SLIDER STYLES - NO CONFLICTS */
+.slider-container {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.slider-container::before,
+.slider-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 24px;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.slider-container::before {
+  left: 0;
+  background: linear-gradient(to right, rgba(255,255,255,1), rgba(255,255,255,0));
+}
+
+.slider-container::after {
+  right: 0;
+  background: linear-gradient(to left, rgba(255,255,255,1), rgba(255,255,255,0));
+}
+
+.slider-track {
+  display: flex;
+  gap: 16px;
+  transition: transform 0.3s ease-out;
+  cursor: grab;
+  user-select: none;
+  will-change: transform;
+}
+
+.slider-track.dragging {
+  transition: none;
+  cursor: grabbing;
+}
+
+.slider-card {
+  width: 280px;
+  height: 480px;
+  flex-shrink: 0;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+}
+
+/* Plate Display Styles */
+.plate-display {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f9fafb;
+  height: 140px;
+}
+
+.non-saudi-plate {
+  position: relative;
+  width: 200px;
+  height: 80px;
+  background: white;
+  border: 2px solid black;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+}
+
+.plate-main {
+  flex: 1;
+  position: relative;
+}
+
+.city-label {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 8px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.country-label {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 8px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.plate-field {
+  position: absolute;
+  font-size: 12px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.plate-separator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1px;
+  height: 20px;
+  background: #9ca3af;
+  transform: translate(-50%, -50%);
+}
+
+.country-sidebar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  padding: 4px;
+  width: 32px;
+}
+
+.country-icon {
+  width: 12px;
+  height: 12px;
+  margin-bottom: 2px;
+}
+
+.country-code {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  line-height: 1;
+}
+
+.kuwait-text {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Saudi Plate Styles */
+.saudi-plate-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.saudi-plate {
+  display: flex;
+  border: 2px solid black;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background: white;
+}
+
+.saudi-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  width: 160px;
+  height: 80px;
+}
+
+.saudi-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid black;
+  font-size: 12px;
+  font-weight: 700;
+  color: black;
+}
+
+.saudi-en-letters {
+  text-transform: uppercase;
+}
+
+.saudi-sidebar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #138c36;
+  color: white;
+  padding: 4px;
+  width: 32px;
+}
+
+/* Card Content */
+.card-content {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  height: calc(100% - 140px);
+}
+
+.plate-info {
+  margin-bottom: 16px;
+}
+
+.plate-title {
+  font-weight: 700;
+  font-size: 16px;
+  color: #111827;
+  margin-bottom: 4px;
+  line-height: 22px;
+}
+
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -23,101 +365,85 @@
   overflow: hidden;
 }
 
-/* Responsive text sizing for long plate letters */
-.break-all {
-  word-break: break-all;
-}
-
-/* Smooth transitions for hover effects */
-.transition-all {
-  transition: all 0.2s ease-in-out;
-}
-
-/* Custom border width */
-.border-3 {
-  border-width: 3px;
-}
-
-/* Ensure proper text wrapping in plate display */
-@media (max-width: 768px) {
-  .plate-letters {
-    font-size: 0.875rem;
-    line-height: 1.2;
-  }
-}
-/* </style> */
-
-.slider-track {
-  display: flex;
-  gap: 20px;
-  transition: transform 0.3s ease;
-  padding: 10px 0;
-}
-
-.slider-track.dragging {
-  transition: none;
-}
-
-.slider-card {
-  min-width: 300px;
-  background: white;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  flex-shrink: 0;
-  border: 1px solid #e5e7eb;
-}
-
-.plate-display {
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #f9fafb;
-}
-
-.card-content {
-  padding: 20px;
-}
-
-.card-content h3 {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 8px;
-}
-
-.price-label {
-  font-size: 12px;
+.plate-country {
   color: #6b7280;
-  margin-bottom: 4px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  background: #10b981;
+  border-radius: 50%;
+}
+
+.price-section {
+  margin-bottom: 16px;
 }
 
 .price-value {
-  font-size: 16px;
-  font-weight: 600;
-  color: #ef4444;
-  margin-bottom: 12px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
 }
 
-.card-content button {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #e5e7eb;
-  color: #18181B;
-  background: white;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.2s;
+.currency {
+  font-size: 12px;
   font-weight: 500;
+  color: #6b7280;
+  margin-left: 4px;
 }
 
-.button{
+.button {
+  display: flex;
+  width: 100%;
+  padding: 10px 16px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  background: white;
+  box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
   cursor: pointer;
+  color: #374151;
+  font-family: Manrope;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  margin-top: auto;
 }
-.card-content button:hover {
-  background: #f3f4f6;
+
+.button:hover {
+  background: #f9fafb;
 }
-/* Ensure these are in your component's CSS */
+
+.no-results {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  background: #f9fafb;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.no-results-content {
+  text-align: center;
+}
+
+.no-results-text {
+  font-size: 16px;
+  color: #6b7280;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* Country Background Colors */
 .uae-bg {
   background: var(--Purple-100, #EBE9FE) !important;
 }
@@ -133,17 +459,283 @@
 .default-bg {
   background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%) !important;
 }
-.slider-track {
-  display: flex;
-  gap: 20px;
-  transition: transform 0.3s ease;
-  padding: 10px;
-  margin-right: -20px; /* Allow overflow on the right */
+
+.rtl .slider-track {
+  flex-direction: row-reverse;
 }
 
-.slider-card {
-  min-width: 300px;
-  width: 300px; /* Fixed width helps with calculations */
-  flex-shrink: 0; /* Prevent cards from shrinking */
-  /* ... rest of your card styles ... */
+/* Tablet Styles */
+@media (min-width: 768px) {
+  .main-section {
+    padding: 32px 40px 48px 40px;
+    gap: 40px;
+  }
+  
+  .content-wrapper {
+    flex-direction: row;
+    gap: 48px;
+    align-items: flex-start;
+  }
+  
+  .left-content {
+    width: 400px;
+    flex-shrink: 0;
+  }
+  
+  .left-inner {
+    gap: 24px;
+  }
+  
+  .title-section {
+    font-size: 40px;
+    line-height: 50px;
+  }
+  
+  .gcc-badge {
+    font-size: 13px;
+    padding: 8px 16px;
+  }
+  
+  .description-section {
+    font-size: 17px;
+    line-height: 28px;
+  }
+  
+  .actions-section {
+    gap: 32px;
+  }
+  
+  .view-all-button {
+    height: 46px;
+    padding: 14px 48px;
+  }
+  
+  .button-text {
+    font-size: 15px;
+    line-height: 15px;
+  }
+  
+  .stats-wrapper {
+    gap: 24px;
+  }
+  
+  .stat-card {
+    padding: 18px;
+  }
+  
+  .stat-number {
+    font-size: 24px;
+    line-height: 32px;
+  }
+  
+  .stat-label {
+    font-size: 15px;
+    line-height: 22px;
+  }
+  
+  .slider-container {
+    flex: 1;
+    max-width: 650px;
+  }
+  
+  .slider-container::before,
+  .slider-container::after {
+    width: 32px;
+  }
+  
+  .slider-card {
+    width: 300px;
+    height: 500px;
+  }
+  
+  .plate-display {
+    height: 150px;
+  }
+  
+  .non-saudi-plate {
+    width: 210px;
+    height: 85px;
+  }
+  
+  .saudi-grid {
+    width: 170px;
+    height: 85px;
+  }
+  
+  .country-sidebar,
+  .saudi-sidebar {
+    width: 34px;
+  }
+  
+  .plate-title {
+    font-size: 17px;
+    line-height: 23px;
+  }
+  
+  .price-value {
+    font-size: 22px;
+  }
+  
+  .button {
+    font-size: 15px;
+    line-height: 22px;
+    padding: 11px 18px;
+  }
+}
+
+/* Desktop Styles */
+@media (min-width: 1024px) {
+  .main-section {
+    padding: 32px 80px 48px 80px;
+    gap: 50px;
+  }
+  
+  .content-wrapper {
+    gap: 72px;
+  }
+  
+  .left-content {
+    width: 495px;
+  }
+  
+  .left-inner {
+    gap: 30px;
+  }
+  
+  .title-section {
+    font-size: 52px;
+    line-height: 66px;
+  }
+  
+  .gcc-badge {
+    font-size: 14px;
+    padding: 8px 16px;
+    margin-bottom: 24px;
+  }
+  
+  .description-section {
+    font-size: 18px;
+    line-height: 30px;
+  }
+  
+  .actions-section {
+    gap: 45px;
+  }
+  
+  .view-all-button {
+    height: 48px;
+    padding: 17.25px 57.63px 14.75px 57.63px;
+  }
+  
+  .button-text {
+    font-size: 16px;
+    line-height: 16px;
+  }
+  
+  .stats-wrapper {
+    gap: 32px;
+  }
+  
+  .stat-card {
+    padding: 20px;
+  }
+  
+  .stat-number {
+    font-size: 28px;
+    line-height: 36px;
+  }
+  
+  .stat-label {
+    font-size: 16px;
+    line-height: 24px;
+  }
+  
+  .slider-container {
+    max-width: none;
+  }
+  
+  .slider-container::before,
+  .slider-container::after {
+    width: 40px;
+  }
+  
+  .slider-card {
+    width: 324px;
+    height: 520px;
+  }
+  
+  .plate-display {
+    height: 160px;
+    padding: 24px;
+  }
+  
+  .non-saudi-plate {
+    width: 216px;
+    height: 90px;
+  }
+  
+  .city-label,
+  .country-label {
+    font-size: 10px;
+  }
+  
+  .plate-field {
+    font-size: 14px;
+  }
+  
+  .saudi-grid {
+    width: 180px;
+    height: 90px;
+  }
+  
+  .saudi-cell {
+    font-size: 14px;
+  }
+  
+  .country-sidebar,
+  .saudi-sidebar {
+    width: 36px;
+  }
+  
+  .country-icon {
+    width: 16px;
+    height: 16px;
+    margin-bottom: 2px;
+  }
+  
+  .country-code {
+    font-size: 10px;
+  }
+  
+  .kuwait-text {
+    font-size: 10px;
+  }
+  
+  .card-content {
+    height: calc(100% - 160px);
+    padding: 24px;
+  }
+  
+  .plate-title {
+    font-size: 18px;
+    line-height: 24px;
+  }
+  
+  .plate-country {
+    font-size: 14px;
+  }
+  
+  .price-value {
+    font-size: 24px;
+  }
+  
+  .currency {
+    font-size: 14px;
+  }
+  
+  .button {
+    font-size: 16px;
+    line-height: 24px;
+    padding: 12px 18px;
+  }
 }

@@ -5,6 +5,7 @@
     "BRAND": "Brand",
     "SELECT_BRAND": "Select a brand",
     "MODEL": "Model",
+    "MODELB": "Category",
     "SELECT_MODEL": "Select a model",
     "YEAR": "Year",
     "SELECT_YEAR": "Select a year",
@@ -40,8 +41,9 @@
     "MIDDLEMAN": "Middleman",
     "OWNER": "Selling your own vehicle",
     "BACK": "Back",
-    "NEXT": "Next"
-  
+    "NEXT": "Next",
+  "DESCRIPTION_REQUIRED": "Description is required",
+  "DESCRIPTION_TOO_SHORT": "Description must be at least 20 characters long"
   },
   "USED_MOTORCYCLES": {
     "TITLE": "Used",

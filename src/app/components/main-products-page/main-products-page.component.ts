@@ -69,11 +69,18 @@ export class MainProductsPageComponent implements OnInit {
   isModalOpen = false;
 
 
+  isInWishlist: boolean = false;
+wishlistId: number | null = null;
+
   allPositions: string[] = [
   'top-left', 'top-center', 'top-right',
   'left-center', 'center', 'right-center',
   'bottom-left', 'bottom-center', 'bottom-right'
 ];
+
+
+isPhoneVisible: boolean = true;
+isLoading: boolean = false;
 
   constructor(
     private listingService: ListingService,
@@ -93,10 +100,14 @@ export class MainProductsPageComponent implements OnInit {
     });
   }
 
+  togglePhoneVisibility(): void {
+    this.isPhoneVisible = !this.isPhoneVisible;
+  }
+
   loadListing(id: number): void {
-    this.listingService.getListing(id).subscribe({ // Change ID as needed
+    this.listingService.getListing(id).subscribe({
       next: (data) => {
-        this.listingId = data.id
+        this.listingId = data.id;
         this.listing = data;
         this.isMotorcycle = !!data.motorcycle;
         this.isSparePart = !!data.spare_part;
@@ -108,13 +119,36 @@ export class MainProductsPageComponent implements OnInit {
         console.error(err);
       }
     });
-
   }
+
+  //   togglePhoneVisibility(): void {
+  //   this.isPhoneVisible = !this.isPhoneVisible;
+  // }
+
+  // loadListing(id: number): void {
+  //   this.listingService.getListing(id).subscribe({ // Change ID as needed
+  //     next: (data) => {
+  //       this.listingId = data.id
+  //       this.listing = data;
+  //       this.isMotorcycle = !!data.motorcycle;
+  //       this.isSparePart = !!data.spare_part;
+  //       this.loading = false;
+  //     },
+  //     error: (err) => {
+  //       this.error = 'Failed to load listing';
+  //       this.loading = false;
+  //       console.error(err);
+  //     }
+  //   });
+
+  // }
 
   lastSoom(id:number){
     this.listingService.lastSoom(id).subscribe({
        next: (response: any) => {
-      this.lastsoom = response.data.min_soom || null; // Access the nested amount
+      this.lastsoom = response.listing_minimum_bid || response.data.amount; // Access the nested amount
+      
+      console.log('this.lastsoom: ', this.lastsoom);
     }
     })
   }
@@ -219,24 +253,95 @@ getSaudiPlateParts(plate: any): {
   return { arLetters, arNumbers, enLetters, enNumbers };
 }
 
+// checkWishlistStatus(): void {
+//   this.listingService.getUserWishlists().subscribe({
+//     next: (wishlists) => {
+//       const wishlistItem = wishlists.find((item: any) => item.listing_id === this.listingId);
+//       this.isInWishlist = !!wishlistItem;
+//       if (wishlistItem) {
+//         this.wishlistId = wishlistItem.id;
+//       }
+//     },
+//     error: (error) => {
+//       console.error('Error fetching wishlists', error);
+//     }
+//   });
+// }
 
-  toggleWishlist(): void {
-    // const previousState = this.listing.wishlist;
-
-    // // Optimistic UI update
-    // this.listing.wishlist = !previousState;
-
+// toggleWishlist(): void {
+//   if (this.isInWishlist) {
+//     this.removeFromWishlist();
+//   } else {
+//     this.addToWishlist();
+//   }
+// }
+toggleWishlist(): void {
+    if (!this.listingId) return;
+    
+    const previousState = this.listing.wishlist;
+    
+    // Optimistic UI update
+    this.listing.wishlist = !previousState;
+    
     this.listingService.toggleWishlist(this.listingId).subscribe({
-      next: ()=>{
-        // this.auth.fetchUserProfileOnce();
+      next: (response) => {
+        // Success - no action needed
       },
-      error: () => {
+      error: (error) => {
         // Revert on error
-        // this.listing.wishlist = previousState;
-        // this.toastr.error('Failed to update wishlist'); // Optional
+        this.listing.wishlist = previousState;
+        console.error('Error updating wishlist', error);
       }
     });
   }
+
+
+addToWishlist(): void {
+  this.listingService.toggleWishlist(this.listingId).subscribe({
+    next: (response) => {
+      this.isInWishlist = true;
+      this.wishlistId = response.id;
+    },
+    error: (error) => {
+      console.error('Error adding to wishlist', error);
+    }
+  });
+}
+
+removeFromWishlist(): void {
+  if (!this.wishlistId) return;
+  
+  // this.listingService.removeFromWishlist(this.wishlistId).subscribe({
+  //   next: () => {
+  //     this.isInWishlist = false;
+  //     this.wishlistId = null;
+  //   },
+  //   error: (error) => {
+  //     console.error('Error removing from wishlist', error);
+  //   }
+  // });
+}
+
+  // toggleWishlist(): void {
+  //   // const previousState = this.listing.wishlist;
+
+  //   // // Optimistic UI update
+  //   // this.listing.wishlist = !previousState;
+
+  //   this.listingService.toggleWishlist(this.listingId).subscribe({
+  //     next: ()=>{
+  //       // this.auth.fetchUserProfileOnce();
+  //     },
+  //     error: () => {
+  //       // Revert on error
+  //       // this.listing.wishlist = previousState;
+  //       // this.toastr.error('Failed to update wishlist'); // Optional
+  //     }
+  //   });
+  // }
+
+
+
   // loadListing(): void {
   //   this.listingService.getListing(42).subscribe({ // Change ID as needed
   //     next: (data) => {
@@ -436,7 +541,7 @@ performSoomSubmission(): void {
       } else if (error.status === 403) {
         this.soomError = 'You are not authorized to submit a soom for this listing.';
       } else {
-        this.soomError = 'Failed to submit soom. Please try again later.';
+        this.soomError = 'You already have a pending SOOM for this listing.';
       }
     }
   });

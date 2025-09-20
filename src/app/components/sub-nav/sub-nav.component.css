@@ -74,3 +74,25 @@ select:focus {
   outline: none;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
+.search-input{
+  display: flex;
+height: 32px;
+padding: 4px 12px 4px 4px;
+align-items: flex-start;
+gap: 6px;
+  border-radius: 6px;
+border: 1px solid var(--Gray-200, #E4E7EC);
+background: var(--black-white-white, #FFF);
+
+}
+
+.sellBtn{
+  display: flex;
+/* padding: 6px 8px; */
+flex-direction: column;
+align-items: center;
+gap: 10px;
+border-radius: 6px;
+border: 1px solid var(--Primary, #F03D24);
+background: var(--White, #FFF);
+}

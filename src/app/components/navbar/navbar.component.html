@@ -1,15 +1,15 @@
 <!-- navbar.component.html -->
 
-<nav class="bg-gray-900 text-white p-4">
-  <div class="container mx-auto flex flex-wrap justify-between items-center">
+<nav class="main-nav">
+  <div class="navbar-container">
     <!-- Logo -->
-    <div class="flex items-center">
+    <div class="logostyle">
       <img routerLink="/home" src="/pictures/mainLogo.png" alt="Dab" class="h-8 cursor-pointer" />
     </div>
-<div class="flex items-center gap-2 ml-4">
+<!-- <div class="flex items-center gap-2 ml-4">
     <button (click)="switchLang('en')" class="text-sm px-3 py-1 rounded bg-gray-700 hover:bg-gray-600">EN</button>
     <button (click)="switchLang('ar')" class="text-sm px-3 py-1 rounded bg-gray-700 hover:bg-gray-600">AR</button>
-  </div>
+  </div> -->
     <!-- Mobile Menu Button -->
     <button (click)="toggleMobileMenu()" class="md:hidden text-white focus:outline-none">
       <i class="fa-solid" [ngClass]="{'fa-bars': !mobileMenuOpen, 'fa-times': mobileMenuOpen}"></i>
@@ -19,13 +19,13 @@
     <div [ngClass]="{'hidden': !mobileMenuOpen}" class="w-full md:flex md:w-auto md:items-center mt-4 md:mt-0">
       @if(isLoggedIn){
         <ul class="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0 mb-4 md:mb-0">
-          <li><a (click)="selectMenu('home'); toggleMobileMenu()" class="block hover:text-gray-300 cursor-pointer">Home</a></li>
-          <li><a (click)="selectMenu('marketplace'); toggleMobileMenu()" class="block hover:text-gray-300 cursor-pointer">Marketplace</a></li>
-          <li><a (click)="selectMenu('usedParts'); toggleMobileMenu()" class="block hover:text-gray-300 cursor-pointer">Used Parts</a></li>
-          <li><a (click)="selectMenu('services'); toggleMobileMenu()" class="block hover:text-gray-300 cursor-pointer">Services</a></li>
-          <li><a (click)="selectMenu('guide'); toggleMobileMenu()" class="block hover:text-gray-300 cursor-pointer">Guide</a></li>
-          <li><a (click)="selectMenu('contact-us'); toggleMobileMenu()" class="block hover:text-gray-300 cursor-pointer">Contact Us</a></li>
-          <li><a (click)="selectMenu('about-us'); toggleMobileMenu()" class="block hover:text-gray-300 cursor-pointer">About Us</a></li>
+          <li><a (click)="selectMenu('home'); toggleMobileMenu()" class="list-navigation">Home</a></li>
+          <!-- <li><a (click)="selectMenu('marketplace'); toggleMobileMenu()" class="list-navigation">Marketplace</a></li> -->
+          <li><a (click)="selectMenu('usedParts'); toggleMobileMenu()" class="list-navigation">Used Parts</a></li>
+          <!-- <li><a (click)="selectMenu('services'); toggleMobileMenu()" class="list-navigation">Services</a></li> -->
+          <!-- <li><a (click)="selectMenu('guide'); toggleMobileMenu()" class="list-navigation">Guide</a></li> -->
+          <li><a (click)="selectMenu('contact-us'); toggleMobileMenu()" class="list-navigation">Contact Us</a></li>
+          <li><a (click)="selectMenu('about-us'); toggleMobileMenu()" class="list-navigation">About Us</a></li>
         </ul>
 
         <!-- Profile Button - Mobile -->

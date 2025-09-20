@@ -3,6 +3,40 @@ nav {
   z-index: 1000;
 }
 
+.main-nav{
+  display: flex;
+padding: 16px 0;
+flex-direction: column;
+align-items: center;
+gap: 16px;
+align-self: stretch;
+background: var(--Primary---Navy, #032C40);
+}
+
+.navbar-container{
+  display: flex;
+width: 1140px;
+justify-content: space-between;
+align-items: center;
+}
+.logostyle{
+  width: 128px;
+height: 38.014px;
+flex-shrink: 0;
+}
+
+.list-navigation{
+color: var(--Gray-300, #D0D5DD);
+text-align: center;
+font-family: Manrope;
+font-size: 14px;
+font-style: normal;
+font-weight: 300;
+line-height: 24px; /* 171.429% */
+letter-spacing: -0.084px;
+cursor:pointer
+}
+
 /* For mobile menu transitions */
 @media (max-width: 768px) {
   nav div[class*="w-full"] {

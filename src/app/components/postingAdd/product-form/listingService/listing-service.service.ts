@@ -154,4 +154,7 @@ checkPaymentStatus(paymentId: number): Observable<any> {
 // getSingleDraft(id: number):Observable<any[]> {
 //   return this.http.get<any[]>(this.baseUrl +`listings/draft/${id}`);
 // }
+getWishlist(): Observable<any> {
+  return this.http.get<any>(this.baseUrl + 'wishlists');
+}
 }

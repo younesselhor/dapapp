@@ -1,4 +1,15 @@
 /* app.component.css */
+.main-page-style {
+  width: 100%;        /* full width */
+  max-width: 1440px;  /* max pour grand écran */
+  margin: 0 auto;     /* center */
+  /* padding: 24px; */
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  box-sizing: border-box;
+}
+
 .main-container {
   margin-top: 60px; /* Account for navbar */
   padding: 0 20px;

@@ -8,267 +8,336 @@
 <div *ngIf="error" class="p-4 bg-red-100 text-red-700 rounded">
   {{ error }}
 </div>
-<div
-  *ngIf="listing && !loading"
-  class="max-w-6xl mx-auto p-6 bg-white rounded-lg my-10"
->
+<div *ngIf="listing && !loading" class="main-container">
   <!-- Image Gallery -->
-  <div *ngIf="listing.category_id !== 3 && !listing.license_plate" class="mb-6">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-      <!-- Left column with 2 stacked images -->
-      <div class="space-y-2">
-        <div
-          *ngIf="listing.images[0]"
-          (click)="setActiveImage(0)"
-          class="relative h-48 bg-gray-200 rounded-lg overflow-hidden cursor-pointer"
-          [class.border-2]="activeImageIndex === 0"
-          [class.border-blue-500]="activeImageIndex === 0"
-        >
-          <img
-            [src]="listing.images[0]"
-            alt="{{ listing.title }}"
-            class="w-full h-full object-cover"
-          />
-        </div>
-        <div
-          *ngIf="listing.images[1]"
-          (click)="setActiveImage(1)"
-          class="relative h-48 bg-gray-200 rounded-lg overflow-hidden cursor-pointer"
-          [class.border-2]="activeImageIndex === 1"
-          [class.border-blue-500]="activeImageIndex === 1"
-        >
-          <img
-            [src]="listing.images[1]"
-            alt="{{ listing.title }}"
-            class="w-full h-full object-cover"
-          />
-          <!-- Show remaining images count if more than 3 -->
-          <div
-            *ngIf="listing.images.length > 3"
-            class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center text-white font-bold text-xl"
-          >
-            +{{ listing.images.length - 3 }} more
-          </div>
-        </div>
-      </div>
 
-      <!-- Right column with 1 big image -->
+  <div
+    *ngIf="listing.category_id !== 3 && !listing.license_plate"
+    class="flex gap-2 mb-6 main-pic"
+  >
+    <!-- Left big image -->
+    <div
+      *ngIf="listing.images[2]"
+      (click)="setActiveImage(2)"
+      class="flex-1 h-[605px] bg-gray-200 rounded-lg overflow-hidden cursor-pointer"
+      [class.border-2]="activeImageIndex === 2"
+      [class.border-blue-500]="activeImageIndex === 2"
+    >
+      <img
+        [src]="listing.images[2]"
+        alt="{{ listing.title }}"
+        class="w-full h-full object-cover"
+      />
+    </div>
+
+    <!-- Right column with 2 stacked images -->
+    <div class="flex flex-col gap-2 w-[442px]">
       <div
-        *ngIf="listing.images[2]"
-        (click)="setActiveImage(2)"
-        class="h-full bg-gray-200 rounded-lg overflow-hidden cursor-pointer"
-        [class.border-2]="activeImageIndex === 2"
-        [class.border-blue-500]="activeImageIndex === 2"
+        *ngIf="listing.images[0]"
+        (click)="setActiveImage(0)"
+        class="relative w-full h-[300px] bg-gray-200 rounded-lg overflow-hidden cursor-pointer"
+        [class.border-2]="activeImageIndex === 0"
+        [class.border-blue-500]="activeImageIndex === 0"
       >
         <img
-          [src]="listing.images[2]"
+          [src]="listing.images[0]"
           alt="{{ listing.title }}"
           class="w-full h-full object-cover"
         />
       </div>
-    </div>
 
+      <div
+        *ngIf="listing.images[1]"
+        (click)="setActiveImage(1)"
+        class="relative w-full h-[300px] bg-gray-200 rounded-lg overflow-hidden cursor-pointer"
+        [class.border-2]="activeImageIndex === 1"
+        [class.border-blue-500]="activeImageIndex === 1"
+      >
+        <img
+          [src]="listing.images[1]"
+          alt="{{ listing.title }}"
+          class="w-full h-full object-cover"
+        />
+
+        <!-- Show remaining images count if more than 3 -->
+        <div
+          *ngIf="listing.images.length > 3"
+          class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center text-white font-bold text-xl"
+        >
+          +{{ listing.images.length - 3 }} more
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Show license plate if category is 3 (license plates) -->
-<!-- Show license plate if category is 3 (license plates) -->
-<div *ngIf="listing.category_id === 3 && listing.license_plate" class="mb-6 flex justify-center">
-  <div class="plate-display" [ngClass]="getPlateBackgroundClass(listing)">
-    <!-- Non-Saudi plate - scaled up -->
-    <div *ngIf="listing.license_plate.plate_format?.country?.code !== 'SA'"
-      class="relative w-[324px] h-[135px] bg-white border-3 border-black rounded-md shadow-sm flex transform scale-125">
-      
-      <!-- Plate Fields -->
-      <div class="flex-1 relative">
-        <ng-container *ngIf="getPlateFieldMap(listing) as fieldMap">
-          <!-- City -->
-          <div class="absolute top-1 left-1/2 transform -translate-x-1/2 text-[15px] font-semibold text-gray-600 uppercase tracking-widest">
-            {{ listing.city }}
-          </div>
-          <!-- Country -->
-          <div class="absolute bottom-1 left-1/2 transform -translate-x-1/2 text-[15px] font-semibold text-gray-600 uppercase tracking-widest">
-            {{ getCountryName(listing) }}
-          </div>
-
-          <!-- Fields -->
-          <ng-container *ngFor="let pos of allPositions">
-            <div *ngIf="fieldMap[pos]" [ngClass]="getPositionClass(pos)" class="absolute text-[21px] font-bold text-gray-800">
-              {{ fieldMap[pos] }}
-            </div>
-          </ng-container>
-
-          <!-- Separator -->
-          <div *ngIf="fieldMap['left-center'] && fieldMap['right-center']"
-            class="absolute top-1/2 left-1/2 w-px h-9 bg-gray-400 transform -translate-y-1/2 -translate-x-1/2">
-          </div>
-        </ng-container>
-      </div>
-
-      <!-- Sidebar -->
-      <div [ngClass]="getSidebarClass(listing)" class="flex flex-col items-center justify-center text-white px-1.5 py-1.5 w-[54px]">
-        <ng-container [ngSwitch]="listing.license_plate?.plate_format?.country?.code">
-          <ng-container *ngSwitchCase="'AE'">
-            <img src="/pictures/simple-icons_emirates.svg" class="w-6 h-6 mb-1" />
-            <span class="text-[15px] font-bold tracking-widest leading-tight">UAE</span>
-          </ng-container>
-          <ng-container *ngSwitchCase="'KW'">
-            <div class="text-[15px] font-bold tracking-widest leading-tight flex flex-col items-center space-y-[2px]">
-              <span>K</span><span>W</span><span>T</span>
-            </div>
-          </ng-container>
-          <ng-container *ngSwitchDefault>
-            <img src="/pictures/simple-icons_saudia.svg" class="w-6 h-6 mb-1" />
-            <span class="text-[15px] font-bold tracking-widest leading-tight">KSA</span>
-          </ng-container>
-        </ng-container>
-      </div>
-    </div>
-
-    <!-- Saudi plate - scaled up -->
-    <div *ngIf="listing.license_plate.plate_format?.country?.code === 'SA'">
-      <div *ngIf="getSaudiPlateParts(listing) as parts" class="transform scale-125">
-        <div class="flex items-center justify-center">
-          <div class="flex border-[3px] border-black rounded-md overflow-hidden shadow-sm bg-white">
-            <div class="grid grid-cols-2 grid-rows-2 w-[270px] h-[135px]">
-              <div class="flex items-center justify-center border border-black text-[21px] font-bold text-black">{{ parts.arNumbers }}</div>
-              <div class="flex items-center justify-center border border-black text-[21px] font-bold text-black">{{ parts.arLetters }}</div>
-              <div class="flex items-center justify-center border border-black text-[21px] font-bold text-black">{{ parts.enNumbers }}</div>
-              <div class="flex items-center justify-center border border-black text-[21px] font-bold text-black uppercase">{{ parts.enLetters }}</div>
-            </div>
-            <div class="flex flex-col items-center justify-center bg-[#138c36] text-white px-1.5 py-1.5 w-[54px]">
-              <img src="/pictures/simple-icons_saudia.svg" class="w-6 h-6 mb-1" />
-              <span class="text-[15px] font-bold tracking-widest leading-tight">KSA</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-  
-<!-- Image Modal -->
-<div
-  *ngIf="isModalOpen"
-  class="fixed inset-0 z-50 flex items-center justify-center bg-gray bg-opacity-100"
-  (click)="closeModalImages()"
->
-  <!-- Modal content - stops propagation to prevent closing when clicking inside -->
-  <div 
-    class="relative max-w-4xl w-full px-4"
-    (click)="$event.stopPropagation()"
+  <!-- Show license plate if category is 3 (license plates) -->
+  <div
+    *ngIf="listing.category_id === 3 && listing.license_plate"
+    class="mb-6 flex justify-center"
   >
-    <!-- Close button -->
-    <button
-      class="absolute -top-10 right-0 text-white text-3xl hover:text-gray-300 transition-colors"
-      (click)="closeModalImages()"
-    >
-      &times;
-    </button>
-
-    <!-- Previous arrow -->
-    <button
-      class="absolute left-0 top-1/2 transform -translate-y-1/2 text-white text-4xl z-10 hover:text-gray-300 transition-colors"
-      (click)="prevImage()"
-    >
-      &#10094;
-    </button>
-
-    <!-- Image -->
-    <img
-      [src]="listing.images[activeImageIndex]"
-      class="max-h-[80vh] w-full object-contain rounded-lg"
-    />
-
-    <!-- Next arrow -->
-    <button
-      class="absolute right-0 top-1/2 transform -translate-y-1/2 text-white text-4xl z-10 hover:text-gray-300 transition-colors"
-      (click)="nextImage()"
-    >
-      &#10095;
-    </button>
-  </div>
-</div>
-
-  <div *ngIf="listing.allow_submission === 0">
-    <!-- Header Section with Two Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-      <!-- Card 1: Title, Price, Location - spans 2 columns on medium screens -->
+    <div class="plate-display" [ngClass]="getPlateBackgroundClass(listing)">
+      <!-- Non-Saudi plate - scaled up -->
       <div
-        class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 relative md:col-span-2"
+        *ngIf="listing.license_plate.plate_format?.country?.code !== 'SA'"
+        class="relative w-[324px] h-[135px] bg-white border-3 border-black rounded-md shadow-sm flex transform scale-125"
       >
-        <!-- Share and Like buttons at top right -->
-        <div class="absolute top-4 right-4 flex gap-2">
-          <button
-            class="p-2 text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              viewBox="0 0 20 20"
-              fill="currentColor"
+        <!-- Plate Fields -->
+        <div class="flex-1 relative">
+          <ng-container *ngIf="getPlateFieldMap(listing) as fieldMap">
+            <!-- City -->
+            <div
+              class="absolute top-1 left-1/2 transform -translate-x-1/2 text-[15px] font-semibold text-gray-600 uppercase tracking-widest"
             >
-              <path
-                d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z"
-              />
-            </svg>
-          </button>
-          <button
-            (click)="toggleWishlist()"
-            class="p-2 rounded-full hover:bg-gray-100 transition-colors"
-            [class.text-red-500]="listing.wishlist"
-            [class.text-gray-500]="!listing.wishlist"
-            [attr.aria-label]="
-              listing.wishlist ? 'Remove from wishlist' : 'Add to wishlist'
-            "
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              viewBox="0 0 20 20"
-              fill="currentColor"
+              {{ listing.city }}
+            </div>
+            <!-- Country -->
+            <div
+              class="absolute bottom-1 left-1/2 transform -translate-x-1/2 text-[15px] font-semibold text-gray-600 uppercase tracking-widest"
             >
-              <path
-                fill-rule="evenodd"
-                d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
-                clip-rule="evenodd"
-              />
-            </svg>
-          </button>
+              {{ getCountryName(listing) }}
+            </div>
+
+            <!-- Fields -->
+            <ng-container *ngFor="let pos of allPositions">
+              <div
+                *ngIf="fieldMap[pos]"
+                [ngClass]="getPositionClass(pos)"
+                class="absolute text-[21px] font-bold text-gray-800"
+              >
+                {{ fieldMap[pos] }}
+              </div>
+            </ng-container>
+
+            <!-- Separator -->
+            <div
+              *ngIf="fieldMap['left-center'] && fieldMap['right-center']"
+              class="absolute top-1/2 left-1/2 w-px h-9 bg-gray-400 transform -translate-y-1/2 -translate-x-1/2"
+            ></div>
+          </ng-container>
         </div>
 
-        <!-- Rest of your card content remains the same -->
-        <h1 class="text-2xl font-bold text-gray-800 pr-8">{{ listing.title }}</h1>
-        <div class="mt-2">
-          <span class="text-xl font-semibold text-red-600"
-            >SAR{{ listing.price }}</span
+        <!-- Sidebar -->
+        <div
+          [ngClass]="getSidebarClass(listing)"
+          class="flex flex-col items-center justify-center text-white px-1.5 py-1.5 w-[54px]"
+        >
+          <ng-container
+            [ngSwitch]="listing.license_plate?.plate_format?.country?.code"
           >
+            <ng-container *ngSwitchCase="'AE'">
+              <img
+                src="/pictures/simple-icons_emirates.svg"
+                class="w-6 h-6 mb-1"
+              />
+              <span class="text-[15px] font-bold tracking-widest leading-tight"
+                >UAE</span
+              >
+            </ng-container>
+            <ng-container *ngSwitchCase="'KW'">
+              <div
+                class="text-[15px] font-bold tracking-widest leading-tight flex flex-col items-center space-y-[2px]"
+              >
+                <span>K</span><span>W</span><span>T</span>
+              </div>
+            </ng-container>
+            <ng-container *ngSwitchDefault>
+              <img
+                src="/pictures/simple-icons_saudia.svg"
+                class="w-6 h-6 mb-1"
+              />
+              <span class="text-[15px] font-bold tracking-widest leading-tight"
+                >KSA</span
+              >
+            </ng-container>
+          </ng-container>
         </div>
-        <div class="flex items-center text-gray-600 mt-4">
+      </div>
+
+      <!-- Saudi plate - scaled up -->
+      <div *ngIf="listing.license_plate.plate_format?.country?.code === 'SA'">
+        <div
+          *ngIf="getSaudiPlateParts(listing) as parts"
+          class="transform scale-125"
+        >
+          <div class="flex items-center justify-center">
+            <div
+              class="flex border-[3px] border-black rounded-md overflow-hidden shadow-sm bg-white"
+            >
+              <div class="grid grid-cols-2 grid-rows-2 w-[270px] h-[135px]">
+                <div
+                  class="flex items-center justify-center border border-black text-[21px] font-bold text-black"
+                >
+                  {{ parts.arNumbers }}
+                </div>
+                <div
+                  class="flex items-center justify-center border border-black text-[21px] font-bold text-black"
+                >
+                  {{ parts.arLetters }}
+                </div>
+                <div
+                  class="flex items-center justify-center border border-black text-[21px] font-bold text-black"
+                >
+                  {{ parts.enNumbers }}
+                </div>
+                <div
+                  class="flex items-center justify-center border border-black text-[21px] font-bold text-black uppercase"
+                >
+                  {{ parts.enLetters }}
+                </div>
+              </div>
+              <div
+                class="flex flex-col items-center justify-center bg-[#138c36] text-white px-1.5 py-1.5 w-[54px]"
+              >
+                <img
+                  src="/pictures/simple-icons_saudia.svg"
+                  class="w-6 h-6 mb-1"
+                />
+                <span
+                  class="text-[15px] font-bold tracking-widest leading-tight"
+                  >KSA</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Image Modal -->
+  <div
+    *ngIf="isModalOpen"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-gray bg-opacity-100"
+    (click)="closeModalImages()"
+  >
+    <!-- Modal content - stops propagation to prevent closing when clicking inside -->
+    <div
+      class="relative max-w-4xl w-full px-4"
+      (click)="$event.stopPropagation()"
+    >
+      <!-- Close button -->
+      <button
+        class="absolute -top-10 right-0 text-white text-3xl hover:text-gray-300 transition-colors"
+        (click)="closeModalImages()"
+      >
+        &times;
+      </button>
+
+      <!-- Previous arrow -->
+      <button
+        class="absolute left-0 top-1/2 transform -translate-y-1/2 text-white text-4xl z-10 hover:text-gray-300 transition-colors"
+        (click)="prevImage()"
+      >
+        &#10094;
+      </button>
+
+      <!-- Image -->
+      <img
+        [src]="listing.images[activeImageIndex]"
+        class="max-h-[80vh] w-full object-contain rounded-lg"
+      />
+
+      <!-- Next arrow -->
+      <button
+        class="absolute right-0 top-1/2 transform -translate-y-1/2 text-white text-4xl z-10 hover:text-gray-300 transition-colors"
+        (click)="nextImage()"
+      >
+        &#10095;
+      </button>
+    </div>
+  </div>
+
+  <!-- Header Section with Two Cards -->
+  <div
+    *ngIf="listing.allow_submission === 0"
+    class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6"
+  >
+    <!-- Card 1: Title, Price, Location - spans 2 columns on medium screens -->
+    <div
+      class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 relative md:col-span-2"
+    >
+      <!-- Share and Like buttons at top right -->
+      <div class="absolute top-4 right-4 flex gap-2">
+        <button
+          class="p-2 text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 mr-1"
-            viewBox="0 0 20 20"
-            fill="currentColor"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
           >
             <path
-              fill-rule="evenodd"
-              d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
-              clip-rule="evenodd"
+              d="M8.59 13.51L15.42 17.49M15.41 6.51L8.59 10.49M21 5C21 6.65685 19.6569 8 18 8C16.3431 8 15 6.65685 15 5C15 3.34315 16.3431 2 18 2C19.6569 2 21 3.34315 21 5ZM9 12C9 13.6569 7.65685 15 6 15C4.34315 15 3 13.6569 3 12C3 10.3431 4.34315 9 6 9C7.65685 9 9 10.3431 9 12ZM21 19C21 20.6569 19.6569 22 18 22C16.3431 22 15 20.6569 15 19C15 17.3431 16.3431 16 18 16C19.6569 16 21 17.3431 21 19Z"
+              stroke="#101828"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
             />
           </svg>
-          <span>{{ listing.city }}</span>
-          <span class="mx-1"></span>
-          <span>{{ formatDate(listing.created_at) }}</span>
-        </div>
-      </div>
-      <!-- Card 2: Seller Info - spans 1 column on medium screens -->
-      <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-        <div class="flex items-center mb-4">
-          <div
-            class="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mr-3 overflow-hidden"
+        </button>
+        <button
+          (click)="toggleWishlist()"
+          class="p-2 rounded-full hover:bg-gray-100 transition-colors"
+          [class.text-red-500]="listing.wishlist"
+          [class.text-gray-500]="!listing.wishlist"
+          [attr.aria-label]="
+            listing.wishlist ? 'Remove from wishlist' : 'Add to wishlist'
+          "
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
           >
-            <svg
+            <path
+              d="M20.8401 4.60987C20.3294 4.09888 19.7229 3.69352 19.0555 3.41696C18.388 3.14039 17.6726 2.99805 16.9501 2.99805C16.2276 2.99805 15.5122 3.14039 14.8448 3.41696C14.1773 3.69352 13.5709 4.09888 13.0601 4.60987L12.0001 5.66987L10.9401 4.60987C9.90843 3.57818 8.50915 2.99858 7.05012 2.99858C5.59109 2.99858 4.19181 3.57818 3.16012 4.60987C2.12843 5.64156 1.54883 7.04084 1.54883 8.49987C1.54883 9.95891 2.12843 11.3582 3.16012 12.3899L4.22012 13.4499L12.0001 21.2299L19.7801 13.4499L20.8401 12.3899C21.3511 11.8791 21.7565 11.2727 22.033 10.6052C22.3096 9.93777 22.4519 9.22236 22.4519 8.49987C22.4519 7.77738 22.3096 7.06198 22.033 6.39452C21.7565 5.72706 21.3511 5.12063 20.8401 4.60987V4.60987Z"
+              stroke="#101828"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Rest of your card content remains the same -->
+      <h1 class="h-1">{{ listing.title }}</h1>
+      <div class="mt-10">
+        <span class="sar">SAR</span
+        ><span class="price">{{ listing.price }}</span>
+      </div>
+      <div class="flex items-center text-gray-600 mt-6">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M7.05051 6.05036C8.36333 4.73754 10.1439 4 12.0005 4C13.8571 4 15.6377 4.73754 16.9505 6.05036C18.2633 7.36318 19.0009 9.14375 19.0009 11.0004C19.0009 12.857 18.2633 14.6375 16.9505 15.9504L12.0005 20.9004L7.05051 15.9504C6.40042 15.3003 5.88474 14.5286 5.53291 13.6793C5.18108 12.83 5 11.9197 5 11.0004C5 10.081 5.18108 9.17073 5.53291 8.32141C5.88474 7.47208 6.40042 6.70038 7.05051 6.05036ZM12.0005 13.0004C12.5309 13.0004 13.0396 12.7896 13.4147 12.4146C13.7898 12.0395 14.0005 11.5308 14.0005 11.0004C14.0005 10.4699 13.7898 9.96122 13.4147 9.58614C13.0396 9.21107 12.5309 9.00036 12.0005 9.00036C11.4701 9.00036 10.9614 9.21107 10.5863 9.58614C10.2112 9.96122 10.0005 10.4699 10.0005 11.0004C10.0005 11.5308 10.2112 12.0395 10.5863 12.4146C10.9614 12.7896 11.4701 13.0004 12.0005 13.0004Z"
+            fill="#A7C543"
+          />
+        </svg>
+        <span class="city">{{ listing.city }}</span>
+        <span class="mx-1"></span>
+        <span class="days">{{ formatDate(listing.created_at) }}</span>
+      </div>
+    </div>
+    <!-- Card 2: Seller Info - spans 1 column on medium screens -->
+    <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+      <div class="flex items-center mb-4">
+        <div
+          class="w-12 h-12 flex items-center justify-center mr-3 overflow-hidden"
+        >
+          <!-- <svg
               *ngIf="!listing.seller.profile_image"
               class="w-8 h-8"
               fill="#f03d24"
@@ -279,42 +348,74 @@
                 d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
                 clip-rule="evenodd"
               ></path>
-            </svg>
-          </div>
-          <div>
-            <h3 class="font-medium text-gray-800">{{ listing.seller.name }}</h3>
-            <p class="text-sm text-gray-500">
-              Member since {{ formatMemberSince(listing.seller.member_since) }}
-            </p>
-          </div>
-        </div>
-
-        <!-- Buttons rearranged -->
-        <div class="space-y-3">
-          <div class="flex gap-3">
-            <button
-              class="w-full py-2 px-4 rounded-lg transition"
-              style="
-                background-color: #fef3f2;
-                color: #f03d24;
-                border: 1px solid #f03d24;
-              "
-            >
-              Send a Message
-            </button>
-          </div>
-          <button
-            class="w-full py-2 px-4 rounded-lg transition"
-            style="
-              background-color: #fef3f2;
-              color: #f03d24;
-              border: 1px solid #f03d24;
-            "
+            </svg> -->
+          <svg
+            *ngIf="!listing.seller.profile_image"
+            xmlns="http://www.w3.org/2000/svg"
+            width="32"
+            height="32"
+            viewBox="0 0 32 32"
+            fill="none"
           >
-            Show Phone Number
-          </button>
+            <path
+              d="M26.6673 28V25.3333C26.6673 23.9188 26.1054 22.5623 25.1052 21.5621C24.105 20.5619 22.7485 20 21.334 20H10.6673C9.25283 20 7.89628 20.5619 6.89608 21.5621C5.89589 22.5623 5.33398 23.9188 5.33398 25.3333V28M21.334 9.33333C21.334 12.2789 18.9462 14.6667 16.0007 14.6667C13.0551 14.6667 10.6673 12.2789 10.6673 9.33333C10.6673 6.38781 13.0551 4 16.0007 4C18.9462 4 21.334 6.38781 21.334 9.33333Z"
+              stroke="#F03D24"
+              stroke-width="2.66667"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+        <div>
+          <h3 class="seller-name">{{ listing.seller.name }}</h3>
+          <p class="member-since">
+            Member since {{ formatMemberSince(listing.seller.member_since) }}
+          </p>
         </div>
       </div>
+
+      <!-- Buttons rearranged -->
+    <div class="space-y-3">
+  <div class="flex gap-3">
+    <button
+      class="w-full py-2 px-4 rounded-lg transition flex items-center justify-center gap-2"
+      style="
+        border-radius: 8px;
+        border: 1px solid var(--Error-200, #fecdca);
+        background: var(--50-error, #fef3f2);
+        box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+      "
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M10 19.375C14.8325 19.375 18.75 15.4575 18.75 10.625C18.75 5.79251 14.8325 1.875 10 1.875C5.16751 1.875 1.25 5.79251 1.25 10.625C1.25 12.1943 1.66312 13.6671 2.38655 14.9406L1.25 19.375L5.82179 18.3149C7.06336 18.9909 8.48682 19.375 10 19.375ZM10 18.0288C14.089 18.0288 17.4038 14.714 17.4038 10.625C17.4038 6.53597 14.089 3.22115 10 3.22115C5.91097 3.22115 2.59615 6.53597 2.59615 10.625C2.59615 12.2038 3.09031 13.6672 3.9324 14.8689L3.26923 17.3558L5.79996 16.7231C6.99335 17.5466 8.44036 18.0288 10 18.0288Z" fill="#BFC8D0"/>
+  <path d="M17.5 10C17.5 14.1421 14.1421 17.5 10 17.5C8.4201 17.5 6.9543 17.0115 5.74541 16.1773L3.18182 16.8182L3.8536 14.299C3.00058 13.0817 2.5 11.5993 2.5 10C2.5 5.85786 5.85786 2.5 10 2.5C14.1421 2.5 17.5 5.85786 17.5 10Z" fill="url(#paint0_linear_55656_11620)"/>
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M10 18.75C14.8325 18.75 18.75 14.8325 18.75 10C18.75 5.16751 14.8325 1.25 10 1.25C5.16751 1.25 1.25 5.16751 1.25 10C1.25 11.5693 1.66312 13.0421 2.38655 14.3156L1.25 18.75L5.82179 17.6899C7.06336 18.3659 8.48682 18.75 10 18.75ZM10 17.4038C14.089 17.4038 17.4038 14.089 17.4038 10C17.4038 5.91097 14.089 2.59615 10 2.59615C5.91097 2.59615 2.59615 5.91097 2.59615 10C2.59615 11.5788 3.09031 13.0422 3.9324 14.2439L3.26923 16.7308L5.79996 16.0981C6.99335 16.9216 8.44036 17.4038 10 17.4038Z" fill="white"/>
+  <path d="M7.81251 5.93834C7.60447 5.52048 7.28533 5.55748 6.96292 5.55748C6.38673 5.55748 5.48828 6.24765 5.48828 7.53214C5.48828 8.58484 5.95216 9.73718 7.51526 11.461C9.02378 13.1246 11.0059 13.9852 12.6514 13.9559C14.2969 13.9266 14.6354 12.5106 14.6354 12.0324C14.6354 11.8204 14.5039 11.7147 14.4133 11.6859C13.8525 11.4168 12.8183 10.9154 12.583 10.8212C12.3477 10.727 12.2248 10.8544 12.1484 10.9237C11.935 11.1271 11.512 11.7264 11.3672 11.8612C11.2224 11.996 11.0064 11.9278 10.9166 11.8768C10.5859 11.7441 9.68933 11.3453 8.97467 10.6526C8.09083 9.79578 8.03896 9.501 7.87244 9.23861C7.73922 9.02869 7.83698 8.8999 7.88576 8.84362C8.07619 8.62389 8.33913 8.28466 8.45705 8.11608C8.57496 7.9475 8.48135 7.69155 8.42518 7.53214C8.18361 6.84655 7.97895 6.27263 7.81251 5.93834Z" fill="white"/>
+  <defs>
+    <linearGradient id="paint0_linear_55656_11620" x1="16.5625" y1="4.375" x2="2.5" y2="17.5" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5BD066"/>
+      <stop offset="1" stop-color="#27B43E"/>
+    </linearGradient>
+  </defs>
+</svg>
+      <span>Send a Message</span>
+    </button>
+  </div>
+  <button
+    class="w-full py-2 px-4 rounded-lg transition flex items-center justify-center gap-2"
+    style="
+      border-radius: 8px;
+      border: 1px solid var(--Error-200, #fecdca);
+      background: var(--50-error, #fef3f2);
+      box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+    "
+  >
+   <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
+  <path d="M18.8332 14.0994V16.5994C18.8341 16.8315 18.7866 17.0612 18.6936 17.2739C18.6006 17.4865 18.4643 17.6774 18.2933 17.8343C18.1222 17.9912 17.9203 18.1107 17.7005 18.185C17.4806 18.2594 17.2477 18.287 17.0165 18.2661C14.4522 17.9875 11.989 17.1112 9.82486 15.7078C7.81139 14.4283 6.10431 12.7212 4.82486 10.7078C3.41651 8.53377 2.54007 6.05859 2.26653 3.48276C2.2457 3.25232 2.27309 3.02006 2.34695 2.80078C2.4208 2.5815 2.53951 2.38 2.6955 2.20911C2.8515 2.03822 3.04137 1.90169 3.25302 1.8082C3.46468 1.71471 3.69348 1.66631 3.92486 1.6661H6.42486C6.82928 1.66212 7.22136 1.80533 7.528 2.06904C7.83464 2.33275 8.03493 2.69897 8.09153 3.09943C8.19705 3.89949 8.39274 4.68504 8.67486 5.4411C8.78698 5.73937 8.81125 6.06353 8.74478 6.37516C8.67832 6.6868 8.52392 6.97286 8.29986 7.19943L7.24153 8.25776C8.42783 10.3441 10.1552 12.0715 12.2415 13.2578L13.2999 12.1994C13.5264 11.9754 13.8125 11.821 14.1241 11.7545C14.4358 11.688 14.7599 11.7123 15.0582 11.8244C15.8143 12.1066 16.5998 12.3022 17.3999 12.4078C17.8047 12.4649 18.1744 12.6688 18.4386 12.9807C18.7029 13.2926 18.8433 13.6907 18.8332 14.0994Z" stroke="#F03D24" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+    <span>Show Phone Number</span>
+  </button>
+</div>
     </div>
   </div>
   <div *ngIf="listing.allow_submission === 1" class="space-y-4">
@@ -329,12 +430,17 @@
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            viewBox="0 0 20 20"
-            fill="currentColor"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
           >
             <path
-              d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z"
+              d="M8.59 13.51L15.42 17.49M15.41 6.51L8.59 10.49M21 5C21 6.65685 19.6569 8 18 8C16.3431 8 15 6.65685 15 5C15 3.34315 16.3431 2 18 2C19.6569 2 21 3.34315 21 5ZM9 12C9 13.6569 7.65685 15 6 15C4.34315 15 3 13.6569 3 12C3 10.3431 4.34315 9 6 9C7.65685 9 9 10.3431 9 12ZM21 19C21 20.6569 19.6569 22 18 22C16.3431 22 15 20.6569 15 19C15 17.3431 16.3431 16 18 16C19.6569 16 21 17.3431 21 19Z"
+              stroke="#101828"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
             />
           </svg>
         </button>
@@ -350,14 +456,17 @@
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            viewBox="0 0 20 20"
-            fill="currentColor"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
           >
             <path
-              fill-rule="evenodd"
-              d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
-              clip-rule="evenodd"
+              d="M20.8401 4.60987C20.3294 4.09888 19.7229 3.69352 19.0555 3.41696C18.388 3.14039 17.6726 2.99805 16.9501 2.99805C16.2276 2.99805 15.5122 3.14039 14.8448 3.41696C14.1773 3.69352 13.5709 4.09888 13.0601 4.60987L12.0001 5.66987L10.9401 4.60987C9.90843 3.57818 8.50915 2.99858 7.05012 2.99858C5.59109 2.99858 4.19181 3.57818 3.16012 4.60987C2.12843 5.64156 1.54883 7.04084 1.54883 8.49987C1.54883 9.95891 2.12843 11.3582 3.16012 12.3899L4.22012 13.4499L12.0001 21.2299L19.7801 13.4499L20.8401 12.3899C21.3511 11.8791 21.7565 11.2727 22.033 10.6052C22.3096 9.93777 22.4519 9.22236 22.4519 8.49987C22.4519 7.77738 22.3096 7.06198 22.033 6.39452C21.7565 5.72706 21.3511 5.12063 20.8401 4.60987V4.60987Z"
+              stroke="#101828"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
             />
           </svg>
         </button>
@@ -388,7 +497,25 @@
     <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
       <div class="mb-4">
         <p class="text-sm text-gray-500">Minimum amount to Soom</p>
-        <p class="text-xl font-semibold text-black-600">SAR {{ lastsoom }}</p>
+        <div style="display: flex;
+align-items: flex-end;
+gap: 4px;">
+        <span style="color: var(--Gray-500, #667085);
+leading-trim: both;
+text-edge: cap;
+font-family: Manrope;
+font-size: 20px;
+font-style: normal;
+font-weight: 400;
+line-height: 48px; /* 240% */">SAR</span> <span style="color: var(--Gray-900---Text-Main, #101828);
+leading-trim: both;
+text-edge: cap;
+font-family: Manrope;
+font-size: 24px;
+font-style: normal;
+font-weight: 700;
+line-height: 48px; /* 200% */">{{ lastsoom }}</span>
+        </div>
       </div>
 
       <div class="flex gap-4">
@@ -606,39 +733,61 @@
     *ngIf="showModal"
     class="fixed inset-0 bg-gray bg-opacity-100 z-50 flex items-center justify-center p-4"
   >
-    <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
+    <div style="display: flex;
+width: 400px;
+padding: 24px;
+flex-direction: column;
+align-items: center;
+gap: 32px;
+border-radius: 12px;
+background: var(--White, #FFF);
+
+/* Shadow/xl - Modal Shadow */
+box-shadow: 0 20px 24px -4px rgba(16, 24, 40, 0.10), 0 8px 8px -4px rgba(16, 24, 40, 0.04);">
       <!-- Success State -->
       <div *ngIf="confirmSoomStep" class="text-center">
         <div
           class="w-12 h-12 mx-auto mb-4 bg-yellow-100 rounded-full flex items-center justify-center"
         >
-          <svg
-            class="w-6 h-6 text-yellow-500"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M13 16h-1v-4h-1m1-4h.01M12 20c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8z"
-            />
-          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+  <path d="M11.9998 8.00021V12.0002M11.9998 16.0002H12.0098M10.2898 2.8602L1.81978 17.0002C1.64514 17.3026 1.55274 17.6455 1.55177 17.9947C1.55079 18.3439 1.64127 18.6873 1.8142 18.9907C1.98714 19.2941 2.2365 19.547 2.53748 19.7241C2.83847 19.9012 3.18058 19.9964 3.52978 20.0002H20.4698C20.819 19.9964 21.1611 19.9012 21.4621 19.7241C21.7631 19.547 22.0124 19.2941 22.1854 18.9907C22.3583 18.6873 22.4488 18.3439 22.4478 17.9947C22.4468 17.6455 22.3544 17.3026 22.1798 17.0002L13.7098 2.8602C13.5315 2.56631 13.2805 2.32332 12.981 2.15469C12.6814 1.98605 12.3435 1.89746 11.9998 1.89746C11.656 1.89746 11.3181 1.98605 11.0186 2.15469C10.7191 2.32332 10.468 2.56631 10.2898 2.8602Z" stroke="#DC6803" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
         </div>
-        <h2 class="text-xl font-semibold mb-2 text-gray-800">
+        <div style="display: flex;
+flex-direction: column;
+align-items: center;
+gap: 8px;
+align-self: stretch;">
+
+      
+        <h2 style="color: var(--Gray-900---Text, #101828);
+text-align: center;
+font-family: Manrope;
+font-size: 18px;
+font-style: normal;
+font-weight: 700;
+line-height: 28px; /* 155.556% */">
           Review Soom amount
         </h2>
-        <p class="text-gray-600 mb-2">
+
+        <p style="color: var(--Gray-500---Supporting-Text, #667085);
+text-align: center;
+font-family: Manrope;
+font-size: 14px;
+font-style: normal;
+font-weight: 400;
+line-height: 20px; /* 142.857% */
+align-self: stretch;">
           You have entered an amount that is 10x the minimum to buy, do you wish
           still to continue?
         </p>
-        <p class="font-semibold text-gray-700 mb-1">
+        <p class="review-amount">
           Minimum {{ minimumRequired | number }} SAR
         </p>
-        <p class="font-semibold text-gray-700 mb-4">
+        <p class="review-amount">
           You offered {{ soomAmount | number }} SAR
         </p>
+          </div>
 
         <div class="flex justify-center gap-4">
           <button
@@ -742,15 +891,33 @@
           </div>
 
           <p
-            class="text-sm mt-2"
-            [ngClass]="{
-              'text-red-600': !isSoomAmountValid() && soomAmount !== null,
-              'text-gray-500': isSoomAmountValid() || soomAmount === null
-            }"
-          >
-            <!-- Minimum amount to Soom is SAR {{ minimumRequired ?? listing?.submission?.amount | number }} -->
-            Minimum amount to Soom is SAR {{ lastsoom }}
-          </p>
+  class="text-sm mt-2 flex items-center gap-1"
+  [ngClass]="{
+    'text-red-600': !isSoomAmountValid() && soomAmount !== null,
+    'text-gray-500': isSoomAmountValid() || soomAmount === null
+  }"
+>
+  <!-- Show icon when soomAmount is not valid -->
+  <svg 
+    *ngIf="!isSoomAmountValid() && soomAmount !== null"
+    xmlns="http://www.w3.org/2000/svg" 
+    width="16" 
+    height="17" 
+    viewBox="0 0 16 17" 
+    fill="none"
+  >
+    <path 
+      d="M8.00016 5.83325V8.49992M8.00016 11.1666H8.00683M14.6668 8.49992C14.6668 12.1818 11.6821 15.1666 8.00016 15.1666C4.31826 15.1666 1.3335 12.1818 1.3335 8.49992C1.3335 4.81802 4.31826 1.83325 8.00016 1.83325C11.6821 1.83325 14.6668 4.81802 14.6668 8.49992Z" 
+      stroke="#F04438" 
+      stroke-width="1.33333" 
+      stroke-linecap="round" 
+      stroke-linejoin="round"
+    />
+  </svg>
+  
+  <!-- Minimum amount to Soom is SAR {{ minimumRequired ?? listing?.submission?.amount | number }} -->
+  Minimum amount to Soom is SAR {{ lastsoom + 1 }}
+</p>
 
           <!-- Error Message -->
           <div
@@ -762,7 +929,7 @@
         </div>
 
         <!-- Action Buttons -->
-        <div class="flex justify-end space-x-3">
+        <div class="flex justify-center space-x-3">
           <button
             (click)="closeModal()"
             [disabled]="isSubmittingSoom"
@@ -803,40 +970,4 @@
       <!-- Confirmation Modal State -->
     </div>
   </div>
-  <!-- </div> -->
-  <!-- <div *ngIf="showModal"
-                class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-                <div [class.blur-sm]="showModal" [class.overflow-hidden]="showModal" class="transition-all duration-200">
-                Modal Content
-                <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
-                    <h2 class="text-xl font-bold mb-4">Soom Request</h2>
-                    <p class="text-gray-600 mb-6">Submit a request to this ad</p>
-
-                    <div class="mb-6">
-                        <h3 class="font-semibold">BMW</h3>
-                        <p class="text-gray-600">fat boy low 2022</p>
-                    </div>
-
-                    <div class="mb-6">
-                        <h3 class="font-semibold mb-2">Soom Amount</h3>
-                        <p class="text-lg">SAR 12,900</p>
-                        <p class="text-sm text-gray-500 mt-1">minimum amount to soom is SAR 12,900</p>
-                    </div>
-
-                    <div class="flex justify-end space-x-3">
-                        <button (click)="closeModal()"
-                            class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
-                            Cancel
-                        </button>
-                        <button class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
-                            Submit
-                        </button>
-                    </div>
-                </div>
-            </div>
-    </div> -->
 </div>
-
-
-
-

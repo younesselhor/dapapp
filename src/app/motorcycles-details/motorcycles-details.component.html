@@ -1,75 +1,164 @@
-
+<div
+  style="
+    display: flex;
+    height: 307px;
+    padding:80px;
+    align-items: flex-start;
+    gap: 50px;
+    align-self: stretch;
+  "
+>
+  <div class="top-content">
+    <div class="top-content-text">
+      <span
+        style="
+          color: var(--gray-900, #18181b);
+          font-family: Manrope;
+          font-size: 48px;
+          font-style: normal;
+          font-weight: 700;
+          line-height: 66px; /* 137.5% */
+        "
+        >Sell your bike</span
+      >
+      <span
+        style="
+          color: var(--gray-900, #18181b);
+          font-family: Manrope;
+          font-size: 18px;
+          font-style: normal;
+          font-weight: 500;
+          line-height: 30px; /* 166.667% */
+        "
+        >Post your motorcycle for sale and get exposure across the whole
+        kingdom!</span
+      >
+    </div>
+    <div class="top-content-img">
+      <img src="hondablur1.png" alt="" />
+    </div>
+  </div>
+</div>
+<div class="main-page">
 <div class="main-container">
   <div class="content-container">
     <!-- Side Bar Start - Moved to left side -->
-    <div class="sidebar" style="width: 25%;">
-      <h2 class="filter-label">FILTERS</h2>
-      <div class="filter-section">
-        <div class="filter-header" (click)="toggleDigits()">
-          <span class="filter-title">Condition</span>
-          <span class="toggle-icon">{{ isDigitsOpen ? '−' : '+' }}</span>
-        </div>
-
-        <div class="filter-content" *ngIf="isDigitsOpen">
-          <div class="filter-item">
-            <input type="radio" id="condition-all" name="condition" [checked]="!selectedCondition"
-              (change)="selectedCondition = ''; executeFilter()">
-            <label for="condition-all">All Conditions</label>
-          </div>
-          <div class="filter-item">
-            <input type="radio" id="condition-new" name="condition" value="new" [checked]="selectedCondition === 'new'"
-              (change)="selectedCondition = 'new'; executeFilter()">
-            <label for="condition-new">New</label>
-          </div>
-          <div class="filter-item">
-            <input type="radio" id="condition-used" name="condition" value="used"
-              [checked]="selectedCondition === 'used'" (change)="selectedCondition = 'used'; executeFilter()">
-            <label for="condition-used">Used</label>
-          </div>
-        </div>
-      </div>
-
-      <div class="filter-section">
-        <div class="filter-header" (click)="toggleCountry()">
-          <span class="filter-title">Brand</span>
-          <span class="toggle-icon">{{ isCountryOpen ? '−' : '+' }}</span>
-        </div>
-
-        <div class="filter-content" *ngIf="isCountryOpen">
-          <div class="filter-item" *ngFor="let brand of brands">
-            <input type="checkbox" [id]="'brand-' + brand.id" [checked]="brand.checked"
-              (change)="brand.checked = !brand.checked; onBrandChange()">
-            <label [for]="'brand-' + brand.id">
-              {{ brand.name }} <span class="count">({{ brand.listings_count}})</span>
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <div class="filter-section">
-        <div class="filter-header">
-          <span class="filter-title">Price Range</span>
-        </div>
-
-        <div class="price-range-container">
-          <div class="slider-container">
-            <div class="slider-track"></div>
-            <input type="range" [min]="absoluteMin" [max]="absoluteMax" [(ngModel)]="priceRange.min"
-              (input)="onMinSliderChange($event)" class="slider-min">
-            <input type="range" [min]="absoluteMin" [max]="absoluteMax" [(ngModel)]="priceRange.max"
-              (input)="onMaxSliderChange($event)" class="slider-max">
-          </div>
-
-          <div class="price-inputs">
-            <div class="price-input">
-              <label>Min</label>
-              <input type="number" [(ngModel)]="priceRange.min" [min]="absoluteMin" [max]="absoluteMax"
-                (change)="onMinInputChange()">
+    <div class="sidebar" style="width: 25%">
+      <div class="container-sidebar">
+        <h2 class="filter-label">FILTERS</h2>
+        <div class="list-section">
+          <div class="filter-section">
+            <div class="filter-header" (click)="toggleDigits()">
+              <span class="filter-title">Condition</span>
+              <span class="toggle-icon">{{ isDigitsOpen ? "−" : "+" }}</span>
             </div>
-            <div class="price-input">
-              <label>MAX</label>
-              <input type="number" [(ngModel)]="priceRange.max" [min]="absoluteMin" [max]="absoluteMax"
-                (change)="onMaxInputChange()">
+
+            <div class="filter-content" *ngIf="isDigitsOpen">
+              <div class="filter-item">
+                <input
+                  type="radio"
+                  id="condition-all"
+                  name="condition"
+                  [checked]="!selectedCondition"
+                  (change)="selectedCondition = ''; executeFilter()"
+                />
+                <label for="condition-all">All Conditions</label>
+              </div>
+              <div class="filter-item">
+                <input
+                  type="radio"
+                  id="condition-new"
+                  name="condition"
+                  value="new"
+                  [checked]="selectedCondition === 'new'"
+                  (change)="selectedCondition = 'new'; executeFilter()"
+                />
+                <label for="condition-new">New</label>
+              </div>
+              <div class="filter-item">
+                <input
+                  type="radio"
+                  id="condition-used"
+                  name="condition"
+                  value="used"
+                  [checked]="selectedCondition === 'used'"
+                  (change)="selectedCondition = 'used'; executeFilter()"
+                />
+                <label for="condition-used">Used</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="filter-section">
+            <div class="filter-header" (click)="toggleCountry()">
+              <span class="filter-title">Brand</span>
+              <span class="toggle-icon">{{ isCountryOpen ? "−" : "+" }}</span>
+            </div>
+
+            <div class="filter-content" *ngIf="isCountryOpen">
+              <div class="filter-item" *ngFor="let brand of brands">
+                <input
+                  type="checkbox"
+                  [id]="'brand-' + brand.id"
+                  [checked]="brand.checked"
+                  (change)="brand.checked = !brand.checked; onBrandChange()"
+                />
+                <label [for]="'brand-' + brand.id">
+                  {{ brand.name }}
+                  <span class="count">({{ brand.listings_count }})</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="filter-section">
+            <div class="filter-header">
+              <span class="filter-title">Price Range</span>
+            </div>
+
+            <div class="price-range-container">
+              <div class="slider-container">
+                <div class="slider-track"></div>
+                <input
+                  type="range"
+                  [min]="absoluteMin"
+                  [max]="absoluteMax"
+                  [(ngModel)]="priceRange.min"
+                  (input)="onMinSliderChange($event)"
+                  class="slider-min"
+                />
+                <input
+                  type="range"
+                  [min]="absoluteMin"
+                  [max]="absoluteMax"
+                  [(ngModel)]="priceRange.max"
+                  (input)="onMaxSliderChange($event)"
+                  class="slider-max"
+                />
+              </div>
+
+              <div class="price-inputs">
+                <div class="price-input">
+                  <label>Min</label>
+                  <input
+                    type="number"
+                    [(ngModel)]="priceRange.min"
+                    [min]="absoluteMin"
+                    [max]="absoluteMax"
+                    (change)="onMinInputChange()"
+                  />
+                </div>
+                <div class="price-input">
+                  <label>MAX</label>
+                  <input
+                    type="number"
+                    [(ngModel)]="priceRange.max"
+                    [min]="absoluteMin"
+                    [max]="absoluteMax"
+                    (change)="onMaxInputChange()"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -84,16 +173,18 @@
         <div class="browse-section">
           <h3>Browse as you wish</h3>
         </div>
-        
+
         <div class="button-group">
           <!-- Brand Select -->
           <div class="filter-select">
             <select class="brand-select">
               <option value="">Brand</option>
-              <option *ngFor="let brand of brands" [value]="brand.id">{{ brand.name }}</option>
+              <option *ngFor="let brand of brands" [value]="brand.id">
+                {{ brand.name }}
+              </option>
             </select>
           </div>
-          
+
           <!-- Model Select -->
           <div class="filter-select">
             <select class="model-select">
@@ -101,7 +192,7 @@
               <!-- Models would be populated dynamically -->
             </select>
           </div>
-          
+
           <!-- Year Select -->
           <div class="filter-select">
             <select class="year-select">
@@ -109,34 +200,38 @@
               <!-- Years would be populated dynamically -->
             </select>
           </div>
-          
+
           <!-- Search Button -->
-          <button class="search-button">
-            Search
-          </button>
+          <button class="search-button">Search</button>
         </div>
       </div>
 
       <!-- Products Grid -->
-      <div *ngIf="!isLoading && motorCyclesDetails.length > 0" 
-           class="products-grid opacity-0 translate-y-4 transition-all duration-700 ease-out"
-           [class.opacity-100]="!isLoading && motorCyclesDetails.length > 0"
-           [class.translate-y-0]="!isLoading && motorCyclesDetails.length > 0">
-        
-        <div *ngFor="let part of motorCyclesDetails; trackBy: trackByMotorcycleId; let i = index" 
-             class="product-card opacity-0 translate-y-6 transition-all duration-500 ease-out"
-             [style.animation-delay]="(i * 100) + 'ms'"
-             [class.animate-fade-in-up]="!isLoading">
-          
+      <div
+        *ngIf="!isLoading && motorCyclesDetails.length > 0"
+        class="main-cards"
+        [class.opacity-100]="!isLoading && motorCyclesDetails.length > 0"
+        [class.translate-y-0]="!isLoading && motorCyclesDetails.length > 0"
+      >
+        <div
+          *ngFor="
+            let part of motorCyclesDetails;
+            trackBy: trackByMotorcycleId;
+            let i = index
+          "
+          class="cards"
+          [style.animation-delay]="i * 100 + 'ms'"
+          [class.animate-fade-in-up]="!isLoading"
+        >
           <!-- Image with Loading State -->
           <div class="product-image relative overflow-hidden">
-            <img [src]="part.image" 
-                 [alt]="part.title" 
-                 class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                 (load)="onImageLoad($event)"
-                 (error)="onImageError($event)" />
-            
-        
+            <img
+              [src]="part.image"
+              [alt]="part.title"
+              class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+              (load)="onImageLoad($event)"
+              (error)="onImageError($event)"
+            />
           </div>
 
           <!-- Content -->
@@ -147,7 +242,11 @@
             </h3>
 
             <!-- Description -->
-            <p *ngIf="part.description" class="product-description" [title]="part.description">
+            <p
+              *ngIf="part.description"
+              class="product-description"
+              [title]="part.description"
+            >
               {{ truncateText(part.description, 30) }}
             </p>
 
@@ -155,36 +254,57 @@
             <div class="product-footer">
               <p class="price-label">PRICE</p>
               <p class="price-value">{{ part.price }} SAR</p>
-              <button class="view-button hover:bg-red-50 hover:border-red-300 transition-colors duration-200"
-                  (click)="viewListing(part.id)">
+              <button
+                class="view-button hover:bg-red-50 hover:border-red-300 transition-colors duration-200"
+                (click)="viewListing(part.id)"
+              >
                 View Bike
               </button>
             </div>
           </div>
         </div>
       </div>
-      <app-login-modal *ngIf="showLoginModal" (close)="closeLoginModal()"></app-login-modal>
+      <app-login-modal
+        *ngIf="showLoginModal"
+        (close)="closeLoginModal()"
+      ></app-login-modal>
 
       <!-- Loading State -->
-      <div *ngIf="isLoading" class="flex-1 flex items-center justify-center min-h-[400px]">
+      <!-- <div
+        *ngIf="isLoading"
+        class="flex-1 flex items-center justify-center min-h-[400px]"
+      >
         <div class="text-center">
-          <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
-          <p class="text-lg font-medium text-gray-600 animate-pulse">Loading motorcycles...</p>
+          <div
+            class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"
+          ></div>
+          <p class="text-lg font-medium text-gray-600 animate-pulse">
+            Loading motorcycles...
+          </p>
           <div class="flex justify-center mt-4 space-x-1">
             <div class="w-2 h-2 bg-blue-600 rounded-full animate-bounce"></div>
-            <div class="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style="animation-delay: 0.1s;"></div>
-            <div class="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style="animation-delay: 0.2s;"></div>
+            <div
+              class="w-2 h-2 bg-blue-600 rounded-full animate-bounce"
+              style="animation-delay: 0.1s"
+            ></div>
+            <div
+              class="w-2 h-2 bg-blue-600 rounded-full animate-bounce"
+              style="animation-delay: 0.2s"
+            ></div>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <!-- No Results State -->
-      <div *ngIf="!isLoading && motorCyclesDetails.length === 0" 
-           class="no-results opacity-0 translate-y-4 transition-all duration-500 ease-out"
-           [class.opacity-100]="!isLoading && motorCyclesDetails.length === 0"
-           [class.translate-y-0]="!isLoading && motorCyclesDetails.length === 0">
+      <!-- <div
+        *ngIf="!isLoading && motorCyclesDetails.length === 0"
+        class="no-results opacity-0 translate-y-4 transition-all duration-500 ease-out"
+        [class.opacity-100]="!isLoading && motorCyclesDetails.length === 0"
+        [class.translate-y-0]="!isLoading && motorCyclesDetails.length === 0"
+      >
         🚫 No motorcycles found matching your filters.
-      </div>
+      </div> -->
     </div>
   </div>
+</div>
 </div>

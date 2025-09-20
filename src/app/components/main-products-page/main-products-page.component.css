@@ -12,3 +12,189 @@ button:hover {
   transform: scale(1.1);
   transition: transform 0.2s ease;
 }
+ .main-container{
+  /* display: flex; */
+padding: 32px 80px;
+flex-direction: column;
+align-items: flex-start;
+gap: 50px;
+align-self: stretch;
+background: #FFF;
+}
+ /* .main-pic{
+display: flex;
+height: 605px;
+padding: 10px;
+align-items: flex-start;
+gap: 10px;
+align-self: stretch;
+} */
+
+.h-1{
+  color: var(--Primary---Navy, #032C40);
+font-family: Manrope;
+font-size: 20px;
+font-style: normal;
+font-weight: 500;
+line-height: 48px; /* 240% */
+}
+.sar{
+  color: var(--Primary, #F03D24);
+font-family: Manrope;
+font-size: 20px;
+font-style: normal;
+font-weight: 700;
+line-height: 48px; /* 240% */
+}
+
+.price{
+  color: var(--Primary, #F03D24);
+font-family: Manrope;
+font-size: 32px;
+font-style: normal;
+font-weight: 700;
+line-height: 48px; /* 150% */
+}
+
+.city{
+  color: var(--Gray-700---Secondary-Text, #344054);
+font-family: Manrope;
+font-size: 16px;
+font-style: normal;
+font-weight: 400;
+line-height: 24px; /* 150% */
+letter-spacing: -0.096px;
+}
+
+.days{
+  color: var(--Gray-700---Secondary-Text, #344054);
+font-family: Manrope;
+font-size: 16px;
+font-style: normal;
+font-weight: 400;
+line-height: 24px; /* 150% */
+}
+.seller-name{
+  color: var(--Gray-700, #344054);
+font-family: Manrope;
+font-size: 18px;
+font-style: normal;
+font-weight: 700;
+line-height: 28px; /* 155.556% */
+}
+
+.member-since{
+  color: var(--Gray-700, #344054);
+font-family: Manrope;
+font-size: 16px;
+font-style: normal;
+font-weight: 400;
+line-height: 24px; /* 150% */
+}
+
+/* Clean up any conflicting styles */
+.space-y-3 button svg {
+  flex-shrink: 0;
+}
+
+/* Optional: Custom gap control if you want different spacing than Tailwind */
+.custom-button-spacing {
+  gap: 6px !important; /* Adjust this value for tighter/looser spacing */
+}
+
+/* Your existing styles remain the same */
+.bg-gray {
+    background: rgba(52, 64, 84, 0.6);
+}
+
+.fixed {
+  transition: opacity 0.3s ease;
+}
+
+button:hover {
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
+}
+
+.main-container {
+  padding: 32px 80px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 50px;
+  align-self: stretch;
+  background: #FFF;
+}
+
+.h-1 {
+  color: var(--Primary---Navy, #032C40);
+  font-family: Manrope;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 48px;
+}
+
+.sar {
+  color: var(--Primary, #F03D24);
+  font-family: Manrope;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 48px;
+}
+
+.price {
+  color: var(--Primary, #F03D24);
+  font-family: Manrope;
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 48px;
+}
+
+.city {
+  color: var(--Gray-700---Secondary-Text, #344054);
+  font-family: Manrope;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.096px;
+}
+
+.days {
+  color: var(--Gray-700---Secondary-Text, #344054);
+  font-family: Manrope;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.seller-name {
+  color: var(--Gray-700, #344054);
+  font-family: Manrope;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 28px;
+}
+
+.member-since {
+  color: var(--Gray-700, #344054);
+  font-family: Manrope;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.review-amount {
+  color: var(--Gray-900---Text, #101828);
+font-family: Manrope;
+font-size: 14px;
+font-style: normal;
+font-weight: 700;
+line-height: 20px;
+align-self: stretch;
+}
