@@ -92,4 +92,12 @@ align-items: center;
 gap: 10px;
 border-radius: 6px;
 background: var(--Primary, #F03D24);
+color: var(--White, #FFF);
+text-align: center;
+font-family: Manrope;
+font-size: 14px;
+font-style: normal;
+font-weight: 700;
+line-height: 24px; /* 171.429% */
+letter-spacing: -0.084px;
 }

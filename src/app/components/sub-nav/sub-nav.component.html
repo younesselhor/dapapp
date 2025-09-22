@@ -1,5 +1,5 @@
 <div class="bg-white shadow-sm border-b border-gray-200" style="display: flex;
-padding: 12px 0px;
+padding: 6px 0px;
 align-items: center;
 gap: 341px;
 align-self: stretch;
@@ -8,7 +8,7 @@ background: #F7F7F7;">
     class="container mx-auto px-4 py-2 flex flex-col md:flex-row md:justify-between md:items-center gap-4"
     style="display: flex;
 align-items: center;
-gap: 341px;"
+"
   >
     <!-- Location Dropdown -->
     <div class="flex items-center gap-1 w-8 text-sm" style="display: flex;
@@ -17,20 +17,27 @@ padding: 0 8px;
 align-items: center;
 gap: 8px;
 border-radius: 4px;">
-      <i class="pi pi-map-marker text-red-600 text-lg"></i>
+     <div class="location-marker">
+      <!-- <img src="pictures/Location-marker.svg" alt=""> -->
+       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M7.05002 6.05036C8.36284 4.73754 10.1434 4 12 4C13.8566 4 15.6372 4.73754 16.95 6.05036C18.2628 7.36318 19.0004 9.14375 19.0004 11.0004C19.0004 12.857 18.2628 14.6375 16.95 15.9504L12 20.9004L7.05002 15.9504C6.39993 15.3003 5.88425 14.5286 5.53242 13.6793C5.1806 12.83 4.99951 11.9197 4.99951 11.0004C4.99951 10.081 5.1806 9.17073 5.53242 8.32141C5.88425 7.47208 6.39993 6.70038 7.05002 6.05036ZM12 13.0004C12.5304 13.0004 13.0392 12.7896 13.4142 12.4146C13.7893 12.0395 14 11.5308 14 11.0004C14 10.4699 13.7893 9.96122 13.4142 9.58614C13.0392 9.21107 12.5304 9.00036 12 9.00036C11.4696 9.00036 10.9609 9.21107 10.5858 9.58614C10.2107 9.96122 10 10.4699 10 11.0004C10 11.5308 10.2107 12.0395 10.5858 12.4146C10.9609 12.7896 11.4696 13.0004 12 13.0004Z" fill="#F03D24"/>
+</svg>
+     </div>
       <select
         [(ngModel)]="selectedCountry"
         (change)="onCountryChange($event)"
-        class="w-full min-w-[200px] p-2 rounded-md hover:border-blue-500 focus:border-blue-500 focus:ring-blue-500 transition-colors appearance-none bg-white"
+        style="width:10vw"
       >
+              <!-- class="w-full min-w-[200px] p-2 rounded-md hover:border-blue-500 focus:border-blue-500 focus:ring-blue-500 transition-colors appearance-none bg-white" -->
+
         <option value="" disabled>Select a Country</option>
         <option *ngFor="let country of countries" [value]="country.name">
           {{ country.name }}
         </option>
       </select>
-      <i
+      <!-- <i
         class="pi pi-chevron-down text-gray-500 ml-[-1.5rem] pointer-events-none"
-      ></i>
+      ></i> -->
     </div>
 
     <!-- Search Box - Shown on mobile as second item -->
@@ -46,19 +53,24 @@ border-radius: 4px;">
         class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400 text-sm"
       />
     </div> -->
-    <div class="relative w-full max-w-sm search-input">
-      <span
+    <div class="searchinput">
+      <!-- <span
         class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500"
-      >
+      > -->
+      <!-- <i class="pi pi-search"></i> -->
+       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M10 6.00077C8.93913 6.00077 7.92172 6.42219 7.17157 7.17234C6.42143 7.92248 6 8.9399 6 10.0008C6 11.0616 6.42143 12.079 7.17157 12.8292C7.92172 13.5793 8.93913 14.0008 10 14.0008C11.0609 14.0008 12.0783 13.5793 12.8284 12.8292C13.5786 12.079 14 11.0616 14 10.0008C14 8.9399 13.5786 7.92248 12.8284 7.17234C12.0783 6.42219 11.0609 6.00077 10 6.00077ZM4 10.0008C3.99988 9.05647 4.22264 8.12548 4.65017 7.28351C5.0777 6.44154 5.69792 5.71236 6.4604 5.15529C7.22287 4.59822 8.10606 4.22898 9.03815 4.0776C9.97023 3.92622 10.9249 3.99698 11.8245 4.28412C12.724 4.57126 13.5432 5.06667 14.2152 5.73006C14.8872 6.39346 15.3931 7.2061 15.6919 8.1019C15.9906 8.9977 16.0737 9.95136 15.9343 10.8853C15.795 11.8193 15.4372 12.7072 14.89 13.4768L19.707 18.2938C19.8892 18.4824 19.99 18.735 19.9877 18.9972C19.9854 19.2594 19.8802 19.5102 19.6948 19.6956C19.5094 19.881 19.2586 19.9862 18.9964 19.9884C18.7342 19.9907 18.4816 19.8899 18.293 19.7078L13.477 14.8918C12.5794 15.53 11.5233 15.9089 10.4247 15.9869C9.326 16.0648 8.22707 15.8389 7.2483 15.3337C6.26953 14.8286 5.44869 14.0638 4.87572 13.1231C4.30276 12.1824 3.99979 11.1022 4 10.0008Z" fill="#667085"/>
+</svg>
         <input
           type="text"
           pInputText
           [(ngModel)]="value"
           placeholder="Search..."
-          class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400 text-sm"
+          class="searchbox"
         />
-        <i class="pi pi-search"></i>
-      </span>
+                  <!-- class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400 text-sm" -->
+
+      <!-- </span> -->
     </div>
     <!-- Submenu - Scrollable on mobile -->
     <div
@@ -79,7 +91,7 @@ border-radius: 4px;">
     </div>
 
     <!-- Sell Button -->
-    <div class="md:order-4 mt-2 md:mt-0 w-full md:w-auto sellBtn">
+    <div class="sellBtn">
       <button
         routerLink="/add-product"
         class="hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm w-full md:w-auto"

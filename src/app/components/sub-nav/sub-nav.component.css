@@ -67,7 +67,8 @@
 }
 select {
   background-image: none; /* Remove default arrow in some browsers */
-  padding-right: 2rem; /* Make space for custom arrow */
+  /* padding-right: 2rem;  */
+  /* Make space for custom arrow */
 }
 
 select:focus {
@@ -87,12 +88,79 @@ background: var(--black-white-white, #FFF);
 }
 
 .sellBtn{
-  display: flex;
+  /* display: flex; */
 /* padding: 6px 8px; */
-flex-direction: column;
+/* flex-direction: column;
 align-items: center;
 gap: 10px;
 border-radius: 6px;
 border: 1px solid var(--Primary, #F03D24);
-background: var(--White, #FFF);
+background: var(--White, #FFF); */
+border-radius: 6px;
+    /* border: 1px solid var(--Primary, #F03D24); */
+   border:  1.4px solid var(--Primary, #F03D24);
+    background: var(--White, #FFF);
+    display: flex
+;
+    /* padding: 8px 10px; */
+    padding: 1px;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+.sellBtn button{
+/* color: var(--Primary, #F03D24);
+text-align: center;
+font-family: Manrope;
+font-size: 16px;
+font-style: normal;
+font-weight: 700;
+line-height: 24px;  */
+
+    display: flex
+;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    color: #f03d24;
+    color: var(--Primary, #F03D24);
+    text-align: center;
+    font-family: Manrope;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 24px;
+
+letter-spacing: -0.096px;
+}
+
+.location-marker{
+  width: 24px;
+height: 24px;
+}
+.location-marker img{
+ width: 14.001px;
+height: 16.9px;
+flex-shrink: 0;
+fill: var(--Primary, #F03D24);
+}
+.searchinput{
+  display: flex;
+height: 32px;
+padding: 4px 12px 4px 4px;
+align-items: flex-start;
+gap: 6px;
+border-radius: 6px;
+border: 1px solid var(--Gray-200, #E4E7EC);
+background: var(--black-white-white, #FFF);
+}
+.searchbox{
+  color: var(--Gray-400, #98A2B3);
+font-family: Manrope;
+font-size: 14px;
+font-style: normal;
+font-weight: 400;
+line-height: 24px; /* 171.429% */
+letter-spacing: -0.084px;
+width: 389px;
 }
