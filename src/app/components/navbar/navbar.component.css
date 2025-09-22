@@ -74,3 +74,22 @@ button:focus {
 a:hover {
   transition: all 0.2s ease;
 }
+.active-link {
+  color: var(--White, #FFF) !important;
+  font-weight: 800 !important;
+  text-align: center;
+  font-family: Manrope;
+  font-size: 14px;
+  font-style: normal;
+  line-height: 24px; /* 171.429% */
+  letter-spacing: -0.084px;
+}
+.signInBtn{
+  display: flex;
+padding: 8px 16px;
+flex-direction: column;
+align-items: center;
+gap: 10px;
+border-radius: 6px;
+background: var(--Primary, #F03D24);
+}

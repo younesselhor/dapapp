@@ -4,7 +4,7 @@
   <div class="navbar-container">
     <!-- Logo -->
     <div class="logostyle">
-      <img routerLink="/home" src="/pictures/mainLogo.png" alt="Dab" class="h-8 cursor-pointer" />
+      <img routerLink="/home" src="/pictures/Frame1000002944.svg" alt="Dab" class="h-8 cursor-pointer" />
     </div>
 <!-- <div class="flex items-center gap-2 ml-4">
     <button (click)="switchLang('en')" class="text-sm px-3 py-1 rounded bg-gray-700 hover:bg-gray-600">EN</button>
@@ -19,13 +19,17 @@
     <div [ngClass]="{'hidden': !mobileMenuOpen}" class="w-full md:flex md:w-auto md:items-center mt-4 md:mt-0">
       @if(isLoggedIn){
         <ul class="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0 mb-4 md:mb-0">
-          <li><a (click)="selectMenu('home'); toggleMobileMenu()" class="list-navigation">Home</a></li>
+                    <li><a routerLink="/home" routerLinkActive="active-link"  (click)="toggleMobileMenu()" class="list-navigation">Home</a></li>
+          <li><a routerLink="/motorcycles" routerLinkActive="active-link"  (click)="toggleMobileMenu()" class="list-navigation">Motorcycles</a></li>
+          <li><a routerLink="/spare-parts" routerLinkActive="active-link"  (click)="toggleMobileMenu()" class="list-navigation">Spare Parts</a></li>
+          <li><a routerLink="/plates" routerLinkActive="active-link"  (click)="toggleMobileMenu()" class="list-navigation">Plates</a></li>
+          <!-- <li><a routerLink="/home" (click)="selectMenu('home');  toggleMobileMenu()" routerLinkActive="active-link" class="list-navigation">Home</a></li> -->
           <!-- <li><a (click)="selectMenu('marketplace'); toggleMobileMenu()" class="list-navigation">Marketplace</a></li> -->
-          <li><a (click)="selectMenu('usedParts'); toggleMobileMenu()" class="list-navigation">Used Parts</a></li>
+          <!-- <li><a routerLink="/used-parts" (click)="selectMenu('usedParts'); toggleMobileMenu()" class="list-navigation">Used Parts</a></li> -->
           <!-- <li><a (click)="selectMenu('services'); toggleMobileMenu()" class="list-navigation">Services</a></li> -->
           <!-- <li><a (click)="selectMenu('guide'); toggleMobileMenu()" class="list-navigation">Guide</a></li> -->
-          <li><a (click)="selectMenu('contact-us'); toggleMobileMenu()" class="list-navigation">Contact Us</a></li>
-          <li><a (click)="selectMenu('about-us'); toggleMobileMenu()" class="list-navigation">About Us</a></li>
+          <!-- <li><a routerLink="/contact-us" (click)="selectMenu('contact-us'); toggleMobileMenu()" class="list-navigation">Contact Us</a></li> -->
+          <!-- <li><a routerLink="/about-us" (click)="selectMenu('about-us'); toggleMobileMenu()" class="list-navigation">About Us</a></li> -->
         </ul>
 
         <!-- Profile Button - Mobile -->
@@ -53,10 +57,10 @@
       }
       @else {
         <ul class="flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0 mb-4 md:mb-0">
-          <li><a routerLink="/home" (click)="toggleMobileMenu()" class="block hover:text-gray-300">Home</a></li>
-          <li><a routerLink="/motorcycles" (click)="toggleMobileMenu()" class="block hover:text-gray-300">Motorcycles</a></li>
-          <li><a routerLink="/spareparts" (click)="toggleMobileMenu()" class="block hover:text-gray-300">Spare Parts</a></li>
-          <li><a routerLink="/plates" (click)="toggleMobileMenu()" class="block hover:text-gray-300">Plates</a></li>
+          <li><a routerLink="/home" routerLinkActive="active-link"  (click)="toggleMobileMenu()" class="list-navigation">Home</a></li>
+          <li><a routerLink="/motorcycles" routerLinkActive="active-link"  (click)="toggleMobileMenu()" class="list-navigation">Motorcycles</a></li>
+          <li><a routerLink="/spareparts" routerLinkActive="active-link"  (click)="toggleMobileMenu()" class="list-navigation">Spare Parts</a></li>
+          <li><a routerLink="/plates" routerLinkActive="active-link"  (click)="toggleMobileMenu()" class="list-navigation">Plates</a></li>
         </ul>
 
         <!-- Sign In Button - Mobile -->
@@ -78,7 +82,7 @@
           style="background-color: #fff;"
           class="bg-white px-4 py-2 rounded-lg text-black flex items-center gap-2 cursor-pointer"
         >
-          {{ userName }} <i class="fa-regular fa-user"></i>
+         {{ userName | titlecase }} <i class="fa-regular fa-user"></i>
         </button>
 
         <!-- Dropdown Menu -->
@@ -102,7 +106,7 @@
         <!-- <button routerLink="/login" style="background-color: #F03D24;" class="px-4 py-2 rounded-lg text-white">
           Sign In
         </button> -->
-        <button (click)="openLoginModal()" style="background-color: #F03D24;" class="px-4 py-2 rounded-lg text-white">Sign In</button>
+        <button (click)="openLoginModal()" style="background-color: #F03D24;" class="signInBtn">Sign In</button>
           <app-login-modal *ngIf="showLoginModal" (close)="showLoginModal = false" ></app-login-modal>
       </div>
     }
