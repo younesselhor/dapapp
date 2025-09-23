@@ -184,7 +184,7 @@
           <div *ngFor="let bike of motorcycles" class="slider-card">
             <img [src]="bike.images[0]" draggable="false" class="card-image" />
             <div class="card-content">
-              <h3 class="title">{{ bike.title }}</h3>
+              <h3 class="title">{{ bike.motorcycle.brand }}</h3>
               <p class="price-label">{{ "COMMON.PRICE" | translate }}</p>
               <p class="price-value">
                 {{ bike.price > 0 ? bike.price : bike.minimum_bid }}

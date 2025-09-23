@@ -58,9 +58,11 @@
 
   .card-content {
     width: 292px;
-  height: 167px;
+  /* height: 167px; */
   flex-shrink: 0;
   border-color: #D0D5DD;
+  height: 45%;
+    gap: 20px;
   }
 
 
@@ -404,7 +406,8 @@
     padding: 24px;
     width: 292px;
     border-color: #D0D5DD;
-    height: 167px;}
+    /* height: 167px; */
+  }
 
 
 

@@ -67,6 +67,47 @@ export class MotorcyclesDetailsComponent implements OnInit, OnDestroy {
   showLoginModal = false;
   isLoggedIn = false;
 
+   activeTab: 'model' | 'category' = 'model';
+  selectedBrand = '';
+  selectedModel = '';
+  selectedYear = '';
+  selectedCategory = '';
+
+  brandSearchTerm = '';
+
+
+//  brands = [
+//     { id: 1, name: 'Honda' } ,
+//      { id: 2, name: 'Yamaha' },
+//     { id: 3, name: 'Kawasaki' },
+//     { id: 4, name: 'Suzuki' },
+//     // Add more brands
+//   ];
+
+  models = [
+    { id: 1, name: 'CBR600RR', brandId: 1 },
+    { id: 2, name: 'R6', brandId: 2 },
+    // Add more models
+  ];
+
+  years = [
+    { value: 2024, label: '2024' },
+    { value: 2023, label: '2023' },
+    { value: 2022, label: '2022' },
+    { value: 2021, label: '2021' },
+    // Add more years
+  ];
+    categories = [
+    { id: 1, name: 'Crosair', image: '', selected: false },
+    { id: 2, name: 'Tuning', image: '', selected: true },
+    { id: 3, name: 'Racing', image: '', selected: false },
+    { id: 4, name: 'Offroad', image: '', selected: false },
+    { id: 5, name: 'Desert', image: '', selected: false },
+    { id: 6, name: 'Street', image: '', selected: false },
+    { id: 7, name: 'Crosair', image: '', selected: false },
+    { id: 8, name: 'Crosair', image: '', selected: false }
+  ];
+
   constructor(
     private listingbyService: ListingByCatService,  
     private cdr: ChangeDetectorRef,
@@ -90,6 +131,76 @@ export class MotorcyclesDetailsComponent implements OnInit, OnDestroy {
     this.getBrands();
   }
 
+
+  // Add this property for search functionality
+
+
+// Add this getter method
+get filteredBrands(): Brand[] {
+  if (!this.brandSearchTerm) {
+    return this.brands;
+  }
+  return this.brands.filter(brand => 
+    brand.name.toLowerCase().includes(this.brandSearchTerm.toLowerCase())
+  );
+}
+
+
+  get filteredModels() {
+    if (!this.selectedBrand) return this.models;
+    return this.models.filter(model => model.brandId === +this.selectedBrand);
+  }
+    onSearch() {
+    if (this.activeTab === 'model') {
+      console.log('Searching by model:', {
+        brand: this.selectedBrand,
+        model: this.selectedModel,
+        year: this.selectedYear
+      });
+      // Implement your search logic here
+    } else {
+      console.log('Searching by category:', {
+        category: this.selectedCategory
+      });
+      // Implement your category search logic here
+    }
+  }
+
+//   selectCategory(categoryId: number): void {
+//   this.categories.forEach(cat => {
+//     cat.selected = cat.id === categoryId;
+//   });
+//   this.selectedCategory = categoryId.toString();
+// }
+
+ switchTab(tab: 'model' | 'category') {
+    this.activeTab = tab;
+    // Reset selections when switching tabs
+    this.resetSelections();
+  }
+
+   private resetSelections() {
+    this.selectedBrand = '';
+    this.selectedModel = '';
+    this.selectedYear = '';
+    this.selectedCategory = '';
+    this.categories.forEach(cat => cat.selected = false);
+  }
+
+   selectCategory(categoryId: number) {
+    this.categories.forEach(cat => {
+      cat.selected = cat.id === categoryId;
+    });
+    this.selectedCategory = categoryId.toString();
+  }
+// Add these methods
+onBrandSearchChange(event: any): void {
+  this.brandSearchTerm = event.target.value;
+}
+
+clearBrandSearch(): void {
+  this.brandSearchTerm = '';
+}
 //     viewListing(id: number): void {
 //   this.router.navigate(['/listing', id]);
 // }

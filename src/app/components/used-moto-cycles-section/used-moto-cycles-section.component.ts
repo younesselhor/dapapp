@@ -14,6 +14,11 @@ interface Motorcycle {
   currency: string;
   images: string[];
   minimum_bid: number;
+  motorcycle: {
+    brand: string;
+    model: string;
+    year: number;
+  };
 }
 
 @Component({
@@ -79,7 +84,9 @@ export class UsedMotoCyclesSectionComponent {
     this.listings
       .getMotorcyclesByCategory(countryToSearch)
       .subscribe((res: any) => {
+        console.log('Response:', res);
         this.motorcycles = res.listings || [];
+        console.log(' this.motorcycles: ',  this.motorcycles);
         if (!this.countryname) {
           this.searchedCountryMessage = 'Showing all countries';
         } else if (res.showing_all_countries && res.searched_country) {
