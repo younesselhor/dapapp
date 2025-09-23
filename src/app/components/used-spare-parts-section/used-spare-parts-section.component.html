@@ -127,7 +127,7 @@ align-items: center;
 gap: 31px;">
         <!-- No Results Message -->
         <div
-          *ngIf="visibleParts?.length === 0"
+          *ngIf="spareParts?.length === 0"
           class="flex items-center justify-center min-h-[300px] bg-gray-50 rounded-lg border border-gray-200"
         >
           <div class="text-center">
@@ -141,25 +141,25 @@ gap: 31px;">
          <!-- class="slider-track rtl:flex-row-reverse" -->
         <div
         class="slider-track"
-          *ngIf="visibleParts.length > 0"
+          *ngIf="spareParts.length > 0"
          
           [style.transform]="'translateX(' + currentPosition + 'px)'"
           [class.dragging]="isDragging"
-           
-             [class.dragging]="isDragging"
-             (mousedown)="startDrag($event)"
-             (touchstart)="startDrag($event)"
-             (mousemove)="onDrag($event)"
-             (touchmove)="onDrag($event)"
-             (mouseup)="endDrag()"
-             (mouseleave)="endDrag()"
-             (touchend)="endDrag()">
+          (mousedown)="shouldSlide ? startDrag($event) : null"
+          (touchstart)="shouldSlide ? startDrag($event) : null"
+          (mousemove)="shouldSlide ? onDrag($event) : null"
+          (touchmove)="shouldSlide ? onDrag($event) : null"
+          (mouseup)="shouldSlide ? endDrag() : null"
+          (mouseleave)="shouldSlide ? endDrag() : null"
+          (touchend)="shouldSlide ? endDrag() : null"
+             >
         
-          <div *ngFor="let part of visibleParts" class="slider-card">
+          <div *ngFor="let part of spareParts" class="slider-card">
 
             <img [src]="part.images[0]" draggable="false" class="card-image" [alt]="part.title" />
-            <div class="card-content">
-              <h3 class="title">{{ truncateText(part.title, 20) }}</h3>
+            <!-- <div class="card-content">
+               <h3 class="title">{{ truncateText(part.title, 20) }}</h3>
+               <h3 class="title">{{ part.title }}></h3>
               <p *ngIf="part.description" class="description line-clamp-2" [title]="part.description">
                 {{ truncateText(part.description, 20) }}
               </p>
@@ -170,8 +170,18 @@ gap: 31px;">
               <button class="button" (click)="viewListing(part.id)">
                 {{ "SPARE_PARTS.VIEW_PART" | translate }}
               </button>
+            </div> -->
+  <div class="card-content">
+              <h3 class="title">{{ part.title }}</h3>
+              <p class="price-label">{{ "COMMON.PRICE" | translate }}</p>
+              <p class="price-value">
+                {{ part.price > 0 ? part.price : part.minimum_bid }}
+                {{ part.currency }}
+              </p>
+              <button class="button" (click)="viewListing(part.id)">
+                {{ "COMMON.VIEW_BIKE" | translate }}
+              </button>
             </div>
-
 
           </div>
         </div>

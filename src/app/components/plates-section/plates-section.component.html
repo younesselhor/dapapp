@@ -1,11 +1,27 @@
 <!-- plates section -->
 <section class="main-section">
   <div class="container">
-    <div class="content-wrapper">
+    <div style="display: flex; padding: 24px; align-items: center; gap: 72px">
       <!-- Left Content -->
-      <div class="left-content">
-        <div class="left-inner">
-          <div class="title-section">
+      <div style="width: 495px; height: 412px">
+        <div  style="
+            display: flex;
+            width: 495px;
+            align-items: flex-start;
+            align-content: flex-start;
+            gap: 40px 45px;
+            flex-wrap: wrap;
+          ">
+          <div   style="
+              width: 465px;
+              flex-shrink: 0;
+              color: var(--gray-900, #18181b);
+              font-family: Manrope;
+              font-size: 52px;
+              font-style: normal;
+              font-weight: 700;
+              line-height: 66px; /* 126.923% */
+            ">
             {{ "PLATES.TITLE" | translate }}
           </div>
           
@@ -15,11 +31,18 @@
             </span>
           </div>
           
-          <div class="description-section">
+          <div   style="
+              color: var(--gray-900, #18181b);
+              font-family: Manrope;
+              font-size: 18px;
+              font-style: normal;
+              font-weight: 500;
+              line-height: 30px; /* 166.667% */
+            ">
             {{ "PLATES.DESCRIPTION" | translate }}
           </div>
 
-          <div class="actions-section">
+          <!-- <div class="actions-section">
             <div class="button-wrapper">
               <button class="view-all-button" routerLink="/plates">
                 <p class="button-text">{{ "COMMON.VIEW_ALL" | translate }}</p>
@@ -44,12 +67,109 @@
                 </div>
               </div>
             </div>
+          </div> -->
+           <div
+            style="
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: flex-start;
+              gap: 45px;
+              flex: 1 0 0;
+            "
+          >
+            <div style="display: flex; align-items: flex-start; gap: 24px">
+              <!-- class="w-fit h-[48px] px-[57.63px] py-[14.75px] border border-gray-800 text-gray-800 hover:bg-gray-100 transition cursor-pointer" -->
+              <button
+                style="
+                  display: flex;
+                  height: 48px;
+                  padding: 17.25px 57.63px 14.75px 57.63px;
+                  justify-content: center;
+                  align-items: center;
+                  border-radius: 4px;
+                  border: 2px solid var(--Primary---Navy, #032c40);
+                "
+                routerLink="/motorcycles"
+              >
+                <p
+                  style="
+                    color: var(--Primary---Navy, #032c40);
+                    text-align: center;
+                    font-family: Manrope;
+                    font-size: 16px;
+                    font-style: normal;
+                    font-weight: 700;
+                    line-height: 16px; /* 100% */
+                  "
+                >
+                  {{ "COMMON.VIEW_ALL" | translate }}
+                </p>
+              </button>
+            </div>
+
+            <!-- class="flex gap-12" -->
+            <div style="display: flex; align-items: center; gap: 45px">
+              <div style="width: 86px; height: 77px">
+                <p
+                  style="
+                    color: var(--gray-900, #18181b);
+                    font-family: Manrope;
+                    font-size: 36px;
+                    font-style: normal;
+                    font-weight: 800;
+                    line-height: 46px; /* 127.778% */
+                  "
+                >
+                  50k+
+                </p>
+                <p
+                  style="
+                    color: var(--gray-500, #71717a);
+                    font-family: Manrope;
+                    font-size: 18px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: 24px; /* 133.333% */
+                  "
+                >
+                  {{ "USED_MOTORCYCLES.SOLD" | translate }}
+                </p>
+              </div>
+              <div style="width: 129px; height: 77px">
+                <p
+                  style="
+                    color: var(--gray-900, #18181b);
+                    font-family: Manrope;
+                    font-size: 36px;
+                    font-style: normal;
+                    font-weight: 800;
+                    line-height: 46px; /* 127.778% */
+                  "
+                >
+                  17k+
+                </p>
+                <p
+                  style="
+                    color: var(--gray-500, #71717a);
+                    font-family: Manrope;
+                    font-size: 18px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: 24px; /* 133.333% */
+                  "
+                >
+                  {{ "USED_MOTORCYCLES.AVAILABLE" | translate }}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       <!-- Right Content - Swipeable Cards -->
-      <div class="slider-container">
+      <div class="slider-container"
+       style="display: flex; align-items: center; gap: 31px">
         <!-- No Results Message -->
         <div
           *ngIf="plates?.length === 0"

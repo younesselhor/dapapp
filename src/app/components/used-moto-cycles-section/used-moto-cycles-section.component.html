@@ -48,72 +48,98 @@
           >
             {{ "USED_MOTORCYCLES.DESCRIPTION" | translate }}
           </div>
-<!-- class="flex flex-col gap-12" -->
-          <div style="display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: flex-start;
-gap: 45px;
-flex: 1 0 0;">
-<div style="display: flex;
-align-items: flex-start;
-gap: 24px;">
- <!-- class="w-fit h-[48px] px-[57.63px] py-[14.75px] border border-gray-800 text-gray-800 hover:bg-gray-100 transition cursor-pointer" -->
-   <button style="display: flex;
-height: 48px;
-padding: 17.25px 57.63px 14.75px 57.63px;
-justify-content: center;
-align-items: center;
-border-radius: 4px;
-border: 2px solid var(--Primary---Navy, #032C40);"
-              routerLink="/motorcycles"
-             
-            >
-            <p style="color: var(--Primary---Navy, #032C40);
-text-align: center;
-font-family: Manrope;
-font-size: 16px;
-font-style: normal;
-font-weight: 700;
-line-height: 16px; /* 100% */">{{ "COMMON.VIEW_ALL" | translate }}</p>
-            </button>
-</div>
-           
-<!-- class="flex gap-12" -->
-            <div style="display: flex;
-align-items: center;
-gap: 45px;">
-              <div style="width: 86px;
-height: 77px;">
-                <p style="color: var(--gray-900, #18181B);
-font-family: Manrope;
-font-size: 36px;
-font-style: normal;
-font-weight: 800;
-line-height: 46px; /* 127.778% */">50k+</p>
-                <p style="color: var(--gray-500, #71717A);
-font-family: Manrope;
-font-size: 18px;
-font-style: normal;
-font-weight: 400;
-line-height: 24px; /* 133.333% */">
+          <!-- class="flex flex-col gap-12" -->
+          <div
+            style="
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: flex-start;
+              gap: 45px;
+              flex: 1 0 0;
+            "
+          >
+            <div style="display: flex; align-items: flex-start; gap: 24px">
+              <!-- class="w-fit h-[48px] px-[57.63px] py-[14.75px] border border-gray-800 text-gray-800 hover:bg-gray-100 transition cursor-pointer" -->
+              <button
+                style="
+                  display: flex;
+                  height: 48px;
+                  padding: 17.25px 57.63px 14.75px 57.63px;
+                  justify-content: center;
+                  align-items: center;
+                  border-radius: 4px;
+                  border: 2px solid var(--Primary---Navy, #032c40);
+                "
+                routerLink="/motorcycles"
+              >
+                <p
+                  style="
+                    color: var(--Primary---Navy, #032c40);
+                    text-align: center;
+                    font-family: Manrope;
+                    font-size: 16px;
+                    font-style: normal;
+                    font-weight: 700;
+                    line-height: 16px; /* 100% */
+                  "
+                >
+                  {{ "COMMON.VIEW_ALL" | translate }}
+                </p>
+              </button>
+            </div>
+
+            <!-- class="flex gap-12" -->
+            <div style="display: flex; align-items: center; gap: 45px">
+              <div style="width: 86px; height: 77px">
+                <p
+                  style="
+                    color: var(--gray-900, #18181b);
+                    font-family: Manrope;
+                    font-size: 36px;
+                    font-style: normal;
+                    font-weight: 800;
+                    line-height: 46px; /* 127.778% */
+                  "
+                >
+                  50k+
+                </p>
+                <p
+                  style="
+                    color: var(--gray-500, #71717a);
+                    font-family: Manrope;
+                    font-size: 18px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: 24px; /* 133.333% */
+                  "
+                >
                   {{ "USED_MOTORCYCLES.SOLD" | translate }}
                 </p>
               </div>
-              <div style="width: 129px;
-height: 77px;">
-                <p style="color: var(--gray-900, #18181B);
-font-family: Manrope;
-font-size: 36px;
-font-style: normal;
-font-weight: 800;
-line-height: 46px; /* 127.778% */">17k+</p>
-                <p style="color: var(--gray-500, #71717A);
-font-family: Manrope;
-font-size: 18px;
-font-style: normal;
-font-weight: 400;
-line-height: 24px; /* 133.333% */">
+              <div style="width: 129px; height: 77px">
+                <p
+                  style="
+                    color: var(--gray-900, #18181b);
+                    font-family: Manrope;
+                    font-size: 36px;
+                    font-style: normal;
+                    font-weight: 800;
+                    line-height: 46px; /* 127.778% */
+                  "
+                >
+                  17k+
+                </p>
+                <p
+                  style="
+                    color: var(--gray-500, #71717a);
+                    font-family: Manrope;
+                    font-size: 18px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: 24px; /* 133.333% */
+                  "
+                >
                   {{ "USED_MOTORCYCLES.AVAILABLE" | translate }}
                 </p>
               </div>
@@ -123,9 +149,10 @@ line-height: 24px; /* 133.333% */">
       </div>
 
       <!-- Right Content - Swipeable Cards -->
-      <div class="slider-container" style="display: flex;
-align-items: center;
-gap: 31px;">
+      <div
+        class="slider-container"
+        style="display: flex; align-items: center; gap: 31px"
+      >
         <!-- No Results Message -->
         <div
           *ngIf="motorcycles.length === 0"
@@ -139,36 +166,11 @@ gap: 31px;">
         </div>
 
         <!-- Motorcycles Slider -->
-        <!-- <div *ngIf="motorcycles.length > 0"
-             class="slider-track rtl:flex-row-reverse" 
-             [style.transform]="'translateX(' + currentPosition + 'px)'"
-             [class.dragging]="isDragging"
-             (mousedown)="startDrag($event)"
-             (touchstart)="startDrag($event)"
-             (mousemove)="onDrag($event)"
-             (touchmove)="onDrag($event)"
-             (mouseup)="endDrag()"
-             (mouseleave)="endDrag()"
-             (touchend)="endDrag()">
-             
-          <div *ngFor="let bike of motorcycles" class="slider-card">
-            <img [src]="bike.images[0]" draggable="false" class="card-image">
-            <div class="card-content">
-              <h3>{{bike.title}}</h3>
-              <p class="price-label">{{ 'COMMON.PRICE' | translate }}</p>
-              <p class="price-value">
-                {{bike.price > 0 ? bike.price : bike.minimum_bid}} {{bike.currency}}
-              </p>
-              <button (click)="viewListing(bike.id)">{{ 'COMMON.VIEW_BIKE' | translate }}</button>
-            </div>
-          </div>
-        </div> -->
-
-         <!-- class="slider-track rtl:flex-row-reverse" -->
+  
+        <!-- class="slider-track rtl:flex-row-reverse" -->
         <div
-        class="slider-track"
+          class="slider-track"
           *ngIf="motorcycles.length > 0"
-         
           [style.transform]="'translateX(' + currentPosition + 'px)'"
           [class.dragging]="isDragging"
           (mousedown)="shouldSlide ? startDrag($event) : null"
@@ -180,7 +182,6 @@ gap: 31px;">
           (touchend)="shouldSlide ? endDrag() : null"
         >
           <div *ngFor="let bike of motorcycles" class="slider-card">
-
             <img [src]="bike.images[0]" draggable="false" class="card-image" />
             <div class="card-content">
               <h3 class="title">{{ bike.title }}</h3>
@@ -193,8 +194,6 @@ gap: 31px;">
                 {{ "COMMON.VIEW_BIKE" | translate }}
               </button>
             </div>
-
-
           </div>
         </div>
       </div>
