@@ -2,7 +2,7 @@
   style="
     display: flex;
     height: 307px;
-    background: #FEF9E7;
+    background: #fef9e7;
     padding: 80px;
     align-items: flex-start;
     gap: 50px;
@@ -34,9 +34,9 @@
         >Post your motorcycle for sale and get exposure across the whole
         kingdom!</span
       >
-    </div>
-    <div class="top-content-img">
-      <img src="hondablur1.png" alt="" />
+      <div class="top-content-img">
+        <img src="hondablur1.png" alt="" />
+      </div>
     </div>
   </div>
 </div>
@@ -49,49 +49,50 @@
           <h2 class="filter-label">FILTERS</h2>
           <div class="list-section">
             <div class="demo-container">
-            <div class="filter-section">
-
-              <div class="filter-header" (click)="toggleDigits()">
-                <span class="filter-title">Condition</span>
-                <span class="toggle-icon">{{ isDigitsOpen ? "−" : "+" }}</span>
-              </div>
-
-              <div class="filter-content" *ngIf="isDigitsOpen">
-                <div class="filter-item">
-                  <input
-                    type="checkbox"
-                    id="condition-all"
-                    name="condition"
-                    [checked]="!selectedCondition"
-                    (change)="selectedCondition = ''; executeFilter()"
-                  />
-                  <label for="condition-all">All Conditions</label>
+              <div class="filter-section">
+                <div class="filter-header" (click)="toggleDigits()">
+                  <span class="filter-title">Condition</span>
+                  <span class="toggle-icon">{{
+                    isDigitsOpen ? "−" : "+"
+                  }}</span>
                 </div>
-                <div class="filter-item">
-                  <input
-                    type="checkbox"
-                    id="condition-new"
-                    name="condition"
-                    value="new"
-                    [checked]="selectedCondition === 'new'"
-                    (change)="selectedCondition = 'new'; executeFilter()"
-                  />
-                  <label for="condition-new">New</label>
-                </div>
-                <div class="filter-item">
-                  <input
-                    type="checkbox"
-                    id="condition-used"
-                    name="condition"
-                    value="used"
-                    [checked]="selectedCondition === 'used'"
-                    (change)="selectedCondition = 'used'; executeFilter()"
-                  />
-                  <label for="condition-used">Used</label>
+
+                <div class="filter-content" *ngIf="isDigitsOpen">
+                  <div class="filter-item">
+                    <input
+                      type="checkbox"
+                      id="condition-all"
+                      name="condition"
+                      [checked]="!selectedCondition"
+                      (change)="selectedCondition = ''; executeFilter()"
+                    />
+                    <label for="condition-all">All Conditions</label>
+                  </div>
+                  <div class="filter-item">
+                    <input
+                      type="checkbox"
+                      id="condition-new"
+                      name="condition"
+                      value="new"
+                      [checked]="selectedCondition === 'new'"
+                      (change)="selectedCondition = 'new'; executeFilter()"
+                    />
+                    <label for="condition-new">New</label>
+                  </div>
+                  <div class="filter-item">
+                    <input
+                      type="checkbox"
+                      id="condition-used"
+                      name="condition"
+                      value="used"
+                      [checked]="selectedCondition === 'used'"
+                      (change)="selectedCondition = 'used'; executeFilter()"
+                    />
+                    <label for="condition-used">Used</label>
+                  </div>
                 </div>
               </div>
             </div>
-</div>
             <!-- <div class="filter-section">
             <div class="filter-header" (click)="toggleCountry()">
               <span class="filter-title">Brand</span>
@@ -113,48 +114,48 @@
               </div>
             </div>
           </div> -->
-          <div class="demo-container">
-  <div class="filter-header">
-            <span class="filter-title">Brand</span>
-            <span class="toggle-icon">−</span>
-        </div>
+            <div class="demo-container">
+              <div class="filter-header">
+                <span class="filter-title">Brand</span>
+                <span class="toggle-icon">−</span>
+              </div>
 
-        <div class="search-container">
-            <input
-                type="text"
-                class="search-input"
-                placeholder="Search by Brand"
-                id="brand-search"
-            />
-            <div class="search-icon">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <div class="search-container">
+                <input
+                  type="text"
+                  class="search-input"
+                  placeholder="Search by Brand"
+                  id="brand-search"
+                />
+                <div class="search-icon">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                     <path
-                        d="M17.5 17.5L12.5001 12.5M14.1667 8.33333C14.1667 11.555 11.555 14.1667 8.33333 14.1667C5.11167 14.1667 2.5 11.555 2.5 8.33333C2.5 5.11167 5.11167 2.5 8.33333 2.5C11.555 2.5 14.1667 5.11167 14.1667 8.33333Z"
-                        stroke="#FF6B35"
-                        stroke-width="1.66667"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+                      d="M17.5 17.5L12.5001 12.5M14.1667 8.33333C14.1667 11.555 11.555 14.1667 8.33333 14.1667C5.11167 14.1667 2.5 11.555 2.5 8.33333C2.5 5.11167 5.11167 2.5 8.33333 2.5C11.555 2.5 14.1667 5.11167 14.1667 8.33333Z"
+                      stroke="#FF6B35"
+                      stroke-width="1.66667"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
                     />
-                </svg>
-            </div>
-        </div>
+                  </svg>
+                </div>
+              </div>
 
-          <div class="brand-list">
-  <div class="filter-item" *ngFor="let brand of filteredBrands">
-    <input
-      type="checkbox"
-      [id]="'brand-' + brand.id"
-      [checked]="brand.checked"
-      (change)="brand.checked = !brand.checked; onBrandChange()"
-      class="brand-checkbox"
-    />
-    <label [for]="'brand-' + brand.id" class="brand-label">
-      <span class="brand-name">{{ brand.name }}</span>
-      <span class="count">({{ brand.listings_count }})</span>
-    </label>
-  </div>
-</div>
-</div>
+              <div class="brand-list">
+                <div class="filter-item" *ngFor="let brand of filteredBrands">
+                  <input
+                    type="checkbox"
+                    [id]="'brand-' + brand.id"
+                    [checked]="brand.checked"
+                    (change)="brand.checked = !brand.checked; onBrandChange()"
+                    class="brand-checkbox"
+                  />
+                  <label [for]="'brand-' + brand.id" class="brand-label">
+                    <span class="brand-name">{{ brand.name }}</span>
+                    <span class="count">({{ brand.listings_count }})</span>
+                  </label>
+                </div>
+              </div>
+            </div>
             <!-- <div class="filter-section">
               <div class="filter-header" (click)="toggleCountry()">
                 <span class="filter-title">Brand</span>
@@ -201,56 +202,56 @@
               </div>
             </div> -->
             <div class="demo-container">
-            <div class="filter-section">
-              <div class="filter-header">
-                <span class="filter-title">Price Range</span>
-              </div>
-
-              <div class="price-range-container">
-                <div class="slider-container">
-                  <div class="slider-track"></div>
-                  <input
-                    type="range"
-                    [min]="absoluteMin"
-                    [max]="absoluteMax"
-                    [(ngModel)]="priceRange.min"
-                    (input)="onMinSliderChange($event)"
-                    class="slider-min"
-                  />
-                  <input
-                    type="range"
-                    [min]="absoluteMin"
-                    [max]="absoluteMax"
-                    [(ngModel)]="priceRange.max"
-                    (input)="onMaxSliderChange($event)"
-                    class="slider-max"
-                  />
+              <div class="filter-section">
+                <div class="filter-header">
+                  <span class="filter-title">Price Range</span>
                 </div>
 
-                <div class="price-inputs">
-                  <div class="price-input">
-                    <label>Min</label>
+                <div class="price-range-container">
+                  <div class="slider-container">
+                    <div class="slider-track"></div>
                     <input
-                      type="number"
+                      type="range"
+                      [min]="absoluteMin"
+                      [max]="absoluteMax"
                       [(ngModel)]="priceRange.min"
+                      (input)="onMinSliderChange($event)"
+                      class="slider-min"
+                    />
+                    <input
+                      type="range"
                       [min]="absoluteMin"
                       [max]="absoluteMax"
-                      (change)="onMinInputChange()"
+                      [(ngModel)]="priceRange.max"
+                      (input)="onMaxSliderChange($event)"
+                      class="slider-max"
                     />
                   </div>
-                  <div class="price-input">
-                    <label>MAX</label>
-                    <input
-                      type="number"
-                      [(ngModel)]="priceRange.max"
-                      [min]="absoluteMin"
-                      [max]="absoluteMax"
-                      (change)="onMaxInputChange()"
-                    />
+
+                  <div class="price-inputs">
+                    <div class="price-input">
+                      <label>Min</label>
+                      <input
+                        type="number"
+                        [(ngModel)]="priceRange.min"
+                        [min]="absoluteMin"
+                        [max]="absoluteMax"
+                        (change)="onMinInputChange()"
+                      />
+                    </div>
+                    <div class="price-input">
+                      <label>MAX</label>
+                      <input
+                        type="number"
+                        [(ngModel)]="priceRange.max"
+                        [min]="absoluteMin"
+                        [max]="absoluteMax"
+                        (change)="onMaxInputChange()"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
             </div>
           </div>
         </div>
@@ -260,75 +261,85 @@
       <!-- Main Content Area -->
       <div class="main-content">
         <!-- New Filter Card Section - Now above the products -->
-       <div class="filter-card">
-  <div class="browse-section">
-    <h3>Browse as you wish</h3>
-  </div>
-  
-  <!-- Tab Buttons - Updated -->
-  <div class="tab-buttons">
-    <button 
-      [class.active]="activeTab === 'model'" 
-      (click)="switchTab('model')"
-      class="tab-button">
-      Model
-    </button>
-    <button 
-      [class.active]="activeTab === 'category'" 
-      (click)="switchTab('category')"
-      class="tab-button">
-      Category
-    </button>
-  </div>
+        <div class="filter-card">
+          <div class="browse-section">
+            <h3>Browse as you wish</h3>
+          </div>
 
-  <!-- Model Tab Content -->
-  <div *ngIf="activeTab === 'model'" class="button-group">
-    <div class="filter-select">
-      <select [(ngModel)]="selectedBrand" class="brand-select">
-        <option value="">Brand</option>
-        <option *ngFor="let brand of brands" [value]="brand.id">
-          {{ brand.name }}
-        </option>
-      </select>
-    </div>
+          <!-- Tab Buttons - Updated -->
+          <div class="tab-buttons">
+            <button
+              [class.active]="activeTab === 'model'"
+              (click)="switchTab('model')"
+              class="tab-button"
+            >
+              Model
+            </button>
+            <button
+              [class.active]="activeTab === 'category'"
+              (click)="switchTab('category')"
+              class="tab-button"
+            >
+              Category
+            </button>
+          </div>
 
-    <div class="filter-select">
-      <select [(ngModel)]="selectedModel" class="model-select">
-        <option value="">Model</option>
-        <option *ngFor="let model of filteredModels" [value]="model.id">
-          {{ model.name }}
-        </option>
-      </select>
-    </div>
+          <!-- Model Tab Content -->
+          <div *ngIf="activeTab === 'model'" class="button-group">
+            <div class="filter-select">
+              <select [(ngModel)]="selectedBrand" class="brand-select">
+                <option value="">Brand</option>
+                <option *ngFor="let brand of brands" [value]="brand.id">
+                  {{ brand.name }}
+                </option>
+              </select>
+            </div>
 
-    <div class="filter-select">
-      <select [(ngModel)]="selectedYear" class="year-select">
-        <option value="">Year</option>
-        <option *ngFor="let year of years" [value]="year.value">
-          {{ year.label }}
-        </option>
-      </select>
-    </div>
+            <div class="filter-select">
+              <select [(ngModel)]="selectedModel" class="model-select">
+                <option value="">Model</option>
+                <option *ngFor="let model of filteredModels" [value]="model.id">
+                  {{ model.name }}
+                </option>
+              </select>
+            </div>
 
-    <button class="search-button" (click)="onSearch()">Search</button>
-  </div>
+            <div class="filter-select">
+              <select [(ngModel)]="selectedYear" class="year-select">
+                <option value="">Year</option>
+                <option *ngFor="let year of years" [value]="year.value">
+                  {{ year.label }}
+                </option>
+              </select>
+            </div>
 
-  <!-- Category Tab Content - NEW -->
-  <div *ngIf="activeTab === 'category'" class="category-content">
-    <div class="category-grid">
-      <div 
-        *ngFor="let category of categories" 
-        [class.selected]="category.selected"
-        (click)="selectCategory(category.id)"
-        class="category-item">
-        <div class="category-placeholder"></div>
-        <span class="category-name">{{ category.name }}</span>
-        <span *ngIf="category.selected" class="category-checkmark">✔</span>
-      </div>
-    </div>
-    <button class="search-button category-search-btn" (click)="onSearch()">Search</button>
-  </div>
-</div>
+            <button class="search-button" (click)="onSearch()">Search</button>
+          </div>
+
+          <!-- Category Tab Content - NEW -->
+          <div *ngIf="activeTab === 'category'" class="category-content">
+            <div class="category-grid">
+              <div
+                *ngFor="let category of categories"
+                [class.selected]="category.selected"
+                (click)="selectCategory(category.id)"
+                class="category-item"
+              >
+                <div class="category-placeholder"></div>
+                <span class="category-name">{{ category.name }}</span>
+                <span *ngIf="category.selected" class="category-checkmark"
+                  >✔</span
+                >
+              </div>
+            </div>
+            <button
+              class="search-button category-search-btn"
+              (click)="onSearch()"
+            >
+              Search
+            </button>
+          </div>
+        </div>
 
         <!-- Products Grid -->
         <div
@@ -361,27 +372,31 @@
             <!-- Content -->
             <div class="product-content">
               <!-- Title -->
-              <h3 class="product-title" [title]="part.title">
+              <span class="product-title" [title]="part.title">
                 {{ truncateText(part.title, 20) }}
-              </h3>
+              </span>
 
-              <!-- Description -->
-              <p
-                *ngIf="part.description"
-                class="product-description"
-                [title]="part.description"
-              >
-                {{ truncateText(part.description, 30) }}
-              </p>
+              <span class="product-brand">
+                {{part.brand }} {{part.model}} {{part.year}}
+              </span>
 
+               <span class="price-value">{{ part.price }} SAR</span>
+
+               <div class="location-time-product">
+
+                <span class="location-value"> 
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M7.05002 6.04987C8.36284 4.73705 10.1434 3.99951 12 3.99951C13.8566 3.99951 15.6372 4.73705 16.95 6.04987C18.2628 7.36269 19.0004 9.14326 19.0004 10.9999C19.0004 12.8565 18.2628 14.637 16.95 15.9499L12 20.8999L7.05002 15.9499C6.39993 15.2998 5.88425 14.5281 5.53242 13.6788C5.1806 12.8295 4.99951 11.9192 4.99951 10.9999C4.99951 10.0806 5.1806 9.17025 5.53242 8.32092C5.88425 7.47159 6.39993 6.69989 7.05002 6.04987ZM12 12.9999C12.5304 12.9999 13.0392 12.7892 13.4142 12.4141C13.7893 12.039 14 11.5303 14 10.9999C14 10.4694 13.7893 9.96073 13.4142 9.58566C13.0392 9.21058 12.5304 8.99987 12 8.99987C11.4696 8.99987 10.9609 9.21058 10.5858 9.58566C10.2107 9.96073 10 10.4694 10 10.9999C10 11.5303 10.2107 12.039 10.5858 12.4141C10.9609 12.7892 11.4696 12.9999 12 12.9999Z" fill="#A7C543"/>
+</svg>
+                  {{ part.location?.city }}
+                </span>
+                <!-- <span class="time-value">{{ part.listing_date }}</span> -->
+                 <span class="time-value">6 days ago</span>
+               </div>
               <!-- Price and Button -->
               <div class="product-footer">
-                <p class="price-label">PRICE</p>
-                <p class="price-value">{{ part.price }} SAR</p>
-                <button
-                  class="view-button hover:bg-red-50 hover:border-red-300 transition-colors duration-200"
-                  (click)="viewListing(part.id)"
-                >
+
+                <button class="viewBtn" (click)="viewListing(part.id)">
                   View Bike
                 </button>
               </div>

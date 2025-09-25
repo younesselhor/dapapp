@@ -1,12 +1,12 @@
 /* app.component.css */
 .main-page-style {
   width: 100%;        /* full width */
-  max-width: 1440px;  /* max pour grand écran */
+  /* max-width: 1440px;   */
   margin: 0 auto;     /* center */
   /* padding: 24px; */
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  /* gap: 24px; */
   box-sizing: border-box;
 }
 
@@ -74,4 +74,12 @@
   .content-container {
     flex-direction: column;
   }
+}
+
+.main-page{
+   width: 100%;
+  display: flex;
+  justify-content: center; 
+  box-sizing: border-box;
+  /* align-items: center; */
 }

@@ -15,7 +15,14 @@ interface Motorcycle {
   price: number;
   images: string[];
   image?: string;
-  imageLoaded?: boolean; // Add this for image loading state
+  imageLoaded?: boolean; // Add this for image loading state;
+  brand?: string;
+  model?: string;
+  year?: number;
+  location?: { city: string; country: string };
+  listing_date?: string;
+  condition?: string;
+  // Add other properties as needed
   // add other properties as needed
 }
 
@@ -295,6 +302,7 @@ clearBrandSearch(): void {
       }));
     });
   }
+  
 
   getMotorcyclesdetails(): void {
     this.listingbyService.getMotorcyclesByCategory('all').subscribe((response: any) => {
