@@ -312,51 +312,90 @@ export class MotorcyclesDetailsComponent implements OnInit, OnDestroy {
   //   this.priceRange.max = +event.target.value;
   //   this.triggerDebouncedFilter();
   // }
-  onMinSliderChange(event: any): void {
-  const newValue = +event.target.value;
-  console.log('Min slider changed to:', newValue);
-  this.priceRange.min = newValue;
+//   onMinSliderChange(event: any): void {
+//   const newValue = +event.target.value;
+//   console.log('Min slider changed to:', newValue);
+//   this.priceRange.min = newValue;
   
-  // Ensure min doesn't exceed max
-  if (this.priceRange.min > this.priceRange.max) {
-    this.priceRange.min = this.priceRange.max;
-  }
+//   // Ensure min doesn't exceed max
+//   if (this.priceRange.min > this.priceRange.max) {
+//     this.priceRange.min = this.priceRange.max;
+//   }
   
-  this.triggerDebouncedFilter();
-}
+//   this.triggerDebouncedFilter();
+// }
 
-onMaxSliderChange(event: any): void {
-  const newValue = +event.target.value;
-  console.log('Max slider changed to:', newValue);
-  this.priceRange.max = newValue;
+// onMaxSliderChange(event: any): void {
+//   const newValue = +event.target.value;
+//   console.log('Max slider changed to:', newValue);
+//   this.priceRange.max = newValue;
   
-  // Ensure max doesn't go below min
-  if (this.priceRange.max < this.priceRange.min) {
-    this.priceRange.max = this.priceRange.min;
-  }
+//   // Ensure max doesn't go below min
+//   if (this.priceRange.max < this.priceRange.min) {
+//     this.priceRange.max = this.priceRange.min;
+//   }
   
-  this.triggerDebouncedFilter();
-}
+//   this.triggerDebouncedFilter();
+// }
 
-  onMinInputChange(): void {
+
+
+  onMinSliderChange(event: any) {
+    this.priceRange.min = +event.target.value;
+    // this.applyFilters();
+        this.executeFilter();
+
+  }
+
+  onMaxSliderChange(event: any) {
+    this.priceRange.max = +event.target.value;
+    // this.applyFilters();
+        this.executeFilter();
+
+  }
+
+    onMinInputChange() {
     if (this.priceRange.min < this.absoluteMin) {
       this.priceRange.min = this.absoluteMin;
     }
     if (this.priceRange.min > this.priceRange.max) {
       this.priceRange.min = this.priceRange.max;
     }
-    this.triggerDebouncedFilter();
+    // this.applyFilters();
+    this.executeFilter();
   }
 
-  onMaxInputChange(): void {
+  onMaxInputChange() {
     if (this.priceRange.max > this.absoluteMax) {
       this.priceRange.max = this.absoluteMax;
     }
     if (this.priceRange.max < this.priceRange.min) {
       this.priceRange.max = this.priceRange.min;
     }
-    this.triggerDebouncedFilter();
+    // this.applyFilters();
+        this.executeFilter();
+
   }
+
+  // onMinInputChange(): void {
+  //   if (this.priceRange.min < this.absoluteMin) {
+  //     this.priceRange.min = this.absoluteMin;
+  //   }
+  //   if (this.priceRange.min > this.priceRange.max) {
+  //     this.priceRange.min = this.priceRange.max;
+  //   }
+  //   this.triggerDebouncedFilter();
+  // }
+
+  // onMaxInputChange(): void {
+  //   if (this.priceRange.max > this.absoluteMax) {
+  //     this.priceRange.max = this.absoluteMax;
+  //   }
+  //   if (this.priceRange.max < this.priceRange.min) {
+  //     this.priceRange.max = this.priceRange.min;
+  //   }
+  //   this.triggerDebouncedFilter();
+  // }
 
   onBrandChangeFilter(): void {
     this.executeFilter();
