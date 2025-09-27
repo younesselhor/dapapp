@@ -196,7 +196,7 @@ flex: 1 0 0;
   -webkit-appearance: none;
   background: transparent;
   top: 50%;
-  transform: translateY(-50%);
+  /* transform: translateY(-50%); */
 }
 
 .slider-min::-webkit-slider-thumb,

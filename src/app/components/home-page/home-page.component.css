@@ -10,7 +10,7 @@
   flex-direction: column;
   width: 100%;
   max-width: 1440px;
-  gap: 50px;
+  /* gap: 50px; */
   overflow-x: hidden; /* prevent horizontal scroll */
   box-sizing: border-box;
   padding: 0 16px;    /* optional */
