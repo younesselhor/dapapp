@@ -464,7 +464,7 @@ nextImage(): void {
     if (this.isMotorcycle) {
       return `${this.listing.motorcycle.brand} ${this.listing.motorcycle.model} ${this.listing.motorcycle.year}`;
     } else if (this.isSparePart) {
-      return `${this.listing.spare_part.bike_part_brand} ${this.listing.spare_part.bike_part_category}`;
+      return `${this.listing.spare_part.compatible_motorcycles.brand}  - ${this.listing.title}`;
     }
     return this.listing.title;
   }

@@ -1,7 +1,7 @@
 /* app.component.css */
 .main-page-style {
   width: 100%;        /* full width */
-  /* max-width: 1440px;   */
+  max-width: 100%;  
   margin: 0 auto;     /* center */
   /* padding: 24px; */
   display: flex;

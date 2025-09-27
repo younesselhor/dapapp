@@ -185,14 +185,22 @@
 
 /* Slider Card */
 .slider-card {
-  width: 280px;
+  /* width: 280px;
   height: 480px;
   flex-shrink: 0;
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   overflow: hidden;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #e5e7eb; */
+      flex: 0 0 auto;
+    width: 324px;
+    height: 491px;
+    background: #fff;
+    border-radius: 4px;
+    background: var(--base-white, #FFF);
+    box-shadow: 0 44px 44px -7px rgba(0, 0, 0, 0.08);
+
 }
 
 /* Card Image */

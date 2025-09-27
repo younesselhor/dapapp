@@ -5,6 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 import { SidebarComponent } from '../components/sidebar/sidebar.component';
 import { FormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { ListingService } from '../components/postingAdd/product-form/listingService/listing-service.service';
 
 
 interface Brand {
@@ -56,6 +57,22 @@ selectedCondition: 'new' | 'used' | '' = '';
 
   isCategoryOpen = true;
 
+    activeTab: 'model' | 'category' = 'model';
+ selectedBrand: string = '';
+  selectedModel: string = '';
+  selectedYear: string = '';
+   selectedCategory = '';
+    categories = [
+    { id: 1, name: 'Crosair', image: '', selected: false },
+    { id: 2, name: 'Tuning', image: '', selected: true },
+    { id: 3, name: 'Racing', image: '', selected: false },
+    { id: 4, name: 'Offroad', image: '', selected: false },
+    { id: 5, name: 'Desert', image: '', selected: false },
+    { id: 6, name: 'Street', image: '', selected: false },
+    { id: 7, name: 'Crosair', image: '', selected: false },
+    { id: 8, name: 'Crosair', image: '', selected: false },
+  ];
+
 
  bikePartsBrand: any[] = [];
   bikePartsCatg: any[] = [];
@@ -64,7 +81,14 @@ selectedCondition: 'new' | 'used' | '' = '';
   searchBrandTerm = '';
 searchCategoryTerm = '';
 displayCount = 6;
-  constructor(private listingbyService :ListingByCatService, private router :Router,private cdr: ChangeDetectorRef){}
+
+filteredModels: any[] = [];
+filteredYears: any[] = [];
+
+ models: any[] = [];
+  years: any[] = [];
+
+  constructor(private listingbyService :ListingByCatService, private router :Router,private cdr: ChangeDetectorRef, private listingService: ListingService){}
 
   // Update your applyFilters method
 // Replace your current applyFilters and executeFilter methods with these:
@@ -73,10 +97,10 @@ private buildFilterParams(): any {
   const params: any = {};
   
   // Price range
-  if (this.priceRange.min !== this.absoluteMin) {
+  if (this.priceRange.min > 0) {
     params.min_price = this.priceRange.min;
   }
-  if (this.priceRange.max !== this.absoluteMax) {
+  if (this.priceRange.max > this.priceRange.min) {
     params.max_price = this.priceRange.max;
   }
   
@@ -96,6 +120,14 @@ private buildFilterParams(): any {
   if (selectedCategories.length > 0) {
     params.bike_part_categories = selectedCategories;
   }
+  const selectedBrandIds = this.filteredBrands
+    .filter((brand) => brand.checked)
+    .map((brand) => brand.id);
+    params.brands = this.selectedBrand ? [this.selectedBrand] : selectedBrandIds;
+    params.models = this.selectedModel ? [this.selectedModel] : [];
+    params.years = this.selectedYear ? [this.selectedYear] : [];
+
+
   
   return params;
 }
@@ -110,7 +142,8 @@ applyFilters() {
   
   this.listingbyService.filterSpareParts(params).subscribe(
     (response) => {
-      this.spareParts = response;
+      this.spareParts = response.spare_parts || response;
+      console.log(' this.spareParts: ',  this.spareParts);
       this.isLoading = false;
       this.cdr.detectChanges();
     },
@@ -120,6 +153,9 @@ applyFilters() {
     }
   );
 }
+  trackBySparePartsId(index: number, sparePart: any): number {
+    return sparePart.id;
+  }
 
   trackByPartId(index: number, bike: bikePart): number {
     return bike.id;
@@ -132,10 +168,23 @@ applyFilters() {
     this.executeFilter(); // Now properly connected
   });
   this.executeFilter();
+  this.getBrands();
   this.getBikePartsBrand();
   this.getBikePartCatg();
   this.getPriceRange();
+
      // this.getSparePlates();
+  }
+
+    getBrands(): void {
+    this.listingbyService
+      .getBrandsListing()
+      .subscribe((res: { motorcycle_brands: Brand[] }) => {
+        this.brands = res.motorcycle_brands.map((brand) => ({
+          ...brand,
+          checked: false,
+        }));
+      });
   }
 
     onImageLoad(event: Event): void {
@@ -169,6 +218,21 @@ applyFilters() {
     return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
   }
 
+
+    switchTab(tab: 'model' | 'category') {
+    this.activeTab = tab;
+    // Reset selections when switching tabs
+    this.resetSelections();
+  }
+
+    private resetSelections() {
+    this.selectedBrand = '';
+    this.selectedModel = '';
+    this.selectedYear = '';
+    this.selectedCategory = '';
+    this.categories.forEach((cat) => (cat.selected = false));
+  }
+
  
   getBikePartsBrand() {
     this.listingbyService.getBikePartsBrand().subscribe((res: any) => {
@@ -186,6 +250,17 @@ applyFilters() {
         checked: false
       }));
     });
+  }
+
+    onYearChange(yearValue: string ): void {
+  this.selectedYear = yearValue;
+  this.executeFilter();
+}
+ selectCategory(categoryId: number) {
+    this.categories.forEach((cat) => {
+      cat.selected = cat.id === categoryId;
+    });
+    this.selectedCategory = categoryId.toString();
   }
 
   getPriceRange() {
@@ -316,10 +391,43 @@ applyFilters() {
   // }
 
   // Called when brand selection changes
-  onBrandChange() {
+  onBrandChangecheck() {
     // this.applyFilters();
     this.executeFilter();
   }
+
+    onBrandChange(brandId: number) {
+    this.selectedModel = '';
+    this.selectedYear = '';
+    this.filteredModels = [];
+    this.filteredYears = [];
+
+    if (brandId) {
+      this.listingService.getMotorcycleModels(brandId).subscribe((res) => {
+        this.models = res.data;
+        this.filteredModels = res.data;
+        this.executeFilter(); // مباشرة من بعد ما يختار brand
+      });
+    } else {
+      this.executeFilter(); // حتى إلا مسح الاختيار
+    }
+  }
+
+  onModelChange(modelId: number) {
+    this.selectedYear = '';
+    this.filteredYears = [];
+
+    if (modelId) {
+      this.listingService.getMotorcycleYears(modelId).subscribe((res) => {
+        this.years = res.data;
+        this.filteredYears = res.data;
+        this.executeFilter(); // مباشرة من بعد ما يختار model
+      });
+    } else {
+      this.executeFilter();
+    }
+  }
+
 
   // Called when category selection changes
   onCategoryChange() {

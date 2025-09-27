@@ -50,7 +50,7 @@ flex: 1 0 0;
 .main-page {
   display: flex;
   height: 100%;
-  max-height: 2857px;
+  /* max-height: 2857px; */
   max-width: 1440px;
   width: 100%;
   /* padding: 32px 80px 48px 70px; */
@@ -129,7 +129,7 @@ flex: 1 0 0;
   align-items: flex-start;
   gap: -0.01px;
   align-self: stretch;
-  /* border-top: 1px solid var(--Gray-200, #E4E7EC); */
+  border-top: 1px solid var(--Gray-200, #E4E7EC);
 }
 
 .filter-header {
@@ -457,6 +457,47 @@ flex: 1 0 0;
   color: #666;
 }
 
+
+
+input[type="range"]::-webkit-slider-runnable-track {
+  background: var(--Primary, #F03D24);
+  border-radius: 3px;
+  height: 3px;
+}
+
+input[type="range"]::-moz-range-track {
+  background: var(--Primary, #F03D24);
+  border-radius: 3px;
+  height: 3px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; /* bach tbdel style default */
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid var(--Gray-400, #98A2B3);
+  background: var(--White, #FFF);
+  cursor: pointer;
+  margin-top: -8px; /* bach tdwi9ha f centre dyal track */
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid var(--Gray-400, #98A2B3);
+  background: var(--White, #FFF);
+  cursor: pointer;
+}
+
+
+input[type="range"] {
+  width: 250px; /* hna t7dd l3ard dialo */
+  background: transparent; /* bach maytghashach track */
+}
+
+
 /* Animations */
 @keyframes fadeInUp {
   from {
@@ -570,12 +611,21 @@ right: -9.09px;
 bottom: -129.178px;
 } */
 .top-content-img {
-  position: relative; /* instead of absolute */
+  /* position: relative; 
   width: 100%;
   max-width: 388px;
   height: auto;
   bottom: 0;
-  right: 0;
+  right: 0; */
+      position: relative;
+    display: flex
+;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 40px;
+    flex: 1 0 0;
+    /* top: 0; */
+    bottom: 71px;
 }
 
 @media (max-width: 1024px) {
@@ -764,7 +814,7 @@ bottom: -129.178px;
   flex-direction: column;
   gap: 0;
   max-height: 300px;
-  overflow-y: auto;
+  /* overflow-y: auto; */
 }
 
 .filter-item {

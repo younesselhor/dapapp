@@ -54,7 +54,7 @@
     <div class="scrollable-list">
       <div class="checkbox-item" *ngFor="let brand of filteredBrands">
         <input type="checkbox" [id]="'brand-' + brand.id" [checked]="brand.checked"
-               (change)="brand.checked = !brand.checked; onBrandChange()">
+               (change)="brand.checked = !brand.checked;  onBrandChangecheck()">
         <label [for]="'brand-' + brand.id">
           {{ brand.name }} <span class="count">({{ brand.listings_count}})</span>
         </label>
@@ -135,7 +135,7 @@
     <!-- Main Content Area -->
     <div class="main-content">
       <!-- New Filter Card Section -->
-      <div class="filter-card-container">
+      <!-- <div class="filter-card-container">
         <div class="filter-card">
           <div class="filter-card-header">
             <h3>Browse as you wish</h3>
@@ -173,36 +173,117 @@
             </button>
           </div>
         </div>
-      </div>
+      </div> -->
+
+         <div class="filter-card">
+          <div class="browse-section">
+            <h3>Browse as you wish</h3>
+          </div>
+
+          <!-- Tab Buttons - Updated -->
+          <div class="tab-buttons">
+            <button
+              [class.active]="activeTab === 'model'"
+              (click)="switchTab('model')"
+              class="tab-button"
+            >
+              Model
+            </button>
+            <button
+              [class.active]="activeTab === 'category'"
+              (click)="switchTab('category')"
+              class="tab-button"
+            >
+              Category
+            </button>
+          </div>
+
+
+          <div *ngIf="activeTab === 'model'" class="button-group">
+            <div class="filter-select">
+              <select
+                [(ngModel)]="selectedBrand"
+                (ngModelChange)="onBrandChange($event)"
+                class="brand-select"
+              >
+                <option value="">Brand</option>
+                <option *ngFor="let brand of brands" [value]="brand.id">
+                  {{ brand.name }}
+                </option>
+              </select>
+            </div>
+
+            <div class="filter-select">
+              <select
+                [(ngModel)]="selectedModel"
+                (ngModelChange)="onModelChange($event)"
+                class="model-select"
+              >
+                <option value="">Model</option>
+                <option *ngFor="let model of filteredModels" [value]="model.id">
+                  {{ model.name }}
+                </option>
+              </select>
+            </div>
+
+            <div class="filter-select">
+              <select
+                [(ngModel)]="selectedYear"
+                (ngModelChange)="onYearChange($event)"
+                class="year-select"
+              >
+                <option value="">Year</option>
+                <option *ngFor="let year of filteredYears" [value]="year.id">
+                  {{ year.year }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Category Tab Content - NEW -->
+          <div *ngIf="activeTab === 'category'" class="category-content">
+            <div class="category-grid">
+              <div
+                *ngFor="let category of categories"
+                [class.selected]="category.selected"
+                (click)="selectCategory(category.id)"
+                class="category-item"
+              >
+                <div class="category-placeholder"></div>
+                <span class="category-name">{{ category.name }}</span>
+                <span *ngIf="category.selected" class="category-checkmark"
+                  >✔</span
+                >
+              </div>
+            </div>
+            <!-- <button
+              class="search-button category-search-btn"
+              (click)="onSearch()"
+            >
+              Search
+            </button> -->
+          </div>
+        </div>
     <!-- Side Bar End -->
-     <div *ngIf="spareParts?.length !== 0">
+     <!-- <div *ngIf="spareParts?.length !== 0">
     <div class="products-grid">
       <div *ngFor="let part of spareParts" class="product-card">
-        <!-- Image -->
         <div class="product-image">
           <img [src]="part.image" [alt]="part.title" class="w-full h-full object-cover" />
         </div>
 
-        <!-- Content -->
         <div class="product-content">
-          <!-- Title -->
           <h3 class="product-title" [title]="part.title">
             {{ truncateText(part.title, 20) }}
           </h3>
 
-          <!-- Description -->
           <p *ngIf="part.description" class="product-description" [title]="part.description">
             {{ truncateText(part.description, 30) }}
           </p>
 
-          <!-- Price and Button -->
           <div class="product-footer">
             <p class="price-label">PRICE</p>
             <p class="price-value">{{ part.price }} SAR</p>
-
-            <!-- <button class="view-button">
-              View Bike
-            </button> -->
              <button class="view-button" (click)="viewListing(part.id)">
           View Bike Part
         </button>
@@ -210,11 +291,62 @@
         </div>
       </div>
     </div>
-    </div>
-<!-- <div *ngIf="spareParts.length === 0" class="no-results">
-  🚫 No spare parts found matching your filters.
-</div> -->
-<div *ngIf="spareParts?.length === 0" class="flex flex-col items-center justify-center py-12 px-4 text-center">
+    </div> -->
+
+    <!-- products-grid -->
+   <div
+          *ngIf="!isLoading && spareParts?.length > 0"
+          class="main-cards"
+          [class.opacity-100]="!isLoading && spareParts?.length > 0"
+          [class.translate-y-0]="!isLoading && spareParts?.length > 0"
+        >
+          <div
+            *ngFor="
+              let part of spareParts;
+              trackBy: trackBySparePartsId;
+              let i = index
+            "
+            class="cards"
+            [style.animation-delay]="i * 100 + 'ms'"
+            [class.animate-fade-in-up]="!isLoading"
+          >
+            <!-- Image with Loading State -->
+            <div class="product-image relative overflow-hidden">
+              <img
+                [src]="part.image"
+                [alt]="part.title"
+                class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                (load)="onImageLoad($event)"
+                (error)="onImageError($event)"
+              />
+            </div>
+
+            <!-- Content -->
+            <div class="product-content">
+              <!-- Title -->
+              <span class="product-title" [title]="part.title">
+                {{ truncateText(part.title, 20) }}
+              </span>
+<!-- 
+              <span class="product-brand">
+                {{ part.brand }} {{ part.model }} {{ part.year }}
+              </span> -->
+
+              <span class="price-value">{{ part.price }} SAR</span>
+
+       
+              <!-- Price and Button -->
+              <div class="product-footer">
+                <button class="viewBtn" (click)="viewListing(part.id)">
+                  View Bike
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+    <!-- products-grid -->
+
+<!-- <div *ngIf="spareParts?.length === 0" class="flex flex-col items-center justify-center py-12 px-4 text-center">
   <div class="max-w-md mx-auto">
     <h3 class="text-xl font-medium text-gray-800 mb-2">No vehicles found</h3>
     <p class="text-gray-600 mb-6">
@@ -227,7 +359,7 @@
       Clear Filter
     </button>
   </div>
-</div>
+</div> -->
   </div>
 </div>
 

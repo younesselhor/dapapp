@@ -64,25 +64,61 @@ getBikePartCatg(){
   return this.http.get(this.baseUrl + 'bike-part-categories')
 }
 
-filterMotorcycles(params: any): Observable<any> {
-  // Convert brands array to the correct format (brands[]=7&brands[]=8)
-  const queryParams = new URLSearchParams();
+// filterMotorcycles(params: any): Observable<any> {
+//   // Convert brands array to the correct format (brands[]=7&brands[]=8)
+//   const queryParams = new URLSearchParams();
   
+//   queryParams.append('min_price', params.min_price);
+//   queryParams.append('max_price', params.max_price);
+  
+//   if (params.brands && params.brands.length > 0) {
+//     params.brands.forEach((brandId: number) => {
+//       queryParams.append('brands[]', brandId.toString());
+//     });
+//   }
+  
+//   if (params.condition) {
+//     queryParams.append('condition', params.condition);
+//   }
+
+//   return this.http.get(`${this.baseUrl}filter/motorcycles?${queryParams.toString()}`);
+// }
+
+filterMotorcycles(params: any): Observable<any> {
+  const queryParams = new URLSearchParams();
+
   queryParams.append('min_price', params.min_price);
   queryParams.append('max_price', params.max_price);
-  
+
+  // brands[]
   if (params.brands && params.brands.length > 0) {
     params.brands.forEach((brandId: number) => {
       queryParams.append('brands[]', brandId.toString());
     });
   }
-  
+
+  // models[]
+  if (params.models && params.models.length > 0) {
+    params.models.forEach((modelId: number) => {
+      queryParams.append('models[]', modelId.toString());
+    });
+  }
+
+  // years[]
+  if (params.years && params.years.length > 0) {
+    params.years.forEach((year: string | number) => {
+      queryParams.append('years[]', year.toString());
+    });
+  }
+
+  // condition
   if (params.condition) {
     queryParams.append('condition', params.condition);
   }
 
   return this.http.get(`${this.baseUrl}filter/motorcycles?${queryParams.toString()}`);
 }
+
 
 filterSpareParts(params: any): Observable<any> {
   // Convert array parameters to the correct format
