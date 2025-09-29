@@ -74,6 +74,14 @@ export class UsedSparePartsSectionComponent implements OnInit {
     });
   }
 
+    viewListing(id: number): void {
+    if (this.isLoggedIn) {
+      this.router.navigate(['/listing', id]);
+    } else {
+      this.openLoginModal();
+    }
+  }
+
   truncateText(text: string, maxLength: number): string {
     return text.length > maxLength
       ? text.substring(0, maxLength) + '...'
@@ -103,9 +111,6 @@ export class UsedSparePartsSectionComponent implements OnInit {
     return this.spareParts;
   }
 
-    viewListing(id: number): void {
-    this.router.navigate(['/listing', id]);
-  }
 
 
   

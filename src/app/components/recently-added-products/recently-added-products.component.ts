@@ -2,6 +2,8 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Component, Inject, PLATFORM_ID } from '@angular/core';
 import { ListingByCatService } from '../../services/listingsByCategory/listing-by-cat.service';
 import { Router } from '@angular/router';
+import { LoginModalComponent } from '../login-modal.component';
+import { AuthService } from '../../services/auth.service';
 
 
 interface Product {
@@ -33,7 +35,7 @@ interface RecentlyAddedResponse {
 @Component({
   selector: 'app-recently-added-products',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,LoginModalComponent],
   templateUrl: './recently-added-products.component.html',
   styleUrl: './recently-added-products.component.css'
 })
@@ -176,8 +178,12 @@ export class RecentlyAddedProductsComponent {
   slidesToMove: number = 1;
   totalSlides: number = this.recentProducts.length;
   dotsArray: number[] = [];
+    showLoginModal = false;
+  isLoggedIn = false;
+  private sub: any;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object,private listingbyService :ListingByCatService, private router: Router) {}
+
+  constructor(@Inject(PLATFORM_ID) private platformId: Object,private listingbyService :ListingByCatService, private router: Router, private authService: AuthService) {}
   // Computed property for CSS transform
   get currentSlidePosition(): number {
     return (this.currentSlide * 100) / this.slidesToShow;
@@ -231,6 +237,9 @@ shouldReduceOpacity(index: number): boolean {
   //   this.dotsArray = Array(dotsCount).fill(0).map((_, i) => i);
   // }
   ngOnInit(): void {
+        this.sub = this.authService.isLoggedIn$.subscribe((status) => {
+      this.isLoggedIn = status;
+    });
     // this.updateSlidesToShow();
     // this.updateDotsArray();
 
@@ -258,6 +267,22 @@ shouldReduceOpacity(index: number): boolean {
     // }
   }
   this.recentlyadd();
+  }
+
+   viewListing(id: number): void {
+    if (this.isLoggedIn) {
+      this.router.navigate(['/listing', id]);
+    } else {
+      this.openLoginModal();
+    }
+  }
+
+  openLoginModal(): void {
+    this.showLoginModal = true;
+  }
+
+  closeLoginModal(): void {
+    this.showLoginModal = false;
   }
   // recentlyadd(){
   //   this.listingbyService.getRecentlyAdd().subscribe((data) => {
@@ -358,13 +383,13 @@ private getProductType(categoryId: number): 'motorcycle' | 'part' | 'plate' {
   //   console.log('click');
   //   console.log('id',id);
   // }
-  viewListing(id: number): void {
-  if (!id || isNaN(id)) {
-    console.error('Invalid ID:', id);
-    return;
-  }
-  this.router.navigate(['/listing', id]);
-}
+//   viewListing(id: number): void {
+//   if (!id || isNaN(id)) {
+//     console.error('Invalid ID:', id);
+//     return;
+//   }
+//   this.router.navigate(['/listing', id]);
+// }
   // updateSlidesToShow(): void {
   //   if (window.innerWidth < 640) {
   //     this.slidesToShow = 1;

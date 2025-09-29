@@ -7,6 +7,7 @@ import { LocationSService } from '../../services/location-s.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
+import { LoginModalComponent } from '../login-modal.component';
 
 interface Plate {
   id: number;
@@ -44,7 +45,7 @@ interface PlateField {
 @Component({
   selector: 'app-plates-section',
   standalone: true,
-  imports: [CommonModule, RouterModule, HttpClientModule, TranslateModule],
+  imports: [CommonModule, RouterModule, HttpClientModule, TranslateModule, LoginModalComponent],
   templateUrl: './plates-section.component.html',
   styleUrl: './plates-section.component.css'
 })
@@ -83,6 +84,8 @@ export class PlatesSectionComponent implements OnInit, AfterViewInit, OnDestroy 
   
   countryname?: string | null;
   searchedCountryMessage: string | null = null;
+    isLoggedIn = false;
+      showLoginModal = false;
 
   constructor(
     private http: HttpClient, 
@@ -401,10 +404,24 @@ export class PlatesSectionComponent implements OnInit, AfterViewInit, OnDestroy 
   // }
 
   // Plate helper methods
-  viewListing(id: number): void {
-    this.router.navigate(['/listing', id]);
+  // viewListing(id: number): void {
+  //   this.router.navigate(['/listing', id]);
+  // }
+    viewListing(id: number): void {
+    if (this.isLoggedIn) {
+      this.router.navigate(['/listing', id]);
+    } else {
+      this.openLoginModal();
+    }
   }
 
+    openLoginModal(): void {
+    this.showLoginModal = true;
+  }
+
+  closeLoginModal(): void {
+    this.showLoginModal = false;
+  }
   getCountryName(plate: Plate): string {
     return plate.license_plate?.plate_format.country.name || '';
   }

@@ -331,3 +331,8 @@
   </div>
 </section>
 
+
+<app-login-modal
+  *ngIf="showLoginModal"
+  (close)="closeLoginModal()"
+></app-login-modal>
