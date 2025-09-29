@@ -158,23 +158,45 @@ navigateToProfile(): void {
     }
   }
 
-   private listenForDropdownClicks(): () => void {
-    const handler = (event: MouseEvent) => {
-      const dropdown = this.document.querySelector('.profile-dropdown');
-      if (dropdown && !dropdown.contains(event.target as Node)) {
-        this.showDropdown = false;
-        if (this.dropdownClickListener) {
-          this.dropdownClickListener();
-          this.dropdownClickListener = null;
-        }
-      }
-    };
-
-    this.document.addEventListener('click', handler);
-    
-    // Return cleanup function
-    return () => this.document.removeEventListener('click', handler);
+  private listenForDropdownClicks(): (() => void) | null {
+  if (!isPlatformBrowser(this.platformId)) {
+    return null; // Return null during SSR
   }
+  
+  const handler = (event: MouseEvent) => {
+    const dropdown = this.document.querySelector('.profile-dropdown');
+    if (dropdown && !dropdown.contains(event.target as Node)) {
+      this.showDropdown = false;
+      if (this.dropdownClickListener) {
+        this.dropdownClickListener();
+        this.dropdownClickListener = null;
+      }
+    }
+  };
+
+  this.document.addEventListener('click', handler);
+  
+  // Return cleanup function
+  return () => this.document.removeEventListener('click', handler);
+}
+  //  private listenForDropdownClicks(): () => void {
+    
+  //   const handler = (event: MouseEvent) => {
+  //     const dropdown = this.document.querySelector('.profile-dropdown');
+  //     if (dropdown && !dropdown.contains(event.target as Node)) {
+  //       this.showDropdown = false;
+  //       if (this.dropdownClickListener) {
+  //         this.dropdownClickListener();
+  //         this.dropdownClickListener = null;
+  //       }
+  //     }
+  //   };
+
+  //   this.document.addEventListener('click', handler);
+    
+  //   // Return cleanup function
+  //   return () => this.document.removeEventListener('click', handler);
+  // }
 
 
 toggleMobileMenu(): void {

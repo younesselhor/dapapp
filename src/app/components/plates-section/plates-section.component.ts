@@ -137,10 +137,17 @@ export class PlatesSectionComponent implements OnInit, AfterViewInit, OnDestroy 
     return this.isMobile ? 1 : 3;
   }
 
+  // getCardWidth() {
+  //   const card = document.querySelector<HTMLElement>('.slider-card');
+  //   return card ? card.offsetWidth : 324; // fallback to 324px
+  // }
   getCardWidth() {
+  if (isPlatformBrowser(this.platformId)) {
     const card = document.querySelector<HTMLElement>('.slider-card');
-    return card ? card.offsetWidth : 324; // fallback to 324px
+    return card ? card.offsetWidth : this.cardWidth;
   }
+  return this.cardWidth; // Return fallback during SSR
+}
 
   fetchPlates(): void {
     if (this.isLoading || this.isDestroyed) return;
@@ -185,6 +192,7 @@ export class PlatesSectionComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   onDrag(event: MouseEvent | TouchEvent) {
+    if (isPlatformBrowser(this.platformId)) {
     if (!this.isDragging || !this.shouldSlide) return;
 
     const x = this.getX(event);
@@ -198,6 +206,7 @@ export class PlatesSectionComponent implements OnInit, AfterViewInit, OnDestroy 
     const maxPosition = this.getMaxPosition();
     if (this.currentPosition > 0) this.currentPosition = 0;
     if (this.currentPosition < maxPosition) this.currentPosition = maxPosition;
+    }
   }
 
   getMaxPosition(): number {

@@ -311,14 +311,14 @@ showAddCardForm = false;
     });
 
 
-      document.addEventListener('click', (event) => {
-      const target = event.target as HTMLElement;
-      if (!target.closest('.relative')) {
-        this.showBrandDropdown = false;
-        this.showModelDropdown = false;
-        this.showYearDropdown = false;
-      }
-    });
+    //   document.addEventListener('click', (event) => {
+    //   const target = event.target as HTMLElement;
+    //   if (!target.closest('.relative')) {
+    //     this.showBrandDropdown = false;
+    //     this.showModelDropdown = false;
+    //     this.showYearDropdown = false;
+    //   }
+    // });
   }
 
 ngOnInit(): void {

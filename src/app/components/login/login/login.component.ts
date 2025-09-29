@@ -1,7 +1,7 @@
 // login.component.ts
-import { CommonModule } from '@angular/common';
+import { CommonModule ,isPlatformBrowser} from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, Inject, PLATFORM_ID } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { MessageService } from 'primeng/api';
@@ -50,6 +50,7 @@ export class LoginComponent {
     private router: Router,
     private auth : AuthService,
      private cookieService: CookieService,
+     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.loginForm = this.fb.group({
       login: ['', Validators.required],
@@ -142,12 +143,14 @@ export class LoginComponent {
   }
 
   onOTPInputChange(event: any, nextField?: string) {
+     if (isPlatformBrowser(this.platformId)) {
     if (event.target.value.length === 1 && nextField) {
       const nextInput = document.getElementById(nextField) as HTMLInputElement;
       if (nextInput) {
         nextInput.focus();
       }
     }
+  }
   }
 
 

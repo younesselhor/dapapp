@@ -4,9 +4,10 @@ import {
   OnInit,
   OnDestroy,
   model,
+  Inject, PLATFORM_ID
 } from '@angular/core';
 import { ListingByCatService } from '../services/listingsByCategory/listing-by-cat.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule,isPlatformBrowser } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { SidebarComponent } from '../components/sidebar/sidebar.component';
 import { FormsModule } from '@angular/forms';
@@ -150,7 +151,9 @@ export class MotorcyclesDetailsComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private router: Router,
     private authService: AuthService,
-    private listingService: ListingService
+    private listingService: ListingService,
+        @Inject(PLATFORM_ID) private platformId: Object
+
   ) {}
 
   ngOnInit(): void {
@@ -671,13 +674,16 @@ executeFilter(): void {
   private animateCards(): void {
     // Add animation classes with staggered delays
     setTimeout(() => {
+       if (isPlatformBrowser(this.platformId)) {
       const cards = document.querySelectorAll('.product-card');
       cards.forEach((card, index) => {
         setTimeout(() => {
           card.classList.add('animate-fade-in-up');
         }, index * 100);
       });
+    }
     }, 50);
+  
   }
 
   getPriceRange(): void {

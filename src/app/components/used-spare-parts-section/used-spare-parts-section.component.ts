@@ -143,6 +143,7 @@ export class UsedSparePartsSectionComponent implements OnInit {
   }
 
   onDrag(event: MouseEvent | TouchEvent) {
+    if (isPlatformBrowser(this.platformId)) {
     // Only allow dragging if there are more than 3 items
     if (!this.isDragging || !this.shouldSlide) return;
 
@@ -157,14 +158,17 @@ export class UsedSparePartsSectionComponent implements OnInit {
     const maxPosition = this.getMaxPosition();
     if (this.currentPosition > 0) this.currentPosition = 0;
     if (this.currentPosition < maxPosition) this.currentPosition = maxPosition;
+    }
   }
 
 
-    getCardWidth() {
+  getCardWidth() {
+  if (isPlatformBrowser(this.platformId)) {
     const card = document.querySelector<HTMLElement>('.slider-card');
-    return card ? card.offsetWidth : this.cardWidth; // fallback
+    return card ? card.offsetWidth : this.cardWidth;
   }
-
+  return this.cardWidth; // Return fallback during SSR
+}
   
   getMaxPosition(): number {
     if (!this.shouldSlide || this.spareParts.length <= 0) return 0;

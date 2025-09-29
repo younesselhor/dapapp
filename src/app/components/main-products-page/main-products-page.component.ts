@@ -1,6 +1,6 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit ,Inject,PLATFORM_ID} from '@angular/core';
 import { ListingService } from './listingProduct.service';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule, DatePipe, isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
@@ -86,7 +86,8 @@ isLoading: boolean = false;
     private listingService: ListingService,
     private datePipe: DatePipe,
     private route: ActivatedRoute,
-    private auth :AuthService
+    private auth :AuthService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) { }
 
   ngOnInit(): void {
@@ -429,10 +430,12 @@ removeFromWishlist(): void {
 }
 
 openModalImages(index: number): void {
+   if (isPlatformBrowser(this.platformId)) {
   this.activeImageIndex = index;
   this.isModalOpen = true;
   // Prevent body scrolling when modal is open
   document.body.style.overflow = 'hidden';
+   }
 }
 
 
@@ -441,9 +444,11 @@ openModalImages(index: number): void {
 // }
 
 closeModalImages(): void {
+  if (isPlatformBrowser(this.platformId)) {
   this.isModalOpen = false;
   // Re-enable body scrolling
   document.body.style.overflow = 'auto';
+  }
 }
 
 prevImage(): void {
@@ -478,8 +483,10 @@ nextImage(): void {
     this.soomAmount = this.lastsoom;
   }
   closeModal() {
+    if (isPlatformBrowser(this.platformId)) {
     this.showModal = false;
     document.body.style.overflow = ''; // Re-enable scrolling
+    }
   }
 
   isSoomAmountValid(): boolean {
