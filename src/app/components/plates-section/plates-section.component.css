@@ -195,7 +195,8 @@
   border: 1px solid #e5e7eb; */
       flex: 0 0 auto;
     width: 324px;
-    height: 491px;
+    /* height: 491px; */
+    height: 410px;
     background: #fff;
     border-radius: 4px;
     background: var(--base-white, #FFF);
@@ -375,6 +376,7 @@
   height: calc(100% - 140px);
   width: 292px;
   border-color: #D0D5DD;
+  gap: 20px;
 }
 
 .card-content button {
