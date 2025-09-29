@@ -195,6 +195,7 @@ export class UsedMotoCyclesSectionComponent {
     if (this.currentPosition < maxPosition) this.currentPosition = maxPosition;
   }
 
+  
   private getX(event: MouseEvent | TouchEvent): number {
     return event instanceof MouseEvent
       ? event.clientX

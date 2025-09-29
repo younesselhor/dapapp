@@ -13,7 +13,7 @@ import { RecentlyAddedProductsComponent } from "../recently-added-products/recen
     UsedSparePartsSectionComponent,
     PlatesSectionComponent,
     CommonModule,
-    // RecentlyAddedProductsComponent
+    RecentlyAddedProductsComponent
 ],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css'

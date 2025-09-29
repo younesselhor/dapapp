@@ -257,7 +257,7 @@
   letter-spacing: 0.05em;
 }
 
-.country-label {
+/* .country-label {
   position: absolute;
   bottom: 4px;
   left: 50%;
@@ -267,6 +267,21 @@
   color: #6b7280;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+} */
+ .country-label {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 8px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;        /* Keep it on one line */
+  overflow: hidden;            /* Hide overflow */
+  text-overflow: ellipsis;     /* Add ... if too long */
+  max-width: 90%;              /* Don't exceed plate width */
 }
 
 .plate-field {
@@ -333,6 +348,8 @@
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   background: white;
+      height: 94px;
+
 }
 
 .saudi-grid {
@@ -738,9 +755,14 @@
     height: 90px;
   }
   
-  .city-label,
+  /* .city-label,
   .country-label {
     font-size: 10px;
+  } */
+     .city-label,
+  .country-label {
+    font-size: 10px;
+    max-width: 95%;  /* Slightly more room on larger plates */
   }
   
   .plate-field {
@@ -803,4 +825,37 @@
     line-height: 24px;
     padding: 12px 18px;
   }
+}
+
+/* Original separator (for 2-field layouts) */
+.plate-separator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1px;
+  height: 20px;
+  background: #9ca3af;
+  transform: translate(-50%, -50%);
+}
+
+/* Left separator (between left-center and center fields) */
+.plate-separator-left {
+  position: absolute;
+  top: 50%;
+  left: 33.33%;
+  width: 1px;
+  height: 20px;
+  background: #9ca3af;
+  transform: translate(-50%, -50%);
+}
+
+/* Right separator (between center and right-center fields) */
+.plate-separator-right {
+  position: absolute;
+  top: 50%;
+  left: 66.67%;
+  width: 1px;
+  height: 20px;
+  background: #9ca3af;
+  transform: translate(-50%, -50%);
 }

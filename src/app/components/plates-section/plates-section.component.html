@@ -183,7 +183,7 @@
         </div>
 
         <!-- Plates Slider -->
-        <div
+        <!-- <div
           class="slider-track"
           *ngIf="plates.length > 0"
           [style.transform]="'translateX(' + currentPosition + 'px)'"
@@ -195,7 +195,20 @@
           (mouseup)="endDrag()"
           (mouseleave)="endDrag()"
           (touchend)="endDrag()"
-        >
+        > -->
+        <div
+  class="slider-track"
+  *ngIf="plates.length > 0"
+  [style.transform]="'translateX(' + currentPosition + 'px)'"
+  [class.dragging]="isDragging"
+  (mousedown)="shouldSlide ? startDrag($event) : null"
+  (touchstart)="shouldSlide ? startDrag($event) : null"
+  (mousemove)="shouldSlide ? onDrag($event) : null"
+  (touchmove)="shouldSlide ? onDrag($event) : null"
+  (mouseup)="shouldSlide ? endDrag() : null"
+  (mouseleave)="shouldSlide ? endDrag() : null"
+  (touchend)="shouldSlide ? endDrag() : null"
+>
           <div *ngFor="let plate of plates" class="slider-card">
             <!-- Plate display section -->
             <div class="plate-display" [ngClass]="getPlateBackgroundClass(plate)">
@@ -204,32 +217,45 @@
                 class="non-saudi-plate">
                 
                 <!-- Plate Fields -->
-                <div class="plate-main">
-                  <ng-container *ngIf="getPlateFieldMap(plate) as fieldMap">
-                    <!-- City (top-center) -->
-                    <div class="city-label">
-                      {{ plate.city }}
-                    </div>
+         <!-- Plate Fields -->
+<div class="plate-main">
+  <ng-container *ngIf="getPlateFieldMap(plate) as fieldMap">
+    <!-- City (top-center) -->
+    <div class="city-label">
+      {{ plate.city }}
+    </div>
 
-                    <!-- Country (bottom-center) -->
-                    <div class="country-label">
-                      {{ getCountryName(plate) }}
-                    </div>
+    <!-- Country (bottom-center) -->
+    <!-- <div class="country-label">
+      {{ getCountryName(plate) }}
+    </div> -->
+<div class="country-label">
+  {{ getCountryNameAbbreviated(plate) }}
+</div>
+    <!-- Dynamic fields -->
+    <ng-container *ngFor="let pos of allPositions">
+      <div *ngIf="fieldMap[pos]" [ngClass]="getPositionClass(pos)" class="plate-field">
+        {{ fieldMap[pos] }}
+      </div>
+    </ng-container>
 
-                    <!-- Dynamic fields -->
-                    <ng-container *ngFor="let pos of allPositions">
-                      <div *ngIf="fieldMap[pos]" [ngClass]="getPositionClass(pos)" class="plate-field">
-                        {{ fieldMap[pos] }}
-                      </div>
-                    </ng-container>
+    <!-- Separators for 3-field layouts -->
+    <!-- Left separator (between left-center and center) -->
+    <div *ngIf="fieldMap['left-center'] && fieldMap['center']"
+      class="plate-separator-left">
+    </div>
+    
+    <!-- Right separator (between center and right-center) -->
+    <div *ngIf="fieldMap['center'] && fieldMap['right-center']"
+      class="plate-separator-right">
+    </div>
 
-                    <!-- Optional separator -->
-                    <div *ngIf="fieldMap['left-center'] && fieldMap['right-center']"
-                      class="plate-separator">
-                    </div>
-                  </ng-container>
-                </div>
-
+    <!-- Single separator for 2-field layouts (between left-center and right-center, no center) -->
+    <div *ngIf="fieldMap['left-center'] && fieldMap['right-center'] && !fieldMap['center']"
+      class="plate-separator">
+    </div>
+  </ng-container>
+</div>
                 <!-- Country Sidebar -->
                 <div [ngClass]="getSidebarClass(plate)" class="country-sidebar">
                   <ng-container [ngSwitch]="plate.license_plate?.plate_format?.country?.code">

@@ -63,6 +63,7 @@ export class PlatesSectionComponent implements OnInit, AfterViewInit, OnDestroy 
   isDragging = false;
   startX = 0;
   startPosition = 0;
+  gap = 31; // Match your CSS gap
 
   // FIXED: Proper subscription management
   private locationSubscription?: Subscription;
@@ -106,19 +107,136 @@ export class PlatesSectionComponent implements OnInit, AfterViewInit, OnDestroy 
     });
   }
 
-  ngAfterViewInit(): void {
-    if (!this.isDestroyed) {
-      this.updateContainerWidth();
-    }
-  }
+
+  
+    ngAfterViewInit(): void {}
 
   ngOnDestroy(): void {
     this.isDestroyed = true;
-    
     if (this.locationSubscription) {
       this.locationSubscription.unsubscribe();
     }
   }
+
+  checkMobile() {
+    this.isMobile = window.innerWidth < 768;
+    this.currentPosition = 0;
+  }
+
+  // Check if we should allow sliding (only if there are more than 3 items)
+  get shouldSlide(): boolean {
+    return this.plates.length > 3;
+  }
+
+  getVisibleCards() {
+    return this.isMobile ? 1 : 3;
+  }
+
+  getCardWidth() {
+    const card = document.querySelector<HTMLElement>('.slider-card');
+    return card ? card.offsetWidth : 324; // fallback to 324px
+  }
+
+  fetchPlates(): void {
+    if (this.isLoading || this.isDestroyed) return;
+
+    this.isLoading = true;
+    
+    const url = this.countryname
+      ? `https://be.dabapp.co/api/listings/by-category/3?country=${this.countryname}`
+      : `https://be.dabapp.co/api/listings/by-category/3?country=all`;
+
+    this.http.get<any>(url).subscribe({
+      next: (response) => {
+        if (this.isDestroyed) return;
+        
+        const listings = response.listings || [];
+        this.plates = listings.filter((plate: Plate) => plate.license_plate);
+
+        if (response.showing_all_countries && response.searched_country) {
+          this.searchedCountryMessage = `No listings found for "${response.searched_country}". Showing all countries instead.`;
+        } else {
+          this.searchedCountryMessage = null;
+        }
+
+        this.isLoading = false;
+      },
+      error: (error) => {
+        if (this.isDestroyed) return;
+        console.error('Error fetching plates:', error);
+        this.searchedCountryMessage = 'Unable to load listings.';
+        this.isLoading = false;
+      }
+    });
+  }
+
+  startDrag(event: MouseEvent | TouchEvent) {
+    if (!this.shouldSlide) return;
+
+    this.isDragging = true;
+    this.startX = this.getX(event);
+    this.startPosition = this.currentPosition;
+    event.preventDefault();
+  }
+
+  onDrag(event: MouseEvent | TouchEvent) {
+    if (!this.isDragging || !this.shouldSlide) return;
+
+    const x = this.getX(event);
+    const dragDistance = x - this.startX;
+
+    const isRTL = document.dir === 'rtl';
+    const adjustedDistance = isRTL ? -dragDistance : dragDistance;
+
+    this.currentPosition = this.startPosition + adjustedDistance;
+
+    const maxPosition = this.getMaxPosition();
+    if (this.currentPosition > 0) this.currentPosition = 0;
+    if (this.currentPosition < maxPosition) this.currentPosition = maxPosition;
+  }
+
+  getMaxPosition(): number {
+    if (!this.shouldSlide || this.plates.length <= 0) return 0;
+
+    const cardWidth = this.getCardWidth();
+    const gap = this.gap;
+
+    // Calculate total width of all cards including gaps
+    const totalWidth = this.plates.length * cardWidth + (this.plates.length - 1) * gap;
+
+    // Maximum position is the difference (negative)
+    return -(totalWidth - cardWidth);
+  }
+
+  endDrag() {
+    if (!this.shouldSlide) return;
+
+    this.isDragging = false;
+    const cardWidth = this.getCardWidth() + this.gap;
+    this.currentPosition = Math.round(this.currentPosition / cardWidth) * cardWidth;
+
+    const maxPosition = this.getMaxPosition();
+    if (this.currentPosition > 0) this.currentPosition = 0;
+    if (this.currentPosition < maxPosition) this.currentPosition = maxPosition;
+  }
+
+  private getX(event: MouseEvent | TouchEvent): number {
+    return event instanceof MouseEvent ? event.clientX : event.touches[0].clientX;
+  }
+
+  // ngAfterViewInit(): void {
+  //   if (!this.isDestroyed) {
+  //     this.updateContainerWidth();
+  //   }
+  // }
+
+  // ngOnDestroy(): void {
+  //   this.isDestroyed = true;
+    
+  //   if (this.locationSubscription) {
+  //     this.locationSubscription.unsubscribe();
+  //   }
+  // }
 
   @HostListener('window:resize', ['$event'])
   onResize(): void {
@@ -128,6 +246,21 @@ export class PlatesSectionComponent implements OnInit, AfterViewInit, OnDestroy 
     this.updateContainerWidth();
     this.resetPosition();
   }
+
+
+  getCountryNameAbbreviated(plate: Plate): string {
+  const fullName = plate.license_plate?.plate_format.country.name || '';
+  
+  // Abbreviate long names
+  const abbreviations: { [key: string]: string } = {
+    'United Arab Emirates': 'UAE',
+    'Saudi Arabia': 'KSA',
+    'KWAIT': 'KWT'
+  };
+  
+  return abbreviations[fullName] || fullName;
+}
+
 
   private checkScreenSize(): void {
     const width = window.innerWidth;
@@ -149,104 +282,104 @@ export class PlatesSectionComponent implements OnInit, AfterViewInit, OnDestroy 
     this.currentPosition = 0;
   }
 
-  // FIXED: Prevent multiple simultaneous API calls
-  fetchPlates(): void {
-    if (this.isLoading || this.isDestroyed) {
-      return;
-    }
+  // // FIXED: Prevent multiple simultaneous API calls
+  // fetchPlates(): void {
+  //   if (this.isLoading || this.isDestroyed) {
+  //     return;
+  //   }
 
-    this.isLoading = true;
+  //   this.isLoading = true;
     
-    const url = this.countryname
-      ? `https://be.dabapp.co/api/listings/by-category/3?country=${this.countryname}`
-      : `https://be.dabapp.co/api/listings/by-category/3?country=all`;
+  //   const url = this.countryname
+  //     ? `https://be.dabapp.co/api/listings/by-category/3?country=${this.countryname}`
+  //     : `https://be.dabapp.co/api/listings/by-category/3?country=all`;
 
-    console.log('Fetching plates from:', url);
+  //   console.log('Fetching plates from:', url);
 
-    this.http.get<any>(url).subscribe({
-      next: (response) => {
-        if (this.isDestroyed) return;
+  //   this.http.get<any>(url).subscribe({
+  //     next: (response) => {
+  //       if (this.isDestroyed) return;
         
-        const listings = response.listings || [];
-        this.plates = listings.filter((plate: Plate) => plate.license_plate);
+  //       const listings = response.listings || [];
+  //       this.plates = listings.filter((plate: Plate) => plate.license_plate);
 
-        if (response.showing_all_countries && response.searched_country) {
-          this.searchedCountryMessage = `No listings found for "${response.searched_country}". Showing all countries instead.`;
-        } else {
-          this.searchedCountryMessage = null;
-        }
+  //       if (response.showing_all_countries && response.searched_country) {
+  //         this.searchedCountryMessage = `No listings found for "${response.searched_country}". Showing all countries instead.`;
+  //       } else {
+  //         this.searchedCountryMessage = null;
+  //       }
 
-        this.isLoading = false;
-      },
-      error: (error) => {
-        if (this.isDestroyed) return;
+  //       this.isLoading = false;
+  //     },
+  //     error: (error) => {
+  //       if (this.isDestroyed) return;
         
-        console.error('Error fetching plates:', error);
-        this.searchedCountryMessage = 'Unable to load listings.';
-        this.isLoading = false;
-      }
-    });
-  }
+  //       console.error('Error fetching plates:', error);
+  //       this.searchedCountryMessage = 'Unable to load listings.';
+  //       this.isLoading = false;
+  //     }
+  //   });
+  // }
 
-  // Slider methods
-  getCardWidth(): number {
-    if (this.isMobile) return this.mobileCardWidth;
-    if (this.isTablet) return this.tabletCardWidth;
-    return this.cardWidth;
-  }
+  // // Slider methods
+  // getCardWidth(): number {
+  //   if (this.isMobile) return this.mobileCardWidth;
+  //   if (this.isTablet) return this.tabletCardWidth;
+  //   return this.cardWidth;
+  // }
 
-  getVisibleCards(): number {
-    if (this.isMobile) return 1;
-    if (this.isTablet) return 2;
-    return 3;
-  }
+  // getVisibleCards(): number {
+  //   if (this.isMobile) return 1;
+  //   if (this.isTablet) return 2;
+  //   return 3;
+  // }
 
-  getMaxPosition(): number {
-    const cardWidth = this.getCardWidth();
-    const visibleCards = this.getVisibleCards();
-    const totalCards = this.plates.length;
+  // getMaxPosition(): number {
+  //   const cardWidth = this.getCardWidth();
+  //   const visibleCards = this.getVisibleCards();
+  //   const totalCards = this.plates.length;
     
-    if (totalCards <= visibleCards) return 0;
+  //   if (totalCards <= visibleCards) return 0;
     
-    const maxOffset = (totalCards - visibleCards) * cardWidth;
-    return -maxOffset;
-  }
+  //   const maxOffset = (totalCards - visibleCards) * cardWidth;
+  //   return -maxOffset;
+  // }
 
-  startDrag(event: MouseEvent | TouchEvent): void {
-    this.isDragging = true;
-    this.startX = this.getX(event);
-    this.startPosition = this.currentPosition;
-    event.preventDefault();
-  }
+  // startDrag(event: MouseEvent | TouchEvent): void {
+  //   this.isDragging = true;
+  //   this.startX = this.getX(event);
+  //   this.startPosition = this.currentPosition;
+  //   event.preventDefault();
+  // }
 
-  onDrag(event: MouseEvent | TouchEvent): void {
-    if (!this.isDragging) return;
+  // onDrag(event: MouseEvent | TouchEvent): void {
+  //   if (!this.isDragging) return;
     
-    const x = this.getX(event);
-    const dragDistance = x - this.startX;
-    this.currentPosition = this.startPosition + dragDistance;
+  //   const x = this.getX(event);
+  //   const dragDistance = x - this.startX;
+  //   this.currentPosition = this.startPosition + dragDistance;
     
-    // Apply boundaries
-    const maxPosition = this.getMaxPosition();
-    this.currentPosition = Math.max(maxPosition, Math.min(0, this.currentPosition));
-  }
+  //   // Apply boundaries
+  //   const maxPosition = this.getMaxPosition();
+  //   this.currentPosition = Math.max(maxPosition, Math.min(0, this.currentPosition));
+  // }
 
-  endDrag(): void {
-    if (!this.isDragging) return;
+  // endDrag(): void {
+  //   if (!this.isDragging) return;
     
-    this.isDragging = false;
+  //   this.isDragging = false;
     
-    // Snap to nearest card
-    const cardWidth = this.getCardWidth();
-    const snapPosition = Math.round(this.currentPosition / cardWidth) * cardWidth;
-    const maxPosition = this.getMaxPosition();
+  //   // Snap to nearest card
+  //   const cardWidth = this.getCardWidth();
+  //   const snapPosition = Math.round(this.currentPosition / cardWidth) * cardWidth;
+  //   const maxPosition = this.getMaxPosition();
     
-    this.currentPosition = Math.max(maxPosition, Math.min(0, snapPosition));
-  }
+  //   this.currentPosition = Math.max(maxPosition, Math.min(0, snapPosition));
+  // }
 
-  private getX(event: MouseEvent | TouchEvent): number {
-    return event instanceof MouseEvent ? event.clientX : event.touches[0].clientX;
-  }
+  // private getX(event: MouseEvent | TouchEvent): number {
+  //   return event instanceof MouseEvent ? event.clientX : event.touches[0].clientX;
+  // }
 
   // Plate helper methods
   viewListing(id: number): void {
@@ -338,4 +471,6 @@ export class PlatesSectionComponent implements OnInit, AfterViewInit, OnDestroy 
       default: return 'bg-[#138c36]'; // KSA green fallback
     }
   }
+
+
 }
