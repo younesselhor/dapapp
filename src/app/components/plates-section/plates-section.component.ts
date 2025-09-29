@@ -1,11 +1,12 @@
 // plates-section.component.ts - COMPLETE FIX
-import { Component, OnInit, AfterViewInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, HostListener, Inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { LocationSService } from '../../services/location-s.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
+import { isPlatformBrowser } from '@angular/common';
 
 interface Plate {
   id: number;
@@ -86,7 +87,8 @@ export class PlatesSectionComponent implements OnInit, AfterViewInit, OnDestroy 
   constructor(
     private http: HttpClient, 
     private router: Router, 
-    private locationService: LocationSService
+    private locationService: LocationSService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     console.log('PlatesSectionComponent constructed at:', new Date().toISOString());
   }
@@ -119,8 +121,11 @@ export class PlatesSectionComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   checkMobile() {
+    if (isPlatformBrowser(this.platformId)) {
     this.isMobile = window.innerWidth < 768;
     this.currentPosition = 0;
+    }
+
   }
 
   // Check if we should allow sliding (only if there are more than 3 items)
@@ -241,10 +246,11 @@ export class PlatesSectionComponent implements OnInit, AfterViewInit, OnDestroy 
   @HostListener('window:resize', ['$event'])
   onResize(): void {
     if (this.isDestroyed) return;
-    
+     if (isPlatformBrowser(this.platformId)) {
     this.checkScreenSize();
     this.updateContainerWidth();
     this.resetPosition();
+     }
   }
 
 
@@ -263,12 +269,15 @@ export class PlatesSectionComponent implements OnInit, AfterViewInit, OnDestroy 
 
 
   private checkScreenSize(): void {
+    if (isPlatformBrowser(this.platformId)) {
     const width = window.innerWidth;
     this.isMobile = width < 768;
     this.isTablet = width >= 768 && width < 1024;
+    }
   }
 
   private updateContainerWidth(): void {
+    if (isPlatformBrowser(this.platformId)) {
     if (this.isMobile) {
       this.containerWidth = window.innerWidth - 32;
     } else if (this.isTablet) {
@@ -276,6 +285,7 @@ export class PlatesSectionComponent implements OnInit, AfterViewInit, OnDestroy 
     } else {
       this.containerWidth = 1024;
     }
+  }
   }
 
   private resetPosition(): void {

@@ -173,7 +173,7 @@ export class RecentlyAddedProductsComponent {
   // Slider configuration
   // currentSlide: number = 0;
   // slidesToShow: number = 5;
-  slidesToMove: number = 5;
+  slidesToMove: number = 1;
   totalSlides: number = this.recentProducts.length;
   dotsArray: number[] = [];
 
@@ -184,25 +184,52 @@ export class RecentlyAddedProductsComponent {
   }
 
 
+  // updateSlidesToShow(): void {
+  //   if (window.innerWidth < 640) {
+  //     this.slidesToShow = 1;
+  //     this.slidesToMove = 1;
+  //   } else if (window.innerWidth < 768) {
+  //     this.slidesToShow = 2;
+  //     this.slidesToMove = 2;
+  //   } else if (window.innerWidth < 1024) {
+  //     this.slidesToShow = 3;
+  //     this.slidesToMove = 3;
+  //   } else {
+  //     this.slidesToShow = 5;
+  //     this.slidesToMove = 5;
+  //   }
+  // }
+
   updateSlidesToShow(): void {
-    if (window.innerWidth < 640) {
-      this.slidesToShow = 1;
-      this.slidesToMove = 1;
-    } else if (window.innerWidth < 768) {
-      this.slidesToShow = 2;
-      this.slidesToMove = 2;
-    } else if (window.innerWidth < 1024) {
-      this.slidesToShow = 3;
-      this.slidesToMove = 3;
-    } else {
-      this.slidesToShow = 5;
-      this.slidesToMove = 5;
-    }
+    if (isPlatformBrowser(this.platformId)) {
+  if (window.innerWidth < 640) {
+    this.slidesToShow = 1;
+    this.slidesToMove = 1;
+  } else if (window.innerWidth < 768) {
+    this.slidesToShow = 3; // Show 3 so you can see side items
+    this.slidesToMove = 1;
+  } else if (window.innerWidth < 1024) {
+    this.slidesToShow = 5; // Show 5 so you can see 2 on each side
+    this.slidesToMove = 1;
+  } else {
+    this.slidesToShow = 5;
+    this.slidesToMove = 1;
   }
-  updateDotsArray(): void {
-    const dotsCount = Math.ceil((this.totalSlides - this.slidesToShow + 1) / this.slidesToMove);
-    this.dotsArray = Array(dotsCount).fill(0).map((_, i) => i);
-  }
+}
+}
+
+shouldReduceOpacity(index: number): boolean {
+  const visibleStart = this.currentSlide;
+  const centerIndex = visibleStart + 2; // The center item (0-indexed, so position 2 is the middle)
+  
+  // Items at positions 0, 1 (left side) and 3, 4 (right side) should have reduced opacity
+  return index === visibleStart || index === visibleStart + 1 || 
+         index === visibleStart + 3 || index === visibleStart + 4;
+}
+  // updateDotsArray(): void {
+  //   const dotsCount = Math.ceil((this.totalSlides - this.slidesToShow + 1) / this.slidesToMove);
+  //   this.dotsArray = Array(dotsCount).fill(0).map((_, i) => i);
+  // }
   ngOnInit(): void {
     // this.updateSlidesToShow();
     // this.updateDotsArray();
@@ -220,6 +247,7 @@ export class RecentlyAddedProductsComponent {
       this.updateSlidesToShow();
       this.updateDotsArray();
 
+      //  if (isPlatformBrowser(this.platformId)) {
       window.addEventListener('resize', () => {
         this.updateSlidesToShow();
         this.updateDotsArray();
@@ -227,6 +255,7 @@ export class RecentlyAddedProductsComponent {
           this.currentSlide = Math.max(0, this.totalSlides - this.slidesToShow);
         }
       });
+    // }
   }
   this.recentlyadd();
   }
@@ -389,9 +418,9 @@ private getProductType(categoryId: number): 'motorcycle' | 'part' | 'plate' {
 
 
   
-  get currentDotIndex() {
-    return Math.floor(this.currentSlide / this.slidesToShow);
-  }
+  // get currentDotIndex() {
+  //   return Math.floor(this.currentSlide / this.slidesToShow);
+  // }
   
   // get totalSlides() {
   //   return this.recentProducts.length;
@@ -405,19 +434,52 @@ private getProductType(categoryId: number): 'motorcycle' | 'part' | 'plate' {
     return this.recentProducts.slice(this.currentSlide, this.currentSlide + this.slidesToShow);
   }
   
+  // nextSlide() {
+  //   if (this.currentSlide < this.totalSlides - this.slidesToShow) {
+  //     this.currentSlide += this.slidesToShow;
+  //   }
+  // }
+  
+  // prevSlide() {
+  //   if (this.currentSlide > 0) {
+  //     this.currentSlide -= this.slidesToShow;
+  //   }
+  // }
+  
+  // goToSlide(index: number) {
+  //   this.currentSlide = index * this.slidesToShow;
+  // }
+
+
+
   nextSlide() {
-    if (this.currentSlide < this.totalSlides - this.slidesToShow) {
-      this.currentSlide += this.slidesToShow;
-    }
+  if (this.currentSlide < this.totalSlides - this.slidesToShow) {
+    this.currentSlide += 1; // Move one item
   }
-  
-  prevSlide() {
-    if (this.currentSlide > 0) {
-      this.currentSlide -= this.slidesToShow;
-    }
+}
+
+prevSlide() {
+  if (this.currentSlide > 0) {
+    this.currentSlide -= 1; // Move one item
   }
-  
-  goToSlide(index: number) {
-    this.currentSlide = index * this.slidesToShow;
+}
+
+// Update goToSlide
+goToSlide(index: number) {
+  this.currentSlide = index;
+  if (this.currentSlide > this.totalSlides - this.slidesToShow) {
+    this.currentSlide = this.totalSlides - this.slidesToShow;
   }
+}
+
+// Update currentDotIndex
+get currentDotIndex() {
+  return this.currentSlide;
+}
+
+// Update updateDotsArray
+updateDotsArray(): void {
+  const dotsCount = this.totalSlides - this.slidesToShow + 1;
+  this.dotsArray = Array(dotsCount).fill(0).map((_, i) => i);
+}
 }

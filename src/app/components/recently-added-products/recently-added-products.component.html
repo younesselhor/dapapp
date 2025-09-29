@@ -1,49 +1,42 @@
-<section >
+<section>
   <div class="products-container">
-    <!-- Title -->
     <h2 style="width: 639px; height: 66px; color: #18181B; font-family: Manrope; font-size: 52px; font-style: normal; font-weight: 700; line-height: 66px; text-align: center; margin: 0 auto 40px;">
       Recently Added Products
     </h2>
 
-    <!-- Main slider container -->
     <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 50px;">
       
-      <!-- Products Container (5 cards in a row) -->
+      <!-- Products Container -->
       <div style="display: flex; align-items: center; gap: 31px; position: relative;">
         
         <!-- Product Cards -->
         <div 
           *ngFor="let product of getVisibleProducts(); let i = index" 
-          style="width: 259.2px; height: 392.8px; flex-shrink: 0; background: #FFF; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);"
+          style="width: 259.2px; height: 392.8px; flex-shrink: 0; background: #FFF; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: opacity 0.3s ease;"
+          [style.opacity]="shouldReduceOpacity(currentSlide + i) ? '0.5' : '1'"
         >
           <!-- Product Image -->
           <div style="width: 259.2px; height: 216px; flex-shrink: 0; overflow: hidden; background: #F8F9FA;">
-            <!-- <img [src]="product.imageUrl" [alt]="product.title" style="width: 100%; height: 100%;" /> -->
-             <img [src]="product.imageUrl" [alt]="product.title" style="width: 100%; height: 100%; object-fit: cover;"  />
+            <img [src]="product.imageUrl" [alt]="product.title" style="width: 100%; height: 100%; object-fit: cover;" />
           </div>
           
           <!-- Product Info -->
           <div style="padding: 20px 16px; display: flex; flex-direction: column; height: 176.8px;">
             
-            <!-- Product Title -->
             <h3 style="color: #151518; font-family: Manrope; font-size: 14.4px; font-style: normal; font-weight: 700; line-height: 19.2px; margin: 0 0 8px 0;">
               {{ product.title }}
             </h3>
             
-            <!-- Price Label -->
             <p style="color: #71717A; font-family: Manrope; font-size: 8.8px; font-style: normal; font-weight: 500; line-height: 14.4px; letter-spacing: 0.8px; text-transform: uppercase; margin: 0 0 4px 0;">
               PRICE
             </p>
             
-            <!-- Price Display -->
             <p style="color: #18181B; font-family: Manrope; font-size: 14.4px; font-style: normal; font-weight: 700; line-height: 19.2px; margin: 0 0 auto 0;">
               {{ product.price }} {{ product.currency }}
             </p>
 
-            <!-- Action Buttons -->
             <div style="display: flex; gap: 8px; margin-top: 16px;">
               
-              <!-- Favorite Button -->
               <button style="display: flex; width: 98.4px; height: 36px; justify-content: center; align-items: center; border: 0.8px solid #D4D4D8; background: #FFF; border-radius: 6px; cursor: pointer; font-family: Manrope; font-size: 10px; color: #666; gap: 4px;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
@@ -51,16 +44,11 @@
                 Favorite
               </button>
               
-              <!-- View Button -->
-              <!-- <button  style="display: flex; width: 99.2px; height: 36px; justify-content: center; align-items: center; background: #032C40; border: none; border-radius: 6px; cursor: pointer; font-family: Manrope; font-size: 10px; color: #FFF; font-weight: 500;"
-              (click)="viewListing(product.id)">
-                View
-              </button> -->
               <button 
-  style="display: flex; width: 99.2px; height: 36px; justify-content: center; align-items: center; background: #032C40; border: none; border-radius: 6px; cursor: pointer; font-family: Manrope; font-size: 10px; color: #FFF; font-weight: 500;"
-  (click)="viewListing(product.id); $event.stopPropagation()">
-  View
-</button>
+                style="display: flex; width: 99.2px; height: 36px; justify-content: center; align-items: center; background: #032C40; border: none; border-radius: 6px; cursor: pointer; font-family: Manrope; font-size: 10px; color: #FFF; font-weight: 500;"
+                (click)="viewListing(product.id); $event.stopPropagation()">
+                View
+              </button>
               
             </div>
           </div>
@@ -70,7 +58,6 @@
       <!-- Navigation Container -->
       <div style="display: flex; align-items: center; gap: 236px; width: 100%; justify-content: center;">
         
-        <!-- Left Arrow -->
         <button
           style="display: flex; padding: 8px; justify-content: center; align-items: center; border-radius: 50%; background: #F03D24; border: none; cursor: pointer; width: 36px; height: 36px;"
           (click)="prevSlide()"
@@ -82,7 +69,6 @@
           </svg>
         </button>
         
-        <!-- Dot Group -->
         <div style="display: flex; padding: 8px; justify-content: center; align-items: center; gap: 12px; border-radius: 12px; border: 1px solid #D0D5DD; background: #FFF;">
           <div
             *ngFor="let dot of dotsArray; let i = index"
@@ -92,12 +78,11 @@
           ></div>
         </div>
         
-        <!-- Right Arrow -->
         <button
           style="display: flex; padding: 8px; justify-content: center; align-items: center; border-radius: 50%; background: #F03D24; border: none; cursor: pointer; width: 36px; height: 36px;"
           (click)="nextSlide()"
-          [disabled]="currentSlide >= totalSlides - 5"
-          [style.opacity]="currentSlide >= totalSlides - 5 ? '0.5' : '1'"
+          [disabled]="currentSlide >= totalSlides - slidesToShow"
+          [style.opacity]="currentSlide >= totalSlides - slidesToShow ? '0.5' : '1'"
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />

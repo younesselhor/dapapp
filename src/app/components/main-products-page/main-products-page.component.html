@@ -74,7 +74,7 @@
   <!-- Show license plate if category is 3 (license plates) -->
   <div
     *ngIf="listing.category_id === 3 && listing.license_plate"
-    class="mb-6 flex justify-center"
+    class="mb-6 flex justify-center" style="margin: 50px 0px;"
   >
     <div class="plate-display" [ngClass]="getPlateBackgroundClass(listing)">
       <!-- Non-Saudi plate - scaled up -->

@@ -1,11 +1,12 @@
-import { CommonModule } from '@angular/common';
-import { Component, HostListener } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, HostListener ,Inject,PLATFORM_ID} from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { ListingByCatService } from '../../services/listingsByCategory/listing-by-cat.service';
 import { LocationSService } from '../../services/location-s.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../services/auth.service';
 import { LoginModalComponent } from '../login-modal.component';
+
 
 interface Motorcycle {
   id: number;
@@ -54,7 +55,8 @@ export class UsedMotoCyclesSectionComponent {
     private listings: ListingByCatService,
     private router: Router,
     private locationService: LocationSService,
-    private authService: AuthService
+    private authService: AuthService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit(): void {
@@ -71,9 +73,12 @@ export class UsedMotoCyclesSectionComponent {
         this.getMotorcycles();
       }
     });
-
+ if (isPlatformBrowser(this.platformId)) {
     this.checkMobile();
+     if (isPlatformBrowser(this.platformId)) {
     window.addEventListener('resize', () => this.checkMobile());
+     }
+    }
   }
 
   ngOnDestroy(): void {
@@ -122,8 +127,10 @@ export class UsedMotoCyclesSectionComponent {
   }
 
   checkMobile() {
+    if (isPlatformBrowser(this.platformId)) {
     this.isMobile = window.innerWidth < 768;
     this.currentPosition = 0; // Reset position on resize
+    }
   }
 
 

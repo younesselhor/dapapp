@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, Inject, OnInit ,PLATFORM_ID} from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { ListingByCatService } from '../../services/listingsByCategory/listing-by-cat.service';
 import { animate, style, transition, trigger } from '@angular/animations';
@@ -52,7 +52,8 @@ export class UsedSparePartsSectionComponent implements OnInit {
     private listinbyCat: ListingByCatService,
     private router: Router,
     private locationService: LocationSService,
-     private authService: AuthService
+     private authService: AuthService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit(): void {
@@ -121,8 +122,10 @@ export class UsedSparePartsSectionComponent implements OnInit {
   }
 
     checkMobile() {
+      if (isPlatformBrowser(this.platformId)) {
     this.isMobile = window.innerWidth < 768;
     this.currentPosition = 0; // Reset position on resize
+      }
   }
 
   getVisibleCards() {

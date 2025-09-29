@@ -171,37 +171,81 @@ export class SubNavComponent implements OnInit, OnChanges {
   //   });
   // }
 
-  
-ngOnInit() {
+
+  ngOnInit() {
   if (isPlatformBrowser(this.platformId)) {
     this.authService.isLoggedIn$.subscribe(status => {
       this.isLoggedIn = status;
     });
 
-    // ✅ LocalStorage safe
-    const storedCountry = localStorage.getItem('selectedCountry');
-    if (storedCountry) {
-      const parsed = JSON.parse(storedCountry);
-      this.selectedCountry = parsed.name;
-      this.locationService.setSelectedCountry(parsed);
-    } else {
-      this.loadCountries().then(() => {
+    // ✅ Always load countries first
+    this.loadCountries().then(() => {
+      // Check localStorage after countries are loaded
+      const storedCountry = localStorage.getItem('selectedCountry');
+      if (storedCountry) {
+        const parsed = JSON.parse(storedCountry);
+        this.selectedCountry = parsed.name;
+        this.locationService.setSelectedCountry(parsed);
+      } else {
+        // If no stored country, detect from IP
         this.getCountry();
-      });
-    }
+      }
+    });
 
+    // ✅ Handle user login - wait for countries to load
     this.userSub = this.authService.userProfile$.subscribe((profile) => {
-      if (profile?.user?.country_id) {
+      if (profile?.user?.country_id && this.countries.length > 0) {
         const found = this.countries.find(c => c.id === Number(profile.user.country_id));
         if (found) {
           this.selectedCountry = found.name;
           this.locationService.setSelectedCountry(found);
           localStorage.setItem('selectedCountry', JSON.stringify(found));
         }
+      } else if (profile?.user?.country_id && this.countries.length === 0) {
+        // If countries not loaded yet, wait and retry
+        setTimeout(() => {
+          const found = this.countries.find(c => c.id === Number(profile.user.country_id));
+          if (found) {
+            this.selectedCountry = found.name;
+            this.locationService.setSelectedCountry(found);
+            localStorage.setItem('selectedCountry', JSON.stringify(found));
+          }
+        }, 500);
       }
     });
   }
 }
+  
+// ngOnInit() {
+//   if (isPlatformBrowser(this.platformId)) {
+//     this.authService.isLoggedIn$.subscribe(status => {
+//       this.isLoggedIn = status;
+//     });
+
+//     // ✅ LocalStorage safe
+//     const storedCountry = localStorage.getItem('selectedCountry');
+//     if (storedCountry) {
+//       const parsed = JSON.parse(storedCountry);
+//       this.selectedCountry = parsed.name;
+//       this.locationService.setSelectedCountry(parsed);
+//     } else {
+//       this.loadCountries().then(() => {
+//         this.getCountry();
+//       });
+//     }
+
+//     this.userSub = this.authService.userProfile$.subscribe((profile) => {
+//       if (profile?.user?.country_id) {
+//         const found = this.countries.find(c => c.id === Number(profile.user.country_id));
+//         if (found) {
+//           this.selectedCountry = found.name;
+//           this.locationService.setSelectedCountry(found);
+//           localStorage.setItem('selectedCountry', JSON.stringify(found));
+//         }
+//       }
+//     });
+//   }
+// }
 
 //   ngOnInit() {
 //   this.authService.isLoggedIn$.subscribe(status => {
