@@ -343,7 +343,6 @@ ngOnInit(): void {
   this.userService.userProfile$.subscribe(profile => {
   if (profile) {
     this.user = profile.user; // ✅ profile.user has first_name, last_name, etc.
-    console.log('this.user: ', this.user);
   }
 });
   

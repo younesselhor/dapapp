@@ -189,11 +189,9 @@ onSubmit() {
 
   this.auth.register(registerData).subscribe({
     next: (response) => {
-      console.log('Registration response:', response); // Debug log
       
       // Check if OTP is required - FIXED: changed requiresOTP to requiresOTP
       if (response.requiresOTP) {
-        console.log('OTP required, showing modal'); // Debug log
         
         // Store temporary data for OTP verification
         this.tempToken = response.token;
@@ -206,7 +204,6 @@ onSubmit() {
         this.submitted = false; // Reset submitted state
       } else if (response.token) {
         // Direct login without OTP
-        console.log('No OTP required, logging in directly'); // Debug log
         this.handleSuccessfulLogin(response.token, response.user);
       }
     },

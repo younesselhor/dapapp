@@ -100,7 +100,6 @@ export class PlatesSectionComponent implements OnInit, AfterViewInit, OnDestroy 
       
       const newCountryName = country?.name;
       if (newCountryName && newCountryName !== this.countryname) {
-        console.log('Country changed to:', newCountryName);
         this.countryname = newCountryName;
         this.fetchPlates();
       }
@@ -114,7 +113,6 @@ export class PlatesSectionComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   ngOnDestroy(): void {
-    console.log('PlatesSectionComponent destroyed');
     this.isDestroyed = true;
     
     if (this.locationSubscription) {
@@ -154,7 +152,6 @@ export class PlatesSectionComponent implements OnInit, AfterViewInit, OnDestroy 
   // FIXED: Prevent multiple simultaneous API calls
   fetchPlates(): void {
     if (this.isLoading || this.isDestroyed) {
-      console.log('Already loading or destroyed, skipping fetch');
       return;
     }
 
@@ -179,7 +176,6 @@ export class PlatesSectionComponent implements OnInit, AfterViewInit, OnDestroy 
           this.searchedCountryMessage = null;
         }
 
-        console.log('Plates loaded successfully:', this.plates.length);
         this.isLoading = false;
       },
       error: (error) => {

@@ -84,9 +84,7 @@ export class UsedMotoCyclesSectionComponent {
     this.listings
       .getMotorcyclesByCategory(countryToSearch)
       .subscribe((res: any) => {
-        console.log('Response:', res);
         this.motorcycles = res.listings || [];
-        console.log(' this.motorcycles: ',  this.motorcycles);
         if (!this.countryname) {
           this.searchedCountryMessage = 'Showing all countries';
         } else if (res.showing_all_countries && res.searched_country) {
@@ -181,7 +179,6 @@ export class UsedMotoCyclesSectionComponent {
 
     // If total width is less than container width, no need to scroll
     // if (totalWidth <= containerWidth) return 0;
-    console.log('totalWidthtotalWidth', totalWidth - cardWidth);
     // Maximum position is the difference between total width and container width (negative)
     return -(totalWidth - cardWidth);
   }

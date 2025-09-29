@@ -179,7 +179,6 @@ export class UsedSparePartsSectionComponent implements OnInit {
 
     // If total width is less than container width, no need to scroll
     // if (totalWidth <= containerWidth) return 0;
-    console.log('totalWidthtotalWidth', totalWidth - cardWidth);
     // Maximum position is the difference between total width and container width (negative)
     return -(totalWidth - cardWidth);
   }

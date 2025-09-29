@@ -536,7 +536,6 @@ export class MotorcyclesDetailsComponent implements OnInit, OnDestroy {
 // }
 
 onBrandSearchChange(value: string): void {
-  console.log('value',value);
   this.brandSearchTerm = value;
   this.filterDebouncer.next();
   this.cdr.detectChanges();
@@ -630,7 +629,6 @@ onBrandSearchChange(value: string): void {
 // }
 
 executeFilter(): void {
-  console.log('Executing filter with price range:', this.priceRange);
   this.isLoading = true;
 
   const selectedBrandIds = this.filteredBrands
@@ -646,13 +644,11 @@ executeFilter(): void {
     condition: this.selectedCondition,
   };
 
-  console.log('Filter params:', filterParams);
 
   this.listingbyService
     .filterMotorcycles(filterParams)
     .subscribe({
       next: (response) => {
-        console.log('Filter response:', response);
         setTimeout(() => {
           const motorcycles = response.motorcycles || response;
           this.motorCyclesDetails = motorcycles.map((m: Motorcycle) => ({
