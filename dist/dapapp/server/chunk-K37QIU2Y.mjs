@@ -1,0 +1,2 @@
+import './polyfills.server.mjs';
+import{O as n,g as r}from"./chunk-FQXLIQ4O.mjs";var o=class e{selectedCountrySubject=new r(null);selectedCountry$=this.selectedCountrySubject.asObservable();setSelectedCountry(t){this.selectedCountrySubject.next(t)}getSelectedCountry(){return this.selectedCountrySubject.value}static \u0275fac=function(c){return new(c||e)};static \u0275prov=n({token:e,factory:e.\u0275fac,providedIn:"root"})};export{o as a};

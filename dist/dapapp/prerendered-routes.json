@@ -1,0 +1,14 @@
+{
+  "routes": {
+    "/": {},
+    "/accessories": {},
+    "/account": {},
+    "/add-product": {},
+    "/home": {},
+    "/motorcycles": {},
+    "/plates": {},
+    "/register": {},
+    "/spare-parts": {},
+    "/submission-success": {}
+  }
+}
