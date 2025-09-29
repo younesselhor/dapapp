@@ -609,7 +609,7 @@
   
   .slider-card {
     width: 300px;
-    height: 500px;
+    height: 410px;
   }
   
   .plate-display {
@@ -725,7 +725,7 @@
   
   .slider-card {
     width: 324px;
-    height: 520px;
+    height: 410px;
   }
   
   .plate-display {
@@ -778,6 +778,7 @@
   .card-content {
     height: calc(100% - 160px);
     padding: 24px;
+    gap:20px
   }
   
   .plate-title {
