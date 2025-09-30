@@ -351,7 +351,7 @@
               <select
                 [(ngModel)]="selectedModel"
                 (ngModelChange)="onModelChange($event)"
-                class="model-select"
+                class="brand-select"
               >
                 <option value="">Model</option>
                 <option *ngFor="let model of filteredModels" [value]="model.id">
@@ -364,7 +364,7 @@
               <select
                 [(ngModel)]="selectedYear"
                 (ngModelChange)="onYearChange($event)"
-                class="year-select"
+                class="brand-select"
               >
                 <option value="">Year</option>
                 <option *ngFor="let year of filteredYears" [value]="year.id">

@@ -26,20 +26,34 @@
 }
 
 .filter-section {
-  border-radius: 8px;
-  margin-bottom: 1rem;
-  padding: 1rem;
-  transition: border-color 0.2s ease;
+   display: flex;
+  padding: 8px 0 7px 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: -0.01px;
+  align-self: stretch;
+  border-top: 1px solid var(--Gray-200, #E4E7EC);
 }
 
 .filter-header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 0 1.13px 0;
   cursor: pointer;
-  font-weight: bold;
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
-  transition: color 0.2s ease;
+  font-weight: 600;
+  color: #101828;
+}
+
+.filter-title{
+  color: var(--Gray-900---Text-Main, #101828);
+font-family: Manrope;
+font-size: 13.672px;
+font-style: normal;
+font-weight: 700;
+line-height: 36px; /* 263.314% */
+letter-spacing: 0.5px;
 }
 
 .filter-content {
@@ -120,6 +134,8 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
+    height: 148px;
+  width: 100%;
 }
 
 .slider-container {
@@ -405,11 +421,11 @@
   background: transparent;
   color: #101828;
   font-size: 14px;
-  appearance: none;
+  /* appearance: none; */
   padding-right: 20px;
 }
 
-.filter-select::after {
+/* .filter-select::after {
   content: "⌄";
   position: absolute;
   right: 16px;
@@ -417,7 +433,7 @@
   transform: translateY(-50%);
   pointer-events: none;
   color: #667085;
-}
+} */
 /* Responsive Design */
 @media (max-width: 1024px) {
   .products-grid {
@@ -619,7 +635,7 @@ input[type="range"]::-moz-range-thumb {
 
 
 input[type="range"] {
-  width: 300px; /* hna t7dd l3ard dialo */
+  /* width: 300px;  */
   background: transparent; /* bach maytghashach track */
 }
 

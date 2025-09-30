@@ -100,7 +100,7 @@ export class MotorcyclesDetailsComponent implements OnInit, OnDestroy {
   absoluteMin = 0;
   absoluteMax = 0;
   isLoading = false;
-  private filterDebouncer = new Subject<void>();
+  // private filterDebouncer = new Subject<void>();
 
   showLoginModal = false;
   isLoggedIn = false;
@@ -155,7 +155,7 @@ export class MotorcyclesDetailsComponent implements OnInit, OnDestroy {
         @Inject(PLATFORM_ID) private platformId: Object
 
   ) {}
-
+filterDebouncer = new Subject<{ min: number; max: number }>();
   ngOnInit(): void {
     this.authService.isLoggedIn$.subscribe((status) => {
       this.isLoggedIn = status;
@@ -173,13 +173,21 @@ export class MotorcyclesDetailsComponent implements OnInit, OnDestroy {
   //   this.cdr.detectChanges(); // bach yrefresh l view
   // });
 
-    this.filterDebouncer.pipe(
-    debounceTime(300),
-    distinctUntilChanged()
-  ).subscribe(() => {
-    this.executeFilter(); // Add this line!
-  });
+  //   this.filterDebouncer.pipe(
+  //   debounceTime(300),
+  //   // distinctUntilChanged()
+  // ).subscribe(() => {
+  //   this.executeFilter(); // Add this line!
+  // });
 
+   this.filterDebouncer.pipe(
+    debounceTime(300),
+    distinctUntilChanged((prev, curr) => 
+      prev.min === curr.min && prev.max === curr.max
+    )
+  ).subscribe(() => {
+    this.executeFilter();
+  });
 
     this.executeFilter();
     this.getPriceRange();
@@ -343,42 +351,86 @@ export class MotorcyclesDetailsComponent implements OnInit, OnDestroy {
 
 
 
-  onMinSliderChange(event: any) {
-    this.priceRange.min = +event.target.value;
-    // this.applyFilters();
-        this.executeFilter();
+  // onMinSliderChange(event: any) {
+  //   this.priceRange.min = +event.target.value;
+  //   // this.applyFilters();
+  //       this.executeFilter();
 
+  // }
+
+  // onMaxSliderChange(event: any) {
+  //   this.priceRange.max = +event.target.value;
+  //   // this.applyFilters();
+  //       this.executeFilter();
+
+  // }
+
+  //   onMinInputChange() {
+  //   if (this.priceRange.min < this.absoluteMin) {
+  //     this.priceRange.min = this.absoluteMin;
+  //   }
+  //   if (this.priceRange.min > this.priceRange.max) {
+  //     this.priceRange.min = this.priceRange.max;
+  //   }
+  //   // this.applyFilters();
+  //   this.executeFilter();
+  // }
+
+  // onMaxInputChange() {
+  //   if (this.priceRange.max > this.absoluteMax) {
+  //     this.priceRange.max = this.absoluteMax;
+  //   }
+  //   if (this.priceRange.max < this.priceRange.min) {
+  //     this.priceRange.max = this.priceRange.min;
+  //   }
+  //   // this.applyFilters();
+  //       this.executeFilter();
+
+  // }
+
+
+
+onMinSliderChange(event: any) {
+  this.priceRange.min = +event.target.value;
+  this.filterDebouncer.next({ 
+    min: this.priceRange.min, 
+    max: this.priceRange.max 
+  });
+}
+
+onMaxSliderChange(event: any) {
+  this.priceRange.max = +event.target.value;
+  this.filterDebouncer.next({ 
+    min: this.priceRange.min, 
+    max: this.priceRange.max 
+  });
+}
+
+onMinInputChange() {
+  if (this.priceRange.min < this.priceRange.max) {
+    this.priceRange.min = this.absoluteMin;
   }
+  // if (this.priceRange.min > this.priceRange.max) {
+  //   this.priceRange.min = this.priceRange.max;
+  // }
+  this.filterDebouncer.next({ 
+    min: this.priceRange.min, 
+    max: this.priceRange.max 
+  });
+}
 
-  onMaxSliderChange(event: any) {
-    this.priceRange.max = +event.target.value;
-    // this.applyFilters();
-        this.executeFilter();
-
+onMaxInputChange() {
+  if (this.priceRange.max > this.priceRange.min) {
+    this.priceRange.max = this.absoluteMax;
   }
-
-    onMinInputChange() {
-    if (this.priceRange.min < this.absoluteMin) {
-      this.priceRange.min = this.absoluteMin;
-    }
-    if (this.priceRange.min > this.priceRange.max) {
-      this.priceRange.min = this.priceRange.max;
-    }
-    // this.applyFilters();
-    this.executeFilter();
-  }
-
-  onMaxInputChange() {
-    if (this.priceRange.max > this.absoluteMax) {
-      this.priceRange.max = this.absoluteMax;
-    }
-    if (this.priceRange.max < this.priceRange.min) {
-      this.priceRange.max = this.priceRange.min;
-    }
-    // this.applyFilters();
-        this.executeFilter();
-
-  }
+  // if (this.priceRange.max < this.priceRange.min) {
+  //   this.priceRange.max = this.priceRange.min;
+  // }
+  this.filterDebouncer.next({ 
+    min: this.priceRange.min, 
+    max: this.priceRange.max 
+  });
+}
 
   // onMinInputChange(): void {
   //   if (this.priceRange.min < this.absoluteMin) {
@@ -446,9 +498,9 @@ export class MotorcyclesDetailsComponent implements OnInit, OnDestroy {
 //     });
 // }
 
-   triggerDebouncedFilter(): void {
-    this.filterDebouncer.next();
-  }
+  //  triggerDebouncedFilter(): void {
+  //   this.filterDebouncer.next();
+  // }
 
   getBrands(): void {
     this.listingbyService
@@ -540,7 +592,7 @@ export class MotorcyclesDetailsComponent implements OnInit, OnDestroy {
 
 onBrandSearchChange(value: string): void {
   this.brandSearchTerm = value;
-  this.filterDebouncer.next();
+  // this.filterDebouncer.next(value);
   this.cdr.detectChanges();
 }
   // executeFilter(): void {
