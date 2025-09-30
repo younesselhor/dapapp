@@ -103,3 +103,16 @@ font-weight: 700;
 line-height: 24px; /* 171.429% */
 letter-spacing: -0.084px;
 }
+.language-button{
+  display: flex;
+padding: 10px;
+justify-content: center;
+align-items: center;
+gap: 8px;
+border-radius: 8px;
+border: 1px solid var(--Gray-300, #D0D5DD);
+background: var(--White, #FFF);
+
+/* Shadow/xs */
+box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+}

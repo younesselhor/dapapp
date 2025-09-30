@@ -74,7 +74,8 @@
   <!-- Show license plate if category is 3 (license plates) -->
   <div
     *ngIf="listing.category_id === 3 && listing.license_plate"
-    class="mb-6 flex justify-center" style="margin: 50px 0px;"
+    class="PlateContainer"
+
   >
     <div class="plate-display" [ngClass]="getPlateBackgroundClass(listing)">
       <!-- Non-Saudi plate - scaled up -->
@@ -256,6 +257,7 @@
     <!-- Card 1: Title, Price, Location - spans 2 columns on medium screens -->
     <div
       class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 relative md:col-span-2"
+      style="flex-direction: column; display: flex; gap: 20px"
     >
       <!-- Share and Like buttons at top right -->
       <div class="absolute top-4 right-4 flex gap-2">
@@ -306,7 +308,22 @@
       </div>
 
       <!-- Rest of your card content remains the same -->
-      <h1 class="h-1">{{ listing.title }}</h1>
+     
+         <ng-container *ngIf="isMotorcycle">
+           <span class="h-1">
+           {{ listing.motorcycle.brand }} {{ listing.motorcycle.model }}{{ listing.motorcycle.year }} 
+             </span>
+         </ng-container>
+         <ng-container *ngIf="isSparePart">
+           <span class="h-1">
+           {{ listing.spare_part.brand }} {{ listing.spare_part.category }} 
+             </span>  
+            </ng-container>
+       <ng-container *ngIf="isplate">
+           <span class="h-1">
+           {{ listing.license_plate.plate_format.name }} 
+             </span>  
+            </ng-container>
       <div class="mt-10">
         <span class="sar">SAR</span
         ><span class="price">{{ listing.price }}</span>
@@ -375,47 +392,88 @@
       </div>
 
       <!-- Buttons rearranged -->
-    <div class="space-y-3">
-  <div class="flex gap-3">
-    <button
-      class="w-full py-2 px-4 rounded-lg transition flex items-center justify-center gap-2"
-      style="
-        border-radius: 8px;
-        border: 1px solid var(--Error-200, #fecdca);
-        background: var(--50-error, #fef3f2);
-        box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
-      "
-    >
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-  <path fill-rule="evenodd" clip-rule="evenodd" d="M10 19.375C14.8325 19.375 18.75 15.4575 18.75 10.625C18.75 5.79251 14.8325 1.875 10 1.875C5.16751 1.875 1.25 5.79251 1.25 10.625C1.25 12.1943 1.66312 13.6671 2.38655 14.9406L1.25 19.375L5.82179 18.3149C7.06336 18.9909 8.48682 19.375 10 19.375ZM10 18.0288C14.089 18.0288 17.4038 14.714 17.4038 10.625C17.4038 6.53597 14.089 3.22115 10 3.22115C5.91097 3.22115 2.59615 6.53597 2.59615 10.625C2.59615 12.2038 3.09031 13.6672 3.9324 14.8689L3.26923 17.3558L5.79996 16.7231C6.99335 17.5466 8.44036 18.0288 10 18.0288Z" fill="#BFC8D0"/>
-  <path d="M17.5 10C17.5 14.1421 14.1421 17.5 10 17.5C8.4201 17.5 6.9543 17.0115 5.74541 16.1773L3.18182 16.8182L3.8536 14.299C3.00058 13.0817 2.5 11.5993 2.5 10C2.5 5.85786 5.85786 2.5 10 2.5C14.1421 2.5 17.5 5.85786 17.5 10Z" fill="url(#paint0_linear_55656_11620)"/>
-  <path fill-rule="evenodd" clip-rule="evenodd" d="M10 18.75C14.8325 18.75 18.75 14.8325 18.75 10C18.75 5.16751 14.8325 1.25 10 1.25C5.16751 1.25 1.25 5.16751 1.25 10C1.25 11.5693 1.66312 13.0421 2.38655 14.3156L1.25 18.75L5.82179 17.6899C7.06336 18.3659 8.48682 18.75 10 18.75ZM10 17.4038C14.089 17.4038 17.4038 14.089 17.4038 10C17.4038 5.91097 14.089 2.59615 10 2.59615C5.91097 2.59615 2.59615 5.91097 2.59615 10C2.59615 11.5788 3.09031 13.0422 3.9324 14.2439L3.26923 16.7308L5.79996 16.0981C6.99335 16.9216 8.44036 17.4038 10 17.4038Z" fill="white"/>
-  <path d="M7.81251 5.93834C7.60447 5.52048 7.28533 5.55748 6.96292 5.55748C6.38673 5.55748 5.48828 6.24765 5.48828 7.53214C5.48828 8.58484 5.95216 9.73718 7.51526 11.461C9.02378 13.1246 11.0059 13.9852 12.6514 13.9559C14.2969 13.9266 14.6354 12.5106 14.6354 12.0324C14.6354 11.8204 14.5039 11.7147 14.4133 11.6859C13.8525 11.4168 12.8183 10.9154 12.583 10.8212C12.3477 10.727 12.2248 10.8544 12.1484 10.9237C11.935 11.1271 11.512 11.7264 11.3672 11.8612C11.2224 11.996 11.0064 11.9278 10.9166 11.8768C10.5859 11.7441 9.68933 11.3453 8.97467 10.6526C8.09083 9.79578 8.03896 9.501 7.87244 9.23861C7.73922 9.02869 7.83698 8.8999 7.88576 8.84362C8.07619 8.62389 8.33913 8.28466 8.45705 8.11608C8.57496 7.9475 8.48135 7.69155 8.42518 7.53214C8.18361 6.84655 7.97895 6.27263 7.81251 5.93834Z" fill="white"/>
-  <defs>
-    <linearGradient id="paint0_linear_55656_11620" x1="16.5625" y1="4.375" x2="2.5" y2="17.5" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#5BD066"/>
-      <stop offset="1" stop-color="#27B43E"/>
-    </linearGradient>
-  </defs>
-</svg>
-      <span>Send a Message</span>
-    </button>
-  </div>
-  <button
-    class="w-full py-2 px-4 rounded-lg transition flex items-center justify-center gap-2"
-    style="
-      border-radius: 8px;
-      border: 1px solid var(--Error-200, #fecdca);
-      background: var(--50-error, #fef3f2);
-      box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
-    "
-  >
-   <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
-  <path d="M18.8332 14.0994V16.5994C18.8341 16.8315 18.7866 17.0612 18.6936 17.2739C18.6006 17.4865 18.4643 17.6774 18.2933 17.8343C18.1222 17.9912 17.9203 18.1107 17.7005 18.185C17.4806 18.2594 17.2477 18.287 17.0165 18.2661C14.4522 17.9875 11.989 17.1112 9.82486 15.7078C7.81139 14.4283 6.10431 12.7212 4.82486 10.7078C3.41651 8.53377 2.54007 6.05859 2.26653 3.48276C2.2457 3.25232 2.27309 3.02006 2.34695 2.80078C2.4208 2.5815 2.53951 2.38 2.6955 2.20911C2.8515 2.03822 3.04137 1.90169 3.25302 1.8082C3.46468 1.71471 3.69348 1.66631 3.92486 1.6661H6.42486C6.82928 1.66212 7.22136 1.80533 7.528 2.06904C7.83464 2.33275 8.03493 2.69897 8.09153 3.09943C8.19705 3.89949 8.39274 4.68504 8.67486 5.4411C8.78698 5.73937 8.81125 6.06353 8.74478 6.37516C8.67832 6.6868 8.52392 6.97286 8.29986 7.19943L7.24153 8.25776C8.42783 10.3441 10.1552 12.0715 12.2415 13.2578L13.2999 12.1994C13.5264 11.9754 13.8125 11.821 14.1241 11.7545C14.4358 11.688 14.7599 11.7123 15.0582 11.8244C15.8143 12.1066 16.5998 12.3022 17.3999 12.4078C17.8047 12.4649 18.1744 12.6688 18.4386 12.9807C18.7029 13.2926 18.8433 13.6907 18.8332 14.0994Z" stroke="#F03D24" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
-    <span>Show Phone Number</span>
-  </button>
-</div>
+      <div class="space-y-3">
+        <div class="flex gap-3">
+          <button
+            class="w-full py-2 px-4 rounded-lg transition flex items-center justify-center gap-2"
+            style="
+              border-radius: 8px;
+              border: 1px solid var(--Error-200, #fecdca);
+              background: var(--50-error, #fef3f2);
+              box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+            "
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M10 19.375C14.8325 19.375 18.75 15.4575 18.75 10.625C18.75 5.79251 14.8325 1.875 10 1.875C5.16751 1.875 1.25 5.79251 1.25 10.625C1.25 12.1943 1.66312 13.6671 2.38655 14.9406L1.25 19.375L5.82179 18.3149C7.06336 18.9909 8.48682 19.375 10 19.375ZM10 18.0288C14.089 18.0288 17.4038 14.714 17.4038 10.625C17.4038 6.53597 14.089 3.22115 10 3.22115C5.91097 3.22115 2.59615 6.53597 2.59615 10.625C2.59615 12.2038 3.09031 13.6672 3.9324 14.8689L3.26923 17.3558L5.79996 16.7231C6.99335 17.5466 8.44036 18.0288 10 18.0288Z"
+                fill="#BFC8D0"
+              />
+              <path
+                d="M17.5 10C17.5 14.1421 14.1421 17.5 10 17.5C8.4201 17.5 6.9543 17.0115 5.74541 16.1773L3.18182 16.8182L3.8536 14.299C3.00058 13.0817 2.5 11.5993 2.5 10C2.5 5.85786 5.85786 2.5 10 2.5C14.1421 2.5 17.5 5.85786 17.5 10Z"
+                fill="url(#paint0_linear_55656_11620)"
+              />
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M10 18.75C14.8325 18.75 18.75 14.8325 18.75 10C18.75 5.16751 14.8325 1.25 10 1.25C5.16751 1.25 1.25 5.16751 1.25 10C1.25 11.5693 1.66312 13.0421 2.38655 14.3156L1.25 18.75L5.82179 17.6899C7.06336 18.3659 8.48682 18.75 10 18.75ZM10 17.4038C14.089 17.4038 17.4038 14.089 17.4038 10C17.4038 5.91097 14.089 2.59615 10 2.59615C5.91097 2.59615 2.59615 5.91097 2.59615 10C2.59615 11.5788 3.09031 13.0422 3.9324 14.2439L3.26923 16.7308L5.79996 16.0981C6.99335 16.9216 8.44036 17.4038 10 17.4038Z"
+                fill="white"
+              />
+              <path
+                d="M7.81251 5.93834C7.60447 5.52048 7.28533 5.55748 6.96292 5.55748C6.38673 5.55748 5.48828 6.24765 5.48828 7.53214C5.48828 8.58484 5.95216 9.73718 7.51526 11.461C9.02378 13.1246 11.0059 13.9852 12.6514 13.9559C14.2969 13.9266 14.6354 12.5106 14.6354 12.0324C14.6354 11.8204 14.5039 11.7147 14.4133 11.6859C13.8525 11.4168 12.8183 10.9154 12.583 10.8212C12.3477 10.727 12.2248 10.8544 12.1484 10.9237C11.935 11.1271 11.512 11.7264 11.3672 11.8612C11.2224 11.996 11.0064 11.9278 10.9166 11.8768C10.5859 11.7441 9.68933 11.3453 8.97467 10.6526C8.09083 9.79578 8.03896 9.501 7.87244 9.23861C7.73922 9.02869 7.83698 8.8999 7.88576 8.84362C8.07619 8.62389 8.33913 8.28466 8.45705 8.11608C8.57496 7.9475 8.48135 7.69155 8.42518 7.53214C8.18361 6.84655 7.97895 6.27263 7.81251 5.93834Z"
+                fill="white"
+              />
+              <defs>
+                <linearGradient
+                  id="paint0_linear_55656_11620"
+                  x1="16.5625"
+                  y1="4.375"
+                  x2="2.5"
+                  y2="17.5"
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <stop stop-color="#5BD066" />
+                  <stop offset="1" stop-color="#27B43E" />
+                </linearGradient>
+              </defs>
+            </svg>
+            <span>Send a Message</span>
+          </button>
+        </div>
+        <button
+          class="w-full py-2 px-4 rounded-lg transition flex items-center justify-center gap-2"
+          style="
+            border-radius: 8px;
+            border: 1px solid var(--Error-200, #fecdca);
+            background: var(--50-error, #fef3f2);
+            box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+          "
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="21"
+            height="20"
+            viewBox="0 0 21 20"
+            fill="none"
+          >
+            <path
+              d="M18.8332 14.0994V16.5994C18.8341 16.8315 18.7866 17.0612 18.6936 17.2739C18.6006 17.4865 18.4643 17.6774 18.2933 17.8343C18.1222 17.9912 17.9203 18.1107 17.7005 18.185C17.4806 18.2594 17.2477 18.287 17.0165 18.2661C14.4522 17.9875 11.989 17.1112 9.82486 15.7078C7.81139 14.4283 6.10431 12.7212 4.82486 10.7078C3.41651 8.53377 2.54007 6.05859 2.26653 3.48276C2.2457 3.25232 2.27309 3.02006 2.34695 2.80078C2.4208 2.5815 2.53951 2.38 2.6955 2.20911C2.8515 2.03822 3.04137 1.90169 3.25302 1.8082C3.46468 1.71471 3.69348 1.66631 3.92486 1.6661H6.42486C6.82928 1.66212 7.22136 1.80533 7.528 2.06904C7.83464 2.33275 8.03493 2.69897 8.09153 3.09943C8.19705 3.89949 8.39274 4.68504 8.67486 5.4411C8.78698 5.73937 8.81125 6.06353 8.74478 6.37516C8.67832 6.6868 8.52392 6.97286 8.29986 7.19943L7.24153 8.25776C8.42783 10.3441 10.1552 12.0715 12.2415 13.2578L13.2999 12.1994C13.5264 11.9754 13.8125 11.821 14.1241 11.7545C14.4358 11.688 14.7599 11.7123 15.0582 11.8244C15.8143 12.1066 16.5998 12.3022 17.3999 12.4078C17.8047 12.4649 18.1744 12.6688 18.4386 12.9807C18.7029 13.2926 18.8433 13.6907 18.8332 14.0994Z"
+              stroke="#F03D24"
+              stroke-width="1.67"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span>Show Phone Number</span>
+        </button>
+      </div>
     </div>
   </div>
   <div *ngIf="listing.allow_submission === 1" class="space-y-4">
@@ -497,24 +555,33 @@
     <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
       <div class="mb-4">
         <p class="text-sm text-gray-500">Minimum amount to Soom</p>
-        <div style="display: flex;
-align-items: flex-end;
-gap: 4px;">
-        <span style="color: var(--Gray-500, #667085);
-leading-trim: both;
-text-edge: cap;
-font-family: Manrope;
-font-size: 20px;
-font-style: normal;
-font-weight: 400;
-line-height: 48px; /* 240% */">SAR</span> <span style="color: var(--Gray-900---Text-Main, #101828);
-leading-trim: both;
-text-edge: cap;
-font-family: Manrope;
-font-size: 24px;
-font-style: normal;
-font-weight: 700;
-line-height: 48px; /* 200% */">{{ lastsoom }}</span>
+        <div style="display: flex; align-items: flex-end; gap: 4px">
+          <span
+            style="
+              color: var(--Gray-500, #667085);
+              leading-trim: both;
+              text-edge: cap;
+              font-family: Manrope;
+              font-size: 20px;
+              font-style: normal;
+              font-weight: 400;
+              line-height: 48px; /* 240% */
+            "
+            >SAR</span
+          >
+          <span
+            style="
+              color: var(--Gray-900---Text-Main, #101828);
+              leading-trim: both;
+              text-edge: cap;
+              font-family: Manrope;
+              font-size: 24px;
+              font-style: normal;
+              font-weight: 700;
+              line-height: 48px; /* 200% */
+            "
+            >{{ lastsoom }}</span
+          >
         </div>
       </div>
 
@@ -608,14 +675,15 @@ line-height: 48px; /* 200% */">{{ lastsoom }}</span>
     </div>
   </div>
   <!-- Details Table -->
+   <ng-container *ngIf="!isplate">
   <div class="mt-10 mb-6">
     <h2 class="text-xl font-semibold mb-4 text-gray-800">Details</h2>
-    <div class="grid grid-cols-1 gap-4">
+    <div class="grid grid-cols-1 ">
       <!-- Motorcycle Details -->
 
       <ng-container *ngIf="isMotorcycle">
-        <div class="grid grid-cols-2 gap-2">
-          <!-- Brand -->
+        <!-- <div class="grid grid-cols-2 gap-2">
+
           <div class="bg-gray-50 p-3 rounded">
             <p class="text-gray-700">
               <span class="text-sm text-gray-500">Brand: </span>
@@ -623,7 +691,7 @@ line-height: 48px; /* 200% */">{{ lastsoom }}</span>
             </p>
           </div>
 
-          <!-- Year -->
+
           <div class="bg-gray-50 p-3 rounded">
             <p class="text-gray-700">
               <span class="text-sm text-gray-500">Year: </span>
@@ -631,7 +699,6 @@ line-height: 48px; /* 200% */">{{ lastsoom }}</span>
             </p>
           </div>
 
-          <!-- Kilometer -->
           <div class="bg-gray-50 p-3 rounded">
             <p class="text-gray-700">
               <span class="text-sm text-gray-500">Kilometer: </span>
@@ -641,7 +708,7 @@ line-height: 48px; /* 200% */">{{ lastsoom }}</span>
             </p>
           </div>
 
-          <!-- Condition -->
+         
           <div class="bg-gray-50 p-3 rounded">
             <p class="text-gray-700">
               <span class="text-sm text-gray-500">Condition: </span>
@@ -651,7 +718,6 @@ line-height: 48px; /* 200% */">{{ lastsoom }}</span>
             </p>
           </div>
 
-          <!-- CC -->
           <div class="bg-gray-50 p-3 rounded">
             <p class="text-gray-700">
               <span class="text-sm text-gray-500">CC: </span>
@@ -659,7 +725,6 @@ line-height: 48px; /* 200% */">{{ lastsoom }}</span>
             </p>
           </div>
 
-          <!-- Transmission -->
           <div class="bg-gray-50 p-3 rounded">
             <p class="text-gray-700">
               <span class="text-sm text-gray-500">Transmission: </span>
@@ -668,56 +733,92 @@ line-height: 48px; /* 200% */">{{ lastsoom }}</span>
               }}</span>
             </p>
           </div>
+        </div> -->
+        <div class="details-Style">
+          <div class="details-Style-item">
+          <span class="detail-title">Brand</span><span class="detail-value">{{ listing.motorcycle.brand }}</span>
+          </div>
+          <div class="details-Style-item">
+          <span class="detail-title">Model</span><span class="detail-value">{{ listing.motorcycle.model }}</span>
+          </div>
+          <div class="details-Style-item">
+          <span class="detail-title">Year </span><span class="detail-value">{{ listing.motorcycle.year }}</span>
+          </div>
+        </div>
+      
+         <div class="details-Stylechange">
+          <div class="details-Style-item">
+          <span class="detail-title">Engine Capacity </span><span class="detail-value">{{ listing.motorcycle.engine }}</span>
+          </div>
+          <div class="details-Style-item">
+          <span class="detail-title">Kilometer </span><span class="detail-value">{{ listing.motorcycle.mileage }} km</span>
+          </div>
+          <div class="details-Style-item">
+          <span class="detail-title">Transmission </span><span class="detail-value">{{ listing.motorcycle.transmission }}</span>
+          </div>
+        </div>
+
+        <div class="details-Style">
+          <div class="details-Style-item">
+          <span class="detail-title">Vehicle Body Condition</span><span class="detail-value">{{ listing.motorcycle.body_condition }}</span>
+          </div>
+          <div class="details-Style-item">
+          <span class="detail-title">Condition</span><span class="detail-value">{{ listing.motorcycle.general_condition }}</span>
+          </div>
+          <div class="details-Style-item">
+          <span class="detail-title">Vehicle Care </span><span class="detail-value">{{ listing.motorcycle.vehicle_care }}</span>
+          </div>
         </div>
       </ng-container>
+
+
+
       <!-- Spare Part Details -->
+
       <ng-container *ngIf="isSparePart">
-        <div class="grid grid-cols-2 gap-2">
-          <div class="bg-gray-50 p-3 rounded">
-            <p class="text-gray-700">
-              <span class="text-sm text-gray-500">Part Brand</span>
-              <span class="font-medium">{{
-                listing.spare_part.bike_part_brand
-              }}</span>
-            </p>
+        <div class="details-Style" *ngIf="listing.spare_part.compatible_motorcycles?.length > 0">
+  <div class="details-Style-item">
+    <span class="detail-title">Compatible Brand</span>
+    <span class="detail-value">{{ listing.spare_part.compatible_motorcycles[0].brand }}</span>
+  </div>
+  <div class="details-Style-item">
+    <span class="detail-title">Compatible Model</span>
+    <span class="detail-value">{{ listing.spare_part.compatible_motorcycles[0].model }}</span>
+  </div>
+  <div class="details-Style-item">
+    <span class="detail-title">Compatible Year</span>
+    <span class="detail-value">{{ listing.spare_part.compatible_motorcycles[0].year }}</span>
+  </div>
+</div>
+      
+         <!-- <div class="details-Stylechange">
+          <div class="details-Style-item">
+          <span class="detail-title">Engine Capacity </span><span class="detail-value">{{ listing.spare_part.engine }}</span>
           </div>
-          <div class="bg-gray-50 p-3 rounded">
-            <p class="text-gray-700">
-              <span class="text-sm text-gray-500">Category</span>
-              <span class="font-medium">{{
-                listing.spare_part.bike_part_category
-              }}</span>
-            </p>
+          <div class="details-Style-item">
+          <span class="detail-title">Kilometer </span><span class="detail-value">{{ listing.spare_part.mileage }} km</span>
           </div>
-          <div class="bg-gray-50 p-3 rounded">
-            <p class="text-gray-700">
-              <span class="text-sm text-gray-500">Condition</span>
-              <span class="font-medium">{{
-                listing.spare_part.condition
-              }}</span>
-            </p>
+          <div class="details-Style-item">
+          <span class="detail-title">Transmission </span><span class="detail-value">{{ listing.spare_part.transmission }}</span>
           </div>
-          <div class="bg-gray-50 p-3 rounded">
-            <p class="text-gray-700">
-              <span class="text-sm text-gray-500">Compatible With</span>
-              <!-- <span class="font-medium">{{ listing.spare_part.bike_part_brand }}</span> -->
-              <span
-                *ngFor="
-                  let bike of listing.spare_part.motorcycle_associations;
-                  let last = last
-                "
-              >
-                {{ bike.brand }} {{ bike.model }} ({{ bike.year }})<span
-                  *ngIf="!last"
-                  >,
-                </span>
-              </span>
-            </p>
+        </div> -->
+
+        <div class="details-Stylechange">
+          <div class="details-Style-item">
+          <span class="detail-title">Brand</span><span class="detail-value">{{ listing.spare_part.brand }}</span>
           </div>
+          <div class="details-Style-item">
+          <span class="detail-title">Category</span><span class="detail-value">{{ listing.spare_part.category }}</span>
+          </div>
+          <!-- <div class="details-Style-item">
+          <span class="detail-title">Vehicle Care </span><span class="detail-value">{{ listing.spare_part.vehicle_care }}</span>
+          </div> -->
         </div>
       </ng-container>
+   
     </div>
   </div>
+  </ng-container>
 
   <div class="mb-8">
     <h2 class="text-xl font-semibold mb-4 text-gray-800">Description</h2>
@@ -733,61 +834,86 @@ line-height: 48px; /* 200% */">{{ lastsoom }}</span>
     *ngIf="showModal"
     class="fixed inset-0 bg-gray bg-opacity-100 z-50 flex items-center justify-center p-4"
   >
-    <div style="display: flex;
-width: 400px;
-padding: 24px;
-flex-direction: column;
-align-items: center;
-gap: 32px;
-border-radius: 12px;
-background: var(--White, #FFF);
+    <div
+      style="
+        display: flex;
+        width: 400px;
+        padding: 24px;
+        flex-direction: column;
+        align-items: center;
+        gap: 32px;
+        border-radius: 12px;
+        background: var(--White, #fff);
 
-/* Shadow/xl - Modal Shadow */
-box-shadow: 0 20px 24px -4px rgba(16, 24, 40, 0.10), 0 8px 8px -4px rgba(16, 24, 40, 0.04);">
+        /* Shadow/xl - Modal Shadow */
+        box-shadow: 0 20px 24px -4px rgba(16, 24, 40, 0.1),
+          0 8px 8px -4px rgba(16, 24, 40, 0.04);
+      "
+    >
       <!-- Success State -->
       <div *ngIf="confirmSoomStep" class="text-center">
         <div
           class="w-12 h-12 mx-auto mb-4 bg-yellow-100 rounded-full flex items-center justify-center"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-  <path d="M11.9998 8.00021V12.0002M11.9998 16.0002H12.0098M10.2898 2.8602L1.81978 17.0002C1.64514 17.3026 1.55274 17.6455 1.55177 17.9947C1.55079 18.3439 1.64127 18.6873 1.8142 18.9907C1.98714 19.2941 2.2365 19.547 2.53748 19.7241C2.83847 19.9012 3.18058 19.9964 3.52978 20.0002H20.4698C20.819 19.9964 21.1611 19.9012 21.4621 19.7241C21.7631 19.547 22.0124 19.2941 22.1854 18.9907C22.3583 18.6873 22.4488 18.3439 22.4478 17.9947C22.4468 17.6455 22.3544 17.3026 22.1798 17.0002L13.7098 2.8602C13.5315 2.56631 13.2805 2.32332 12.981 2.15469C12.6814 1.98605 12.3435 1.89746 11.9998 1.89746C11.656 1.89746 11.3181 1.98605 11.0186 2.15469C10.7191 2.32332 10.468 2.56631 10.2898 2.8602Z" stroke="#DC6803" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M11.9998 8.00021V12.0002M11.9998 16.0002H12.0098M10.2898 2.8602L1.81978 17.0002C1.64514 17.3026 1.55274 17.6455 1.55177 17.9947C1.55079 18.3439 1.64127 18.6873 1.8142 18.9907C1.98714 19.2941 2.2365 19.547 2.53748 19.7241C2.83847 19.9012 3.18058 19.9964 3.52978 20.0002H20.4698C20.819 19.9964 21.1611 19.9012 21.4621 19.7241C21.7631 19.547 22.0124 19.2941 22.1854 18.9907C22.3583 18.6873 22.4488 18.3439 22.4478 17.9947C22.4468 17.6455 22.3544 17.3026 22.1798 17.0002L13.7098 2.8602C13.5315 2.56631 13.2805 2.32332 12.981 2.15469C12.6814 1.98605 12.3435 1.89746 11.9998 1.89746C11.656 1.89746 11.3181 1.98605 11.0186 2.15469C10.7191 2.32332 10.468 2.56631 10.2898 2.8602Z"
+              stroke="#DC6803"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
         </div>
-        <div style="display: flex;
-flex-direction: column;
-align-items: center;
-gap: 8px;
-align-self: stretch;">
+        <div
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            align-self: stretch;
+          "
+        >
+          <h2
+            style="
+              color: var(--Gray-900---Text, #101828);
+              text-align: center;
+              font-family: Manrope;
+              font-size: 18px;
+              font-style: normal;
+              font-weight: 700;
+              line-height: 28px; /* 155.556% */
+            "
+          >
+            Review Soom amount
+          </h2>
 
-      
-        <h2 style="color: var(--Gray-900---Text, #101828);
-text-align: center;
-font-family: Manrope;
-font-size: 18px;
-font-style: normal;
-font-weight: 700;
-line-height: 28px; /* 155.556% */">
-          Review Soom amount
-        </h2>
-
-        <p style="color: var(--Gray-500---Supporting-Text, #667085);
-text-align: center;
-font-family: Manrope;
-font-size: 14px;
-font-style: normal;
-font-weight: 400;
-line-height: 20px; /* 142.857% */
-align-self: stretch;">
-          You have entered an amount that is 10x the minimum to buy, do you wish
-          still to continue?
-        </p>
-        <p class="review-amount">
-          Minimum {{ minimumRequired | number }} SAR
-        </p>
-        <p class="review-amount">
-          You offered {{ soomAmount | number }} SAR
-        </p>
-          </div>
+          <p
+            style="
+              color: var(--Gray-500---Supporting-Text, #667085);
+              text-align: center;
+              font-family: Manrope;
+              font-size: 14px;
+              font-style: normal;
+              font-weight: 400;
+              line-height: 20px; /* 142.857% */
+              align-self: stretch;
+            "
+          >
+            You have entered an amount that is 10x the minimum to buy, do you
+            wish still to continue?
+          </p>
+          <p class="review-amount">
+            Minimum {{ minimumRequired | number }} SAR
+          </p>
+          <p class="review-amount">You offered {{ soomAmount | number }} SAR</p>
+        </div>
 
         <div class="flex justify-center gap-4">
           <button
@@ -866,10 +992,10 @@ align-self: stretch;">
           </div>
 
           <!-- Product Details -->
-          <div class="flex-1">
+          <!-- <div class="flex-1">
             <h3 class="font-semibold text-gray-800">{{ getTitle() }}</h3>
             <p class="text-gray-600 text-sm">{{ listing.city }}</p>
-          </div>
+          </div> -->
         </div>
 
         <!-- Soom Amount Input Section -->
@@ -891,33 +1017,33 @@ align-self: stretch;">
           </div>
 
           <p
-  class="text-sm mt-2 flex items-center gap-1"
-  [ngClass]="{
-    'text-red-600': !isSoomAmountValid() && soomAmount !== null,
-    'text-gray-500': isSoomAmountValid() || soomAmount === null
-  }"
->
-  <!-- Show icon when soomAmount is not valid -->
-  <svg 
-    *ngIf="!isSoomAmountValid() && soomAmount !== null"
-    xmlns="http://www.w3.org/2000/svg" 
-    width="16" 
-    height="17" 
-    viewBox="0 0 16 17" 
-    fill="none"
-  >
-    <path 
-      d="M8.00016 5.83325V8.49992M8.00016 11.1666H8.00683M14.6668 8.49992C14.6668 12.1818 11.6821 15.1666 8.00016 15.1666C4.31826 15.1666 1.3335 12.1818 1.3335 8.49992C1.3335 4.81802 4.31826 1.83325 8.00016 1.83325C11.6821 1.83325 14.6668 4.81802 14.6668 8.49992Z" 
-      stroke="#F04438" 
-      stroke-width="1.33333" 
-      stroke-linecap="round" 
-      stroke-linejoin="round"
-    />
-  </svg>
-  
-  <!-- Minimum amount to Soom is SAR {{ minimumRequired ?? listing?.submission?.amount | number }} -->
-  Minimum amount to Soom is SAR {{ lastsoom + 1 }}
-</p>
+            class="text-sm mt-2 flex items-center gap-1"
+            [ngClass]="{
+              'text-red-600': !isSoomAmountValid() && soomAmount !== null,
+              'text-gray-500': isSoomAmountValid() || soomAmount === null
+            }"
+          >
+            <!-- Show icon when soomAmount is not valid -->
+            <svg
+              *ngIf="!isSoomAmountValid() && soomAmount !== null"
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="17"
+              viewBox="0 0 16 17"
+              fill="none"
+            >
+              <path
+                d="M8.00016 5.83325V8.49992M8.00016 11.1666H8.00683M14.6668 8.49992C14.6668 12.1818 11.6821 15.1666 8.00016 15.1666C4.31826 15.1666 1.3335 12.1818 1.3335 8.49992C1.3335 4.81802 4.31826 1.83325 8.00016 1.83325C11.6821 1.83325 14.6668 4.81802 14.6668 8.49992Z"
+                stroke="#F04438"
+                stroke-width="1.33333"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+            <!-- Minimum amount to Soom is SAR {{ minimumRequired ?? listing?.submission?.amount | number }} -->
+            Minimum amount to Soom is SAR {{ lastsoom + 1 }}
+          </p>
 
           <!-- Error Message -->
           <div

@@ -64,6 +64,10 @@ isLoggedIn = false;
 showLoginModal = false;
 
 
+  // showDropdown = false;
+  showLanguageDropdown = false;
+
+   currentLang = 'en'; 
  private dropdownClickListener: (() => void) | null = null;
 
 constructor(
@@ -79,6 +83,8 @@ constructor(
     // Only access localStorage on browser side
     if (isPlatformBrowser(this.platformId)) {
       const savedLang = localStorage.getItem('lang') || 'en';
+       this.currentLang = savedLang;
+       console.log('Current Language:', this.currentLang);
       this.translate.use(savedLang);
     }
   }
@@ -106,19 +112,33 @@ ngOnInit() {
         ];
 }
 
-switchLang(lang: string): void {
-  this.translate.use(lang);
+// switchLang(lang: string): void {
+//   this.translate.use(lang);
 
-  if (isPlatformBrowser(this.platformId)) {
-    localStorage.setItem('lang', lang);
+//   if (isPlatformBrowser(this.platformId)) {
+//     localStorage.setItem('lang', lang);
 
 
-    // تحديث اتجاه اللغة والاتجاه فـ <html>
-    this.document.documentElement.lang = lang;
-    this.document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+//     // تحديث اتجاه اللغة والاتجاه فـ <html>
+//     this.document.documentElement.lang = lang;
+//     this.document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+//   }
+// }
+
+
+   switchLang(lang: string): void {
+    this.translate.use(lang);
+    this.currentLang = lang; // Update current language
+           console.log('Current Language:', this.currentLang);
+
+    this.showLanguageDropdown = false;
+
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem('lang', lang);
+      this.document.documentElement.lang = lang;
+      this.document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    }
   }
-}
-
 //  switchLang(lang: string): void {
 //     this.translate.use(lang);
     
@@ -142,6 +162,11 @@ navigateToProfile(): void {
 //   this.showDropdown = !this.showDropdown;
 // }
 
+
+  toggleLanguageDropdown() {
+    this.showLanguageDropdown = !this.showLanguageDropdown;
+    this.showDropdown = false; // Close profile dropdown
+  }
 
   toggleDropdown(): void {
     this.showDropdown = !this.showDropdown;

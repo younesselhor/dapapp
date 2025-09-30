@@ -183,7 +183,7 @@ flex: 1 0 0;
   position: absolute;
   width: 100%;
   height: 3px;
-  background: #98a2b3;
+  /* background: #98a2b3; */
   border-radius: 10px;
   top: 50%;
   transform: translateY(-50%);
@@ -823,7 +823,7 @@ bottom: -129.178px;
   gap: 12px;
   padding: 8px 0;
   cursor: pointer;
-  border-bottom: 1px solid #f2f4f7;
+  /* border-bottom: 1px solid #f2f4f7; */
 }
 
 .filter-item:last-child {
@@ -839,8 +839,11 @@ bottom: -129.178px;
 }
 
 .brand-checkbox {
-  width: 16px;
-  height: 16px;
+  /* width: 14px;
+  height: 14px; */
+      width: 18px;
+    height: 18px;
+
   border: 1px solid #d0d5dd;
   border-radius: 4px;
   margin: 0;
@@ -852,6 +855,25 @@ bottom: -129.178px;
 .brand-checkbox:checked {
   background-color: #ff6b35;
   border-color: #ff6b35;
+}
+
+.condition-checkbox{
+      /* width: 14px;
+    height: 14px; */
+        width: 18px;
+    height: 18px;
+
+    border-radius: 2px;
+    border: 1px solid var(--Gray-400, #98A2B3);
+    background: var(--White, #FFF);
+ cursor: pointer;
+  accent-color: #ff6b35;
+}
+
+.condition-checkbox:checked {
+  background-color: #ff6b35;
+  border-color: #ff6b35;
+  color: white;
 }
 
 .brand-label {

@@ -14,17 +14,17 @@
 
   <div class="filter-content" *ngIf="isDigitsOpen">
     <div class="checkbox-item">
-      <input type="radio" id="condition-all" name="condition" [checked]="!selectedCondition"
+      <input  class="condition-checkbox" type="checkbox" id="condition-all" name="condition" [checked]="!selectedCondition"
         (change)="selectedCondition = ''; executeFilter()">
       <label for="condition-all">All Conditions</label>
     </div>
     <div class="checkbox-item">
-      <input type="radio" id="condition-new" name="condition" value="new" [checked]="selectedCondition === 'new'"
+      <input class="condition-checkbox" type="checkbox" id="condition-new" name="condition" value="new" [checked]="selectedCondition === 'new'"
         (change)="selectedCondition = 'new'; executeFilter()">
       <label for="condition-new">New</label>
     </div>
     <div class="checkbox-item">
-      <input type="radio" id="condition-used" name="condition" value="used"
+      <input class="condition-checkbox" type="checkbox" id="condition-used" name="condition" value="used"
         [checked]="selectedCondition === 'used'" (change)="selectedCondition = 'used'; executeFilter()">
       <label for="condition-used">Used</label>
     </div>
@@ -53,7 +53,7 @@
     <!-- Brand list with scroll -->
     <div class="scrollable-list">
       <div class="checkbox-item" *ngFor="let brand of filteredBrands">
-        <input type="checkbox" [id]="'brand-' + brand.id" [checked]="brand.checked"
+        <input  class="condition-checkbox" type="checkbox" [id]="'brand-' + brand.id" [checked]="brand.checked"
                (change)="brand.checked = !brand.checked;  onBrandChangecheck()">
         <label [for]="'brand-' + brand.id">
           {{ brand.name }} <span class="count">({{ brand.listings_count}})</span>
@@ -89,7 +89,7 @@
     <!-- Category list with scroll -->
     <div class="scrollable-list">
       <div class="checkbox-item" *ngFor="let category of filteredCategories">
-        <input type="checkbox" [id]="'category-' + category.id" [checked]="category.checked"
+        <input  class="condition-checkbox" type="checkbox" [id]="'category-' + category.id" [checked]="category.checked"
                (change)="category.checked = !category.checked; onCategoryChange()">
         <label [for]="'category-' + category.id">
           {{ category.name }} <span class="count">({{ category.listings_count}})</span>

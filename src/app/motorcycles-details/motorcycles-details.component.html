@@ -60,6 +60,7 @@
                 <div class="filter-content" *ngIf="isDigitsOpen">
                   <div class="filter-item">
                     <input
+                     class="condition-checkbox"
                       type="checkbox"
                       id="condition-all"
                       name="condition"
@@ -70,6 +71,7 @@
                   </div>
                   <div class="filter-item">
                     <input
+                    class="condition-checkbox"
                       type="checkbox"
                       id="condition-new"
                       name="condition"
@@ -81,6 +83,7 @@
                   </div>
                   <div class="filter-item">
                     <input
+                     class="condition-checkbox"
                       type="checkbox"
                       id="condition-used"
                       name="condition"
@@ -156,6 +159,7 @@
   <div class="brand-list">
     <div class="filter-item" *ngFor="let brand of filteredBrands">
       <input
+       class="condition-checkbox"
         type="checkbox"
         [id]="'brand-' + brand.id"
         [checked]="brand.checked"

@@ -57,6 +57,7 @@ export class MainProductsPageComponent implements OnInit {
   activeImageIndex = 0;
   isMotorcycle = false;
   isSparePart = false;
+  isplate = false;
   lastsoom: number = 0;
   showSoomInfo: boolean = false;
   showModal = false;
@@ -112,6 +113,7 @@ isLoading: boolean = false;
         this.listing = data;
         this.isMotorcycle = !!data.motorcycle;
         this.isSparePart = !!data.spare_part;
+        this.isplate = !!data.license_plate;
         this.loading = false;
       },
       error: (err) => {

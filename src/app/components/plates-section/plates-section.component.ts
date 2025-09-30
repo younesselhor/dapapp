@@ -8,6 +8,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
 import { LoginModalComponent } from '../login-modal.component';
+import { AuthService } from '../../services/auth.service';
 
 interface Plate {
   id: number;
@@ -86,17 +87,22 @@ export class PlatesSectionComponent implements OnInit, AfterViewInit, OnDestroy 
   searchedCountryMessage: string | null = null;
     isLoggedIn = false;
       showLoginModal = false;
-
+      private sub: any;
   constructor(
     private http: HttpClient, 
     private router: Router, 
     private locationService: LocationSService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+      private authService: AuthService,
   ) {
     console.log('PlatesSectionComponent constructed at:', new Date().toISOString());
   }
 
   ngOnInit(): void {
+            this.sub = this.authService.isLoggedIn$.subscribe((status) => {
+      this.isLoggedIn = status;
+    });
+
     this.checkScreenSize();
     this.fetchPlates();
 
