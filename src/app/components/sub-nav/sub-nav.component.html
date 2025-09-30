@@ -93,7 +93,7 @@ border-radius: 4px;">
     <!-- Sell Button -->
     <div class="sellBtn">
       <button
-        routerLink="/add-product"
+        (click)="navigateToAddProduct()"
         class="hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm w-full md:w-auto"
         style="cursor: pointer;
         color: #f03d24;"
@@ -103,3 +103,8 @@ border-radius: 4px;">
     </div>
   </div>
 </div>
+
+<app-login-modal
+  *ngIf="showLoginModal"
+  (close)="closeLoginModal()"
+></app-login-modal>

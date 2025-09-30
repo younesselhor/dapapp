@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit, signal, OnChanges, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink, RouterModule } from '@angular/router';
+import { Router, RouterLink, RouterModule } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 
@@ -13,6 +13,7 @@ import { LocationSService } from '../../services/location-s.service';
 // import { ListingService } from '../main-products-page/listingProduct.service';
 import { Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { LoginModalComponent } from '../login-modal.component';
 
 
 interface ICountry {
@@ -35,7 +36,8 @@ interface ICity {
     RouterLink,
     FormsModule,
     DropdownModule,
-    InputTextModule
+    InputTextModule,
+    LoginModalComponent
   ],
   templateUrl: './sub-nav.component.html',
   styleUrl: './sub-nav.component.css'
@@ -49,10 +51,12 @@ export class SubNavComponent implements OnInit, OnChanges {
   countries: ICountry[] = [];
   allCities: any[] = [];
   isLoggedIn = false;
+  showLoginModal = false;
 
    private userSub: Subscription | undefined;
     constructor(private authService: AuthService, private listingService: ListingService, private locationService: LocationSService,
-        @Inject(PLATFORM_ID) private platformId: Object
+        @Inject(PLATFORM_ID) private platformId: Object,
+        private router: Router,
     ) {}
 
 
@@ -289,6 +293,29 @@ export class SubNavComponent implements OnInit, OnChanges {
 //     }
 //   });
 // }
+
+//  viewListing(id: number): void {
+//     if (this.isLoggedIn) {
+//       this.router.navigate(['/listing', id]);
+//     } else {
+//       this.openLoginModal();
+//     }
+//   }
+
+navigateToAddProduct(){
+  if(this.isLoggedIn){
+    this.router.navigate(['/add-product']);
+  } else {
+    this.openLoginModal();
+  }
+}
+  openLoginModal(): void {
+    this.showLoginModal = true;
+  }
+
+  closeLoginModal(): void {
+    this.showLoginModal = false;
+  }
 
 loadCountries(): Promise<void> {
   return new Promise((resolve) => {
