@@ -1,416 +1,391 @@
-  /* motorcycle-slider.component.css */
-  .slider-section {
-    padding: 32px 80px 48px 80px;
-    background: #FFF;
-  }
+/* motorcycle-slider.component.css - FIXED VERSION */
 
+.slider-section {
+  padding: 32px 80px 48px 80px;
+  background: #fff;
+}
 
-
-  .container{
-    display: flex;
+.container {
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
   gap: 50px;
   flex: 1 0 0;
-  }
+}
 
-  .slider-track {
-    display: flex;
-    gap: 16px;
-    transition: transform 0.3s ease-out;
-    cursor: grab;
-    flex-wrap: nowrap;
-  }
+.slider-track {
+  display: flex;
+  gap: 16px;
+  transition: transform 0.3s ease-out;
+  cursor: grab;
+  flex-wrap: nowrap;
+  will-change: transform;
+  width: max-content;
+}
 
-  .slider-track.dragging {
-    cursor: grabbing;
-    transition: none;
-  }
-  /* .slider-track {
-    display: flex;
-    gap: 16px;
-    transition: transform 0.3s ease-out;
-    cursor: grab;
-    user-select: none;
-    will-change: transform;
+.slider-track.dragging {
+  cursor: grabbing;
+  transition: none;
+}
 
-  } */
+.slider-track:active {
+  cursor: grabbing;
+}
 
-  .slider-track:active {
-    cursor: grabbing;
-  }
+.slider-card {
+  flex: 0 0 auto;
+  width: 324px;
+  height: 491px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 44px 44px -7px rgba(0, 0, 0, 0.08);
+}
 
-
-
-  .card-image{
-    width: 324px;
+.card-image {
+  width: 100%;
   height: 270.201px;
   flex-shrink: 0;
-  background: #E2FFEA;
-  }
-  /* .slider-card img {
-    width: 324px;
-    height: 270px;
-    object-fit: cover;
-    background: lightgray 50% / cover no-repeat;
-  } */
+  background: #e2ffea;
+  object-fit: cover;
+}
 
-  .card-content {
-    width: 292px;
-  /* height: 167px; */
-      height: 45%;
-    gap: 20px;
-  flex-shrink: 0;
-  border-color: #D0D5DD;
-  }
+.card-content {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  gap: 12px;
+}
 
-
-
-  .price-label {
-    color: var(--gray-500, #71717A);
+.price-label {
+  color: var(--gray-500, #71717a);
   font-family: Manrope;
   font-size: 11px;
   font-style: normal;
   font-weight: 500;
-  line-height: 18px; /* 163.636% */
+  line-height: 18px;
   letter-spacing: 1px;
   text-transform: uppercase;
-  }
+}
 
-  /* .price-value {
-    color: #18181B;
-    font-family: Manrope;
-    font-size: 18px;
-    font-weight: 700;
-    line-height: 24px;
-    margin-bottom: 16px;
-  } */
-
-
-
-  .title {
-    color: var(--Color-1, #151518);
-    font-family: Manrope;
-    font-size: 18px;
-    font-weight: 700;
-    line-height: 24px;
+.title {
+  color: var(--Color-1, #151518);
+  font-family: Manrope;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 24px;
   font-style: normal;
-    display: -webkit-box;
-    -webkit-line-clamp: 1;   /* جوج سطور */
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  /* button {
-    display: flex;
-    width: 292px;
-    padding: 10px 18px;
-    justify-content: center;
-    align-items: center;
-    border-radius: 8px;
-    border: 1px solid #D0D5DD;
-    background: #FFF;
-    box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
-    color: #344054;
-    font-family: Manrope;
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 24px;
-    cursor: pointer;
-  } */
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
-  button:hover {
-    background: #F9FAFB;
-  }
-  /* motorcycle-slider.component.css */
-  .slider-section {
-    padding: 32px 20px 48px;
-    background: #FFF;
-  }
-
-  @media (min-width: 768px) {
-    .slider-section {
-      padding: 32px 80px 48px;
-    }
-  }
-  /* 
-  .slider-container {
-    flex: 1;
-    max-width: 640px;
-    overflow: hidden;
-    position: relative;
-  } */
-
-
-  /* @media (min-width: 768px) {
-    .slider-container {
-      width: 640px; 
-    }
-  } */
-
-  /* 
-  .slider-track {
-    display: flex;
-    gap: 16px;
-    transition: transform 0.3s ease-out;
-    cursor: grab;
-    user-select: none;
-  }
-
-
-  .slider-track.dragging {
-    transition: none;
-    cursor: grabbing;
-  } */
-
-
-  @media (min-width: 768px) {
-    .slider-card {
-      width: 324px; /* Desktop width */
-    }
-  }
-
-  .slider-card img {
-    width: 100%;
-    height: 270px;
-    object-fit: cover;
-    background: lightgray 50% / cover no-repeat;
-  }
-
-  .card-content {
-    padding: 24px;
-  }
-
-  /* .card-content h3 {
-    color: #151518;
-    font-family: Manrope, sans-serif;
-    font-size: 18px;
-    font-weight: 700;
-    line-height: 24px;
-    margin-bottom: 8px;
-  } */
-
-  .price-label {
-    color: #71717A;
-    font-family: Manrope, sans-serif;
-    font-size: 11px;
-    font-weight: 500;
-    line-height: 18px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-bottom: 4px;
-  }
-
-  .price-value {
-    color: var(--gray-900, #18181B);
+.price-value {
+  color: var(--gray-900, #18181b);
   font-family: Manrope;
   font-size: 18px;
   font-style: normal;
   font-weight: 700;
-  line-height: 24px; /* 133.333% */
-  }
+  line-height: 24px;
+}
 
-  /* button {
-    display: flex;
-    width: 100%;
-    padding: 10px 18px;
-    justify-content: center;
-    align-items: center;
-    border-radius: 8px;
-    border: 1px solid #D0D5DD;
-    background: #FFF;
-    box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
-    color: #344054;
-    font-family: Manrope, sans-serif;
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 24px;
-    cursor: pointer;
-  } */
-
-  button:hover {
-    background: #F9FAFB;
-  }
-  .button{
-    cursor: pointer;
-  }
-  .button {
+.button {
+  cursor: pointer;
   display: flex;
-  width: 292px;
+  width: 100%;
   padding: 10px 18px;
   justify-content: center;
   align-items: center;
   gap: 8px;
   border-radius: 8px;
-  border: 1px solid var(--Gray-300, #D0D5DD);
-  background: var(--White, #FFF);
-
-  /* Shadow/xs */
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: var(--White, #fff);
   box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
-  }
+  margin-top: auto;
+}
 
-  .card-content button:hover {
-    background: #f3f4f6;
-  }
+.button:hover {
+  background: #f3f4f6;
+}
 
-
-
-  .slider-card {
-    /* width: 324px;
-    flex-shrink: 0;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    overflow: hidden;
-    background-color: white; */
-    width: 324px;
-  height: 491px;
-  }
-
-  .rtl .slider-track {
-    flex-direction: row-reverse;
-  }
-  /* .main-section{
-      display: flex;
+/* MAIN SECTION - THIS IS THE KEY FIX */
+.main-section {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
   padding: 32px 80px 48px 80px;
-  align-items: flex-start;
-  gap: 50px;
-  align-self: stretch;
-  background: #FFF;
-  } */
+  overflow: hidden; /* Prevent overflow */
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
 
+/* Slider container with proper constraints */
+.slider-container {
+  flex: 1;
+  overflow: hidden; /* Critical: prevents cards from overflowing */
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0; /* CRITICAL: allows flex item to shrink below content size */
+  box-sizing: border-box;
+}
+
+/* CRITICAL MEDIA QUERIES FOR 1024px - 1206px RANGE */
+
+/* Reduce padding for medium screens */
+@media (max-width: 1206px) {
   .main-section {
-    display: flex;
+    padding: 32px 40px 48px 40px;
+    gap: 24px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .main-section {
+    padding: 32px 20px 48px 20px;
+  }
+  
+  .slider-card {
+    width: 280px; /* Slightly smaller cards */
+  }
+}
+
+/* Desktop layout */
+@media (min-width: 768px) {
+  .main-section {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  
+  /* Left content - make it flexible */
+  .main-section > div:first-child {
+    flex: 0 0 auto;
+    max-width: 495px;
+    min-width: 350px;
+  }
+  
+  /* Slider container takes remaining space */
+  .slider-container {
+    flex: 1;
+    min-width: 0; /* Important for flexbox overflow handling */
+  }
+}
+
+/* Adjust for the specific problem range */
+@media (min-width: 1024px) and (max-width: 1206px) {
+  .main-section > div:first-child {
+    max-width: 400px;
+    min-width: 350px;
+  }
+  
+  .slider-card {
+    width: 280px;
+  }
+  
+  /* Reduce gap in the inline style or use this */
+  .main-section > div:first-child + div {
+    margin-left: 32px;
+  }
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .slider-section {
+    padding: 32px 20px 48px;
+  }
+  
+  .slider-card {
+    width: 100%;
+    max-width: 400px;
+  }
+}
+
+@media (max-width: 640px) {
+  .slider-card {
+    width: 100%;
+    min-width: 280px;
+  }
+}
+
+/* RTL Support */
+.rtl .slider-track {
+  flex-direction: row-reverse;
+}
+
+/* Additional styles to replace inline styles */
+.content-wrapper {
+  display: flex;
+  padding: 24px;
+  align-items: center;
+  gap: 72px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.left-content {
+  flex: 0 0 auto;
+  max-width: 495px;
+}
+
+.text-content {
+  display: flex;
+  align-items: flex-start;
+  align-content: flex-start;
+  gap: 40px 45px;
+  flex-wrap: wrap;
+}
+
+.main-title {
+  width: 100%;
+  flex-shrink: 0;
+  color: var(--gray-900, #18181b);
+  font-family: Manrope;
+  font-size: 52px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 66px;
+}
+
+.description {
+  color: var(--gray-900, #18181b);
+  font-family: Manrope;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px;
+}
+
+.cta-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 45px;
+  flex: 1 0 0;
+}
+
+.button-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.view-all-button {
+  cursor: pointer;
+  display: flex;
+  height: 48px;
+  padding: 17.25px 57.63px 14.75px 57.63px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  border: 2px solid var(--Primary---Navy, #032c40);
+  background: transparent;
+}
+
+.button-text {
+  color: var(--Primary---Navy, #032c40);
+  text-align: center;
+  font-family: Manrope;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 16px;
+  margin: 0;
+}
+
+.stats {
+  display: flex;
+  align-items: center;
+  gap: 45px;
+}
+
+.stat-item {
+  min-width: 86px;
+}
+
+.stat-number {
+  color: var(--gray-900, #18181b);
+  font-family: Manrope;
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: 46px;
+  margin: 0 0 4px 0;
+}
+
+.stat-label {
+  color: var(--gray-500, #71717a);
+  font-family: Manrope;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  margin: 0;
+}
+
+.no-results {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  background: #f9fafb;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.no-results-text {
+  font-size: 18px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* Responsive adjustments for content wrapper */
+@media (max-width: 1206px) {
+  .content-wrapper {
+    gap: 48px;
+  }
+  
+  .main-title {
+    font-size: 42px;
+    line-height: 52px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .content-wrapper {
+    gap: 32px;
+    padding: 16px;
+  }
+  
+  .left-content {
+    max-width: 380px;
+  }
+  
+  .main-title {
+    font-size: 36px;
+    line-height: 46px;
+  }
+  
+  .stats {
+    gap: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .content-wrapper {
     flex-direction: column;
     gap: 32px;
-    /* padding: 32px 16px; */
-    padding: 32px 80px 48px 80px;
-  ;
   }
-
-  @media(min-width: 768px){
-    .main-section {
-      flex-direction: row;   /* left + right */
-      align-items: flex-start;
-      gap: 50px;
-    }
+  
+  .left-content {
+    max-width: 100%;
   }
-
-  .slider-card {
-    flex: 0 0 auto;
-    width: calc(33.333% - 16px); /* 3 cards in desktop */
-    min-width: 200px;             /* minimal card width */
-    max-width: 324px;         /* max card width */
-    height: auto;                 /* auto height */
-    border-radius: 8px;
-    background: #fff;
-    /* box-shadow: 0 4px 10px rgba(0,0,0,0.1); */
-    box-shadow: 0 44px 44px -7px rgba(0, 0, 0, 0.08);
+  
+  .main-title {
+    font-size: 32px;
+    line-height: 42px;
   }
-
-  @media (max-width: 1024px) {
-    .slider-card {
-      width: calc(50% - 12px);   /* 2 cards tablet */
-    }
-  }
-
-  @media (max-width: 640px) {
-    .slider-card {
-      width: 100%;               /* 1 card mobile */
-    }
-  }
-
-
-
-
-  /* .slider-card {
-    width: 324px;
-    height: 491px;
-    flex-shrink: 0;
-
-    background: #fff;
-    border-radius: 3px;
-  background: var(--base-white, #FFF);
-
-
-  box-shadow: 0 44px 44px -7px rgba(0, 0, 0, 0.08);
-  } */
-
-  /* 
-  .slider-container {
-    position: relative;
-    overflow: hidden;
-    padding: 10px 20px; 
-  } */
-  /* .slider-track {
-    display: flex;
-    gap: 16px;
-  } */
-  .slider-card {
-    flex: 0 0 auto;
-    width: 324px;
-    height: 491px;
-
-    background: #fff;
-    /* box-shadow: 0 4px 10px rgba(0,0,0,0.1); */
-    border-radius: 4px;
-  background: var(--base-white, #FFF);
-
-  /* Shadow 1 */
-  box-shadow: 0 44px 44px -7px rgba(0, 0, 0, 0.08);
-  }
-
-
-  .slider-container {
-    flex: 1 1 auto;
-    overflow: hidden;
-    position: relative;
-    width: 100%;          /* full width of parent */
-    max-width: 100%;      /* prevent it to overflow */
-    /* padding: 10px 16px;      */
-    padding:0px 0px 65px 35px;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-  }
-
-
-  /* .slider-container {
-    position: relative;
-    overflow: hidden;
-  } */
-
-  .slider-container::before,
-  .slider-container::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    width: 40px; 
-    height: 100%;
-    pointer-events: none;
-    z-index: 2;
-  }
-
-  /* .slider-container::before {
-    left: 0;
-    background: linear-gradient(to right, rgba(255,255,255,1), rgba(255,255,255,0));
-  }
-
-  .slider-container::after {
-    right: 0;
-    background: linear-gradient(to left, rgba(255,255,255,1), rgba(255,255,255,0));
-  } */
-  .card-content {
-    display: flex;
-    flex-direction: column;
-    padding: 24px;
-    width: 292px;
-    border-color: #D0D5DD;
-
-  }
-
-
-
-  .card-content button {
-    margin-top: auto; /* يخلي البوتون ديما ملصق للتحت */
-  }
+}

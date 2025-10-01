@@ -44,7 +44,7 @@
   <div class="main-container">
     <div class="content-container">
       <!-- Side Bar Start - Moved to left side -->
-      <div class="sidebar" style="width: 25%">
+      <div class="sidebar" style="width: 100%">
         <div class="container-sidebar">
           <h2 class="filter-label">FILTERS</h2>
           <div class="list-section">
@@ -96,27 +96,6 @@
                 </div>
               </div>
             </div>
-            <!-- <div class="filter-section">
-            <div class="filter-header" (click)="toggleCountry()">
-              <span class="filter-title">Brand</span>
-              <span class="toggle-icon">{{ isCountryOpen ? "−" : "+" }}</span>
-            </div>
-
-            <div class="filter-content" *ngIf="isCountryOpen">
-              <div class="filter-item" *ngFor="let brand of brands">
-                <input
-                  type="checkbox"
-                  [id]="'brand-' + brand.id"
-                  [checked]="brand.checked"
-                  (change)="brand.checked = !brand.checked; onBrandChange()"
-                />
-                <label [for]="'brand-' + brand.id">
-                  {{ brand.name }}
-                  <span class="count">({{ brand.listings_count }})</span>
-                </label>
-              </div>
-            </div>
-          </div> -->
     <div class="demo-container">
   <div class="filter-header">
     <span class="filter-title">Brand</span>
@@ -173,51 +152,6 @@
     </div>
   </div>
 </div>
-            <!-- <div class="filter-section">
-              <div class="filter-header" (click)="toggleCountry()">
-                <span class="filter-title">Brand</span>
-                <span class="toggle-icon">{{ isCountryOpen ? "−" : "+" }}</span>
-              </div>
-
-              <div class="filter-content" *ngIf="isCountryOpen">
-                <div class="search-container">
-                  <input
-                    type="text"
-                    class="search-input"
-                    placeholder="Search by Brand"
-                    [(ngModel)]="brandSearchTerm"
-                    (input)="onBrandSearchChange($event)"
-                  />
-                  <div class="search-icon">
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                      <path
-                        d="M17.5 17.5L12.5001 12.5M14.1667 8.33333C14.1667 11.555 11.555 14.1667 8.33333 14.1667C5.11167 14.1667 2.5 11.555 2.5 8.33333C2.5 5.11167 5.11167 2.5 8.33333 2.5C11.555 2.5 14.1667 5.11167 14.1667 8.33333Z"
-                        stroke="#FF6B35"
-                        stroke-width="1.66667"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                    </svg>
-                  </div>
-                </div>
-
-                <div class="brand-list">
-                  <div class="filter-item" *ngFor="let brand of filteredBrands">
-                    <input
-                      type="checkbox"
-                      [id]="'brand-' + brand.id"
-                      [checked]="brand.checked"
-                      (change)="brand.checked = !brand.checked; onBrandChange()"
-                      class="brand-checkbox"
-                    />
-                    <label [for]="'brand-' + brand.id" class="brand-label">
-                      {{ brand.name }}
-                      <span class="count">({{ brand.listings_count }})</span>
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div> -->
             <div class="demo-container">
               <div class="filter-section">
                 <div class="filter-header">
@@ -300,39 +234,6 @@
               Category
             </button>
           </div>
-
-          <!-- Model Tab Content -->
-          <!-- <div *ngIf="activeTab === 'model'" class="button-group">
-            <div class="filter-select">
-              <select [(ngModel)]="selectedBrand" class="brand-select">
-                <option value="">Brand</option>
-                <option *ngFor="let brand of brands" [value]="brand.id">
-                  {{ brand.name }}
-                </option>
-              </select>
-            </div>
-
-            <div class="filter-select">
-              <select [(ngModel)]="selectedModel" class="model-select">
-                <option value="">Model</option>
-                <option *ngFor="let model of filteredModels" [value]="model.id">
-                  {{ model.name }}
-                </option>
-              </select>
-            </div>
-
-            <div class="filter-select">
-              <select [(ngModel)]="selectedYear" class="year-select">
-                <option value="">Year</option>
-                <option *ngFor="let year of years" [value]="year.value">
-                  {{ year.label }}
-                </option>
-              </select>
-            </div>
-
-            <button class="search-button" (click)="onSearch()">Search</button>
-          </div> -->
-
           <div *ngIf="activeTab === 'model'" class="button-group">
             <div class="filter-select">
               <select
@@ -390,12 +291,7 @@
                 >
               </div>
             </div>
-            <!-- <button
-              class="search-button category-search-btn"
-              (click)="onSearch()"
-            >
-              Search
-            </button> -->
+
           </div>
         </div>
 
@@ -477,6 +373,15 @@
           (close)="closeLoginModal()"
         ></app-login-modal>
 
+    </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+
         <!-- Loading State -->
         <!-- <div
         *ngIf="isLoading"
@@ -512,7 +417,4 @@
       >
         🚫 No motorcycles found matching your filters.
       </div> -->
-      </div>
-    </div>
-  </div>
-</div>
+      

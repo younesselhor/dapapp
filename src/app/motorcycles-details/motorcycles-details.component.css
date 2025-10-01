@@ -1,14 +1,3 @@
-/* Main Layout */
-/* .main-container {
-
-  display: flex;
-max-height: 2857px;
-flex-direction: column;
-align-items: flex-start;
-gap: 50px;
-align-self: stretch;
-background: #FFF;
-} */
 
 .main-container {
   display: flex;
@@ -24,23 +13,21 @@ background: #FFF;
   flex-direction: column;
   gap: 32px;
   flex: 1;
-  width: 75%;
+  /* width: 75%; */
+  width: 100%;
 }
-/* .content-container {
-  display: flex;
-width: 1280px;
-align-items: flex-start;
-gap: 48px;
-flex: 1 0 0;
-} */
+
 .content-container {
   display: flex;
-  /* flex-wrap: wrap; allow wrapping for smaller screens */
-  width: 100%; /* instead of fixed 1280px */
-  /* max-width: 1280px; */
-  align-items: flex-start;
+  width: 100%;
+  max-width: 1280px;   /* optional center constraint */
+  margin: 0 auto;      /* center if max-width applied */
   gap: 48px;
-  flex: 1 0 0;
+  align-items: flex-start;
+
+  /* align-items: flex-start;
+  gap: 48px;
+  flex: 1 0 0; */
 }
 .main-container,
 .main-page {
@@ -48,35 +35,56 @@ flex: 1 0 0;
 }
 
 .main-page {
-  display: flex;
-  height: 100%;
+  /* display: flex;
+  height: 100%; */
   /* max-height: 2857px; */
-  max-width: 1440px;
-  width: 100%;
+  /* max-width: 1440px;
+  width: 100%; */
   /* padding: 32px 80px 48px 70px; */
-  flex-direction: column;
+  /* flex-direction: column;
   align-items: flex-start;
   gap: 50px;
-  align-self: stretch;
+  align-self: stretch; */
+    display: flex;
+  flex-direction: column;
+  width: 100%;          /* full width */
+  max-width: 100%;      /* prevent shrinking */
+  align-items: stretch; /* make children expand full width */
 }
 .main-cards {
-  display: grid;
+  /* display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 31px;
   align-self: stretch;
+  width: 100%; */
+    display: grid;
+  /* grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 31px;
+  width: 100%; */
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 31px;
   width: 100%;
 }
 .cards {
+    /* width: 100%; 
+  max-width: 320px; 
   display: flex;
-  width: 290px;
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
   border-radius: 4px;
   border: 0.5px solid var(--Gray-200, #e4e7ec);
   background: var(--base-white, #fff);
-
-  /* Shadow 1 */
+  box-shadow: 0 44px 44px -7px rgba(0, 0, 0, 0.08); */
+  display: flex;
+  width: 100%; /* au lieu de 290px */
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  border-radius: 4px;
+  border: 0.5px solid var(--Gray-200, #e4e7ec);
+  background: var(--base-white, #fff);
   box-shadow: 0 44px 44px -7px rgba(0, 0, 0, 0.08);
 }
 /* Sidebar Styles */
@@ -94,6 +102,7 @@ flex: 1 0 0;
   align-items: flex-start;
   flex-shrink: 0;
   background: #fff;
+  flex: 0 0 280px;
 }
 .container-sidebar {
   display: flex;
@@ -494,7 +503,8 @@ input[type="range"]::-moz-range-thumb {
 
 
 input[type="range"] {
-  width: 250px; /* hna t7dd l3ard dialo */
+  /* width: 250px; */
+      width: 100%;
   background: transparent; /* bach maytghashach track */
 }
 
