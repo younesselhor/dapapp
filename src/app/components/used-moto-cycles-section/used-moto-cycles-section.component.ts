@@ -6,6 +6,7 @@ import { LocationSService } from '../../services/location-s.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../services/auth.service';
 import { LoginModalComponent } from '../login-modal.component';
+import { TimeAgoPipe } from '../../pipe/timeAgoPipe';
 
 
 interface Motorcycle {
@@ -20,12 +21,14 @@ interface Motorcycle {
     model: string;
     year: number;
   };
+  city: string;
+  created_at: string;
 }
 
 @Component({
   selector: 'app-used-moto-cycles-section',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslateModule, LoginModalComponent],
+  imports: [CommonModule, RouterModule, TranslateModule, LoginModalComponent,TimeAgoPipe,],
   templateUrl: './used-moto-cycles-section.component.html',
   styleUrls: ['./used-moto-cycles-section.component.css'],
 })
