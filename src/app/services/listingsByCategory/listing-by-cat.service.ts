@@ -34,7 +34,15 @@ getMotorcyclesByCategory(countryId?: string|null): Observable<any> {
     : `${this.baseUrl}listings/by-category/1?country=all`;
   return this.http.get(url);
   
+}getPlatebyCountryName(countryId?: string|null): Observable<any> {
+  const url = countryId
+    ? `${this.baseUrl}listings/by-category/3?country=${countryId}`
+    : `${this.baseUrl}listings/by-category/3?country=all`;
+  return this.http.get(url);  
 }
+
+
+
   // getBikePartByCategory(countryId: any) {
   //   return this.http.get(`${this.baseUrl}listings/by-category/2?country=${countryId}`);
   // }

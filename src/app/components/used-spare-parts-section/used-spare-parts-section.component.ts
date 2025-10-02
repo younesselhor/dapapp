@@ -64,6 +64,7 @@ export class UsedSparePartsSectionComponent implements OnInit {
 
 
     this.locationService.selectedCountry$.subscribe((country) => {
+       this.currentPosition = 0;
       if (country?.name) {
         this.countryname = country.name;
         this.getBikePart();
@@ -92,6 +93,7 @@ export class UsedSparePartsSectionComponent implements OnInit {
 
   getBikePart() {
     const countryToSearch = this.countryname || 'all';
+     this.currentPosition = 0;
     this.listinbyCat
       .getBikePartByCategory(countryToSearch)
       .subscribe((res: any) => {
@@ -103,6 +105,7 @@ export class UsedSparePartsSectionComponent implements OnInit {
         } else {
           this.searchedCountryMessage = null;
         }
+         this.currentPosition = 0;
       });
   }
   get visibleParts() {

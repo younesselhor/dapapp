@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
 import { LoginModalComponent } from '../login-modal.component';
 import { AuthService } from '../../services/auth.service';
+import { ListingByCatService } from '../../services/listingsByCategory/listing-by-cat.service';
 
 interface Plate {
   id: number;
@@ -94,6 +95,7 @@ export class PlatesSectionComponent implements OnInit, AfterViewInit, OnDestroy 
     private locationService: LocationSService,
     @Inject(PLATFORM_ID) private platformId: Object,
       private authService: AuthService,
+      private listing : ListingByCatService
   ) {
     console.log('PlatesSectionComponent constructed at:', new Date().toISOString());
   }
@@ -104,18 +106,28 @@ export class PlatesSectionComponent implements OnInit, AfterViewInit, OnDestroy 
     });
 
     this.checkScreenSize();
-    this.fetchPlates();
 
-    // FIXED: Single subscription management
-    this.locationSubscription = this.locationService.selectedCountry$.subscribe((country) => {
-      if (this.isDestroyed) return;
-      
-      const newCountryName = country?.name;
-      if (newCountryName && newCountryName !== this.countryname) {
-        this.countryname = newCountryName;
-        this.fetchPlates();
+    this.locationService.selectedCountry$.subscribe((country) => {
+       this.currentPosition = 0;
+      if (country?.name) {
+        this.countryname = country.name;
+        this.getPlateByCountryName();
+      } else {
+        this.countryname = 'all';
+        this.getPlateByCountryName();
       }
     });
+
+    // FIXED: Single subscription management
+    // this.locationSubscription = this.locationService.selectedCountry$.subscribe((country) => {
+    //   if (this.isDestroyed) return;
+      
+    //   const newCountryName = country?.name;
+    //   if (newCountryName && newCountryName !== this.countryname) {
+    //     this.countryname = newCountryName;
+    //     this.fetchPlates();
+    //   }
+    // });
   }
 
 
@@ -158,38 +170,66 @@ export class PlatesSectionComponent implements OnInit, AfterViewInit, OnDestroy 
   return this.cardWidth; // Return fallback during SSR
 }
 
-  fetchPlates(): void {
-    if (this.isLoading || this.isDestroyed) return;
+//   fetchPlates(): void {
+//     if (this.isLoading || this.isDestroyed) return;
 
-    this.isLoading = true;
+//     this.isLoading = true;
     
-    const url = this.countryname
-      ? `https://be.dabapp.co/api/listings/by-category/3?country=${this.countryname}`
-      : `https://be.dabapp.co/api/listings/by-category/3?country=all`;
+//     // const url = this.countryname
+//     //   ? `https://be.dabapp.co/api/listings/by-category/3?country=${this.countryname}`
+//     //   : `https://be.dabapp.co/api/listings/by-category/3?country=all`;
 
-    this.http.get<any>(url).subscribe({
-      next: (response) => {
-        if (this.isDestroyed) return;
+//     // this.http.get<any>(url).
+// this.listing.getPlatebyCountryName(this.countryname). 
+//     subscribe({
+//       next: (response) => {
+//         if (this.isDestroyed) return;
         
-        const listings = response.listings || [];
-        this.plates = listings.filter((plate: Plate) => plate.license_plate);
+//         const listings = response.listings || [];
+//         this.plates = listings.filter((plate: Plate) => plate.license_plate);
 
-        if (response.showing_all_countries && response.searched_country) {
-          this.searchedCountryMessage = `No listings found for "${response.searched_country}". Showing all countries instead.`;
-        } else {
-          this.searchedCountryMessage = null;
-        }
+//         if (response.showing_all_countries && response.searched_country) {
+//           this.searchedCountryMessage = `No listings found for "${response.searched_country}". Showing all countries instead.`;
+//         } else {
+//           this.searchedCountryMessage = null;
+//         }
 
-        this.isLoading = false;
-      },
-      error: (error) => {
-        if (this.isDestroyed) return;
-        console.error('Error fetching plates:', error);
-        this.searchedCountryMessage = 'Unable to load listings.';
-        this.isLoading = false;
+//         this.isLoading = false;
+//       },
+//       error: (error) => {
+//         if (this.isDestroyed) return;
+//         console.error('Error fetching plates:', error);
+//         this.searchedCountryMessage = 'Unable to load listings.';
+//         this.isLoading = false;
+//       }
+//     });
+//   }
+
+getPlateByCountryName() {
+  const countryToSearch = this.countryname || 'all';
+  
+  // Reset slider position when country changes
+  this.currentPosition = 0;
+  
+  this.listing
+    .getPlatebyCountryName(countryToSearch)
+    .subscribe((res: any) => {
+      const listings = res.listings || [];
+      this.plates = listings.filter((plate: Plate) => plate.license_plate);
+      
+      if (!this.countryname) {
+        this.searchedCountryMessage = 'Showing all countries';
+      } else if (res.showing_all_countries && res.searched_country) {
+        this.searchedCountryMessage = `No listings found for "${res.searched_country}". Showing all countries instead.`;
+      } else {
+        this.searchedCountryMessage = null;
       }
+      
+      // Also reset position after data loads (in case of async issues)
+      this.currentPosition = 0;
     });
-  }
+}
+
 
   startDrag(event: MouseEvent | TouchEvent) {
     if (!this.shouldSlide) return;
