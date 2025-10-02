@@ -65,6 +65,7 @@ export class UsedMotoCyclesSectionComponent {
     });
 
     this.locationService.selectedCountry$.subscribe((country) => {
+       this.currentPosition = 0;
       if (country?.name) {
         this.countryname = country.name;
         this.getMotorcycles();
@@ -86,10 +87,13 @@ export class UsedMotoCyclesSectionComponent {
   }
   getMotorcycles() {
     const countryToSearch = this.countryname || 'all';
+
+     this.currentPosition = 0;
     this.listings
       .getMotorcyclesByCategory(countryToSearch)
       .subscribe((res: any) => {
         this.motorcycles = res.listings || [];
+        
         if (!this.countryname) {
           this.searchedCountryMessage = 'Showing all countries';
         } else if (res.showing_all_countries && res.searched_country) {
@@ -97,6 +101,7 @@ export class UsedMotoCyclesSectionComponent {
         } else {
           this.searchedCountryMessage = null;
         }
+         this.currentPosition = 0;
       });
   }
 
@@ -121,7 +126,7 @@ export class UsedMotoCyclesSectionComponent {
     this.showLoginModal = false;
   }
 
-  // Check if we should allow sliding (only if there are more than 3 items)
+
   get shouldSlide(): boolean {
     return this.motorcycles.length > 3;
   }
@@ -198,6 +203,25 @@ export class UsedMotoCyclesSectionComponent {
     // Maximum position is the difference between total width and container width (negative)
     return -(totalWidth - cardWidth);
   }
+
+//   getMaxPosition(): number {
+//   if (!this.shouldSlide || this.motorcycles.length <= 0) return 0;
+
+//   const cardWidth = this.getCardWidth();
+//   const gap = this.gap;
+//   const visibleCards = this.getVisibleCards();
+
+//   // total width of all cards + gaps
+//   const totalWidth =
+//     this.motorcycles.length * cardWidth + (this.motorcycles.length - 1) * gap;
+
+//   // visible width (container width)
+//   const visibleWidth = visibleCards * cardWidth + gap;
+
+//   // max scroll position = -(totalWidth - visibleWidth)
+//   return -(totalWidth - visibleWidth);
+// }
+
   endDrag() {
     if (!this.shouldSlide) return;
 
