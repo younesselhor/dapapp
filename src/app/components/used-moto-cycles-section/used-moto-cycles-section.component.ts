@@ -117,6 +117,7 @@ export class UsedMotoCyclesSectionComponent {
     if (this.isLoggedIn) {
       this.router.navigate(['/listing', id]);
     } else {
+      sessionStorage.setItem('redirectAfterLogin', `/listing/${id}`);
       this.openLoginModal();
     }
   }
@@ -195,8 +196,7 @@ export class UsedMotoCyclesSectionComponent {
     const visibleCards = this.getVisibleCards();
 
     // Calculate total width of all cards including gaps
-    const totalWidth =
-      this.motorcycles.length * cardWidth + (this.motorcycles.length - 1) * gap;
+    const totalWidth = this.motorcycles.length * cardWidth + (this.motorcycles.length - 1) * gap;
 
     // Calculate visible width (container width)
     // const containerWidth = this.getSliderContainerWidth();

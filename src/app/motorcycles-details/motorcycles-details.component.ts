@@ -32,6 +32,7 @@ interface Motorcycle {
   location?: { city: string; country: string };
   listing_date?: Date;
   condition?: string;
+  currency?: string;
   // Add other properties as needed
   // add other properties as needed
 }

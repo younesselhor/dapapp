@@ -657,3 +657,43 @@ input[type="range"] {
   border-color: #ff6b35;
   color: white;
 }
+
+
+.top-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 40px;
+  flex: 1 0 0;
+}
+.top-content-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  align-self: stretch;
+}
+/* .top-content-img{
+  width: 388.09px;
+height: 289.178px;
+position: absolute;
+right: -9.09px;
+bottom: -129.178px;
+} */
+.top-content-img {
+  /* position: relative; 
+  width: 100%;
+  max-width: 388px;
+  height: auto;
+  bottom: 0;
+  right: 0; */
+      position: relative;
+    display: flex
+;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 40px;
+    flex: 1 0 0;
+    /* top: 0; */
+    bottom: 71px;
+}

@@ -65,6 +65,7 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 31px;
   width: 100%;
+  min-width: 100%;
 }
 .cards {
     /* width: 100%; 
