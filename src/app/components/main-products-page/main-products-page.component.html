@@ -75,7 +75,6 @@
   <div
     *ngIf="listing.category_id === 3 && listing.license_plate"
     class="PlateContainer"
-
   >
     <div class="plate-display" [ngClass]="getPlateBackgroundClass(listing)">
       <!-- Non-Saudi plate - scaled up -->
@@ -308,22 +307,23 @@
       </div>
 
       <!-- Rest of your card content remains the same -->
-     
-         <ng-container *ngIf="isMotorcycle">
-           <span class="h-1">
-           {{ listing.motorcycle.brand }} {{ listing.motorcycle.model }}{{ listing.motorcycle.year }} 
-             </span>
-         </ng-container>
-         <ng-container *ngIf="isSparePart">
-           <span class="h-1">
-           {{ listing.spare_part.brand }} {{ listing.spare_part.category }} 
-             </span>  
-            </ng-container>
-       <ng-container *ngIf="isplate">
-           <span class="h-1">
-           {{ listing.license_plate.plate_format.name }} 
-             </span>  
-            </ng-container>
+
+      <ng-container *ngIf="isMotorcycle">
+        <span class="h-1">
+          {{ listing.motorcycle.brand }} {{ listing.motorcycle.model
+          }}{{ listing.motorcycle.year }}
+        </span>
+      </ng-container>
+      <ng-container *ngIf="isSparePart">
+        <span class="h-1">
+          {{ listing.spare_part.brand }} {{ listing.spare_part.category }}
+        </span>
+      </ng-container>
+      <ng-container *ngIf="isplate">
+        <span class="h-1">
+          {{ listing.license_plate.plate_format.name }}
+        </span>
+      </ng-container>
       <div class="mt-10">
         <span class="sar">SAR</span
         ><span class="price">{{ listing.price }}</span>
@@ -674,15 +674,8 @@
       </div>
     </div>
   </div>
-  <!-- Details Table -->
-   <ng-container *ngIf="!isplate">
-  <div class="mt-10 mb-6">
-    <h2 class="text-xl font-semibold mb-4 text-gray-800">Details</h2>
-    <div class="grid grid-cols-1 ">
-      <!-- Motorcycle Details -->
 
-      <ng-container *ngIf="isMotorcycle">
-        <!-- <div class="grid grid-cols-2 gap-2">
+  <!-- <div class="grid grid-cols-2 gap-2">
 
           <div class="bg-gray-50 p-3 rounded">
             <p class="text-gray-700">
@@ -734,64 +727,120 @@
             </p>
           </div>
         </div> -->
-        <div class="details-Style">
-          <div class="details-Style-item">
-          <span class="detail-title">Brand</span><span class="detail-value">{{ listing.motorcycle.brand }}</span>
-          </div>
-          <div class="details-Style-item">
-          <span class="detail-title">Model</span><span class="detail-value">{{ listing.motorcycle.model }}</span>
-          </div>
-          <div class="details-Style-item">
-          <span class="detail-title">Year </span><span class="detail-value">{{ listing.motorcycle.year }}</span>
-          </div>
-        </div>
-      
-         <div class="details-Stylechange">
-          <div class="details-Style-item">
-          <span class="detail-title">Engine Capacity </span><span class="detail-value">{{ listing.motorcycle.engine }}</span>
-          </div>
-          <div class="details-Style-item">
-          <span class="detail-title">Kilometer </span><span class="detail-value">{{ listing.motorcycle.mileage }} km</span>
-          </div>
-          <div class="details-Style-item">
-          <span class="detail-title">Transmission </span><span class="detail-value">{{ listing.motorcycle.transmission }}</span>
-          </div>
-        </div>
+  <!-- Details Table -->
+  <ng-container *ngIf="!isplate">
+    <div class="mt-10 mb-6">
+      <h2 class="text-xl font-semibold mb-4 text-gray-800">Details</h2>
+      <div class="grid grid-cols-1">
+        <!-- Motorcycle Details -->
 
-        <div class="details-Style">
-          <div class="details-Style-item">
-          <span class="detail-title">Vehicle Body Condition</span><span class="detail-value">{{ listing.motorcycle.body_condition }}</span>
+        <ng-container *ngIf="isMotorcycle">
+          <div class="details-Style">
+            <div class="details-Style-item">
+              <span class="detail-title">Brand</span
+              ><span class="detail-value">{{ listing.motorcycle.brand }}</span>
+            </div>
+            <div class="details-Style-item">
+              <span class="detail-title">Model</span
+              ><span class="detail-value">{{ listing.motorcycle.model }}</span>
+            </div>
+            <div class="details-Style-item">
+              <span class="detail-title">Year </span
+              ><span class="detail-value">{{ listing.motorcycle.year }}</span>
+            </div>
           </div>
-          <div class="details-Style-item">
-          <span class="detail-title">Condition</span><span class="detail-value">{{ listing.motorcycle.general_condition }}</span>
+
+          <div class="details-Stylechange">
+            <div class="details-Style-item">
+              <span class="detail-title">Engine Capacity </span
+              ><span class="detail-value">{{ listing.motorcycle.engine }}</span>
+            </div>
+            <div class="details-Style-item">
+              <span class="detail-title">Kilometer </span
+              ><span class="detail-value"
+                >{{ listing.motorcycle.mileage }} km</span
+              >
+            </div>
+            <div class="details-Style-item">
+              <span class="detail-title">Transmission </span
+              ><span class="detail-value">{{
+                listing.motorcycle.transmission
+              }}</span>
+            </div>
           </div>
-          <div class="details-Style-item">
-          <span class="detail-title">Vehicle Care </span><span class="detail-value">{{ listing.motorcycle.vehicle_care }}</span>
+
+          <div class="details-Style">
+            <div class="details-Style-item">
+              <span class="detail-title">Vehicle Body Condition</span
+              ><span class="detail-value">{{
+                listing.motorcycle.body_condition
+              }}</span>
+            </div>
+            <div class="details-Style-item">
+              <span class="detail-title">Condition</span
+              ><span class="detail-value">{{
+                listing.motorcycle.general_condition
+              }}</span>
+            </div>
+            <div class="details-Style-item">
+              <span class="detail-title">Vehicle Care </span
+              ><span class="detail-value">{{
+                listing.motorcycle.vehicle_care
+              }}</span>
+            </div>
           </div>
-        </div>
-      </ng-container>
 
+           <div class="details-Stylechange">
+            <div class="details-Style-item">
+              <span class="detail-title">Is Modified?</span>
+              
+              <span class="detail-value">{{ listing.motorcycle.modified  ? 'Yes' : 'No' }}</span>
 
+              
+            </div>
+            <div class="details-Style-item">
+              <span class="detail-title">Has Warranty ? </span
+              ><span class="detail-value"
+                >{{ listing.motorcycle.warranty ? 'Yes' : 'No' }}</span
+              >
+            </div>
+            <div class="details-Style-item">
+              <span class="detail-title">The Seller Is a  </span
+              ><span class="detail-value">{{
+                listing.motorcycle.seller_type
+              }}</span>
+            </div>
+          </div>
+        </ng-container>
 
-      <!-- Spare Part Details -->
+        <!-- Spare Part Details -->
 
-      <ng-container *ngIf="isSparePart">
-        <div class="details-Style" *ngIf="listing.spare_part.compatible_motorcycles?.length > 0">
-  <div class="details-Style-item">
-    <span class="detail-title">Compatible Brand</span>
-    <span class="detail-value">{{ listing.spare_part.compatible_motorcycles[0].brand }}</span>
-  </div>
-  <div class="details-Style-item">
-    <span class="detail-title">Compatible Model</span>
-    <span class="detail-value">{{ listing.spare_part.compatible_motorcycles[0].model }}</span>
-  </div>
-  <div class="details-Style-item">
-    <span class="detail-title">Compatible Year</span>
-    <span class="detail-value">{{ listing.spare_part.compatible_motorcycles[0].year }}</span>
-  </div>
-</div>
-      
-         <!-- <div class="details-Stylechange">
+        <ng-container *ngIf="isSparePart">
+          <div
+            class="details-Style"
+            *ngIf="listing.spare_part.compatible_motorcycles?.length > 0"
+          >
+            <div class="details-Style-item">
+              <span class="detail-title">Compatible Brand</span>
+              <span class="detail-value">{{
+                listing.spare_part.compatible_motorcycles[0].brand
+              }}</span>
+            </div>
+            <div class="details-Style-item">
+              <span class="detail-title">Compatible Model</span>
+              <span class="detail-value">{{
+                listing.spare_part.compatible_motorcycles[0].model
+              }}</span>
+            </div>
+            <div class="details-Style-item">
+              <span class="detail-title">Compatible Year</span>
+              <span class="detail-value">{{
+                listing.spare_part.compatible_motorcycles[0].year
+              }}</span>
+            </div>
+          </div>
+
+          <!-- <div class="details-Stylechange">
           <div class="details-Style-item">
           <span class="detail-title">Engine Capacity </span><span class="detail-value">{{ listing.spare_part.engine }}</span>
           </div>
@@ -803,21 +852,24 @@
           </div>
         </div> -->
 
-        <div class="details-Stylechange">
-          <div class="details-Style-item">
-          <span class="detail-title">Brand</span><span class="detail-value">{{ listing.spare_part.brand }}</span>
-          </div>
-          <div class="details-Style-item">
-          <span class="detail-title">Category</span><span class="detail-value">{{ listing.spare_part.category }}</span>
-          </div>
-          <!-- <div class="details-Style-item">
+          <div class="details-Stylechange">
+            <div class="details-Style-item">
+              <span class="detail-title">Brand</span
+              ><span class="detail-value">{{ listing.spare_part.brand }}</span>
+            </div>
+            <div class="details-Style-item">
+              <span class="detail-title">Category</span
+              ><span class="detail-value">{{
+                listing.spare_part.category
+              }}</span>
+            </div>
+            <!-- <div class="details-Style-item">
           <span class="detail-title">Vehicle Care </span><span class="detail-value">{{ listing.spare_part.vehicle_care }}</span>
           </div> -->
-        </div>
-      </ng-container>
-   
+          </div>
+        </ng-container>
+      </div>
     </div>
-  </div>
   </ng-container>
 
   <div class="mb-8">

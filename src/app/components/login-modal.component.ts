@@ -1,8 +1,8 @@
-import { Component, EventEmitter, Output, OnDestroy, inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, OnDestroy, inject, OnInit, PLATFORM_ID, Inject, Input } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthService } from '../services/auth.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { AuthUser } from '../interfaces/user-interface';
 import { Router, RouterLink } from '@angular/router';
 // import { Auth, RecaptchaVerifier, signInWithPhoneNumber, signInWithPopup, GoogleAuthProvider } from '@angular/fire/auth';
@@ -18,6 +18,7 @@ import { Router, RouterLink } from '@angular/router';
 export class LoginModalComponent implements OnDestroy, OnInit {
   // private authInstance = inject(Auth);
   @Output() close = new EventEmitter<void>();
+  @Input() redirectUrl: string | null = null;
 
   loginForm: FormGroup;
   otpForm: FormGroup;
@@ -60,6 +61,7 @@ showPassword = false;
     private auth: AuthService,
     private cookieService: CookieService,
     private router: Router,
+     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.loginForm = this.fb.group({
       login: ['', Validators.required],
@@ -89,30 +91,30 @@ this.resetPasswordForm = this.fb.group({
 
   ngOnInit() {
     this.onLoginInputChange();
-    this.loadRecaptcha();
+    // this.loadRecaptcha();
   }
 
   
-  loadRecaptcha() {
-    // Check if script already exists
-    if (document.querySelector('script[src*="recaptcha"]')) {
-      this.recaptchaLoaded = true;
-      return;
-    }
+  // loadRecaptcha() {
+  //   // Check if script already exists
+  //   if (document.querySelector('script[src*="recaptcha"]')) {
+  //     this.recaptchaLoaded = true;
+  //     return;
+  //   }
 
-    const script = document.createElement('script');
-    script.src = 'https://www.google.com/recaptcha/api.js?render=explicit';
-    script.async = true;
-    script.defer = true;
-    script.onload = () => {
-      this.recaptchaLoaded = true;
-    };
-    script.onerror = () => {
-      console.error('Failed to load reCAPTCHA script');
-      this.message = 'Failed to load verification system';
-    };
-    document.head.appendChild(script);
-  }
+  //   const script = document.createElement('script');
+  //   script.src = 'https://www.google.com/recaptcha/api.js?render=explicit';
+  //   script.async = true;
+  //   script.defer = true;
+  //   script.onload = () => {
+  //     this.recaptchaLoaded = true;
+  //   };
+  //   script.onerror = () => {
+  //     console.error('Failed to load reCAPTCHA script');
+  //     this.message = 'Failed to load verification system';
+  //   };
+  //   document.head.appendChild(script);
+  // }
 
   // Format phone number to international format
   formatPhoneNumber(phone: string): string {
@@ -337,34 +339,105 @@ clearMessages() {
   }
   passwordControl?.updateValueAndValidity();
 }
-  handleSuccessfulLogin(token: string, user?: AuthUser) {
-    this.cookieService.set('token', token, {
-      secure: false,
-      sameSite: 'Strict',
-      path: '/',
-      expires: 7
-    });
+  // handleSuccessfulLogin(token: string, user?: AuthUser) {
+  //   this.cookieService.set('token', token, {
+  //     secure: false,
+  //     sameSite: 'Strict',
+  //     path: '/',
+  //     expires: 7
+  //   });
 
-    this.auth.saveToken(token);
-    this.auth.setLoggedIn(true);
+  //   this.auth.saveToken(token);
+  //   this.auth.setLoggedIn(true);
     
-    if (this.auth.fetchUserProfile) {
-      this.auth.fetchUserProfile();
+  //   if (this.auth.fetchUserProfile) {
+  //     this.auth.fetchUserProfile();
+  //   }
+  //   if (isPlatformBrowser(this.platformId)) {
+  //     const redirectUrl = sessionStorage.getItem('redirectAfterLogin');
+  //     if (redirectUrl) {
+  //       sessionStorage.removeItem('redirectAfterLogin');
+  //       this.router.navigate([redirectUrl]);
+  //       return;
+  //     }
+  //   }
+    
+  //   // If no redirect URL or not in browser, just close modal
+  //   this.closeModal();
+  // }
+
+
+//   handleSuccessfulLogin(token: string, user?: AuthUser) {
+//   console.log('handleSuccessfulLogin called');
+//   console.log('isPlatformBrowser:', isPlatformBrowser(this.platformId));
+  
+//   this.cookieService.set('token', token, {
+//     secure: false,
+//     sameSite: 'Strict',
+//     path: '/',
+//     expires: 7
+//   });
+
+//   this.auth.saveToken(token);
+//   this.auth.setLoggedIn(true);
+  
+//   if (this.auth.fetchUserProfile) {
+//     this.auth.fetchUserProfile();
+//   }
+  
+//   // Check if there's a redirect URL stored (SSR-safe)
+//   if (isPlatformBrowser(this.platformId)) {
+//     const redirectUrl = sessionStorage.getItem('redirectAfterLogin');
+//     console.log('Retrieved redirectUrl:', redirectUrl);
+//     if (redirectUrl) {
+//       sessionStorage.removeItem('redirectAfterLogin');
+//       console.log('Navigating to:', redirectUrl);
+//       this.router.navigate([redirectUrl]);
+//       return;
+//     } else {
+//       console.log('No redirect URL found in sessionStorage');
+//     }
+//   }
+  
+//   // If no redirect URL or not in browser, just close modal
+//   console.log('Closing modal without redirect');
+//   this.closeModal();
+// }
+
+handleSuccessfulLogin(token: string, user?: AuthUser) {
+  this.cookieService.set('token', token, {
+    secure: false,
+    sameSite: 'Strict',
+    path: '/',
+    expires: 7
+  });
+
+  this.auth.saveToken(token);
+  this.auth.setLoggedIn(true);
+  
+  if (this.auth.fetchUserProfile) {
+    this.auth.fetchUserProfile();
+  }
+  
+  // Check if there's a redirect URL passed from parent
+  if (this.redirectUrl) {
+    console.log('Navigating to redirectUrl:', this.redirectUrl);
+    this.router.navigate([this.redirectUrl]);
+    return;
+  }
+  
+  // Fallback to sessionStorage check
+  if (isPlatformBrowser(this.platformId)) {
+    const redirectUrl = sessionStorage.getItem('redirectAfterLogin');
+    if (redirectUrl) {
+      sessionStorage.removeItem('redirectAfterLogin');
+      this.router.navigate([redirectUrl]);
+      return;
     }
-
-      // Check if there's a redirect URL stored
-  const redirectUrl = sessionStorage.getItem('redirectAfterLogin');
-  if (redirectUrl) {
-    sessionStorage.removeItem('redirectAfterLogin');
-    this.router.navigate([redirectUrl]);
-  } else {
-    // If no redirect URL, just close modal and stay on current page
-    this.closeModal();
   }
-    
-    // this.closeModal();
-  }
-
+  
+  this.closeModal();
+}
   closeModal() {
     this.close.emit();
     this.resetComponent();

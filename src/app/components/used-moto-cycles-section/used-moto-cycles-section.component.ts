@@ -113,22 +113,52 @@ export class UsedMotoCyclesSectionComponent {
   }
 
 
+  // viewListing(id: number): void {
+  //   if (this.isLoggedIn) {
+  //     this.router.navigate(['/listing', id]);
+  //   } else {
+  //     sessionStorage.setItem('redirectAfterLogin', `/listing/${id}`);
+  //     this.openLoginModal();
+  //   }
+  // }
+
+pendingRedirectUrl: string | null = null;
   viewListing(id: number): void {
-    if (this.isLoggedIn) {
-      this.router.navigate(['/listing', id]);
-    } else {
-      sessionStorage.setItem('redirectAfterLogin', `/listing/${id}`);
-      this.openLoginModal();
-    }
+  if (this.isLoggedIn) {
+    this.router.navigate(['/listing', id]);
+  } else {
+    this.pendingRedirectUrl = `/listing/${id}`;
+    this.openLoginModal();
   }
+}
+
+closeLoginModal(): void {
+  this.showLoginModal = false;
+  this.pendingRedirectUrl = null;
+}
+
+//   viewListing(id: number): void {
+//   if (this.isLoggedIn) {
+//     this.router.navigate(['/listing', id]);
+//   } else {
+//    if (isPlatformBrowser(this.platformId)) {
+//     console.log('test');
+//       const redirectUrl = `/listing/${id}`;
+//       console.log('Storing redirectUrl:', redirectUrl);
+//       sessionStorage.setItem('redirectAfterLogin', redirectUrl);
+//       console.log('Stored value:', sessionStorage.getItem('redirectAfterLogin'));
+//     }
+//     this.openLoginModal();
+//   }
+// }
 
   openLoginModal(): void {
     this.showLoginModal = true;
   }
 
-  closeLoginModal(): void {
-    this.showLoginModal = false;
-  }
+  // closeLoginModal(): void {
+  //   this.showLoginModal = false;
+  // }
 
 
   get shouldSlide(): boolean {

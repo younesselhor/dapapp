@@ -236,8 +236,13 @@
       </div>
     </div>
   </div>
-</section>
+<!-- </section>
 <app-login-modal
   *ngIf="showLoginModal"
+  (close)="closeLoginModal()"
+></app-login-modal> -->
+<app-login-modal
+  *ngIf="showLoginModal"
+  [redirectUrl]="pendingRedirectUrl"
   (close)="closeLoginModal()"
 ></app-login-modal>
