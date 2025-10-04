@@ -6,6 +6,7 @@ import { SidebarComponent } from '../components/sidebar/sidebar.component';
 import { FormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { ListingService } from '../components/postingAdd/product-form/listingService/listing-service.service';
+import { TimeAgoPipe } from '../pipe/timeAgoPipe';
 
 
 interface Brand {
@@ -28,7 +29,7 @@ interface bikePart {
 @Component({
   selector: 'app-spare-plates-details',
    standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule,TimeAgoPipe],
   templateUrl: './spare-plates-details.component.html',
   styleUrls: ['./spare-plates-details.component.css', '../components/sidebar/sidebar.component.css']
 })

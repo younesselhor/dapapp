@@ -697,3 +697,30 @@ bottom: -129.178px;
     /* top: 0; */
     bottom: 71px;
 }
+
+.location-time-product{
+  display: flex;
+    justify-content: space-between;
+}
+.location-value {
+  color: var(--Gray-700---Secondary-Text, #344054);
+  font-family: Manrope;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 24px; /* 171.429% */
+  letter-spacing: -0.084px;
+  display: flex;
+}
+
+.location-value svg{
+  margin-right: 5px;
+}
+.time-value {
+  color: var(--Gray-700---Secondary-Text, #344054);
+  font-family: Manrope;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 24px; /* 200% */
+}

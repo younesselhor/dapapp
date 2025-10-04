@@ -7,6 +7,7 @@ import { LocationSService } from '../../services/location-s.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../services/auth.service';
 import { LoginModalComponent } from '../login-modal.component';
+import { TimeAgoPipe } from '../../pipe/timeAgoPipe';
 
 interface SparePart {
   id: number;
@@ -20,12 +21,36 @@ interface SparePart {
   country?: string | null;
   wishlist?: boolean;
   minimum_bid?: number;
+  spare_part: {
+    condition: string;
+    brand: string;
+    category: string;
+    compatible_motorcycles: {
+      brand: string;
+      model: string;
+      year: number;
+    }[];
+  };
 }
 
+
+
+//  "spare_part": {
+//                 "condition": "new",
+//                 "brand": "Hella",
+//                 "category": "Chain",
+//                 "compatible_motorcycles": [
+//                     {
+//                         "brand": "BMW",
+//                         "model": "Blechmann R18",
+//                         "year": 2020
+//                     }
+//                 ]
+//             }
 @Component({
   selector: 'app-used-spare-parts-section',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslateModule, LoginModalComponent],
+  imports: [CommonModule, RouterModule, TranslateModule, LoginModalComponent, TimeAgoPipe],
   templateUrl: './used-spare-parts-section.component.html',
   styleUrls: ['./used-spare-parts-section.component.css'],
 })

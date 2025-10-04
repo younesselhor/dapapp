@@ -71,9 +71,6 @@
   text-overflow: ellipsis;
 }
 
-viewBtn:hover {
-  background: #f9fafb;
-}
 .slider-section {
   padding: 32px 20px 48px;
   background: #fff;

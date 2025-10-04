@@ -6,19 +6,16 @@
       <!-- Left Content -->
       <!-- class="lg:w-[495px] flex flex-col gap-10" -->
       <div style="width: 495px; height: 412px">
-        <div
-          style="
+        <div style="
             display: flex;
             width: 495px;
             align-items: flex-start;
             align-content: flex-start;
             gap: 40px 45px;
             flex-wrap: wrap;
-          "
-        >
+          ">
           <!-- <h2 class="font-manrope text-[#18181B] text-[52px] font-bold leading-[66px]"> -->
-          <div
-            style="
+          <div style="
               width: 465px;
               flex-shrink: 0;
               color: var(--gray-900, #18181b);
@@ -27,94 +24,101 @@
               font-style: normal;
               font-weight: 700;
               line-height: 66px; /* 126.923% */
-            "
-          >
+            ">
             {{ "SPARE_PARTS.TITLE" | translate }}<br />{{
-              "SPARE_PARTS.SUBTITLE" | translate
+            "SPARE_PARTS.SUBTITLE" | translate
             }}
           </div>
           <!-- </h2> -->
           <!-- class="font-manrope text-[#18181B] text-[18px] font-medium leading-[30px]" -->
-          <div
-            style="
+          <div style="
               color: var(--gray-900, #18181b);
               font-family: Manrope;
               font-size: 18px;
               font-style: normal;
               font-weight: 500;
               line-height: 30px; /* 166.667% */
-            "
-          >
+            ">
             {{ "SPARE_PARTS.DESCRIPTION" | translate }}
           </div>
-<!-- class="flex flex-col gap-12" -->
-          <div style="display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: flex-start;
-gap: 45px;
-flex: 1 0 0;">
-<div style="display: flex;
-align-items: flex-start;
-gap: 24px;">
- <!-- class="w-fit h-[48px] px-[57.63px] py-[14.75px] border border-gray-800 text-gray-800 hover:bg-gray-100 transition cursor-pointer" -->
-   <button style="
-   cursor: pointer;
-   display: flex;
-height: 48px;
-padding: 17.25px 57.63px 14.75px 57.63px;
-justify-content: center;
-align-items: center;
-border-radius: 4px;
-border: 2px solid var(--Primary---Navy, #032C40);"
-              routerLink="/spare-parts"
-             
-            >
-            <p style="color: var(--Primary---Navy, #032C40);
-text-align: center;
-font-family: Manrope;
-font-size: 16px;
-font-style: normal;
-font-weight: 700;
-line-height: 16px; /* 100% */">{{ "COMMON.VIEW_ALL" | translate }}</p>
-            </button>
-</div>
-           
-<!-- class="flex gap-12" -->
-            <div style="display: flex;
-align-items: center;
-gap: 45px;">
-              <div style="width: 86px;
-height: 77px;">
-                <p style="color: var(--gray-900, #18181B);
-font-family: Manrope;
-font-size: 36px;
-font-style: normal;
-font-weight: 800;
-line-height: 46px; /* 127.778% */">2k+</p>
-                <p style="color: var(--gray-500, #71717A);
-font-family: Manrope;
-font-size: 18px;
-font-style: normal;
-font-weight: 400;
-line-height: 24px; /* 133.333% */">
+          <!-- class="flex flex-col gap-12" -->
+          <div style="
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: flex-start;
+              gap: 45px;
+              flex: 1 0 0;
+            ">
+            <div style="display: flex; align-items: flex-start; gap: 24px">
+              <!-- class="w-fit h-[48px] px-[57.63px] py-[14.75px] border border-gray-800 text-gray-800 hover:bg-gray-100 transition cursor-pointer" -->
+              <button style="
+                  cursor: pointer;
+                  display: flex;
+                  height: 48px;
+                  padding: 17.25px 57.63px 14.75px 57.63px;
+                  justify-content: center;
+                  align-items: center;
+                  border-radius: 4px;
+                  border: 2px solid var(--Primary---Navy, #032c40);
+                " routerLink="/spare-parts">
+                <p style="
+                    color: var(--Primary---Navy, #032c40);
+                    text-align: center;
+                    font-family: Manrope;
+                    font-size: 16px;
+                    font-style: normal;
+                    font-weight: 700;
+                    line-height: 16px; /* 100% */
+                  ">
+                  {{ "COMMON.VIEW_ALL" | translate }}
+                </p>
+              </button>
+            </div>
+
+            <!-- class="flex gap-12" -->
+            <div style="display: flex; align-items: center; gap: 45px">
+              <div style="width: 86px; height: 77px">
+                <p style="
+                    color: var(--gray-900, #18181b);
+                    font-family: Manrope;
+                    font-size: 36px;
+                    font-style: normal;
+                    font-weight: 800;
+                    line-height: 46px; /* 127.778% */
+                  ">
+                  2k+
+                </p>
+                <p style="
+                    color: var(--gray-500, #71717a);
+                    font-family: Manrope;
+                    font-size: 18px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: 24px; /* 133.333% */
+                  ">
                   {{ "SPARE_PARTS.SOLD" | translate }}
                 </p>
               </div>
-              <div style="width: 129px;
-height: 77px;">
-                <p style="color: var(--gray-900, #18181B);
-font-family: Manrope;
-font-size: 36px;
-font-style: normal;
-font-weight: 800;
-line-height: 46px; /* 127.778% */">13k+</p>
-                <p style="color: var(--gray-500, #71717A);
-font-family: Manrope;
-font-size: 18px;
-font-style: normal;
-font-weight: 400;
-line-height: 24px; /* 133.333% */">
+              <div style="width: 129px; height: 77px">
+                <p style="
+                    color: var(--gray-900, #18181b);
+                    font-family: Manrope;
+                    font-size: 36px;
+                    font-style: normal;
+                    font-weight: 800;
+                    line-height: 46px; /* 127.778% */
+                  ">
+                  13k+
+                </p>
+                <p style="
+                    color: var(--gray-500, #71717a);
+                    font-family: Manrope;
+                    font-size: 18px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: 24px; /* 133.333% */
+                  ">
                   {{ "SPARE_PARTS.AVAILABLE" | translate }}
                 </p>
               </div>
@@ -124,14 +128,10 @@ line-height: 24px; /* 133.333% */">
       </div>
 
       <!-- Right Content - Swipeable Cards -->
-      <div class="slider-container" style="display: flex;
-align-items: center;
-gap: 31px;">
+      <div class="slider-container" style="display: flex; align-items: center; gap: 31px">
         <!-- No Results Message -->
-        <div
-          *ngIf="spareParts?.length === 0"
-          class="flex items-center justify-center min-h-[300px] bg-gray-50 rounded-lg border border-gray-200"
-        >
+        <div *ngIf="spareParts?.length === 0"
+          class="flex items-center justify-center min-h-[300px] bg-gray-50 rounded-lg border border-gray-200">
           <div class="text-center">
             <p class="text-lg text-gray-600 font-medium">
               {{ "COMMON.NO_RESULTS" | translate }}
@@ -140,24 +140,14 @@ gap: 31px;">
         </div>
 
         <!-- Spare Parts Slider -->
-         <!-- class="slider-track rtl:flex-row-reverse" -->
-        <div
-        class="slider-track"
-          *ngIf="spareParts.length > 0"
-         
-          [style.transform]="'translateX(' + currentPosition + 'px)'"
-          [class.dragging]="isDragging"
-          (mousedown)="shouldSlide ? startDrag($event) : null"
-          (touchstart)="shouldSlide ? startDrag($event) : null"
-          (mousemove)="shouldSlide ? onDrag($event) : null"
-          (touchmove)="shouldSlide ? onDrag($event) : null"
-          (mouseup)="shouldSlide ? endDrag() : null"
-          (mouseleave)="shouldSlide ? endDrag() : null"
-          (touchend)="shouldSlide ? endDrag() : null"
-             >
-        
+        <!-- class="slider-track rtl:flex-row-reverse" -->
+        <div class="slider-track" *ngIf="spareParts.length > 0"
+          [style.transform]="'translateX(' + currentPosition + 'px)'" [class.dragging]="isDragging"
+          (mousedown)="shouldSlide ? startDrag($event) : null" (touchstart)="shouldSlide ? startDrag($event) : null"
+          (mousemove)="shouldSlide ? onDrag($event) : null" (touchmove)="shouldSlide ? onDrag($event) : null"
+          (mouseup)="shouldSlide ? endDrag() : null" (mouseleave)="shouldSlide ? endDrag() : null"
+          (touchend)="shouldSlide ? endDrag() : null">
           <div *ngFor="let part of spareParts" class="slider-card">
-
             <img [src]="part.images[0]" draggable="false" class="card-image" [alt]="part.title" />
             <!-- <div class="card-content">
                <h3 class="title">{{ truncateText(part.title, 20) }}</h3>
@@ -173,7 +163,7 @@ gap: 31px;">
                 {{ "SPARE_PARTS.VIEW_PART" | translate }}
               </button>
             </div> -->
-  <div class="card-content">
+            <!-- <div class="card-content">
               <h3 class="title">{{ part.title }}</h3>
               <p class="price-label">{{ "COMMON.PRICE" | translate }}</p>
               <p class="price-value">
@@ -183,6 +173,49 @@ gap: 31px;">
               <button class="button" (click)="viewListing(part.id)">
                 {{ "SPARE_PARTS.VIEW_PART" | translate }}
               </button>
+            </div> -->
+              
+                      <div class="product-content ">
+              <!-- Title -->
+              <span class="product-title" [title]="part.title">
+                {{ truncateText(part.title, 20) }}
+              </span>
+
+              <span class="product-brand">
+                {{ part.spare_part.brand }} {{ part.spare_part.category }} 
+              </span>
+
+              <span class="price-value">{{ part.price }} {{ part.currency || 'SAR' }}</span>
+
+              <div class="location-time-product">
+                <span class="location-value">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M7.05002 6.04987C8.36284 4.73705 10.1434 3.99951 12 3.99951C13.8566 3.99951 15.6372 4.73705 16.95 6.04987C18.2628 7.36269 19.0004 9.14326 19.0004 10.9999C19.0004 12.8565 18.2628 14.637 16.95 15.9499L12 20.8999L7.05002 15.9499C6.39993 15.2998 5.88425 14.5281 5.53242 13.6788C5.1806 12.8295 4.99951 11.9192 4.99951 10.9999C4.99951 10.0806 5.1806 9.17025 5.53242 8.32092C5.88425 7.47159 6.39993 6.69989 7.05002 6.04987ZM12 12.9999C12.5304 12.9999 13.0392 12.7892 13.4142 12.4141C13.7893 12.039 14 11.5303 14 10.9999C14 10.4694 13.7893 9.96073 13.4142 9.58566C13.0392 9.21058 12.5304 8.99987 12 8.99987C11.4696 8.99987 10.9609 9.21058 10.5858 9.58566C10.2107 9.96073 10 10.4694 10 10.9999C10 11.5303 10.2107 12.039 10.5858 12.4141C10.9609 12.7892 11.4696 12.9999 12 12.9999Z"
+                      fill="#A7C543"
+                    />
+                  </svg>
+                  {{ part.city }}
+                </span>
+                <!-- <span class="time-value">{{ part.listing_date }}</span> -->
+                <span class="time-value">{{
+                  part.created_at ? (part.created_at | timeAgo) : ""
+                }}</span>
+              </div>
+              <!-- Price and Button -->
+              <div class="product-footer">
+                <button class="viewBtn" (click)="viewListing(part.id)">
+                  View Bike
+                </button>
+              </div>
             </div>
 
           </div>
@@ -191,8 +224,4 @@ gap: 31px;">
     </div>
   </div>
 </section>
-<app-login-modal
-  *ngIf="showLoginModal"
-  (close)="closeLoginModal()"
-></app-login-modal>
-
+<app-login-modal *ngIf="showLoginModal" (close)="closeLoginModal()"></app-login-modal>
