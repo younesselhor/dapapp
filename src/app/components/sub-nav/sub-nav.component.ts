@@ -116,65 +116,6 @@ export class SubNavComponent implements OnInit, OnChanges {
 
 
 
-//   ngOnInit() {
-
-//       this.authService.isLoggedIn$.subscribe(status => {
-//     this.isLoggedIn = status;
-//   });
-
-//     this.getCountry();
-//     this.loadCountries();
-
-//     this.userSub = this.authService.currentUser$.subscribe((user) => {
-//       if (user?.country) {
-//         const found = this.countries.find(c => c.name.toLowerCase() === user.country.toLowerCase());
-//         // if (found) {
-//         //   this.selectedCountry = found.name;
-//         //   console.log(' this.selectedCountry: ',  this.selectedCountry);
-//         //   console.log('User country matched:', found.name, '-> code:', found.code);
-//         // }
-//         if (found) {
-//   this.selectedCountry = found.name;
-//   this.locationService.setSelectedCountry(found); // 🔥 Notify globally on login
-
-// }
-
-//       }
-//     });
-//   }
-
-//   loadCountries() {
-//     this.listingService.getCityList().subscribe((res) => {
-//       // this.countries = res.countries;
-//       console.log('this.countries : ', this.countries );
-//       this.allCities = res.cities;
-//     });
-//   }
-
-//   getCountry() {
-//   this.listingService.getCountry().subscribe((res) => {
-//     // Convert API response { country: "Morocco", continent: "...", ip: "..." }
-//     this.countries = [{
-//       id: 4,                     // you can generate or omit if not used
-//       name: res.country,
-//       code: res.continent || ''  // or use some mapping if you want real ISO code
-//     }];
-
-//     // auto-select the detected country
-//     this.selectedCountry = res.country;
-//     // this.locationService.setSelectedCountry(this.countries[0]);
-
-//     console.log('Countries:', this.countries);
-//   });
-// }
-
-  // getCountry(){
-  //   this.listingService.getCountry().subscribe((res) => {
-  //     this.countries = res.country;
-  //     console.log(' : ',  this.countries);
-  //   });
-  // }
-
 
   ngOnInit() {
   if (isPlatformBrowser(this.platformId)) {
@@ -220,87 +161,6 @@ export class SubNavComponent implements OnInit, OnChanges {
   }
 }
   
-// ngOnInit() {
-//   if (isPlatformBrowser(this.platformId)) {
-//     this.authService.isLoggedIn$.subscribe(status => {
-//       this.isLoggedIn = status;
-//     });
-
-//     // ✅ LocalStorage safe
-//     const storedCountry = localStorage.getItem('selectedCountry');
-//     if (storedCountry) {
-//       const parsed = JSON.parse(storedCountry);
-//       this.selectedCountry = parsed.name;
-//       this.locationService.setSelectedCountry(parsed);
-//     } else {
-//       this.loadCountries().then(() => {
-//         this.getCountry();
-//       });
-//     }
-
-//     this.userSub = this.authService.userProfile$.subscribe((profile) => {
-//       if (profile?.user?.country_id) {
-//         const found = this.countries.find(c => c.id === Number(profile.user.country_id));
-//         if (found) {
-//           this.selectedCountry = found.name;
-//           this.locationService.setSelectedCountry(found);
-//           localStorage.setItem('selectedCountry', JSON.stringify(found));
-//         }
-//       }
-//     });
-//   }
-// }
-
-//   ngOnInit() {
-//   this.authService.isLoggedIn$.subscribe(status => {
-//     this.isLoggedIn = status;
-//   });
-
-//   // Load all countries first
-//   this.loadCountries();
-
-//   // Then detect user's country and preselect
-//   this.getCountry();
-
-//   this.userSub = this.authService.userProfile$.subscribe((profile) => {
-//     if (profile?.user?.country_id) {
-//       const found = this.countries.find(c => c.id === Number(profile.user.country_id));
-//       if (found) {
-//         this.selectedCountry = found.name;
-//         this.locationService.setSelectedCountry(found);
-//       }
-//     }
-//   });
-// }
-
-// ngOnInit() {
-//   this.authService.isLoggedIn$.subscribe(status => {
-//     this.isLoggedIn = status;
-//   });
-
-//   // Load countries, then detect user country
-//   this.loadCountries().then(() => {
-//     this.getCountry();
-//   });
-
-//   this.userSub = this.authService.userProfile$.subscribe((profile) => {
-//     if (profile?.user?.country_id) {
-//       const found = this.countries.find(c => c.id === Number(profile.user.country_id));
-//       if (found) {
-//         this.selectedCountry = found.name;
-//         this.locationService.setSelectedCountry(found);
-//       }
-//     }
-//   });
-// }
-
-//  viewListing(id: number): void {
-//     if (this.isLoggedIn) {
-//       this.router.navigate(['/listing', id]);
-//     } else {
-//       this.openLoginModal();
-//     }
-//   }
 
 navigateToAddProduct(){
   if(this.isLoggedIn){
@@ -327,12 +187,7 @@ loadCountries(): Promise<void> {
   });
 }
 
-// loadCountries() {
-//   this.listingService.getCityList().subscribe((res) => {
-//     this.countries = res.countries;   // ✅ now the dropdown has full list
-//     this.allCities = res.cities;
-//   });
-// }
+
 
 onCountryChange(event: Event) {
   const selectedName = (event.target as HTMLSelectElement).value;
@@ -360,14 +215,6 @@ getCountry() {
   });
 }
 
-// onCountryChange(event: Event) {
-//   const selectedName = (event.target as HTMLSelectElement).value;
-//   const selected = this.countries.find(c => c.name === selectedName);
-//   if (selected) {
-//     // this.selectedCountry = selected;
-//     this.locationService.setSelectedCountry(selected); // 👈 notify the app
-//   }
-// }
 
 
   ngOnChanges(changes: SimpleChanges): void {

@@ -118,10 +118,18 @@ filterMotorcycles(params: any): Observable<any> {
       queryParams.append('years[]', year.toString());
     });
   }
-
+if (params.types && params.types.length > 0) {
+  params.types.forEach((typeId: number) => {
+    queryParams.append('types[]', typeId.toString());
+  });
+}
   // condition
   if (params.condition) {
     queryParams.append('condition', params.condition);
+  }
+    // country (name)
+  if (params.country) {
+    queryParams.append('country', params.country);
   }
 
   return this.http.get(`${this.baseUrl}filter/motorcycles?${queryParams.toString()}`);
@@ -177,6 +185,11 @@ filterSpareParts(params: any): Observable<any> {
   getRecentlyAdd(){
     return this.http.get(`${this.baseUrl}recent`);
   }
-}
 
+
+
+  getCategoryDetails(){
+    return this.http.get(this.baseUrl + 'categorie/listings-count')  
+}
+}
 

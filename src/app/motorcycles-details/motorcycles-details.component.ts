@@ -17,6 +17,18 @@ import { LoginModalComponent } from '../components/login-modal.component';
 import { FormatFieldNamePipe } from '../components/postingAdd/product-form/FormatFieldNamePipe';
 import { TimeAgoPipe } from '../pipe/timeAgoPipe';
 import { ListingService } from '../components/postingAdd/product-form/listingService/listing-service.service';
+import { LocationSService } from '../services/location-s.service';
+
+
+
+interface MotorcycleType {
+  id: number;
+  name: string;
+  listings_count: number;
+  selected?: boolean;
+}
+
+
 
 interface Motorcycle {
   id: number;
@@ -107,52 +119,23 @@ export class MotorcyclesDetailsComponent implements OnInit, OnDestroy {
   isLoggedIn = false;
 
   activeTab: 'model' | 'category' = 'model';
-  // selectedBrand = '';
-  // selectedModel = '';
-  // selectedYear = '';
+
   selectedCategory = '';
 
   brandSearchTerm = '';
 
-  //  brands = [
-  //     { id: 1, name: 'Honda' } ,
-  //      { id: 2, name: 'Yamaha' },
-  //     { id: 3, name: 'Kawasaki' },
-  //     { id: 4, name: 'Suzuki' },
-  //     // Add more brands
-  //   ];
 
-  // models = [
-  //   { id: 1, name: 'CBR600RR', brandId: 1 },
-  //   { id: 2, name: 'R6', brandId: 2 },
-  //   // Add more models
-  // ];
-
-  // years = [
-  //   { value: 2024, label: '2024' },
-  //   { value: 2023, label: '2023' },
-  //   { value: 2022, label: '2022' },
-  //   { value: 2021, label: '2021' },
-
-  // ];
   filteredModels: any[] = [];
-  categories = [
-    { id: 1, name: 'Crosair', image: '', selected: false },
-    { id: 2, name: 'Tuning', image: '', selected: true },
-    { id: 3, name: 'Racing', image: '', selected: false },
-    { id: 4, name: 'Offroad', image: '', selected: false },
-    { id: 5, name: 'Desert', image: '', selected: false },
-    { id: 6, name: 'Street', image: '', selected: false },
-    { id: 7, name: 'Crosair', image: '', selected: false },
-    { id: 8, name: 'Crosair', image: '', selected: false },
-  ];
 
+  categories: MotorcycleType[] = [];
+  selectedCategories: number[] = [];
   constructor(
     private listingbyService: ListingByCatService,
     private cdr: ChangeDetectorRef,
     private router: Router,
     private authService: AuthService,
     private listingService: ListingService,
+    private locationService: LocationSService,
         @Inject(PLATFORM_ID) private platformId: Object
 
   ) {}
@@ -161,25 +144,10 @@ filterDebouncer = new Subject<{ min: number; max: number }>();
     this.authService.isLoggedIn$.subscribe((status) => {
       this.isLoggedIn = status;
     });
-    // this.filterDebouncer.pipe(
-    //   debounceTime(300), // Wait 300ms after last change
-    //   distinctUntilChanged() // Only emit if value changed
-    // ).subscribe(() => {
-    //   this.executeFilter();
-    // });
-  //     this.filterDebouncer.pipe(
-  //   debounceTime(300),
-  //   distinctUntilChanged()
-  // ).subscribe(() => {
-  //   this.cdr.detectChanges(); // bach yrefresh l view
-  // });
 
-  //   this.filterDebouncer.pipe(
-  //   debounceTime(300),
-  //   // distinctUntilChanged()
-  // ).subscribe(() => {
-  //   this.executeFilter(); // Add this line!
-  // });
+
+    this.getCategoryDetails();
+
 
    this.filterDebouncer.pipe(
     debounceTime(300),
@@ -190,11 +158,56 @@ filterDebouncer = new Subject<{ min: number; max: number }>();
     this.executeFilter();
   });
 
+
+   // Subscribe to country changes
+  this.locationService.selectedCountry$.subscribe((country) => {
+    if (country) {
+      this.executeFilter(); // Re-execute filter when country changes
+    }
+  });
+
     this.executeFilter();
     this.getPriceRange();
     this.getBrands();
   }
 
+
+
+
+
+  getCategoryDetails(){
+    this.listingbyService.getCategoryDetails().subscribe({
+    next: (response: any) => {
+      this.categories = response.motorcycle_types.map((type: any) => ({
+        id: type.id,
+        name: type.name,
+        listings_count: type.listings_count,
+        selected: false
+      }));
+    },
+    error: (err) => {
+      console.error('Error loading motorcycle types:', err);
+    }
+  });
+  }
+
+
+  selectCategory(categoryId: number) {
+  const category = this.categories.find(cat => cat.id === categoryId);
+  if (category) {
+    category.selected = !category.selected; // Toggle selection
+    
+    // Update selectedCategories array
+    if (category.selected) {
+      this.selectedCategories.push(categoryId);
+    } else {
+      this.selectedCategories = this.selectedCategories.filter(id => id !== categoryId);
+    }
+    
+    // Execute filter after updating selections
+    this.executeFilter();
+  }
+}
   // Add this property for search functionality
 
   // Add this getter method
@@ -207,32 +220,6 @@ filterDebouncer = new Subject<{ min: number; max: number }>();
     );
   }
 
-  // get filteredModels() {
-  //   if (!this.selectedBrand) return this.models;
-  //   return this.models.filter(model => model.brandId === +this.selectedBrand);
-  // }
-  //   onSearch() {
-  //   if (this.activeTab === 'model') {
-  //     console.log('Searching by model:', {
-  //       brand: this.selectedBrand,
-  //       model: this.selectedModel,
-  //       year: this.selectedYear
-  //     });
-  //     // Implement your search logic here
-  //   } else {
-  //     console.log('Searching by category:', {
-  //       category: this.selectedCategory
-  //     });
-  //     // Implement your category search logic here
-  //   }
-  // }
-
-  //   selectCategory(categoryId: number): void {
-  //   this.categories.forEach(cat => {
-  //     cat.selected = cat.id === categoryId;
-  //   });
-  //   this.selectedCategory = categoryId.toString();
-  // }
 
   switchTab(tab: 'model' | 'category') {
     this.activeTab = tab;
@@ -240,24 +227,15 @@ filterDebouncer = new Subject<{ min: number; max: number }>();
     this.resetSelections();
   }
 
-  private resetSelections() {
-    this.selectedBrand = '';
-    this.selectedModel = '';
-    this.selectedYear = '';
-    this.selectedCategory = '';
-    this.categories.forEach((cat) => (cat.selected = false));
-  }
+private resetSelections() {
+  this.selectedBrand = '';
+  this.selectedModel = '';
+  this.selectedYear = '';
+  this.selectedCategory = '';
+  this.selectedCategories = []; // Clear the array
+  this.categories.forEach((cat) => (cat.selected = false));
+}
 
-  selectCategory(categoryId: number) {
-    this.categories.forEach((cat) => {
-      cat.selected = cat.id === categoryId;
-    });
-    this.selectedCategory = categoryId.toString();
-  }
-  // Add these methods
-  // onBrandSearchChange(event: any): void {
-  //   this.brandSearchTerm = event.target.value;
-  // }
 
   clearBrandSearch(): void {
     this.brandSearchTerm = '';
@@ -314,81 +292,6 @@ filterDebouncer = new Subject<{ min: number; max: number }>();
     }
   }
 
-  // Price range handlers
-  // onMinSliderChange(event: any): void {
-  //   this.priceRange.min = +event.target.value;
-  //   this.triggerDebouncedFilter();
-  // }
-
-  // onMaxSliderChange(event: any): void {
-  //   this.priceRange.max = +event.target.value;
-  //   this.triggerDebouncedFilter();
-  // }
-//   onMinSliderChange(event: any): void {
-//   const newValue = +event.target.value;
-//   console.log('Min slider changed to:', newValue);
-//   this.priceRange.min = newValue;
-  
-//   // Ensure min doesn't exceed max
-//   if (this.priceRange.min > this.priceRange.max) {
-//     this.priceRange.min = this.priceRange.max;
-//   }
-  
-//   this.triggerDebouncedFilter();
-// }
-
-// onMaxSliderChange(event: any): void {
-//   const newValue = +event.target.value;
-//   console.log('Max slider changed to:', newValue);
-//   this.priceRange.max = newValue;
-  
-//   // Ensure max doesn't go below min
-//   if (this.priceRange.max < this.priceRange.min) {
-//     this.priceRange.max = this.priceRange.min;
-//   }
-  
-//   this.triggerDebouncedFilter();
-// }
-
-
-
-  // onMinSliderChange(event: any) {
-  //   this.priceRange.min = +event.target.value;
-  //   // this.applyFilters();
-  //       this.executeFilter();
-
-  // }
-
-  // onMaxSliderChange(event: any) {
-  //   this.priceRange.max = +event.target.value;
-  //   // this.applyFilters();
-  //       this.executeFilter();
-
-  // }
-
-  //   onMinInputChange() {
-  //   if (this.priceRange.min < this.absoluteMin) {
-  //     this.priceRange.min = this.absoluteMin;
-  //   }
-  //   if (this.priceRange.min > this.priceRange.max) {
-  //     this.priceRange.min = this.priceRange.max;
-  //   }
-  //   // this.applyFilters();
-  //   this.executeFilter();
-  // }
-
-  // onMaxInputChange() {
-  //   if (this.priceRange.max > this.absoluteMax) {
-  //     this.priceRange.max = this.absoluteMax;
-  //   }
-  //   if (this.priceRange.max < this.priceRange.min) {
-  //     this.priceRange.max = this.priceRange.min;
-  //   }
-  //   // this.applyFilters();
-  //       this.executeFilter();
-
-  // }
-
 
 
 onMinSliderChange(event: any) {
@@ -433,75 +336,11 @@ onMaxInputChange() {
   });
 }
 
-  // onMinInputChange(): void {
-  //   if (this.priceRange.min < this.absoluteMin) {
-  //     this.priceRange.min = this.absoluteMin;
-  //   }
-  //   if (this.priceRange.min > this.priceRange.max) {
-  //     this.priceRange.min = this.priceRange.max;
-  //   }
-  //   this.triggerDebouncedFilter();
-  // }
-
-  // onMaxInputChange(): void {
-  //   if (this.priceRange.max > this.absoluteMax) {
-  //     this.priceRange.max = this.absoluteMax;
-  //   }
-  //   if (this.priceRange.max < this.priceRange.min) {
-  //     this.priceRange.max = this.priceRange.min;
-  //   }
-  //   this.triggerDebouncedFilter();
-  // }
 
   onBrandChangeFilter(): void {
     this.executeFilter();
   }
 
-//   onBrandChangeFilter(brand: any, event: any): void {
-//   brand.checked = event.target.checked; // update state
-
-//   const selectedBrandIds = this.filteredBrands
-//     .filter((b) => b.checked)
-//     .map((b) => b.id);
-
-//   // this.executeFilterWithBrands(selectedBrandIds);
-// }
-// executeFilterWithBrands(selectedBrandIds: number[]): void {
-//   this.isLoading = true;
-
-//   this.listingbyService
-//     .filterMotorcycles({
-//       min_price: this.priceRange.min,
-//       max_price: this.priceRange.max,
-//       brands: selectedBrandIds,
-//       models: this.selectedModel ? [this.selectedModel] : [],
-//       years: this.selectedYear ? [this.selectedYear] : [],
-//       condition: this.selectedCondition,
-//     })
-//     .subscribe({
-//       next: (response) => {
-//         setTimeout(() => {
-//           const motorcycles = response.motorcycles || response;
-//           this.motorCyclesDetails = motorcycles.map((motorcycle: Motorcycle) => ({
-//             ...motorcycle,
-//             imageLoaded: false,
-//           }));
-//           this.isLoading = false;
-//           this.cdr.detectChanges();
-//           this.animateCards();
-//         }, 300);
-//       },
-//       error: (error) => {
-//         console.error('Error filtering motorcycles:', error);
-//         this.isLoading = false;
-//         this.cdr.detectChanges();
-//       },
-//     });
-// }
-
-  //  triggerDebouncedFilter(): void {
-  //   this.filterDebouncer.next();
-  // }
 
   getBrands(): void {
     this.listingbyService
@@ -522,33 +361,7 @@ onMaxInputChange() {
       });
   }
 
-  // onBrandChange(brandId: number) {
-  //   this.selectedModel = '';
-  //   this.selectedYear = '';
-  //   this.filteredModels = [];
-  //   this.filteredYears = [];
 
-  //   if (brandId) {
-  //     this.listingService.getMotorcycleModels(brandId).subscribe((res) => {
-  //       this.models = res.data;
-  //       this.filteredModels = res.data;
-  //     });
-  //   }
-  //   this.executeFilter();
-  // }
-
-  // onModelChange(modelId: number) {
-  //   this.selectedYear = '';
-  //   this.filteredYears = [];
-
-  //   if (modelId) {
-  //     this.listingService.getMotorcycleYears(modelId).subscribe((res) => {
-  //       this.years = res.data;
-  //       this.filteredYears = res.data;
-  //     });
-  //   }
-  //       this.executeFilter();
-  // }
 
   onBrandChange(brandId: number) {
     this.selectedModel = '';
@@ -582,107 +395,19 @@ onMaxInputChange() {
     }
   }
 
-  // onYearChange(year: number) {
-  //   this.executeFilter(); // مباشرة من بعد ما يختار year
-  // }
 
-//   onBrandSearchChange(event: any): void {
-//   this.brandSearchTerm = event.target.value;
-//   this.filterDebouncer.next();
-// }
 
 onBrandSearchChange(value: string): void {
   this.brandSearchTerm = value;
   // this.filterDebouncer.next(value);
   this.cdr.detectChanges();
 }
-  // executeFilter(): void {
-  //   this.isLoading = true;
-  //      const selectedBrandIds = this.brands
-  //     .filter((brand) => brand.checked)
-  //     .map((brand) => brand.id);
-  //   this.listingbyService
-  //     .filterMotorcycles({
-  //       min_price: this.priceRange.min,
-  //       max_price: this.priceRange.max,
-  //       // brands: selectedBrandIds,
-  //       // models: selectedModelIds,
-  //       // years:yearSelectedIds,
-  //       brands: this.selectedBrand || selectedBrandIds ? [this.selectedBrand] : [],
-  //       models: this.selectedModel ? [this.selectedModel] : [],
-  //       years: this.selectedYear  ? [this.selectedYear] : [],
-  //       condition: this.selectedCondition,
-  //     })
-  //     .subscribe({
-  //       next: (response) => {
-  //         // Add a small delay to show loading animation
-  //         setTimeout(() => {
-  //           const motorcycles = response.motorcycles || response;
-  //           // Initialize imageLoaded property for each motorcycle
-  //           this.motorCyclesDetails = motorcycles.map(
-  //             (motorcycle: Motorcycle) => ({
-  //               ...motorcycle,
-  //               imageLoaded: false,
-  //             })
-  //           );
-
-  //           this.isLoading = false;
-  //           this.cdr.detectChanges();
-
-  //           // Trigger staggered animation
-  //           this.animateCards();
-  //         }, 300); // Small delay to show loading state
-  //       },
-  //       error: (error) => {
-  //         console.error('Error filtering motorcycles:', error);
-  //         this.isLoading = false;
-  //         this.cdr.detectChanges();
-  //       },
-  //     });
-  // }
 
   onYearChange(yearValue: string ): void {
   this.selectedYear = yearValue;
   this.executeFilter();
 }
 
-
-// executeFilter(): void {
-//   this.isLoading = true;
-
-//   const selectedBrandIds = this.filteredBrands
-//     .filter((brand) => brand.checked)
-//     .map((brand) => brand.id);
-
-//   this.listingbyService
-//     .filterMotorcycles({
-//       min_price: this.priceRange.min,
-//       max_price: this.priceRange.max,
-//       brands: selectedBrandIds.length ? selectedBrandIds : (this.selectedBrand ? [this.selectedBrand] : []),
-//       models: this.selectedModel ? [this.selectedModel] : [],
-//       years: this.selectedYear ? [this.selectedYear] : [],
-//       condition: this.selectedCondition,
-//     })
-//     .subscribe({
-//       next: (response) => {
-//         setTimeout(() => {
-//           const motorcycles = response.motorcycles || response;
-//           this.motorCyclesDetails = motorcycles.map((m: Motorcycle) => ({
-//             ...m,
-//             imageLoaded: false,
-//           }));
-//           this.isLoading = false;
-//           this.cdr.detectChanges();
-//           this.animateCards();
-//         }, 300);
-//       },
-//       error: (err) => {
-//         console.error('Error filtering motorcycles:', err);
-//         this.isLoading = false;
-//         this.cdr.detectChanges();
-//       },
-//     });
-// }
 
 executeFilter(): void {
   this.isLoading = true;
@@ -691,13 +416,24 @@ executeFilter(): void {
     .filter((brand) => brand.checked)
     .map((brand) => brand.id);
 
+
+     let selectedCountryName: string | null = null;
+  this.locationService.selectedCountry$.subscribe((country) => {
+    if (country && country.name) {
+      selectedCountryName = country.name;
+    }
+  }).unsubscribe();
+
+
   const filterParams = {
     min_price: this.priceRange.min,
     max_price: this.priceRange.max,
     brands: selectedBrandIds.length ? selectedBrandIds : (this.selectedBrand ? [this.selectedBrand] : []),
     models: this.selectedModel ? [this.selectedModel] : [],
     years: this.selectedYear ? [this.selectedYear] : [],
+     types: this.selectedCategories,
     condition: this.selectedCondition,
+     country: selectedCountryName 
   };
 
 

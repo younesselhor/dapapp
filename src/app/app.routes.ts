@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
 import { AdSubmissionSuccessComponent } from './ad-submission-success/ad-submission-success.component';
+import { AccountTabsComponent } from './components/account/account-tabs/account-tabs.component';
+import { accountTabsRoutes } from './components/account/account-tabs/account-tabs.routes';
 
 export const routes: Routes = [
   { 
@@ -32,10 +34,65 @@ export const routes: Routes = [
     path: 'register',
     loadComponent: () => import('./components/register/register/register.component').then(m => m.RegisterComponent)
   },
+  // {
+  //   path: 'account',
+  //   loadComponent: () => import('./components/account/account/account.component').then(m => m.AccountComponent)
+  // },
+  // {
+  //   path: 'account',
+  //   loadComponent: () =>
+  //     import('./components/account/account/account.component').then(
+  //       (m) => m.AccountComponent
+  //     ),
+  //   children: [
+  //     {
+  //       path: 'account-home',
+  //       loadComponent: () =>
+  //         import('./components/home-tab/profile-card/profile-card.component').then(
+  //           (m) => m.ProfileCardComponent
+  //         ),
+  //     },
+  //     {
+  //       path: 'settings',
+  //       loadComponent: () =>
+  //         import('./components/home-tab/settings/settings.component').then(
+  //           (m) => m.SettingsComponent
+  //         ),
+  //     },
+  //     {
+  //       path: 'wishlist',
+  //       loadComponent: () =>
+  //         import('./components/home-tab/saved-vehicles/saved-vehicles.component').then(
+  //           (m) => m.SavedVehiclesComponent
+  //         ),
+  //     },
+  //     {
+  //       path: 'soom-box',
+  //       loadComponent: () =>
+  //         import('./components/home-tab/soom-box/soom-box.component').then(
+  //           (m) => m.SoomBoxComponent
+  //         ),
+  //     },
+  //     {
+  //       path: 'draft',
+  //       loadComponent: () =>
+  //         import('./components/home-tab/draft-product/draft-product.component').then(
+  //           (m) => m.DraftProductComponent
+  //         ),
+  //     },
+  //     // default redirect
+  //     { path: '', redirectTo: 'account', pathMatch: 'full' },
+  //   ],
+  // },
+
+
+
+
   {
-    path: 'account',
-    loadComponent: () => import('./components/account/account/account.component').then(m => m.AccountComponent)
-  },
+  path: 'account',
+  component: AccountTabsComponent,
+  children: accountTabsRoutes
+},
   {
     path: 'add-product',
     loadComponent: () => import('./components/postingAdd/product-form/product-form.component').then(m => m.ProductFormComponent),

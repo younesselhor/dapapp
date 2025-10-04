@@ -275,24 +275,23 @@
             </div>
           </div>
 
-          <!-- Category Tab Content - NEW -->
           <div *ngIf="activeTab === 'category'" class="category-content">
-            <div class="category-grid">
-              <div
-                *ngFor="let category of categories"
-                [class.selected]="category.selected"
-                (click)="selectCategory(category.id)"
-                class="category-item"
-              >
-                <div class="category-placeholder"></div>
-                <span class="category-name">{{ category.name }}</span>
-                <span *ngIf="category.selected" class="category-checkmark"
-                  >✔</span
-                >
-              </div>
-            </div>
-
-          </div>
+  <div class="category-grid">
+    <div
+      *ngFor="let category of categories"
+      [class.selected]="category.selected"
+      (click)="selectCategory(category.id)"
+      class="category-item"
+    >
+      <div class="category-placeholder"></div>
+      <span class="category-name">{{ category.name }}</span>
+      <span class="category-count" *ngIf="category.listings_count">
+        ({{ category.listings_count }})
+      </span>
+      <span *ngIf="category.selected" class="category-checkmark">✔</span>
+    </div>
+  </div>
+</div>
         </div>
 
         <!-- Products Grid -->
@@ -381,40 +380,3 @@
 
 
 
-
-        <!-- Loading State -->
-        <!-- <div
-        *ngIf="isLoading"
-        class="flex-1 flex items-center justify-center min-h-[400px]"
-      >
-        <div class="text-center">
-          <div
-            class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"
-          ></div>
-          <p class="text-lg font-medium text-gray-600 animate-pulse">
-            Loading motorcycles...
-          </p>
-          <div class="flex justify-center mt-4 space-x-1">
-            <div class="w-2 h-2 bg-blue-600 rounded-full animate-bounce"></div>
-            <div
-              class="w-2 h-2 bg-blue-600 rounded-full animate-bounce"
-              style="animation-delay: 0.1s"
-            ></div>
-            <div
-              class="w-2 h-2 bg-blue-600 rounded-full animate-bounce"
-              style="animation-delay: 0.2s"
-            ></div>
-          </div>
-        </div>
-      </div> -->
-
-        <!-- No Results State -->
-        <!-- <div
-        *ngIf="!isLoading && motorCyclesDetails.length === 0"
-        class="no-results opacity-0 translate-y-4 transition-all duration-500 ease-out"
-        [class.opacity-100]="!isLoading && motorCyclesDetails.length === 0"
-        [class.translate-y-0]="!isLoading && motorCyclesDetails.length === 0"
-      >
-        🚫 No motorcycles found matching your filters.
-      </div> -->
-      

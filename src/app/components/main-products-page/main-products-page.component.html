@@ -325,7 +325,7 @@
         </span>
       </ng-container>
       <div class="mt-10">
-        <span class="sar">SAR</span
+        <span class="sar">{{ listing.currency }}</span
         ><span class="price">{{ listing.price }}</span>
       </div>
       <div class="flex items-center text-gray-600 mt-6">
@@ -807,7 +807,7 @@
             <div class="details-Style-item">
               <span class="detail-title">The Seller Is a  </span
               ><span class="detail-value">{{
-                listing.motorcycle.seller_type
+                listing.seller_type
               }}</span>
             </div>
           </div>
@@ -1056,7 +1056,7 @@
           <div class="relative">
             <span
               class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
-              >SAR</span
+              > {{listing.currency }} </span
             >
             <input
               type="number"

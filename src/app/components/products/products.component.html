@@ -2,15 +2,15 @@
   <div class="content-container">
     <!-- Sidebar Filters -->
     <div class="sidebar" style="width: 25%;">
-      <div class="flex justify-between items-center mb-4">
+      <!-- <div class="flex justify-between items-center mb-4">
         <h2>FILTERS</h2>
         <button (click)="resetFilters()" class="text-sm [color:var(--Primary,#F03D24)] hover:underline">
           Reset All
         </button>
-      </div>
+      </div> -->
 
       <!-- Search Input -->
-      <div class="filter-section">
+      <!-- <div class="filter-section">
         <div class="filter-header">
           <span>Search Plates</span>
         </div>
@@ -28,10 +28,10 @@
             Search
           </button>
         </div>
-      </div>
+      </div> -->
 
       <!-- Country Filter -->
-      <div class="filter-section">
+      <!-- <div class="filter-section">
         <div class="filter-header" (click)="toggleCountry()">
           <span>Country</span>
           <span class="toggle-icon">{{ isCountryOpen ? '−' : '+' }}</span>
@@ -53,20 +53,16 @@
                      (change)="country.checked = !country.checked; onCheckboxChange()">
               <label [for]="'country-' + country.code">
                 {{ country.name }} 
-                <!-- <span class="count">({{ country.listings_count || 0 }})</span> -->
               </label>
             </div>
           </div>
           
-          <!-- <button class="show-more-btn" *ngIf="countries.length > displayCount" 
-                  (click)="showMoreCountries()">
-            Show More Countries
-          </button> -->
+    
         </div>
-      </div>
+      </div> -->
 
       <!-- Price Range Filter -->
-    <div class="filter-section">
+    <!-- <div class="filter-section">
   <div class="filter-header">
     <span>Price Range</span>
   </div>
@@ -92,7 +88,7 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
     </div>
 
     <!-- Main Content Area -->
@@ -100,12 +96,12 @@
       <!-- Products Grid -->
       <div class="products-grid">
         <!-- Loading Indicator -->
-        <div *ngIf="isLoading" class="w-full flex justify-center items-center">
+        <!-- <div *ngIf="isLoading" class="w-full flex justify-center items-center">
           <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-        </div>
+        </div> -->
 
         <!-- No Results -->
-        <div *ngIf="!isLoading && filteredPlates.length === 0" class="flex flex-col items-center justify-center py-12 px-4 text-center">
+        <!-- <div *ngIf="!isLoading && filteredPlates.length === 0" class="flex flex-col items-center justify-center py-12 px-4 text-center">
           <div class="max-w-md mx-auto">
             <h3 class="text-xl font-medium text-gray-800 mb-2">No plates found</h3>
             <p class="text-gray-600 mb-6">
@@ -115,7 +111,7 @@
               Clear Filter
             </button>
           </div>
-        </div>
+        </div> -->
 
         <!-- Plate Cards -->
         <div *ngFor="let plate of filteredPlates" 
@@ -124,7 +120,7 @@
           <!-- Plate display -->
           <div class="product-image" [class]="getPlateBackgroundClass(plate)">
             <!-- Saudi Plate -->
-            <ng-container *ngIf="getCountryCode(plate) === 'KSA'; else NonSaudi">
+            <!-- <ng-container *ngIf="getCountryCode(plate) === 'KSA'; else NonSaudi">
               <div *ngIf="getSaudiPlateParts(plate) as parts">
                 <div class="flex border-[2px] border-black rounded-md overflow-hidden shadow-sm bg-white">
                   <div class="grid grid-cols-2 grid-rows-2 w-[180px] h-[90px]">
@@ -139,13 +135,13 @@
                   </div>
                 </div>
               </div>
-            </ng-container>
+            </ng-container> -->
 
             <!-- Non-Saudi Plate -->
             <ng-template #NonSaudi>
               <div class="relative w-[216px] h-[90px] bg-white border-2 border-black rounded-md shadow-sm flex">
                 <!-- Fields -->
-                <div class="flex-1 relative">
+                <!-- <div class="flex-1 relative">
                   <ng-container *ngIf="getPlateFieldMap(plate) as fieldMap">
                     <div class="absolute top-1 left-1/2 transform -translate-x-1/2 text-[10px] font-semibold text-gray-600 uppercase">
                       {{ plate.license_plate?.city }}
@@ -159,9 +155,9 @@
                       </div>
                     </ng-container>
                   </ng-container>
-                </div>
+                </div> -->
                 <!-- Sidebar -->
-                <div [ngClass]="getSidebarClass(plate)" class="flex flex-col items-center justify-center text-white px-1 py-1 w-[36px]">
+                <!-- <div [ngClass]="getSidebarClass(plate)" class="flex flex-col items-center justify-center text-white px-1 py-1 w-[36px]">
                   <ng-container [ngSwitch]="getCountryCode(plate)">
                     <ng-container *ngSwitchCase="'UAE'">
                       <img src="/pictures/simple-icons_emirates.svg" class="w-4 h-4 mb-0.5" />
@@ -177,13 +173,13 @@
                       <span class="text-[10px] font-bold">KSA</span>
                     </ng-container>
                   </ng-container>
-                </div>
+                </div> -->
               </div>
             </ng-template>
           </div>
 
           <!-- Plate Details -->
-          <div class="product-content">
+          <!-- <div class="product-content">
             <h3 class="product-title" [title]="plate.title">{{ plate.title }}</h3>
             <p class="product-description">{{ getCountryName(plate) }}</p>
 
@@ -203,7 +199,7 @@
                 View Plate
               </button>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>

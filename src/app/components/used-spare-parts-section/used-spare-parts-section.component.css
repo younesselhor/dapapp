@@ -465,9 +465,7 @@ viewBtn:hover {
   background: #f9fafb;
 }
 
-.viewBtn {
-  cursor: pointer;
-}
+
 .viewBtn {
   display: flex;
   width: 292px;

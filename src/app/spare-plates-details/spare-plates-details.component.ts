@@ -7,7 +7,14 @@ import { FormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { ListingService } from '../components/postingAdd/product-form/listingService/listing-service.service';
 import { TimeAgoPipe } from '../pipe/timeAgoPipe';
+import { LocationSService } from '../services/location-s.service';
 
+interface MotorcycleType {
+  id: number;
+  name: string;
+  listings_count: number;
+  selected?: boolean;
+}
 
 interface Brand {
   id: number;
@@ -63,16 +70,16 @@ selectedCondition: 'new' | 'used' | '' = '';
   selectedModel: string = '';
   selectedYear: string = '';
    selectedCategory = '';
-    categories = [
-    { id: 1, name: 'Crosair', image: '', selected: false },
-    { id: 2, name: 'Tuning', image: '', selected: true },
-    { id: 3, name: 'Racing', image: '', selected: false },
-    { id: 4, name: 'Offroad', image: '', selected: false },
-    { id: 5, name: 'Desert', image: '', selected: false },
-    { id: 6, name: 'Street', image: '', selected: false },
-    { id: 7, name: 'Crosair', image: '', selected: false },
-    { id: 8, name: 'Crosair', image: '', selected: false },
-  ];
+  //   categories = [
+  //   { id: 1, name: 'Crosair', image: '', selected: false },
+  //   { id: 2, name: 'Tuning', image: '', selected: true },
+  //   { id: 3, name: 'Racing', image: '', selected: false },
+  //   { id: 4, name: 'Offroad', image: '', selected: false },
+  //   { id: 5, name: 'Desert', image: '', selected: false },
+  //   { id: 6, name: 'Street', image: '', selected: false },
+  //   { id: 7, name: 'Crosair', image: '', selected: false },
+  //   { id: 8, name: 'Crosair', image: '', selected: false },
+  // ];
 
 
  bikePartsBrand: any[] = [];
@@ -89,10 +96,54 @@ filteredYears: any[] = [];
  models: any[] = [];
   years: any[] = [];
 
-  constructor(private listingbyService :ListingByCatService, private router :Router,private cdr: ChangeDetectorRef, private listingService: ListingService){}
+
+
+  categories: MotorcycleType[] = [];
+selectedCategories: number[] = [];
+
+  constructor(private listingbyService :ListingByCatService, private router :Router,private cdr: ChangeDetectorRef, private listingService: ListingService , private locationService: LocationSService,){}
 
   // Update your applyFilters method
 // Replace your current applyFilters and executeFilter methods with these:
+
+// private buildFilterParams(): any {
+//   const params: any = {};
+  
+//   // Price range
+//   if (this.priceRange.min > 0) {
+//     params.min_price = this.priceRange.min;
+//   }
+//   if (this.priceRange.max > this.priceRange.min) {
+//     params.max_price = this.priceRange.max;
+//   }
+  
+//   // Condition
+//   if (this.selectedCondition) {
+//     params.condition = this.selectedCondition;
+//   }
+  
+//   // Selected brands
+//   const selectedBrands = this.bikePartsBrand.filter(b => b.checked).map(b => b.id);
+//   if (selectedBrands.length > 0) {
+//     params.bike_part_brands = selectedBrands;
+//   }
+  
+//   // Selected categories
+//   const selectedCategories = this.bikePartsCatg.filter(c => c.checked).map(c => c.id);
+//   if (selectedCategories.length > 0) {
+//     params.bike_part_categories = selectedCategories;
+//   }
+//   const selectedBrandIds = this.filteredBrands
+//     .filter((brand) => brand.checked)
+//     .map((brand) => brand.id);
+//     params.brands = this.selectedBrand ? [this.selectedBrand] : selectedBrandIds;
+//     params.models = this.selectedModel ? [this.selectedModel] : [];
+//     params.years = this.selectedYear ? [this.selectedYear] : [];
+
+
+  
+//   return params;
+// }
 
 private buildFilterParams(): any {
   const params: any = {};
@@ -121,18 +172,37 @@ private buildFilterParams(): any {
   if (selectedCategories.length > 0) {
     params.bike_part_categories = selectedCategories;
   }
+  
   const selectedBrandIds = this.filteredBrands
     .filter((brand) => brand.checked)
     .map((brand) => brand.id);
-    params.brands = this.selectedBrand ? [this.selectedBrand] : selectedBrandIds;
-    params.models = this.selectedModel ? [this.selectedModel] : [];
-    params.years = this.selectedYear ? [this.selectedYear] : [];
+    
+  params.brands = this.selectedBrand ? [this.selectedBrand] : selectedBrandIds;
+  params.models = this.selectedModel ? [this.selectedModel] : [];
+  params.years = this.selectedYear ? [this.selectedYear] : [];
 
+//   if (params.types && params.types.length > 0) {
+//   params.types.forEach((typeId: number) => {
+//     queryParams.append('types[]', typeId.toString());
+//   });
+// }
+   params.types = this.selectedCategories; // Add this line
 
+  // Get selected country name from the service
+  let selectedCountryName: string | null = null;
+  this.locationService.selectedCountry$.subscribe((country) => {
+    if (country && country.name) {
+      selectedCountryName = country.name;
+    }
+  }).unsubscribe();
+
+  // Add country to params
+  if (selectedCountryName) {
+    params.country = selectedCountryName;
+  }
   
   return params;
 }
-
 applyFilters() {
   this.isLoading = true;
   this.filterDebouncer.next(); // Trigger the debounced filter
@@ -172,9 +242,61 @@ applyFilters() {
   this.getBikePartsBrand();
   this.getBikePartCatg();
   this.getPriceRange();
+  this.getCategoryDetails();
+
+
+   this.locationService.selectedCountry$.subscribe((country) => {
+    if (country) {
+      this.executeFilter(); // Re-execute filter when country changes
+    }
+  });
 
      // this.getSparePlates();
   }
+
+
+  getCategoryDetails() {
+  this.listingbyService.getCategoryDetails().subscribe({
+    next: (response: any) => {
+      this.categories = response.motorcycle_types.map((type: any) => ({
+        id: type.id,
+        name: type.name,
+        listings_count: type.listings_count,
+        selected: false
+      }));
+    },
+    error: (err) => {
+      console.error('Error loading motorcycle types:', err);
+    }
+  });
+}
+
+
+selectCategory(categoryId: number) {
+  const category = this.categories.find(cat => cat.id === categoryId);
+  if (category) {
+    category.selected = !category.selected; // Toggle selection
+    
+    // Update selectedCategories array
+    if (category.selected) {
+      this.selectedCategories.push(categoryId);
+    } else {
+      this.selectedCategories = this.selectedCategories.filter(id => id !== categoryId);
+    }
+    
+    // Execute filter after updating selections
+    this.executeFilter();
+  }
+}
+
+private resetSelections() {
+  this.selectedBrand = '';
+  this.selectedModel = '';
+  this.selectedYear = '';
+  this.selectedCategory = '';
+  this.selectedCategories = []; // Clear the array
+  this.categories.forEach((cat) => (cat.selected = false));
+}
 
     getBrands(): void {
     this.listingbyService
@@ -207,12 +329,6 @@ applyFilters() {
     }
   }
 
-  // getSparePlates(){
-  //   this.listingbyService.getBikePartByCategory().subscribe((res :any) =>{
-  //     this.spareParts = res;
-  //     console.log('this.spareParts: ', this.spareParts);
-  //   })
-  // }
 
      truncateText(text: string, maxLength: number): string {
     return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
@@ -225,13 +341,6 @@ applyFilters() {
     this.resetSelections();
   }
 
-    private resetSelections() {
-    this.selectedBrand = '';
-    this.selectedModel = '';
-    this.selectedYear = '';
-    this.selectedCategory = '';
-    this.categories.forEach((cat) => (cat.selected = false));
-  }
 
  
   getBikePartsBrand() {
@@ -256,12 +365,12 @@ applyFilters() {
   this.selectedYear = yearValue;
   this.executeFilter();
 }
- selectCategory(categoryId: number) {
-    this.categories.forEach((cat) => {
-      cat.selected = cat.id === categoryId;
-    });
-    this.selectedCategory = categoryId.toString();
-  }
+//  selectCategory(categoryId: number) {
+//     this.categories.forEach((cat) => {
+//       cat.selected = cat.id === categoryId;
+//     });
+//     this.selectedCategory = categoryId.toString();
+//   }
 
   getPriceRange() {
   this.listingbyService.getPriceRange(2).subscribe({
@@ -349,46 +458,7 @@ applyFilters() {
   viewListing(id: number): void {
   this.router.navigate(['/listing', id]);
 }
-  // Filter application
-  // applyFilters() {
-  //   const params: any = {};
-    
-  //   // Price range
-  //   if (this.priceRange.min !== this.absoluteMin) {
-  //     params.min_price = this.priceRange.min;
-  //   }
-  //   if (this.priceRange.max !== this.absoluteMax) {
-  //     params.max_price = this.priceRange.max;
-  //   }
-    
-  //   // Condition
-  //   if (this.selectedCondition) {
-  //     params.condition = this.selectedCondition;
-  //   }
-    
-  //   // Selected brands
-  //   const selectedBrands = this.bikePartsBrand.filter(b => b.checked).map(b => b.id);
-  //   if (selectedBrands.length > 0) {
-  //     params.bike_part_brands = selectedBrands;
-  //   }
-    
-  //   // Selected categories
-  //   const selectedCategories = this.bikePartsCatg.filter(c => c.checked).map(c => c.id);
-  //   if (selectedCategories.length > 0) {
-  //     params.bike_part_categories = selectedCategories;
-  //   }
-    
-  //   // Call API with filters
-  //   this.listingbyService.filterSpareParts(params).subscribe(
-  //     (response) => {
-  //       // Handle the filtered response (update your listings display)
-  //       console.log('Filtered results:', response);
-  //     },
-  //     (error) => {
-  //       console.error('Filter error:', error);
-  //     }
-  //   );
-  // }
+
 
   // Called when brand selection changes
   onBrandChangecheck() {
@@ -456,7 +526,6 @@ showMoreCategories() {
   this.displayCount += 6;
 }
 }
- // getBikePartsBrand(){
   //   this.listingbyService.getBikePartsBrand().subscribe((res: any)=>{
   //     this.bikePartsBrand = res
   //     console.log(' this.bikePartsBrand: ',  this.bikePartsBrand);

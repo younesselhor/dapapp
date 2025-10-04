@@ -50,6 +50,7 @@
   width: 100%;          /* full width */
   max-width: 100%;      /* prevent shrinking */
   align-items: stretch; /* make children expand full width */
+  margin-top: 20px;
 }
 .main-cards {
   /* display: grid;
