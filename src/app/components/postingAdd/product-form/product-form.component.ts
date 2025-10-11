@@ -118,7 +118,7 @@ discountedPrice: number | null = null;
       name: 'Bike Part',
       icon: 'bike-part-icon',
       note: 'Fees depend on the type',
-      imageUrl: '/pictures/Remarquespart.svg',
+      imageUrl: '/pictures/usedpart.svg',
     },
     {
       category_id: 3,
@@ -1677,7 +1677,7 @@ private async handleStep3() {
     contacting_channel: step2Data.contacting_channel,
     seller_type: step2Data.seller_type,
     ...this.getTypeSpecificPayload(step1Data),
-    amount: 19.6,
+    amount: step2Data.price,
     // bank_card_id: bankCardId
     // bank_card_id: 6
   };

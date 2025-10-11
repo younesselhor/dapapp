@@ -3,6 +3,13 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { MotorcycleListing } from '../postingAdd-interface';
 
+
+interface MotorcycleDetails {
+  type: string;
+  make: string;
+  year: string;
+  model: string;
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -156,5 +163,14 @@ checkPaymentStatus(paymentId: number): Observable<any> {
 // }
 getWishlist(): Observable<any> {
   return this.http.get<any>(this.baseUrl + 'wishlists');
+}
+
+getMyGarage(): Observable<any> {
+  return this.http.get<any>(this.baseUrl + 'my-garage');  
+}
+
+
+postMyGarage(motorcycleDetails : MotorcycleDetails): Observable<any> {
+  return this.http.post<any>(this.baseUrl + 'my-garage',motorcycleDetails);  
 }
 }

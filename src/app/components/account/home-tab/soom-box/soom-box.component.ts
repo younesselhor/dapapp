@@ -147,6 +147,10 @@ export class SoomBoxComponent implements OnInit {
   currentView: 'received' | 'sent' = 'received';
 
 
+   isDropdownOpen = false;
+  selectedNumber = 28;
+
+
   showAcceptModal = false;
   selectedSoom: SoomSubmission | null = null;
 
@@ -159,6 +163,15 @@ export class SoomBoxComponent implements OnInit {
 
   toggleView(view: 'received' | 'sent') {
     this.currentView = view;
+  }
+
+   toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  selectNumber(num: number) {
+    this.selectedNumber = num;
+    this.isDropdownOpen = false;
   }
 
   // Fetch sooms received by the current user (as seller)
