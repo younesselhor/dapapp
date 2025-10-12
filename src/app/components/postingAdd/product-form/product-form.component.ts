@@ -978,6 +978,11 @@ loadPlateForm(fields: any[]) {
 
   this.platesForm = new FormGroup(group);
 }
+onBrandFocus() {
+  // when clicking on input: show all brands if not filtered yet
+  this.filteredBrands = this.brands;
+  this.showBrandDropdown = true;
+}
 
 
   getBrandPartList(){

@@ -1,5 +1,6 @@
-<div class="main-containerGarage">
-    <!-- <div class="container-content">
+<!-- View 1: Empty state with "Add Your Vehicle" - Show when NO vehicles and form is NOT shown -->
+<div class="main-containerGarage" *ngIf="garageItems.length === 0 && !showAddForm">
+    <div class="container-content">
         <div class="addV-container">
             <div class="svg-style">
                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
@@ -13,13 +14,13 @@
                 <span class="text-description">Add your bike to unlock a curated selection of the latest parts and
                     accessories tailored for your ride.</span>
             </div>
-            <button class="button-style"><span class="button-text">Add Your Vehicle</span></button>
+            <button class="button-style" (click)="showAddVehicleForm()">
+                <span class="button-text">Add Your Vehicle</span>
+            </button>
         </div>
 
         <div class="garage-help">
-            <span class="garage-head">
-                Your garage helps you
-            </span>
+            <span class="garage-head">Your garage helps you</span>
             <div class="garage-help-section">
                 <div class="help-section">
                     <svg xmlns="http://www.w3.org/2000/svg" width="31" height="30" viewBox="0 0 31 30" fill="none">
@@ -30,7 +31,6 @@
                     <span class="text-description-section">
                         Easily browse and shop for parts and accessories specific to your vehicle.
                     </span>
-
                 </div>
                 <div class="help-section">
                     <svg xmlns="http://www.w3.org/2000/svg" width="31" height="30" viewBox="0 0 31 30" fill="none">
@@ -48,59 +48,161 @@
                             d="M14.6324 4.5C14.4335 4.5 14.2427 4.57902 14.1021 4.71967C13.9614 4.86032 13.8824 5.05109 13.8824 5.25C13.8824 5.44891 13.9614 5.63968 14.1021 5.78033C14.2427 5.92098 14.4335 6 14.6324 6H16.3304C16.4696 6 16.606 6.03873 16.7244 6.11185C16.8428 6.18496 16.9386 6.28958 17.0009 6.414L19.0859 10.584C18.8555 10.5283 18.6194 10.5001 18.3824 10.5H15.1634C14.1885 10.5002 13.2329 10.7718 12.4037 11.2844C11.5744 11.7971 10.9043 12.5305 10.4684 13.4025L9.66741 15H6.38241C5.55751 15.0004 4.74861 15.2276 4.04409 15.6567C3.33957 16.0857 2.76654 16.7002 2.38762 17.4329C2.00871 18.1656 1.83848 18.9884 1.89555 19.8113C1.95262 20.6342 2.23478 21.4256 2.71121 22.099C3.18764 22.7724 3.84 23.3019 4.59701 23.6296C5.35401 23.9574 6.18653 24.0707 7.00359 23.9572C7.82064 23.8438 8.5908 23.508 9.2299 22.9864C9.869 22.4649 10.3524 21.7777 10.6274 21H13.5284C14.2248 21 14.9075 20.806 15.4999 20.4399C16.0922 20.0738 16.571 19.5499 16.8824 18.927L18.0959 16.5H18.3824C18.9685 16.5001 19.5418 16.3286 20.0315 16.0066C20.5212 15.6846 20.9058 15.2262 21.1379 14.688L21.7274 15.867C20.817 16.5336 20.1902 17.5178 19.9713 18.6247C19.7524 19.7316 19.9572 20.8803 20.5453 21.8433C21.1334 22.8062 22.0618 23.5131 23.1465 23.8239C24.2312 24.1346 25.3931 24.0265 26.4018 23.521C27.4106 23.0155 28.1926 22.1494 28.593 21.0945C28.9933 20.0396 28.9828 18.8728 28.5634 17.8253C28.144 16.7778 27.3464 15.9261 26.3287 15.4389C25.3109 14.9517 24.1473 14.8647 23.0684 15.195L22.1789 13.4175C22.4049 13.4725 22.6394 13.5 22.8824 13.5H25.1324C25.3313 13.5 25.5221 13.421 25.6627 13.2803C25.8034 13.1397 25.8824 12.9489 25.8824 12.75V8.25C25.8824 8.05109 25.8034 7.86032 25.6627 7.71967C25.5221 7.57902 25.3313 7.5 25.1324 7.5H22.8824C22.2963 7.49985 21.723 7.67138 21.2333 7.9934C20.7436 8.31542 20.359 8.77383 20.1269 9.312L18.3419 5.7435C18.1552 5.37019 17.8683 5.05617 17.5133 4.83657C17.1584 4.61696 16.7493 4.50043 16.3319 4.5H14.6324ZM22.4129 17.238L23.7119 19.836C23.7556 19.9248 23.8164 20.0041 23.8908 20.0694C23.9653 20.1346 24.0519 20.1844 24.1457 20.216C24.2395 20.2476 24.3387 20.2603 24.4374 20.2534C24.5361 20.2464 24.6325 20.2201 24.721 20.1757C24.8095 20.1314 24.8883 20.0699 24.953 19.995C25.0176 19.92 25.0668 19.833 25.0976 19.739C25.1285 19.6449 25.1404 19.5457 25.1328 19.447C25.1251 19.3483 25.0979 19.2521 25.0529 19.164L23.7539 16.566C23.9569 16.522 24.1664 16.5 24.3824 16.5C25.0854 16.4997 25.7661 16.7463 26.3058 17.1968C26.8455 17.6472 27.2099 18.2729 27.3354 18.9645C27.4608 19.6562 27.3394 20.37 26.9923 20.9813C26.6452 21.5926 26.0945 22.0626 25.4362 22.3093C24.7779 22.5559 24.0539 22.5636 23.3906 22.3309C22.7272 22.0982 22.1667 21.64 21.8067 21.0362C21.4467 20.4324 21.3102 19.7214 21.421 19.0272C21.5318 18.333 21.8829 17.6998 22.4129 17.238ZM22.8824 9H24.3824V12H22.8824C22.4846 12 22.1031 11.842 21.8217 11.5607C21.5404 11.2794 21.3824 10.8978 21.3824 10.5C21.3824 10.1022 21.5404 9.72064 21.8217 9.43934C22.1031 9.15804 22.4846 9 22.8824 9ZM9.73641 16.5H16.4189L15.5414 18.255C15.3547 18.6291 15.0674 18.9437 14.7118 19.1636C14.3563 19.3835 13.9465 19.5 13.5284 19.5H10.8824C10.8824 18.348 10.4489 17.295 9.73641 16.5ZM17.6489 15H11.3459L11.8094 14.073C12.1208 13.4501 12.5996 12.9262 13.192 12.5601C13.7844 12.194 14.467 12 15.1634 12H18.3824C18.7802 12 19.1618 12.158 19.4431 12.4393C19.7244 12.7206 19.8824 13.1022 19.8824 13.5C19.8824 13.8978 19.7244 14.2794 19.4431 14.5607C19.1618 14.842 18.7802 15 18.3824 15H17.6489ZM6.38241 16.5C7.17806 16.5 7.94112 16.8161 8.50373 17.3787C9.06634 17.9413 9.38241 18.7044 9.38241 19.5C9.38241 20.2956 9.06634 21.0587 8.50373 21.6213C7.94112 22.1839 7.17806 22.5 6.38241 22.5C5.58676 22.5 4.8237 22.1839 4.26109 21.6213C3.69848 21.0587 3.38241 20.2956 3.38241 19.5C3.38241 18.7044 3.69848 17.9413 4.26109 17.3787C4.8237 16.8161 5.58676 16.5 6.38241 16.5Z"
                             fill="#F03D24" />
                     </svg>
-
                     <span class="text-description-section">
                         Save and manage multiple vehicles in one place for a seamless experience.
                     </span>
-
                 </div>
             </div>
         </div>
-    </div> -->
+    </div>
+</div>
 
+<!-- View 2: Form to add vehicle - Show when showAddForm is true -->
+<div class="main-containerGarage" *ngIf="showAddForm">
     <div class="details-bike">
-        <span class="bike-details">
-            Enter bike details
-        </span>
+        <span class="bike-details">Enter bike details</span>
         <div class="input-details">
             <form [formGroup]="vehicleForm" (ngSubmit)="onSubmit()" class="form-add-details">
                 <div class="inputs-section">
                     <div class="input-container">
+                        <!-- Type Field -->
                         <div class="container">
                             <label class="label-text" for="bikeType">Type</label>
-                            <select id="bikeType" formControlName="type" class="select-style">
-                                <option value="">Select Bike Type</option>
+                            <select id="bikeType" formControlName="type_id" class="select-style">
+                                <option value="">Select Type</option>
+                                <option *ngFor="let type of types" [value]="type.id">
+                                    {{ type.name }}
+                                </option>
                             </select>
+                            <div *ngIf="vehicleForm.get('type_id')?.invalid && vehicleForm.get('type_id')?.touched" 
+                                 class="error-message">
+                                Type is required
+                            </div>
                         </div>
 
+                        <!-- Brand Select -->
                         <div class="container">
                             <label class="label-text" for="bikeMake">Make</label>
-                            <select id="bikeMake" formControlName="make" class="select-style">
+                            <select id="bikeMake" formControlName="brand_id" class="select-style" 
+                                    (change)="onBrandChange(vehicleForm.value.brand_id)">
                                 <option value="">Select your manufacturer</option>
+                                <option *ngFor="let brand of brands" [value]="brand.id">
+                                    {{ brand.name }}
+                                </option>
                             </select>
+                            <div *ngIf="vehicleForm.get('brand_id')?.invalid && vehicleForm.get('brand_id')?.touched" 
+                                 class="error-message">
+                                Make is required
+                            </div>
                         </div>
 
-                        <div class="container">
-                            <label class="label-text" for="bikeYear">Year</label>
-                            <select id="bikeYear" formControlName="year" class="select-style">
-                                <option value="">-----------</option>
-                            </select>
-                        </div>
-
+                        <!-- Model Select -->
                         <div class="container">
                             <label class="label-text" for="bikeModel">Model</label>
-                            <select id="bikeModel" formControlName="model" class="select-style">
+                            <select id="bikeModel" formControlName="model_id" class="select-style"
+                                    [disabled]="models.length === 0"
+                                    (change)="onModelChange(vehicleForm.value.model_id)">
                                 <option value="">Select your model</option>
+                                <option *ngFor="let model of models" [value]="model.id">
+                                    {{ model.name }}
+                                </option>
                             </select>
+                            <div *ngIf="vehicleForm.get('model_id')?.invalid && vehicleForm.get('model_id')?.touched" 
+                                 class="error-message">
+                                Model is required
+                            </div>
+                        </div>
+
+                        <!-- Year Select -->
+                        <div class="container">
+                            <label class="label-text" for="bikeYear">Year</label>
+                            <select id="bikeYear" formControlName="year_id" class="select-style"
+                                    [disabled]="years.length === 0">
+                                <option value="">-----------</option>
+                                <option *ngFor="let year of years" [value]="year.id">
+                                    {{ year.year }}
+                                </option>
+                            </select>
+                            <div *ngIf="vehicleForm.get('year_id')?.invalid && vehicleForm.get('year_id')?.touched" 
+                                 class="error-message">
+                                Year is required
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <button type="submit" class="button-add" [disabled]="vehicleForm.invalid">
-                    <span class="button-text">Save Vehicle</span>
-                </button>
+                <div class="button-group">
+                    <button type="button" class="button-cancel" (click)="cancelAddVehicle()">
+                        <span class="button-text">Cancel</span>
+                    </button>
+                    <button type="submit" class="button-add" [disabled]="vehicleForm.invalid">
+                        <span class="button-text">Save Vehicle</span>
+                    </button>
+                </div>
             </form>
         </div>
+    </div>
+</div>
 
+<!-- View 3: Garage with vehicles - Show when user HAS vehicles and form is NOT shown -->
+<div class="garage-container" *ngIf="garageItems.length > 0 && !showAddForm">
+    <div class="add-new-bike" (click)="showAddVehicleForm()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
+            <path d="M11.5 13H5.5V11H11.5V5H13.5V11H19.5V13H13.5V19H11.5V13Z" fill="#1D1B20"/>
+        </svg>
+        <span class="add-new-bike-text">Add New Bike</span>
+    </div>
+
+    <div class="motor-in-garage">
+        <div class="row-garage">
+            <div class="motor-card" *ngFor="let item of garageItems">
+                <div class="content-card">
+                    <div class="content-frame">
+                        <div class="header-card">
+                            <div class="img-moto">
+                                <div class="svg">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
+                                        <path d="M9 26.502V23.99H5V19.99H17.73L23.4 15.99H30.384L28.2 9.98999H23V5.98999H31L33.184 11.99H41V17.99H35.368L38.28 25.994C40.4895 26.0642 42.5959 26.9452 44.1975 28.469C45.7991 29.9927 46.7839 32.0526 46.9641 34.2559C47.1443 36.4592 46.5072 38.6517 45.1745 40.4154C43.8417 42.1791 41.9064 43.3906 39.7377 43.8189C37.5689 44.2472 35.3184 43.8623 33.4152 42.7377C31.5121 41.613 30.0894 39.8272 29.4185 37.7208C28.7476 35.6144 28.8754 33.3348 29.7775 31.3166C30.6797 29.2985 32.2931 27.6829 34.31 26.778L31.838 19.99H29.944L26.78 31.73L26.776 31.728L26.78 31.738L20.93 33.868C20.9767 34.236 21 34.61 21 34.99C20.9995 36.6399 20.5455 38.2579 19.6876 39.6671C18.8297 41.0764 17.6009 42.2228 16.1355 42.9809C14.6701 43.739 13.0245 44.0797 11.3786 43.9658C9.73267 43.8519 8.14971 43.2877 6.80274 42.335C5.45577 41.3822 4.39661 40.0775 3.74103 38.5635C3.08544 37.0494 2.85865 35.3843 3.08544 33.7501C3.31223 32.1159 3.98388 30.5755 5.02698 29.2972C6.07008 28.0189 7.44449 27.0519 9 26.502ZM13 26.044C14.3269 26.1925 15.6041 26.6345 16.7391 27.3377C17.874 28.041 18.8383 28.9879 19.562 30.11L23.476 28.684L25.806 19.99H24.712L19 23.99H13V26.044ZM12 39.99C13.3261 39.99 14.5979 39.4632 15.5355 38.5255C16.4732 37.5878 17 36.3161 17 34.99C17 33.6639 16.4732 32 .3921 15.5355 31.4545C14.5979 30.5168 13.3261 29.99 12 29.99C10.6739 29.99 9.40215 30.5168 8.46447 31.4545C7.52679 32.3921 7 33.6639 7 34.99C7 36.3161 7.52679 37.5878 8.46447 38.5255C9.40215 39.4632 10.6739 39.99 12 39.99ZM38 39.99C39.3261 39.99 40.5979 39.4632 41.5355 38.5255C42.4732 37.5878 43 36.3161 43 34.99C43 33.6639 42.4732 32.3921 41.5355 31.4545C40.5979 30.5168 39.3261 29.99 38 29.99C36.6739 29.99 35.4022 30.5168 34.4645 31.4545C33.5268 32.3921 33 33.6639 33 34.99C33 36.3161 33.5268 37.5878 34.4645 38.5255C35.4022 39.4632 36.6739 39.99 38 39.99Z" fill="url(#paint0_linear_21_13801)"/>
+                                        <defs>
+                                            <linearGradient id="paint0_linear_21_13801" x1="24.997" y1="5.98999" x2="24.997" y2="43.9895" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#F03D24"/>
+                                                <stop offset="1" stop-color="#202F50"/>
+                                            </linearGradient>
+                                        </defs>
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <div class="icons">
+                                <svg (click)="editVehicle(item)" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="cursor: pointer;">
+                                    <path d="M16.475 5.40799L18.592 7.52499M17.836 3.54299L12.109 9.27C11.8122 9.56484 11.6102 9.94161 11.529 10.352L11 13L13.648 12.47C14.058 12.388 14.434 12.187 14.73 11.891L20.457 6.16399C20.6291 5.9919 20.7656 5.78759 20.8588 5.56273C20.9519 5.33788 20.9998 5.09688 20.9998 4.85349C20.9998 4.61011 20.9519 4.36911 20.8588 4.14426C20.7656 3.9194 20.6291 3.71509 20.457 3.54299C20.2849 3.3709 20.0806 3.23438 19.8557 3.14124C19.6309 3.04811 19.3899 3.00017 19.1465 3.00017C18.9031 3.00017 18.6621 3.04811 18.4373 3.14124C18.2124 3.23438 18.0081 3.3709 17.836 3.54299Z" stroke="#344054" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M19 15V18C19 18.5304 18.7893 19.0391 18.4142 19.4142C18.0391 19.7893 17.5304 20 17 20H6C5.46957 20 4.96086 19.7893 4.58579 19.4142C4.21071 19.0391 4 18.5304 4 18V7C4 6.46957 4.21071 5.96086 4.58579 5.58579C4.96086 5.21071 5.46957 5 6 5H9" stroke="#344054" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <svg (click)="deleteVehicle(item.id)" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style="cursor: pointer;">
+                                    <path d="M14 11V17M10 11V17M6 7V19C6 19.5304 6.21071 20.0391 6.58579 20.4142C6.96086 20.7893 7.46957 21 8 21H16C16.5304 21 17.0391 20.7893 17.4142 20.4142C17.7893 20.0391 18 19.5304 18 19V7M4 7H20M7 7L9 3H15L17 7" stroke="#344054" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="midle-card">
+                            <span class="motorcycle-name">{{ item.brand.name }} - {{ item.model.name }}</span>
+                            <span class="motorcycle-year">{{ item.year.year }} - {{ item.type.name }}</span>
+                        </div>
+                        <div class="shop">
+                            <span class="shope-bike-text">Shop Bike </span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M4.5 12H19.5M19.5 12L13.875 6M19.5 12L13.875 18" stroke="#F03D24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+
+                        <button class="default" (click)="setAsDefault(item.id)">
+                            <span class="default-text">Default</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M8 16C9.05058 16 10.0909 15.7931 11.0615 15.391C12.0321 14.989 12.914 14.3997 13.6569 13.6569C14.3997 12.914 14.989 12.0321 15.391 11.0615C15.7931 10.0909 16 9.05058 16 8C16 6.94943 15.7931 5.90914 15.391 4.93853C14.989 3.96793 14.3997 3.08601 13.6569 2.34315C12.914 1.60028 12.0321 1.011 11.0615 0.608964C10.0909 0.206926 9.05058 -1.56548e-08 8 0C5.87827 3.16163e-08 3.84344 0.842855 2.34315 2.34315C0.842855 3.84344 0 5.87827 0 8C0 10.1217 0.842855 12.1566 2.34315 13.6569C3.84344 15.1571 5.87827 16 8 16ZM7.79378 11.2356L12.2382 5.90222L10.8729 4.76444L7.05067 9.35022L5.07289 7.37156L3.816 8.62844L6.48267 11.2951L7.17067 11.9831L7.79378 11.2356Z" fill="white"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

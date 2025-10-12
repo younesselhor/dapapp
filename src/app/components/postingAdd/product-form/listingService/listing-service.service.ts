@@ -173,4 +173,8 @@ getMyGarage(): Observable<any> {
 postMyGarage(motorcycleDetails : MotorcycleDetails): Observable<any> {
   return this.http.post<any>(this.baseUrl + 'my-garage',motorcycleDetails);  
 }
+
+getTypes(){
+  return this.http.get<any>(this.baseUrl + 'types');  
+}
 }

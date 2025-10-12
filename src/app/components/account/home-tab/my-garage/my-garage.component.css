@@ -250,3 +250,438 @@ background: var(--Primary, #F03D24);
 box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
 }
 
+
+
+
+.main-containerGarage{
+    display: flex;
+padding-bottom: 24px;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+gap: 48px;
+align-self: stretch;
+border-radius: 8px;
+border: 1px solid var(--Gray-200, #E4E7EC);
+}
+
+.container-content{
+    display: flex;
+padding: 32px 24px;
+flex-direction: column;
+align-items: center;
+gap: 24px;
+align-self: stretch;
+}
+
+.addV-container{
+    display: flex;
+flex-direction: column;
+align-items: center;
+gap: 24px;
+}
+
+.svg-style{
+    display: flex;
+width: 124px;
+height: 124px;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+gap: 48px;
+border-radius: 199998px;
+background: #FFF6EE;
+}
+
+.text-style{
+    display: flex;
+flex-direction: column;
+align-items: center;
+gap: 8px;
+}
+
+.text-primary{
+    color: var(--Gray-900---Text-Main, #101828);
+font-family: Manrope;
+font-size: 24px;
+font-style: normal;
+font-weight: 700;
+line-height: 24px; /* 100% */
+}
+
+.text-description{
+    color: var(--Gray-700---Secondary-Text, #344054);
+text-align: center;
+font-family: Manrope;
+font-size: 16px;
+font-style: normal;
+font-weight: 400;
+line-height: 24px; /* 150% */
+width: 500px;
+}
+
+.button-style{
+    display: flex;
+height: 48px;
+padding: 12px 20px;
+justify-content: center;
+align-items: center;
+gap: 8px;
+border-radius: 8px;
+background: var(--Primary, #F03D24);
+cursor: pointer;
+/* Shadow/xs */
+box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+
+}
+
+.button-text{
+    color: var(--White, #FFF);
+font-family: Manrope;
+font-size: 18px;
+font-style: normal;
+font-weight: 600;
+line-height: 24px; /* 133.333% */
+}
+
+.garage-help{
+display: flex;
+padding: 32px 24px;
+flex-direction: column;
+align-items: center;
+gap: 24px;
+align-self: stretch;
+    border-radius: 8px;
+border: 1px solid var(--Gray-200, #E4E7EC);
+background: #FCFCFC;
+
+}
+
+.garage-head{
+color: var(--Gray-900---Text-Main, #101828);
+font-family: Manrope;
+font-size: 20px;
+font-style: normal;
+font-weight: 700;
+line-height: 24px; /* 120% */
+
+}
+
+
+.garage-help-section{
+display: flex;
+align-items: center;
+gap: 24px;
+
+}
+
+
+.help-section{
+    display: flex;
+flex-direction: column;
+align-items: flex-start;
+gap: 8px;
+}
+
+
+.text-description-section{
+    color: var(--gray-900, #18181B);
+font-family: Manrope;
+font-size: 16px;
+font-style: normal;
+font-weight: 500;
+line-height: 20px; /* 125% */
+letter-spacing: -0.3px;
+width: 342.766px;
+}
+
+.details-bike{
+    display: flex;
+padding: 32px 24px;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+gap: 24px;
+align-self: stretch;
+}
+
+.bike-details{
+    color: var(--Gray-900---Text-Main, #101828);
+font-family: Manrope;
+font-size: 24px;
+font-style: normal;
+font-weight: 700;
+line-height: 40px; /* 166.667% */
+}
+
+.input-details{
+    display: flex;
+flex-direction: column;
+align-items: flex-start;
+gap: 16px;
+align-self: stretch;
+}
+
+.form-add-details{
+    display: flex;
+flex-direction: column;
+align-items: center;
+gap: 48px;
+align-self: stretch;
+}
+
+.inputs-section{
+    display: flex;
+width: 666px;
+flex-direction: column;
+align-items: flex-start;
+gap: 24px;
+}
+
+
+.input-container{
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+gap: 8px;
+align-self: stretch;
+}
+
+.container{
+
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+gap: 8px;
+align-self: stretch;
+}
+
+
+.label-text{
+color: var(--Gray-700---Secondary-Text, #344054);
+font-family: Manrope;
+font-size: 16px;
+font-style: normal;
+font-weight: 700;
+line-height: 18px; /* 112.5% */
+
+}
+
+
+.select-style{
+display: flex;
+height: 48px;
+padding: 8px 16px;
+justify-content: space-between;
+align-items: center;
+align-self: stretch;
+border-radius: 4px;
+border: 1px solid var(--Gray-200, #E4E7EC);
+background: #FFF;
+
+}
+
+.option-style{
+    color: var(--Gray-500, #667085);
+font-family: Manrope;
+font-size: 16px;
+font-style: normal;
+font-weight: 400;
+line-height: 18px; /* 112.5% */
+}
+
+
+.button-add{
+    display: flex;
+height: 48px;
+padding: 12px 20px;
+justify-content: center;
+align-items: center;
+gap: 8px;
+border-radius: 8px;
+background: var(--Primary, #F03D24);
+
+/* Shadow/xs */
+box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+}
+
+
+
+.garage-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 48px;
+    align-self: stretch;
+}
+
+.add-new-bike{
+    display: flex;
+    height: 40px;
+    padding: 12px 20px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border-radius: 8px;
+    border: 1px solid var(--Gray-500, #667085);
+    background: #FFF;
+    box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+    cursor: pointer;
+}
+
+.add-new-bike-text{
+    color: var(--Gray-700---Secondary-Text, #344054);
+    font-family: Manrope;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+}
+
+.motor-in-garage{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 48px;
+    width: 60%;
+}
+
+.row-garage{
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping */
+    align-items: flex-start;
+    gap: 12px;
+    align-self: stretch;
+    justify-content: flex-start; /* Align items to the start */
+}
+
+.motor-card{
+    display: flex;
+    width: calc(50% - 6px); /* 50% width minus half of the gap */
+    padding: 32px 24px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+    border-radius: 8px;
+    border: 1px solid var(--Gray-200, #E4E7EC);
+    background: #FCFCFC;
+    box-sizing: border-box; /* Include padding and border in width calculation */
+}
+
+.content-card{
+    display: flex;
+    width: 100%; /* Changed from fixed width */
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+}
+
+.content-frame{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    align-self: stretch;
+}
+
+.header-card{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    align-self: stretch;
+}
+
+.img-moto{
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.svg{
+    display: flex;
+    width: 68px;
+    padding: 8.99px 10px 11.01px 10px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 6px;
+    border: 1px solid #F2F4F7;
+    background: #FFF;
+}
+
+.icons{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.midle-card{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    align-self: stretch;
+}
+
+.motorcycle-name{
+    color: #344054;
+    font-family: Manrope;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 20px;
+    align-self: stretch;
+}
+
+.motorcycle-year{
+    color: #667085;
+    font-family: Manrope;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    align-self: stretch;
+}
+
+.shop{
+    display: flex;
+    align-items: flex-start;
+    gap: 4px;
+    cursor: pointer;
+}
+
+.shope-bike-text{
+    color: var(--Primary, #F03D24);
+    font-family: Manrope;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+}
+
+.default{
+    display: flex;
+    padding: 8px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border-radius: 4px;
+    background: var(--Primary, #F03D24);
+    border: none;
+    cursor: pointer;
+}
+
+.default-text{
+    color: var(--White, #FFF);
+    font-family: Manrope;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 16px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .motor-card {
+        width: 100%; /* Stack on smaller screens */
+    }
+}

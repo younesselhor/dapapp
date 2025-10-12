@@ -1,122 +1,11 @@
-<!-- 
-
-
-
-<div class="tabs flex">
-    <button (click)="toggleView('received')"
-        [class]="currentView === 'received' ? 'px-4 py-2 border-b-2 border-red-500 text-red-500 bg-white' : 'px-4 py-2 border border-gray-300 text-gray-600 bg-gray-50'">
-        Received
-    </button>
-    <button (click)="toggleView('sent')"
-        [class]="currentView === 'sent' ? 'px-4 py-2 border-b-2 border-red-500 text-red-500 bg-white' : 'px-4 py-2 border border-gray-300 text-gray-600 bg-gray-50'">
-        Sent
-    </button>
-</div>
-
-<div *ngIf="currentView === 'received'">
-    <table class="min-w-full mt-4 border border-gray-300 text-sm">
-        <thead>
-            <tr class="bg-gray-100 text-left">
-                <th class="p-2 text-gray-500">Ad Name</th>
-                <th class="p-2 text-gray-500">Country</th>
-                <th class="p-2 text-gray-500">Amount</th>
-                <th class="p-2 text-gray-500">Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let soom of receivedSooms" class="border-b border-gray-300">
-                <td class="p-2">
-                    {{ soom.listing.title }}
-                    <br />
-                    <ng-container *ngIf="getDaysLeft(soom.submission_date) > 1">
-                        <small class="text-gray-500">
-                            Expires in {{ getDaysLeft(soom.submission_date) }} days
-                        </small>
-                    </ng-container>
-                    <ng-container *ngIf="getDaysLeft(soom.submission_date) === 1">
-                        <small class="text-yellow-500">
-                            Expires in {{ getDaysLeft(soom.submission_date) }} day
-                        </small>
-                    </ng-container>
-                    <ng-container *ngIf="isExpired(soom.submission_date)">
-                        <button class="text-blue-600 font-medium underline bg-transparent border-none cursor-pointer"
-                            (click)="openModal()">
-                            Submit another soom →
-                        </button>
-                    </ng-container>
-                </td>
-                <td class="p-2">{{ soom.listing.country?.code || 'N/A' }}</td>
-                <td class="p-2">{{ soom.amount }} SAR</td>
-                <td class="p-2">
-                    <span *ngIf="soom.status === 'accepted'" class="text-green-600 font-semibold">Accepted</span>
-                    <span *ngIf="soom.status === 'rejected'" class="text-red-500 font-semibold">Rejected</span>
-                    <ng-container *ngIf="soom.status === 'pending'">
-                        <button (click)="acceptSoom(soom)"
-                            class="text-green-600 font-bold mr-2 hover:bg-green-50 px-2 py-1 rounded">✓</button>
-                        <button (click)="rejectSoom(soom)"
-                            class="text-red-600 font-bold hover:bg-red-50 px-2 py-1 rounded">✗</button>
-                    </ng-container>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<div *ngIf="currentView === 'sent'">
-    <table class="min-w-full mt-4 border text-sm">
-        <thead>
-            <tr class="bg-gray-100 text-left">
-                <th class="p-2 text-gray-500">Ad Name</th>
-                <th class="p-2 text-gray-500">Country</th>
-                <th class="p-2 text-gray-500">Amount</th>
-                <th class="p-2 text-gray-500">Status</th>
-                <th class="p-2 text-gray-500">Seller Information</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let soom of sentSooms" class="border-b">
-                <td class="p-2">
-                    {{ soom.listing.title }}
-                    <br />
-                    <ng-container *ngIf="getDaysLeft(soom.submission_date) > 1">
-                        <small class="text-gray-500">
-                            Expires in {{ getDaysLeft(soom.submission_date) }} days
-                        </small>
-                    </ng-container>
-                    <ng-container *ngIf="getDaysLeft(soom.submission_date) === 1">
-                        <small class="text-yellow-500">
-                            Expires in {{ getDaysLeft(soom.submission_date) }} day
-                        </small>
-                    </ng-container>
-                    <ng-container *ngIf="isExpired(soom.submission_date)">
-                        <button class="text-blue-600 font-medium underline bg-transparent border-none cursor-pointer"
-                            (click)="openModal()">
-                            Submit another soom →
-                        </button>
-                    </ng-container>
-                </td>
-                <td class="p-2">{{ soom.listing.country?.code}}</td>
-                <td class="p-2">{{ soom.amount }} SAR</td>
-                <td class="p-2">
-                    <span *ngIf="soom.status === 'accepted'" class="text-green-600 font-semibold">Accepted</span>
-                    <span *ngIf="soom.status === 'rejected'" class="text-red-500 font-semibold">Rejected</span>
-                    <span *ngIf="soom.status === 'pending'" class="text-gray-500 font-semibold">Pending</span>
-                </td>
-                <td class="p-2">
-                    <span *ngIf="soom.status === 'accepted'"
-                        class="text-blue-600 font-medium cursor-pointer hover:underline">View Seller Info</span>
-                    <span *ngIf="soom.status !== 'accepted'">-</span>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div> -->
 <div class="soom-box-container">
     <div class="tabs">
-        <button (click)="toggleView('received')" class="button-style">
+        <button (click)="toggleView('received')" 
+                [class]="currentView === 'received' ? 'button-style active' : 'button-style'">
             Received
         </button>
-        <button (click)="toggleView('sent')" class="button-styleS">
+        <button (click)="toggleView('sent')" 
+                [class]="currentView === 'sent' ? 'button-styleS active' : 'button-styleS'">
             Sent
         </button>
     </div>
@@ -126,92 +15,186 @@
             <div class="text-and-badge">
                 <span class="text">Soom Requests</span>
                 <div class="badge">
-                    <span class="badge-text">28 Request</span>
+                    <span class="badge-text">
+                        {{ currentView === 'received' ? receivedSooms.length : sentSooms.length }} Request{{ (currentView === 'received' ? receivedSooms.length : sentSooms.length) !== 1 ? 's' : '' }}
+                    </span>
                 </div>
             </div>
         </div>
 
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th class="header-text">Ad Name</th>
-                        <th class="header-text text-right">Country</th>
-                        <th class="header-text text-right">Amount</th>
-                        <th class="header-text text-right">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <ng-container *ngFor="let soom of receivedSooms; let last = last">
+        <!-- Received Tab Content -->
+        <div *ngIf="currentView === 'received'">
+            <div class="table-wrapper">
+                <table>
+                    <thead>
                         <tr>
-                            <td class="table-cell-content">
-                                <div class="text-and-supp">
-                                    <span class="table-title">{{ soom.listing.title }}</span>
+                            <th class="header-text">Ad Name</th>
+                            <th class="header-text text-right">Country</th>
+                            <th class="header-text text-right">Amount</th>
+                            <th class="header-text text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor="let soom of receivedSooms; let last = last">
+                            <tr>
+                                <td class="table-cell-content">
+                                    <div class="text-and-supp">
+                                        <span class="table-title">{{ soom.listing.title }}</span>
 
-                                    <ng-container *ngIf="getDaysLeft(soom.submission_date) > 1">
-                                        <small class="morethanone">
-                                            Expires in {{ getDaysLeft(soom.submission_date) }} days
-                                        </small>
-                                    </ng-container>
+                                        <ng-container *ngIf="getDaysLeft(soom.submission_date) > 1">
+                                            <small class="morethanone">
+                                                Expires in {{ getDaysLeft(soom.submission_date) }} days
+                                            </small>
+                                        </ng-container>
 
-                                    <ng-container *ngIf="getDaysLeft(soom.submission_date) === 1">
-                                        <small class="oneday">
-                                            Expires in {{ getDaysLeft(soom.submission_date) }} day
-                                        </small>
-                                    </ng-container>
+                                        <ng-container *ngIf="getDaysLeft(soom.submission_date) === 1">
+                                            <small class="oneday">
+                                                Expires in {{ getDaysLeft(soom.submission_date) }} day
+                                            </small>
+                                        </ng-container>
 
-                                    <ng-container *ngIf="isExpired(soom.submission_date)">
-                                        <button class="btn-soom">
-                                            Submit another Soom
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                                viewBox="0 0 20 20" fill="none">
-                                                <path
-                                                    d="M4.16602 10.0001H15.8327M15.8327 10.0001L9.99935 4.16675M15.8327 10.0001L9.99935 15.8334"
-                                                    stroke="#1852F1" stroke-width="1.67" stroke-linecap="round"
-                                                    stroke-linejoin="round" />
-                                            </svg>
+                                        <ng-container *ngIf="isExpired(soom.submission_date)">
+                                            <button class="btn-soom">
+                                                Submit another Soom
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 20 20" fill="none">
+                                                    <path
+                                                        d="M4.16602 10.0001H15.8327M15.8327 10.0001L9.99935 4.16675M15.8327 10.0001L9.99935 15.8334"
+                                                        stroke="#1852F1" stroke-width="1.67" stroke-linecap="round"
+                                                        stroke-linejoin="round" />
+                                                </svg>
+                                            </button>
+                                        </ng-container>
+                                    </div>
+                                </td>
+
+                                <td class="table-cell-content country-cell text-right">
+                                    {{ soom.listing.country?.code || "N/A" }}
+                                </td>
+
+                                <td class="table-cell-content price-cell text-right">
+                                    {{ soom.amount }} SAR
+                                </td>
+
+                                <td class="table-cell-content text-right">
+                                    <span *ngIf="soom.status === 'accepted'" class="accepted">
+                                        Accepted
+                                    </span>
+                                    <span *ngIf="soom.status === 'rejected'" class="rejected">
+                                        Rejected
+                                    </span>
+
+                                    <div *ngIf="soom.status === 'pending'" class="action">
+                                        <button (click)="rejectSoom(soom)" class="action-btn reject-btn" title="Reject">
+                                            ✗
                                         </button>
-                                    </ng-container>
-                                </div>
-                            </td>
+                                        <button (click)="openAcceptModal(soom)" class="action-btn accept-btn" title="Accept">
+                                            ✓
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
 
-                            <td class="table-cell-content country-cell text-right">
-                                {{ soom.listing.country?.code || "N/A" }}
-                            </td>
-
-                            <td class="table-cell-content price-cell text-right">
-                                {{ soom.amount }} SAR
-                            </td>
-
-                            <td class="table-cell-content text-right">
-                                <span *ngIf="soom.status === 'accepted'" class="accepted">
-                                    Accepted
-                                </span>
-                                <span *ngIf="soom.status === 'rejected'" class="rejected">
-                                    Rejected
-                                </span>
-
-                                <div *ngIf="soom.status === 'pending'" class="action">
-                                    <button (click)="acceptSoom(soom)" class="action-btn accept-btn" title="Accept">
-                                        ✓
-                                    </button>
-                                    <button (click)="rejectSoom(soom)" class="action-btn reject-btn" title="Reject">
-                                        ✗
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr *ngIf="!last" class="divider-row">
-                            <td colspan="4">
-                                <div class="divider"></div>
-                            </td>
-                        </tr>
-                    </ng-container>
-                </tbody>
-            </table>
+                            <tr *ngIf="!last" class="divider-row">
+                                <td colspan="4">
+                                    <div class="divider"></div>
+                                </td>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
+        <!-- Sent Tab Content -->
+        <div *ngIf="currentView === 'sent'">
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="header-text">Ad Name</th>
+                            <th class="header-text text-right">Country</th>
+                            <th class="header-text text-right">Amount</th>
+                            <th class="header-text text-right">Status</th>
+                            <th class="header-text text-right">Seller Information</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor="let soom of sentSooms; let last = last">
+                            <tr>
+                                <td class="table-cell-content">
+                                    <div class="text-and-supp">
+                                        <span class="table-title">{{ soom.listing.title }}</span>
+
+                                        <ng-container *ngIf="getDaysLeft(soom.submission_date) > 1">
+                                            <small class="morethanone">
+                                                Expires in {{ getDaysLeft(soom.submission_date) }} days
+                                            </small>
+                                        </ng-container>
+
+                                        <ng-container *ngIf="getDaysLeft(soom.submission_date) === 1">
+                                            <small class="oneday">
+                                                Expires in {{ getDaysLeft(soom.submission_date) }} day
+                                            </small>
+                                        </ng-container>
+
+                                        <ng-container *ngIf="isExpired(soom.submission_date)">
+                                            <button class="btn-soom">
+                                                Submit another Soom
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                    viewBox="0 0 20 20" fill="none">
+                                                    <path
+                                                        d="M4.16602 10.0001H15.8327M15.8327 10.0001L9.99935 4.16675M15.8327 10.0001L9.99935 15.8334"
+                                                        stroke="#1852F1" stroke-width="1.67" stroke-linecap="round"
+                                                        stroke-linejoin="round" />
+                                                </svg>
+                                            </button>
+                                        </ng-container>
+                                    </div>
+                                </td>
+
+                                <td class="table-cell-content country-cell text-right">
+                                    {{ soom.listing.country?.code || "N/A" }}
+                                </td>
+
+                                <td class="table-cell-content price-cell text-right">
+                                    {{ soom.amount }} SAR
+                                </td>
+
+                                <td class="table-cell-content text-right">
+                                    <ng-container [ngSwitch]="soom.status">
+                                        <span *ngSwitchCase="'accepted'" class="status-accepted">
+                                            Accepted
+                                        </span>
+                                        <span *ngSwitchCase="'rejected'" class="status-rejected">
+                                            Rejected
+                                        </span>
+                                        <span *ngSwitchDefault [class]="isExpired(soom.submission_date) ? 'status-expired' : 'status-pending'">
+                                            {{ isExpired(soom.submission_date) ? 'Expired' : 'Pending' }}
+                                        </span>
+                                    </ng-container>
+                                </td>
+
+                                <td class="table-cell-content text-right seller-info-cell">
+                                    <button *ngIf="soom.status === 'accepted'" class="view-seller-info-btn" (click)="viewSellerInfo(soom)">
+                                        View Seller Info
+                                    </button>
+                                    <span *ngIf="soom.status !== 'accepted'">-</span>
+                                </td>
+                            </tr>
+
+                            <tr *ngIf="!last" class="divider-row">
+                                <td colspan="5">
+                                    <div class="divider"></div>
+                                </td>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Pagination -->
         <div class="pagination">
             <div class="pagination-content">
                 <div class="btn-prev">
@@ -225,9 +208,7 @@
                     </button>
                 </div>
 
-
                 <div class="right-content-pagination">
-
                     <div class="number-of-page">
                         <span class="show">Show</span>
                         <div class="dropdown-container">
@@ -241,7 +222,6 @@
                                     </svg>
                                 </button>
 
-                                <!-- Dropdown menu (optional) -->
                                 <div class="dropdown-menu" *ngIf="isDropdownOpen">
                                     <div class="dropdown-item" (click)="selectNumber(10)">10</div>
                                     <div class="dropdown-item" (click)="selectNumber(20)">20</div>
@@ -252,10 +232,8 @@
                         </div>
                     </div>
 
-
                     <div class="btn-next">
                         <button class="btn-right">
-
                             <span class="text-btn-right">Next</span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14"
                                 fill="none">
@@ -267,62 +245,114 @@
                         </button>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
-
-
-
-
-
 </div>
 
-<div class="modal">
-    <div class="top-content-modal">
-        <div class="svg-modal">
-       <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26" fill="none">
-  <path d="M13.0007 8.3335C14.9336 8.3335 16.5007 6.76649 16.5007 4.8335C16.5007 2.9005 14.9336 1.3335 13.0007 1.3335C11.0677 1.3335 9.50065 2.9005 9.50065 4.8335C9.50065 6.76649 11.0677 8.3335 13.0007 8.3335ZM13.0007 8.3335V24.6668M13.0007 24.6668C9.90646 24.6668 6.939 23.4377 4.75107 21.2497C2.56315 19.0618 1.33398 16.0944 1.33398 13.0002H4.83398M13.0007 24.6668C16.0948 24.6668 19.0623 23.4377 21.2502 21.2497C23.4382 19.0618 24.6673 16.0944 24.6673 13.0002H21.1673" stroke="#F03D24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
-        </div>
+<!-- Accept Confirmation Modal -->
+<div class="modal-backdrop" *ngIf="showAcceptModal" (click)="closeModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+        <div class="top-content-modal">
+            <div class="svg-modal">
+                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26" fill="none">
+                    <path d="M13.0007 8.3335C14.9336 8.3335 16.5007 6.76649 16.5007 4.8335C16.5007 2.9005 14.9336 1.3335 13.0007 1.3335C11.0677 1.3335 9.50065 2.9005 9.50065 4.8335C9.50065 6.76649 11.0677 8.3335 13.0007 8.3335ZM13.0007 8.3335V24.6668M13.0007 24.6668C9.90646 24.6668 6.939 23.4377 4.75107 21.2497C2.56315 19.0618 1.33398 16.0944 1.33398 13.0002H4.83398M13.0007 24.6668C16.0948 24.6668 19.0623 23.4377 21.2502 21.2497C23.4382 19.0618 24.6673 16.0944 24.6673 13.0002H21.1673" stroke="#F03D24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
 
-        <div class="text-top-modal">
-            <span class="price-modal">1,200 SAR</span>
-            <span class="user-made">
-                User Made a soom request
-            </span>
-            <span class="expired-date-modal">Expires in 1 day</span>
-        </div>
-    </div>
-
-    <div class="product-card-modal">
-        <img src="" alt="" class="img-card-modal">
-        <div class="content-modal">
-            <div class="name-description">
-                <span class="name-product-modal">New Brakes for BMW offro..</span>
-                <span class="description-product-modal">Min. amount to offer: 800 SAR</span>
+            <div class="text-top-modal">
+                <span class="price-modal">{{ selectedSoom?.amount }} SAR</span>
+                <span class="user-made">
+                    {{ selectedSoom?.user?.first_name }} {{ selectedSoom?.user?.last_name }} made a soom request
+                </span>
+                <span class="expired-date-modal">
+                    <ng-container *ngIf="selectedSoom && getDaysLeft(selectedSoom.submission_date) > 1">
+                        Expires in {{ getDaysLeft(selectedSoom.submission_date) }} days
+                    </ng-container>
+                    <ng-container *ngIf="selectedSoom && getDaysLeft(selectedSoom.submission_date) === 1">
+                        Expires in 1 day
+                    </ng-container>
+                </span>
             </div>
         </div>
 
-       
-    </div>
-     <div>
-        <p class="text-modal">By confirming, we will put your ad on hold and send your information to the buyer to
-            communicate with you, if you deny the buyer has to request again.</p>
-            </div>
-
-
-            <div class="button-section">
-                <div class="btn-sec">
-                    <button class="reject-btn">
-                        <span class="reject-text">Reject</span>
-                    </button>
-
-                      <button class="accept-btn-modal">
-                        <span class="accept-text">Accepte</span>
-                    </button>
+        <div class="product-card-modal">
+            <img [src]="selectedSoom?.first_image || selectedSoom?.listing?.images?.[0]?.image_url" alt="Product" class="img-card-modal">
+            <div class="content-modal">
+                <div class="name-description">
+                    <span class="name-product-modal">{{ selectedSoom?.listing?.title }}</span>
+                    <span class="description-product-modal">
+                        Min. amount to offer: {{ selectedSoom?.min_soom }} SAR
+                    </span>
                 </div>
+            </div>
+        </div>
 
+        <div>
+            <p class="text-modal">
+                By confirming, we will put your ad on hold and send your information to the buyer to
+                communicate with you. If you deny, the buyer has to request again.
+            </p>
+        </div>
+
+        <div class="button-section">
+            <div class="btn-sec">
+                <button class="reject-btn-modal" (click)="rejectSoom(selectedSoom!)">
+                    <span class="reject-text">Reject</span>
+                </button>
+
+                <button class="accept-btn-modal" (click)="confirmAcceptSoom()">
+                   Accept
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Accepted Confirmation Modal -->
+<div class="modal-backdrop" *ngIf="showAcceptedModal" (click)="closeAcceptedModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+        <div class="top-content-modal">
+            <div class="svg-modal-accept">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" fill="none">
+                    <path d="M21 10.0799V10.9999C20.9988 13.1563 20.3005 15.2545 19.0093 16.9817C17.7182 18.7088 15.9033 19.9723 13.8354 20.5838C11.7674 21.1952 9.55726 21.1218 7.53447 20.3744C5.51168 19.6271 3.78465 18.246 2.61096 16.4369C1.43727 14.6279 0.879791 12.4879 1.02168 10.3362C1.16356 8.18443 1.99721 6.13619 3.39828 4.49694C4.79935 2.85768 6.69279 1.71525 8.79619 1.24001C10.8996 0.764774 13.1003 0.982201 15.07 1.85986M21 2.99986L11 13.0099L8.00001 10.0099" stroke="#086A47" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
             </div>
 
+            <div class="text-top-modal">
+                <span class="soom-modal-accepted">Soom Request accepted</span>
+                <span class="user-contact-text">
+                    Your contact information will be sent to this customer to contact you
+                </span>
+            </div>
+        </div>
+        
+        <div class="user-made-soom">
+            <div class="avatar">
+                {{ getInitials(selectedSoom?.user?.first_name, selectedSoom?.user?.last_name) }}
+            </div>
+            <div class="user-name">
+                {{ selectedSoom?.user?.first_name}} {{ selectedSoom?.user?.last_name}}
+            </div>
+            <div class="price-made">
+                {{selectedSoom?.amount}}Sar
+            </div>
+        </div>
+
+        <div class="product-card-modal">
+            <img [src]="selectedSoom?.first_image || selectedSoom?.listing?.images?.[0]?.image_url" alt="Product" class="img-card-modal">
+            <div class="content-modal">
+                <div class="name-description">
+                    <span class="name-product-modal">{{ selectedSoom?.listing?.title }}</span>
+                    <span class="description-product-modal">
+                        Min. amount to offer: {{ selectedSoom?.min_soom }} SAR
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="close-btn-modal">
+            <button class="btn-close" (click)="closeAcceptedModal()">Close</button>
+        </div>
+    </div>
 </div>
