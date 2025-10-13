@@ -66,6 +66,8 @@ export class MainProductsPageComponent implements OnInit {
   confirmSoomStep = false;
   isModalOpen = false;
 
+  showShareMenu = false;
+
   allPositions: string[] = [
     'top-left', 'top-center', 'top-right',
     'left-center', 'center', 'right-center',
@@ -418,6 +420,102 @@ export class MainProductsPageComponent implements OnInit {
       } else if (event.key === 'ArrowLeft') {
         this.prevImage();
       }
+    }
+  }
+
+
+
+  toggleShareMenu(): void {
+  this.showShareMenu = !this.showShareMenu;
+}
+
+shareVia(platform: string): void {
+  const url = encodeURIComponent(window.location.href);
+  const text = encodeURIComponent(`Check out this ${this.getTitle()}`);
+  
+  let shareUrl = '';
+  
+  switch (platform) {
+    case 'whatsapp':
+      shareUrl = `https://api.whatsapp.com/send?text=${text}%20${url}`;
+      break;
+    case 'facebook':
+      shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+      break;
+    case 'twitter':
+      shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+      break;
+    case 'telegram':
+      shareUrl = `https://t.me/share/url?url=${url}&text=${text}`;
+      break;
+    case 'email':
+      shareUrl = `mailto:?subject=${encodeURIComponent('Check this out!')}&body=${text}%20${url}`;
+      break;
+    case 'copy':
+      this.copyToClipboard(window.location.href);
+      this.showShareMenu = false;
+      return;
+  }
+  
+  if (shareUrl) {
+    window.open(shareUrl, '_blank', 'width=600,height=400');
+    this.showShareMenu = false;
+  }
+}
+
+copyToClipboard(text: string): void {
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(() => {
+      alert('Link copied to clipboard!');
+      // Or use toast: this.toastService.success('Link copied to clipboard!');
+    });
+  } else {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-999999px';
+    document.body.appendChild(textArea);
+    textArea.select();
+    try {
+      document.execCommand('copy');
+      alert('Link copied to clipboard!');
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
+    document.body.removeChild(textArea);
+  }
+}
+
+@HostListener('document:click', ['$event'])
+closeShareMenu(event: Event): void {
+  const target = event.target as HTMLElement;
+  if (!target.closest('.share-menu-container')) {
+    this.showShareMenu = false;
+  }
+}
+
+
+   share() {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent("Check this out!");
+
+    // list of possible share URLs
+    const shareOptions = [
+      `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+      `https://api.whatsapp.com/send?text=${text}%20${url}`,
+      `https://t.me/share/url?url=${url}&text=${text}`,
+      `mailto:?subject=Check this out&body=${text}%20${url}`
+    ];
+
+    // let user choose
+    const choice = prompt(
+      "Choose share option:\n1. Facebook\n2. WhatsApp\n3. Telegram\n4. Email",
+      "1"
+    );
+
+    const index = parseInt(choice || '1', 10) - 1;
+    if (shareOptions[index]) {
+      window.open(shareOptions[index], "_blank");
     }
   }
 }

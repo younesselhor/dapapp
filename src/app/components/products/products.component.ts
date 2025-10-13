@@ -1,8 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ListingByCatService } from '../../services/listingsByCategory/listing-by-cat.service';
+import { NgxSliderModule, Options, ChangeContext } from '@angular-slider/ngx-slider';
+
+import { isPlatformBrowser } from '@angular/common';
+import { Inject, PLATFORM_ID } from '@angular/core';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 interface Plate {
   id: number;
@@ -10,10 +16,17 @@ interface Plate {
   description: string;
   price: string | null;
   image: string | null;
+  currency?: string;
+  seller_location?: {
+    country: string;
+    city: string;
+  };
   license_plate?: {
     format: string;
-    city: string;
-    country: string;
+    plate_location: {
+      city: string;
+      country: string;
+    };
     fields: {
       field_id: number;
       field_name: string;
@@ -31,56 +44,213 @@ interface PlateField {
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, NgxSliderModule],
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.css']
 })
-export class ProductsComponent implements OnInit {
+export class ProductsComponent implements OnInit, OnDestroy {
   plates: Plate[] = [];
   filteredPlates: Plate[] = [];
-  searchQuery: string = '';
+  
+  // Separate search queries
+  countrySearchQuery: string = ''; // For filtering displayed countries
+  plateSearchQuery: string = '';   // For API plate search
+  
   isLoading: boolean = false;
   
-  // Filter properties
   isCountryOpen = true;
   
-  // Updated countries with proper IDs matching your API
   countries = [
     { id: 1, code: 'KSA', name: 'Saudi Arabia', checked: false },
     { id: 2, code: 'UAE', name: 'United Arab Emirates', checked: false },
     { id: 3, code: 'KW', name: 'Kuwait', checked: false }
   ];
 
+  // Filtered countries for display
+  get filteredCountries() {
+    if (!this.countrySearchQuery.trim()) {
+      return this.countries;
+    }
+    const query = this.countrySearchQuery.toLowerCase();
+    return this.countries.filter(country => 
+      country.code.toLowerCase().includes(query) || 
+      country.name.toLowerCase().includes(query)
+    );
+  }
+
   priceRange = {
     min: 0,
     max: 10000
   };
-   absoluteMin = 0;
-   absoluteMax = 0;
+  
   allPositions: string[] = [
     'top-left', 'top-center', 'top-right',
     'left-center', 'center', 'right-center',
     'bottom-left', 'bottom-center', 'bottom-right'
   ];
+  
+  absoluteMin = 0;
+  absoluteMax = 10000;
+  
+  isBrowser = false;
+  
+  // Subjects for debouncing
+  private priceChangeSubject = new Subject<{ min: number, max: number }>();
+  private plateSearchSubject = new Subject<string>(); // Add this for plate search debouncing
+  
+  options: Options = {
+    floor: 0,
+    ceil: 10000,
+    step: 10,
+    showTicks: false,
+    showSelectionBar: true,
+    translate: (value: number): string => `${value} SAR`,
+  };
 
   constructor(
     private listingService: ListingByCatService,
-    private router: Router
-  ) {}
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+  }
 
   ngOnInit() {
+    this.setupPriceDebounce();
+    this.setupPlateSearchDebounce(); // Add this
+    this.getPriceRange();
+  }
+
+  ngOnDestroy() {
+    this.priceChangeSubject.complete();
+    this.plateSearchSubject.complete(); // Add this
+  }
+
+  // Setup debouncing for price changes
+  setupPriceDebounce() {
+    this.priceChangeSubject.pipe(
+      debounceTime(500),
+      distinctUntilChanged((prev, curr) => 
+        prev.min === curr.min && prev.max === curr.max
+      )
+    ).subscribe(priceRange => {
+      console.log('Debounced price change:', priceRange);
+      this.loadPlates();
+    });
+  }
+
+  // Setup debouncing for plate search
+  setupPlateSearchDebounce() {
+    this.plateSearchSubject.pipe(
+      debounceTime(500), // Wait 500ms after user stops typing
+      distinctUntilChanged() // Only trigger if value actually changed
+    ).subscribe(searchQuery => {
+      console.log('Debounced plate search:', searchQuery);
+      this.loadPlates();
+    });
+  }
+
+  // Called when user types in plate search input
+  // onPlateSearchChange() {
+  //   this.plateSearchSubject.next(this.plateSearchQuery);
+  // }
+
+  // Called when slider value changes
+  onSliderChange(changeContext: ChangeContext): void {
+    console.log('Slider change event:', changeContext);
+    
+    if (changeContext.value !== undefined && changeContext.highValue !== undefined) {
+      this.priceRange.min = changeContext.value;
+      this.priceRange.max = changeContext.highValue;
+      
+      console.log('New price range:', this.priceRange);
+      
+      this.priceChangeSubject.next({
+        min: this.priceRange.min,
+        max: this.priceRange.max
+      });
+    }
+  }
+
+  // Called when user types in plate search input
+onPlateSearchChange() {
+  console.log('Plate search changed to:', this.plateSearchQuery); // Debug log
+  this.plateSearchSubject.next(this.plateSearchQuery);
+}
+
+  onMinInputChange() {
+    if (this.priceRange.min < this.absoluteMin) {
+      this.priceRange.min = this.absoluteMin;
+    }
+    if (this.priceRange.min > this.priceRange.max) {
+      this.priceRange.max = this.priceRange.min;
+    }
+    
+    this.updateSliderOptions();
     this.loadPlates();
+  }
+
+  onMaxInputChange() {
+    if (this.priceRange.max > this.absoluteMax) {
+      this.priceRange.max = this.absoluteMax;
+    }
+    if (this.priceRange.max < this.priceRange.min) {
+      this.priceRange.min = this.priceRange.max;
+    }
+    
+    this.updateSliderOptions();
+    this.loadPlates();
+  }
+
+  updateSliderOptions() {
+    this.options = Object.assign({}, this.options);
+  }
+
+  getPriceRange() {
+    this.listingService.getPriceRange(3).subscribe({
+      next: (res: any) => {
+        this.absoluteMin = res.min_price > 0 ? res.min_price : 0;
+        this.absoluteMax = res.max_price > 0 ? res.max_price : 10000;
+        
+        this.priceRange = {
+          min: this.absoluteMin,
+          max: this.absoluteMax
+        };
+        
+        this.options = {
+          ...this.options,
+          floor: this.absoluteMin,
+          ceil: this.absoluteMax
+        };
+        
+        console.log('Price range loaded:', this.priceRange);
+        this.loadPlates();
+      },
+      error: (err) => {
+        console.error('Error getting price range:', err);
+        this.absoluteMin = 0;
+        this.absoluteMax = 10000;
+        this.priceRange = {
+          min: this.absoluteMin,
+          max: this.absoluteMax
+        };
+        this.loadPlates();
+      }
+    });
   }
 
   loadPlates() {
     this.isLoading = true;
     const params = this.buildFilterParams();
     
+    console.log('Loading plates with params:', params);
+    
     this.listingService.filterLicencePlate(params).subscribe({
       next: (res) => {
-        this.plates = res.results || res; // Handle different response structures
+        this.plates = res.results || res;
         this.filteredPlates = [...this.plates];
         this.isLoading = false;
+        console.log('Plates loaded:', this.plates.length);
       },
       error: (err) => {
         console.error('Error loading plates:', err);
@@ -91,108 +261,110 @@ export class ProductsComponent implements OnInit {
     });
   }
 
-    onMinSliderChange(event: any) {
-    this.priceRange.min = +event.target.value;
-    // this.applyFilters();
-        this.loadPlates();
-
-  }
-
-  onMaxSliderChange(event: any) {
-    this.priceRange.max = +event.target.value;
-    // this.applyFilters();
-        this.loadPlates();
-
-  }
-    getPriceRange() {
-  this.listingService.getPriceRange(3).subscribe({
-    next: (res: any) => {
-      // Set default minimum if 0
-      this.absoluteMin = res.min_price > 0 ? res.min_price : 1000; 
-      // Set default maximum if 0
-      this.absoluteMax = res.max_price > 0 ? res.max_price : 50000;
+  // buildFilterParams(): any {
+  //   const params: any = {};
+    
+  //   // Add plate search query (from second search box)
+  //   if (this.plateSearchQuery.trim()) {
+  //     params.plate_search = this.plateSearchQuery.trim();
+  //   }
+    
+  //   // Always include price range
+  //   params.min_price = this.priceRange.min;
+  //   params.max_price = this.priceRange.max;
+    
+  //   // Add selected countries
+  //   const selectedCountries = this.countries
+  //     .filter(c => c.checked)
+  //     .map(c => c.id);
       
-      this.priceRange = {
-        min: this.absoluteMin,
-        max: this.absoluteMax
-      };
-      
-      // Load data with initial reasonable prices
-      // this.executeFilter();
-    },
-    error: (err) => {
-      console.error('Error getting price range:', err);
-      // Fallback defaults
-      this.absoluteMin = 1000;
-      this.absoluteMax = 50000;
-      this.priceRange = {
-        min: this.absoluteMin,
-        max: this.absoluteMax
-      };
-      // this.executeFilter();
-    }
-  });
-}
+  //   if (selectedCountries.length > 0) {
+  //     params.country_id = selectedCountries[0];
+  //     // If your API supports multiple countries:
+  //     // params.country_ids = selectedCountries.join(',');
+  //   }
+    
+  //   return params;
+  // }
+
   buildFilterParams(): any {
-    const params: any = {};
-    
-    // Add search query if exists
-    if (this.searchQuery.trim()) {
-      params.plate_search = this.searchQuery.trim();
-    }
-    
-    // Add price range
-    if (this.priceRange.min > 0) {
-      params.min_price = this.priceRange.min;
-    }
-    if (this.priceRange.max < 10000) {
-      params.max_price = this.priceRange.max;
-    }
-    
-    // Add selected countries using country_id
-    const selectedCountries = this.countries
-      .filter(c => c.checked)
-      .map(c => c.id);
-      
-    if (selectedCountries.length > 0) {
-      // If multiple countries selected, you might need to handle this differently
-      // For now, using the first selected country
-      params.country_id = selectedCountries[0];
-      
-      // If API supports multiple countries, use this instead:
-      // params.country_ids = selectedCountries.join(',');
-    }
-    
-    return params;
+  const params: any = {};
+  
+  // Add plate search query (from second search box)
+  if (this.plateSearchQuery.trim()) {
+    params.plate_search = this.plateSearchQuery.trim();
+    console.log('Adding plate_search to params:', params.plate_search); // Debug log
   }
-
+  
+  // Always include price range
+  params.min_price = this.priceRange.min;
+  params.max_price = this.priceRange.max;
+  
+  // Add selected countries
+  const selectedCountries = this.countries
+    .filter(c => c.checked)
+    .map(c => c.id);
+    
+  if (selectedCountries.length > 0) {
+    params.country_id = selectedCountries[0];
+  }
+  
+  console.log('Final filter params:', params); // Debug log to see all params
+  
+  return params;
+}
   applyFilters() {
     this.loadPlates();
   }
 
   resetFilters() {
-    this.searchQuery = '';
-    this.priceRange = { min: 0, max: 10000 };
+    this.plateSearchQuery = '';
+    this.countrySearchQuery = '';
+    this.priceRange = { 
+      min: this.absoluteMin, 
+      max: this.absoluteMax 
+    };
     this.countries.forEach(c => c.checked = false);
+    this.updateSliderOptions();
     this.applyFilters();
   }
 
   getCountryCode(plate: Plate): string {
-    const country = plate.license_plate?.country?.toUpperCase() || '';
-    if (country.includes('SAUDI')) return 'KSA';
-    if (country.includes('EMARAT')) return 'UAE';
-    if (country.includes('KWAIT')) return 'KW';
+    const country = plate.license_plate?.plate_location?.country || 
+                    plate.seller_location?.country || '';
+    const countryUpper = country.toUpperCase();
+    
+    if (countryUpper.includes('SAUDI')) return 'KSA';
+    if (countryUpper.includes('EMARAT') || countryUpper.includes('ARAB EMIRATES')) return 'UAE';
+    if (countryUpper.includes('KWAIT') || countryUpper.includes('KUWAIT')) return 'KW';
+    
     return '';
   }
 
   getCountryName(plate: Plate): string {
-    const country = plate.license_plate?.country || '';
-    switch (country.toUpperCase()) {
-      case 'SAUDI': return 'Saudi Arabia';
-      case 'EMARAT': return 'United Arab Emirates';
-      case 'KWAIT': return 'Kuwait';
-      default: return country;
-    }
+    const country = plate.license_plate?.plate_location?.country || 
+                    plate.seller_location?.country || '';
+    
+    const countryUpper = country.toUpperCase();
+    
+    if (countryUpper.includes('SAUDI')) return 'Saudi Arabia';
+    if (countryUpper.includes('EMARAT') || countryUpper.includes('ARAB EMIRATES')) return 'United Arab Emirates';
+    if (countryUpper.includes('KWAIT') || countryUpper.includes('KUWAIT')) return 'Kuwait';
+    
+    return country;
+  }
+
+  getCountryCodeAbbreviated(plate: Plate): string {
+    const fullName = plate.license_plate?.plate_location?.country || '';
+    
+    const abbreviations: { [key: string]: string } = {
+      'United Arab Emirates': 'UAE',
+      'Saudi Arabia': 'KSA',
+      'KWAIT': 'KWT',
+      'Kuwait': 'KWT'
+    };
+    
+    return abbreviations[fullName] || fullName.substring(0, 8);
   }
 
   getPlateBackgroundClass(plate: Plate): string {
@@ -286,21 +458,7 @@ export class ProductsComponent implements OnInit {
   }
 
   onCheckboxChange() {
-    this.applyFilters();
-  }
-
-  onMinInputChange() {
-    if (this.priceRange.min < 0) this.priceRange.min = 0;
-    if (this.priceRange.min > this.priceRange.max) {
-      this.priceRange.max = this.priceRange.min;
-    }
-    this.applyFilters();
-  }
-
-  onMaxInputChange() {
-    if (this.priceRange.max < this.priceRange.min) {
-      this.priceRange.min = this.priceRange.max;
-    }
+    // Immediately call API when country checkbox changes
     this.applyFilters();
   }
 }
