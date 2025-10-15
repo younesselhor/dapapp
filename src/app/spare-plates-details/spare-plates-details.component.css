@@ -4,7 +4,7 @@
   min-height: 100vh;
 }
 
-.content-container {
+/* .content-container {
   display: flex;
   width: 100%;
 
@@ -12,7 +12,16 @@
       align-items: flex-start;
     gap: 50px;
     flex: 1 0 0;
-}
+} */
+ .content-container{
+  display: flex;
+width: 1280px;
+align-items: flex-start;
+gap: 48px;
+flex: 1 0 0;
+    margin: 20px;
+
+ }
 
 /* Sidebar Styles */
 .sidebar {
@@ -797,4 +806,15 @@ bottom: -129.178px;
 .category-search-btn {
   align-self: flex-end;
   margin-top: 8px;
+}
+
+
+.motor-cycle-continer{
+  display: flex;
+height: 307px;
+padding: 48px 80px;
+align-items: flex-start;
+gap: 50px;
+align-self: stretch;
+background: #FFF;
 }
