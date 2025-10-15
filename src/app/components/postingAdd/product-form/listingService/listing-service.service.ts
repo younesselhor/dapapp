@@ -177,4 +177,18 @@ postMyGarage(motorcycleDetails : MotorcycleDetails): Observable<any> {
 getTypes(){
   return this.http.get<any>(this.baseUrl + 'types');  
 }
+
+// Add these methods to your ListingService
+
+deleteGarageItem(id: number): Observable<any> {
+  return this.http.delete<any>(`${this.baseUrl}my-garage/${id}`);
+}
+
+updateGarageItem(id: number, motorcycleDetails: MotorcycleDetails): Observable<any> {
+  return this.http.put<any>(`${this.baseUrl}my-garage/${id}`, motorcycleDetails);
+}
+
+setDefaultGarageItem(id: number): Observable<any> {
+  return this.http.post<any>(`${this.baseUrl}my-garage/${id}/set-default`, {});
+}
 }
