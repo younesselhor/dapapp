@@ -179,7 +179,7 @@ gap: 24px;
   align-items: center;
   gap: 16px;
   padding-top: 24px;
-  border-top: 1px solid rgba(197, 202, 219, 0.2);
+  /* border-top: 1px solid rgba(197, 202, 219, 0.2); */
 }
 
 .logo-content {
