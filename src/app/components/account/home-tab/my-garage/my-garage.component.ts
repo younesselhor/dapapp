@@ -13,6 +13,7 @@ interface GarageItem {
   title: string | null;
   description: string | null;
   picture: string | null;
+  is_default: boolean; // Add this
   created_at: string;
   updated_at: string;
   brand: {
@@ -43,7 +44,9 @@ interface GarageItem {
 export class MyGarageComponent implements OnInit {
   vehicleForm: FormGroup;
   garageItems: GarageItem[] = [];
-  showAddForm: boolean = false; // Controls form visibility
+  showAddForm: boolean = false;
+  isEditMode: boolean = false; // Track if we're editing
+  editingItemId: number | null = null; // Track which item is being edited
 
   // Data arrays
   brands: Array<{ id: number; name: string }> = [];
@@ -180,14 +183,16 @@ export class MyGarageComponent implements OnInit {
     }
   }
 
-  // Show the add vehicle form
   showAddVehicleForm() {
+    this.isEditMode = false;
+    this.editingItemId = null;
     this.showAddForm = true;
   }
 
-  // Cancel adding vehicle and go back
   cancelAddVehicle() {
     this.showAddForm = false;
+    this.isEditMode = false;
+    this.editingItemId = null;
     this.vehicleForm.reset();
     this.brandSearchTerm = '';
     this.modelSearchTerm = '';
@@ -198,22 +203,44 @@ export class MyGarageComponent implements OnInit {
     if (this.vehicleForm.valid) {
       console.log(this.vehicleForm.value);
       
-      this.listingService.postMyGarage(this.vehicleForm.value).subscribe({
-        next: (res) => {
-          console.log('Vehicle saved:', res);
-          this.getMyGarage();
-          // Reset form and hide it after successful submission
-          this.vehicleForm.reset();
-          this.brandSearchTerm = '';
-          this.modelSearchTerm = '';
-          this.yearSearchTerm = '';
-          this.showAddForm = false;
-        },
-        error: (err) => {
-          console.error('Error saving vehicle:', err);
-        }
-      });
+      if (this.isEditMode && this.editingItemId) {
+        // Update existing vehicle
+        this.listingService.updateGarageItem(this.editingItemId, this.vehicleForm.value).subscribe({
+          next: (res) => {
+            console.log('Vehicle updated:', res);
+            this.getMyGarage();
+            this.resetForm();
+          },
+          error: (err) => {
+            console.error('Error updating vehicle:', err);
+            alert('Failed to update vehicle. Please try again.');
+          }
+        });
+      } else {
+        // Create new vehicle
+        this.listingService.postMyGarage(this.vehicleForm.value).subscribe({
+          next: (res) => {
+            console.log('Vehicle saved:', res);
+            this.getMyGarage();
+            this.resetForm();
+          },
+          error: (err) => {
+            console.error('Error saving vehicle:', err);
+            alert('Failed to save vehicle. Please try again.');
+          }
+        });
+      }
     }
+  }
+
+  resetForm() {
+    this.vehicleForm.reset();
+    this.brandSearchTerm = '';
+    this.modelSearchTerm = '';
+    this.yearSearchTerm = '';
+    this.showAddForm = false;
+    this.isEditMode = false;
+    this.editingItemId = null;
   }
 
   getMyGarage() {
@@ -230,31 +257,62 @@ export class MyGarageComponent implements OnInit {
 
   deleteVehicle(id: number) {
     if (confirm('Are you sure you want to delete this vehicle?')) {
-      // Implement delete API call here
-      console.log('Delete vehicle:', id);
-      // After successful deletion:
-      // this.getMyGarage();
+      this.listingService.deleteGarageItem(id).subscribe({
+        next: (res) => {
+          console.log('Vehicle deleted:', res);
+          this.getMyGarage(); // Refresh the list
+          alert('Vehicle deleted successfully!');
+        },
+        error: (err) => {
+          console.error('Error deleting vehicle:', err);
+          alert('Failed to delete vehicle. Please try again.');
+        }
+      });
     }
   }
 
   editVehicle(item: GarageItem) {
-    // Implement edit functionality
-    console.log('Edit vehicle:', item);
-    // Populate form with item data
+    this.isEditMode = true;
+    this.editingItemId = item.id;
     this.showAddForm = true;
-    this.vehicleForm.patchValue({
-      type_id: item.type_id,
-      brand_id: item.brand_id,
-      model_id: item.model_id,
-      year_id: item.year_id
-    });
-    this.brandSearchTerm = item.brand.name;
-    this.modelSearchTerm = item.model.name;
-    this.yearSearchTerm = item.year.year.toString();
+    
+    // Load models and years for the selected brand and model
+    this.onBrandChange(item.brand_id);
+    
+    // Wait a bit for models to load, then set model and load years
+    setTimeout(() => {
+      this.onModelChange(item.model_id);
+      
+      // Set form values
+      this.vehicleForm.patchValue({
+        type_id: item.type_id,
+        brand_id: item.brand_id,
+        model_id: item.model_id,
+        year_id: item.year_id
+      });
+      
+      this.brandSearchTerm = item.brand.name;
+      this.modelSearchTerm = item.model.name;
+      this.yearSearchTerm = item.year.year.toString();
+    }, 500);
   }
 
   setAsDefault(id: number) {
-    // Implement set as default functionality
-    console.log('Set as default:', id);
+    this.listingService.setDefaultGarageItem(id).subscribe({
+      next: (res) => {
+        console.log('Set as default:', res);
+        this.getMyGarage(); // Refresh to show updated default status
+        alert('Vehicle set as default successfully!');
+      },
+      error: (err) => {
+        console.error('Error setting default:', err);
+        alert('Failed to set vehicle as default. Please try again.');
+      }
+    });
+  }
+
+  // Helper method to check if a vehicle is default
+  isDefault(item: GarageItem): boolean {
+    return item.is_default === true;
   }
 }

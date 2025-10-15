@@ -544,6 +544,7 @@ box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
     align-items: flex-start;
     gap: 48px;
     width: 60%;
+    margin: 20px;
 }
 
 .row-garage{
@@ -684,4 +685,30 @@ box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
     .motor-card {
         width: 100%; /* Stack on smaller screens */
     }
+}
+
+.not-default{
+    display: flex;
+height: 40px;
+padding: 12px 20px;
+justify-content: center;
+align-items: center;
+gap: 8px;
+
+border-radius: 8px;
+border: 1px solid var(--Gray-500, #667085);
+background: #FFF;
+
+/* Shadow/xs */
+box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+cursor: pointer;
+}
+
+.not-default-text{
+    color: var(--Primary---Navy, #032C40);
+font-family: Manrope;
+font-size: 16px;
+font-style: normal;
+font-weight: 600;
+line-height: 24px; /* 150% */
 }
