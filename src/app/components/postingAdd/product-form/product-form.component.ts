@@ -1661,12 +1661,12 @@ private async handleStep2() {
 private async handleStep3() {
   const step1Data = this.sharedFormDataService.getStep1Data();
   const step2Data = this.sharedFormDataService.getStep2Data();
-  const bankCardId = this.getDefaultBankCardId();
+  // const bankCardId = this.getDefaultBankCardId();
   
-  if (!bankCardId) {
-    alert('Please add a payment method before proceeding');
-    return;
-  }
+  // if (!bankCardId) {
+  //   alert('Please add a payment method before proceeding');
+  //   return;
+  // }
 
   const payload = {
     step: 3,
@@ -1682,7 +1682,7 @@ private async handleStep3() {
     contacting_channel: step2Data.contacting_channel,
     seller_type: step2Data.seller_type,
     ...this.getTypeSpecificPayload(step1Data),
-    amount: step2Data.price,
+    amount: step2Data.price || step2Data.minimum_bid 
     // bank_card_id: bankCardId
     // bank_card_id: 6
   };
