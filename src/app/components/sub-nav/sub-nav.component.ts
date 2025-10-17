@@ -13,7 +13,7 @@ import { LocationSService } from '../../services/location-s.service';
 // import { ListingService } from '../main-products-page/listingProduct.service';
 import { Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { LoginModalComponent } from '../login-modal.component';
+import { LoginModalComponent } from '../login-modal/login-modal.component';
 
 
 interface ICountry {

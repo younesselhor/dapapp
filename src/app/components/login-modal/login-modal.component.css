@@ -1,0 +1,248 @@
+
+/* Modal Styles */
+.modal-content {
+  display: flex;
+  width: 408px;
+  padding: 24px;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  border-radius: 12px;
+  background: var(--White, #FFF);
+  box-shadow: 0 20px 24px -4px rgba(16, 24, 40, 0.10), 0 8px 8px -4px rgba(16, 24, 40, 0.04);
+}
+
+.otp-check-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  align-self: stretch;
+}
+
+.svg-logo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 6.715px;
+}
+
+.supporting-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  align-self: stretch;
+}
+
+.text {
+  color: var(--Gray-900---Text, #101828);
+  text-align: center;
+  font-family: Manrope, sans-serif;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 28px;
+  align-self: stretch;
+}
+
+.message-display {
+  color: var(--Gray-500---Supporting-Text, #667085);
+  font-family: Manrope, sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  align-self: stretch;
+  text-align: center;
+}
+
+.otp-numbers {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  align-self: stretch;
+  margin-top: 8px;
+}
+
+/* OTP Input Styles */
+.otp-input {
+  width: 72px;
+  height: 72px;
+  border-radius: 8px;
+  border: 2px solid var(--Gray-300, #D0D5DD);
+  background: var(--White, #FFF);
+  color: var(--Primary-600, #1D5CF3);
+  text-align: center;
+  font-family: Manrope, sans-serif;
+  font-size: 44px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.otp-input:focus {
+  border-color: var(--Primary-600, #1D5CF3);
+  box-shadow: 0 0 0 4px rgba(29, 92, 243, 0.1);
+}
+
+.otp-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Input States */
+.otp-input-filled {
+  border-color: var(--Primary-600, #1D5CF3);
+  background: rgba(29, 92, 243, 0.05);
+  transform: scale(1.05);
+}
+
+.otp-input-error {
+  border-color: #F03D24;
+  background: rgba(240, 61, 36, 0.05);
+  animation: shake 0.4s ease-in-out;
+}
+
+.otp-input-success {
+  border-color: #10B981;
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.otp-expired {
+  color: var(--Gray-500---Supporting-Text, #667085);
+  text-align: center;
+  font-family: Manrope, sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  align-self: stretch;
+}
+
+.modal-actions {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  align-self: stretch;
+}
+
+.btn {
+  display: flex;
+  align-items: flex-start;
+  flex: 1 0 0;
+  border-radius: 8px;
+}
+
+.cancel-btn {
+  display: flex;
+  padding: 10px 18px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  flex: 1 0 0;
+  border-radius: 8px;
+  border: 1px solid var(--Gray-300, #D0D5DD);
+  background: var(--White, #FFF);
+  box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+  font-family: Manrope, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cancel-btn:hover {
+  background: #F9FAFB;
+}
+
+.verify-btn {
+  display: flex;
+  padding: 10px 18px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  flex: 1 0 0;
+  border-radius: 8px;
+  border: 1px solid var(--Primary, #F03D24);
+  background: var(--Primary, #F03D24);
+  box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+  color: white;
+  font-family: Manrope, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.verify-btn:hover:not(:disabled) {
+  background: #d63420;
+}
+
+.verify-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.resend-btn {
+  display: flex;
+  padding: 8px 16px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: 8px;
+  border: 1px solid var(--Primary, #F03D24);
+  background: transparent;
+  color: var(--Primary, #F03D24);
+  font-family: Manrope, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.resend-btn:hover:not(:disabled) {
+  background: rgba(240, 61, 36, 0.05);
+}
+
+.resend-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Animations */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+/* Remove spinner from number input */
+input[type="tel"]::-webkit-outer-spin-button,
+input[type="tel"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="tel"] {
+  -moz-appearance: textfield;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .modal-content {
+    width: 100%;
+    max-width: 408px;
+  }
+  
+  .otp-input {
+    width: 60px;
+    height: 60px;
+    font-size: 36px;
+  }
+}
+

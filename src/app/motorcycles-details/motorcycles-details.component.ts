@@ -13,7 +13,7 @@ import { SidebarComponent } from '../components/sidebar/sidebar.component';
 import { FormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { AuthService } from '../services/auth.service';
-import { LoginModalComponent } from '../components/login-modal.component';
+import { LoginModalComponent } from '../components/login-modal/login-modal.component';
 import { FormatFieldNamePipe } from '../components/postingAdd/product-form/FormatFieldNamePipe';
 import { TimeAgoPipe } from '../pipe/timeAgoPipe';
 import { ListingService } from '../components/postingAdd/product-form/listingService/listing-service.service';

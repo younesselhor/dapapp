@@ -7,7 +7,7 @@ import { LocationSService } from '../../services/location-s.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
-import { LoginModalComponent } from '../login-modal.component';
+import { LoginModalComponent } from '../login-modal/login-modal.component';
 import { AuthService } from '../../services/auth.service';
 import { ListingByCatService } from '../../services/listingsByCategory/listing-by-cat.service';
 

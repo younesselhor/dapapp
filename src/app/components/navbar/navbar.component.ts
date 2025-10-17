@@ -11,7 +11,7 @@ import { AuthUserDetails, MeResponse } from '../../interfaces/user-interface';
 import { CookieService } from 'ngx-cookie-service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { isPlatformBrowser } from '@angular/common';
-import { LoginModalComponent } from '../login-modal.component';
+import { LoginModalComponent } from '../login-modal/login-modal.component';
 
 
 interface sub_menu {
@@ -110,6 +110,14 @@ ngOnInit() {
           { name: 'Jeddah', code: 'JED' },
           { name: 'Dammam', code: 'DAM' }
         ];
+}
+
+toggleLanguage() {
+  if (this.currentLang === 'en') {
+    this.switchLang('ar');
+  } else {
+    this.switchLang('en');
+  }
 }
 
 // switchLang(lang: string): void {

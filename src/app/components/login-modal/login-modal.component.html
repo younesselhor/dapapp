@@ -1,0 +1,621 @@
+<div class="fixed inset-0 z-50 bg-gray bg-opacity-50 backdrop-blur-sm flex items-center justify-center">
+  <div class="bg-white rounded-xl shadow-lg w-full max-w-sm p-6">
+    <!-- Logo -->
+    <div class="flex flex-col items-center mb-6">
+      <img src="/pictures/dabapplogo.svg" alt="Dab" class="w-12 h-12 mb-2" />
+    </div>
+
+    <!-- Headings -->
+    <div class="text-center mb-6">
+      <h2 class="text-base font-medium text-gray-800">Please Sign in or create an account</h2>
+      <p class="text-sm text-gray-500 mt-1">
+        To be able to sell or view information, you will<br />
+        need to have a Dabapp account
+      </p>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700">Phone Number or Email</label>
+        <input
+          type="text"
+          class="w-full mt-1 px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 placeholder-gray-400"
+          placeholder="Phone number or email"
+          formControlName="login"
+          required
+          (input)="onLoginInputChange()"
+        />
+        <p *ngIf="loginForm.get('login')?.invalid && loginForm.get('login')?.touched" class="text-sm text-red-600 mt-1">
+          Please enter a valid phone number or email
+        </p>
+      </div>
+      <div class="mb-4">
+  <label class="block text-sm font-medium text-gray-700">Password</label>
+  <div class="relative">
+    <input
+      [type]="showPassword ? 'text' : 'password'"
+      class="w-full mt-1 px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 placeholder-gray-400 pr-10"
+      placeholder="Enter password"
+      formControlName="password"
+      [required]="!isPhone(loginForm.get('login')?.value)"
+    />
+
+    <!-- Eye Icon -->
+    <button
+      type="button"
+      (click)="showPassword = !showPassword"
+      class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700 focus:outline-none"
+    >
+      <svg *ngIf="!showPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+           viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+      </svg>
+
+      <svg *ngIf="showPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+           viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a9.959 9.959 0 012.065-3.368M9.88 9.88A3 3 0 0012 15a3 3 0 002.12-5.12M3 3l18 18"/>
+      </svg>
+    </button>
+  </div>
+
+  @if(loginForm.get('password')?.invalid && loginForm.get('password')?.touched){
+  <p class="text-sm text-red-600 mt-1">
+    Password must be at least 6 characters
+  </p>
+  }
+</div>
+
+
+      @if(message){
+      <div class="mb-4 p-3 rounded-lg text-sm" 
+           [class.bg-green-100]="!loginError && !otpError"
+           [class.bg-red-100]="loginError || otpError"
+           [class.text-green-800]="!loginError && !otpError"
+           [class.text-red-800]="loginError || otpError">
+        {{ message }}
+      </div>
+      }
+
+      @if(loginError && !isPhone(loginForm.get('login')?.value)){
+      <div class="bg-red-100 border border-red-400 px-4 py-3 rounded-lg mt-4 text-sm">
+        <strong class="font-medium">Incorrect email or password.<br/></strong> Please try again.<br />
+        <span class="block mt-1">That doesn't look right. Doublecheck your email and password, or
+          reset your password if you've forgotten it.</span>
+        <!-- <a href="#" class="text-red-500 font-semibold block mt-2">Forgot Password?</a> -->
+         <a href="javascript:void(0)" class="text-red-500 font-semibold block mt-2" (click)="openForgotPassword()">
+  Forgot Password?
+</a>
+      </div>
+      }
+
+      <!-- Buttons -->
+      <div class="space-y-2">
+        <button
+          type="submit"
+          [disabled]="loginForm.invalid"
+          class="w-full bg-red-500 hover:bg-red-600 disabled:bg-gray-300 text-white font-semibold py-2 px-4 rounded-lg"
+        >
+          Sign in
+        </button>
+
+        <button
+          type="button"
+          class="w-full bg-gray-800 hover:bg-gray-900 text-white font-semibold py-2 px-4 rounded-lg"
+          routerLink="/register"
+          (click)="closeModal()"
+        >
+          Sign Up
+        </button>
+
+        <button
+          type="button"
+          class="w-full bg-white border border-gray-300 text-gray-800 hover:bg-gray-100 py-2 px-4 rounded-lg flex items-center justify-center gap-2"
+          [disabled]="isSigningInWithGoogle"
+        >
+          <!-- Google Icon SVG -->
+          <svg class="w-5 h-5" viewBox="0 0 533.5 544.3" xmlns="http://www.w3.org/2000/svg">
+            <path fill="#4285f4" d="M533.5 278.4c0-17.4-1.6-34.1-4.6-50.4H272v95.3h146.9c-6.3 34-25.1 62.8-53.4 82.1v68h86.4c50.6-46.7 81.6-115.5 81.6-194.9z"/>
+            <path fill="#34a853" d="M272 544.3c72.6 0 133.6-24 178.2-65.2l-86.4-68c-24 16-54.8 25.5-91.8 25.5-70.6 0-130.4-47.7-151.8-111.7h-89v69.9c44.5 88.1 136.3 149.5 240.8 149.5z"/>
+            <path fill="#fbbc04" d="M120.2 324.9c-10.1-29.7-10.1-61.6 0-91.3v-69.9h-89c-38.2 75.6-38.2 165.5 0 241.1l89-69.9z"/>
+            <path fill="#ea4335" d="M272 107.7c39.5 0 75 13.6 102.9 40.3l77.3-77.3C405.5 24 344.6 0 272 0c-104.5 0-196.3 61.4-240.8 149.5l89 69.9c21.3-64 81.1-111.7 151.8-111.7z"/>
+          </svg>
+          <span class="font-medium">Continue with Google</span>
+        </button>
+
+        <button
+          (click)="closeModal()"
+          type="button"
+          class="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-lg"
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- reCAPTCHA Modal -->
+  @if(showRecaptcha) {
+  <div class="fixed inset-0 z-50 bg-gray bg-opacity-50 backdrop-blur-sm flex items-center justify-center">
+    <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6">
+      <div class="text-center mb-6">
+        <h2 class="text-lg font-semibold text-gray-800">🔐 SMS Verification</h2>
+        <p class="text-sm text-gray-600 mt-2">Complete the verification to receive SMS code</p>
+        @if(currentUser) {
+        <div class="mt-4 p-3 bg-blue-50 rounded-lg">
+          <p class="text-sm text-gray-700"><strong>User:</strong> {{currentUser.first_name}} {{currentUser.last_name}}</p>
+          <p class="text-sm text-gray-700"><strong>Phone:</strong> {{currentUser.phone}}</p>
+          <p class="text-sm text-gray-700"><strong>Email:</strong> {{currentUser.email || 'Not provided'}}</p>
+        </div>
+        }
+      </div>
+
+      <!-- reCAPTCHA container -->
+      <div class="flex justify-center mb-6">
+        <div id="recaptcha-container"></div>
+      </div>
+
+      @if(message && !loginError){
+      <div class="mb-4 p-3 bg-blue-100 text-blue-800 rounded-lg text-sm text-center">
+        {{ message }}
+      </div>
+      }
+
+      @if(message && loginError){
+      <div class="mb-4 p-3 bg-red-100 text-red-800 rounded-lg text-sm text-center">
+        {{ message }}
+      </div>
+      }
+
+      <!-- <div class="flex space-x-3">
+        <button
+          type="button"
+          (click)="closeRecaptcha()"
+          class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-lg border border-gray-300"
+        >
+          Cancel
+        </button>
+      </div> -->
+    </div>
+  </div>
+  }
+
+  <!-- OTP Modal -->
+<!-- OTP Modal -->
+@if(showOTPModal) {
+<div class="fixed inset-0 z-50  flex items-center justify-center p-4">
+  <div class="modal-content">
+    <div class="otp-check-container">
+      <!-- Logo SVG -->
+      <div class="svg-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="62" height="53" viewBox="0 0 62 53" fill="none">
+          <path d="M0.954102 8.95846C4.4701 18.5855 6.7591 28.8035 7.6441 39.4205L61.3381 52.7045C61.3681 51.5795 61.3861 50.4605 61.3861 49.3295C59.8441 -1.10054 47.3881 -7.31954 0.954102 8.95846ZM15.8131 32.2775C14.9971 26.2145 13.7431 20.2295 12.0661 14.3705C20.4781 11.7155 29.2201 10.2425 38.1211 10.0175C42.4291 10.0535 46.1971 12.8135 47.5621 16.8695L39.4681 18.0065L26.0491 19.8935C26.7271 21.9275 27.2071 24.0515 27.4741 26.2385L42.6751 29.9735L51.1201 32.0465C51.6061 35.1005 51.9661 38.1815 52.1911 41.2805L15.8101 32.2775H15.8131Z" fill="#F03D24"/>
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="72" height="18" viewBox="0 0 72 18" fill="none">
+          <path d="M0.954102 1.06836H6.32347C10.3012 1.06836 12.6087 3.58538 12.6087 7.17963C12.6087 10.7739 10.362 13.5654 6.26688 13.5654H0.954102V1.06836ZM4.61961 10.9143H6.02168C8.00847 10.9143 8.82372 9.52061 8.82372 7.17963C8.82372 5.1111 8.06506 3.7216 6.06569 3.7216H4.61961V10.9143Z" fill="#F03D24"/>
+          <path d="M23.0302 10.7447C23.0302 11.8177 23.0847 13.247 23.1455 13.5656H19.8803C19.8069 13.3707 19.7461 12.9201 19.7335 12.6874C19.2809 13.2784 18.5809 13.7961 17.0489 13.7961C14.9154 13.7961 13.7627 12.4548 13.7627 10.7635C13.7627 8.52733 15.5546 7.56117 18.4593 7.56117H19.6267V7.03514C19.6267 6.42527 19.4108 5.97887 18.5578 5.97887C17.7572 5.97887 17.5477 6.34563 17.4638 6.95969H14.1986C14.3244 5.37109 15.2675 3.81184 18.6479 3.82232C21.7664 3.83489 23.0302 5.03577 23.0302 7.33064V10.7447ZM19.6288 9.34468H18.8449C17.6252 9.34468 17.2249 9.77221 17.2249 10.4743C17.2249 11.0339 17.556 11.4824 18.2602 11.4824C19.459 11.4824 19.6288 10.6608 19.6288 9.63808V9.34468Z" fill="#F03D24"/>
+          <path d="M25.0703 0.419922H28.6079V4.89649C29.0397 4.35997 29.7962 3.82346 31.2067 3.82346C33.5644 3.82346 35.0147 5.72223 35.0147 8.62697C35.0147 11.5317 33.5141 13.7951 30.8944 13.7951C29.5783 13.7951 28.9915 13.3823 28.5576 12.7996C28.5514 13.0344 28.5094 13.3487 28.4612 13.5646H25.0493C25.0682 12.5859 25.0682 11.5275 25.0682 10.5174V0.419922H25.0703ZM31.4163 8.71918C31.4163 7.20394 31.0034 6.31533 29.9555 6.31533C28.8322 6.31533 28.4759 7.08867 28.4759 8.86379C28.4759 10.3497 28.784 11.3473 29.9325 11.3473C30.9426 11.3473 31.4184 10.3644 31.4184 8.71918H31.4163Z" fill="#F03D24"/>
+          <path d="M39.9102 11.1344L39.1871 13.5654H35.6201L39.5686 1.06836H44.3092L48.4148 13.5654H44.59L43.8314 11.1344H39.9102ZM43.19 8.42032C42.6032 6.45659 42.1233 4.71081 41.8383 3.49317H41.788C41.4988 4.84075 41.0209 6.62215 40.5137 8.42032H43.188H43.19Z" fill="#F03D24"/>
+          <path d="M53.1744 12.8989V17.0506H49.6556V6.61579C49.6556 5.75862 49.6556 4.72121 49.6367 4.05475H53.078C53.1199 4.29786 53.1681 4.83857 53.1681 5.11731C53.5432 4.55145 54.3082 3.82422 55.836 3.82422C57.8396 3.82422 59.5602 5.48197 59.5602 8.58162C59.5602 12.1004 57.5755 13.798 55.3833 13.798C54.2097 13.798 53.5453 13.383 53.1744 12.901V12.8989ZM55.9534 8.71994C55.9534 6.96159 55.4211 6.314 54.5157 6.314C53.4049 6.314 53.0591 7.07476 53.0591 8.85198C53.0591 10.493 53.4049 11.3459 54.4381 11.3459C55.4713 11.3459 55.9534 10.5454 55.9534 8.71994Z" fill="#F03D24"/>
+          <path d="M64.6597 12.8989V17.0506H61.1409V6.61579C61.1409 5.75862 61.1409 4.72121 61.1221 4.05475H64.5633C64.6052 4.29786 64.6534 4.83857 64.6534 5.11731C65.0286 4.55145 65.7935 3.82422 67.3214 3.82422C69.3249 3.82422 71.0456 5.48197 71.0456 8.58162C71.0456 12.1004 69.0609 13.798 66.8687 13.798C65.695 13.798 65.0307 13.383 64.6597 12.901V12.8989ZM67.4387 8.71994C67.4387 6.96159 66.9064 6.314 66.001 6.314C64.8903 6.314 64.5445 7.07476 64.5445 8.85198C64.5445 10.493 64.8903 11.3459 65.9235 11.3459C66.9567 11.3459 67.4387 10.5454 67.4387 8.71994Z" fill="#F03D24"/>
+        </svg>
+      </div>
+
+      <!-- Supporting Text -->
+      <div class="supporting-text">
+        <span class="text">Please check your phone</span>
+        <span class="message-display">We've sent a code to {{ phoneNumber || userLogin }}</span>
+      </div>
+
+      <!-- OTP Numbers Input -->
+      <form [formGroup]="otpForm">
+        <div class="otp-numbers">
+          <input
+            #digit1Input
+            id="digit1"
+            type="tel"
+            inputmode="numeric"
+            pattern="[0-9]"
+            maxlength="1"
+            formControlName="digit1"
+            (input)="onOTPInputChange($event, 'digit2')"
+            (keydown)="handleKeyDown($event, 0)"
+            (paste)="handlePaste($event)"
+            [disabled]="isVerifying"
+            [class]="getInputClass(0)"
+            class="otp-input"
+            autofocus
+          />
+          <input
+            #digit2Input
+            id="digit2"
+            type="tel"
+            inputmode="numeric"
+            pattern="[0-9]"
+            maxlength="1"
+            formControlName="digit2"
+            (input)="onOTPInputChange($event, 'digit3')"
+            (keydown)="handleKeyDown($event, 1)"
+            [disabled]="isVerifying"
+            [class]="getInputClass(1)"
+            class="otp-input"
+          />
+          <input
+            #digit3Input
+            id="digit3"
+            type="tel"
+            inputmode="numeric"
+            pattern="[0-9]"
+            maxlength="1"
+            formControlName="digit3"
+            (input)="onOTPInputChange($event, 'digit4')"
+            (keydown)="handleKeyDown($event, 2)"
+            [disabled]="isVerifying"
+            [class]="getInputClass(2)"
+            class="otp-input"
+          />
+          <input
+            #digit4Input
+            id="digit4"
+            type="tel"
+            inputmode="numeric"
+            pattern="[0-9]"
+            maxlength="1"
+            formControlName="digit4"
+            (input)="onOTPInputChange($event)"
+            (keydown)="handleKeyDown($event, 3)"
+            [disabled]="isVerifying"
+            [class]="getInputClass(3)"
+            class="otp-input"
+          />
+        </div>
+
+        <!-- Status Messages -->
+        @if(message) {
+        <div class="mt-4 text-center">
+          <p class="message-display font-semibold"
+             [class.text-red-600]="otpError || loginError"
+             [class.text-green-600]="!otpError && !loginError && message.includes('✓')"
+             [class.text-blue-600]="message === 'Verifying...'">
+            @if(message === 'Verifying...') {
+              <svg class="animate-spin h-4 w-4 inline-block mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            }
+            {{ message }}
+          </p>
+        </div>
+        }
+      </form>
+    </div>
+
+    <!-- OTP Expired Timer -->
+    <div class="otp-expired">
+      @if(!otpResendEnabled && !otpExpired) {
+        OTP will expire in {{ formatTime(resendCountdown) }}
+      }
+      @if(otpExpired) {
+        <span class="text-red-600">OTP has expired</span>
+      }
+    </div>
+
+    <!-- Resend Options -->
+    @if(otpExpired || otpResendEnabled) {
+    <div class="flex flex-col gap-2 w-full">
+      <p class="text-center message-display mb-2">Didn't receive the code?</p>
+      @if(isEmail(loginForm.get('login')?.value)) {
+      <button 
+        type="button" 
+        [disabled]="isResendingOTP"
+        class="resend-btn" 
+        (click)="resendOTP('email')"
+      >
+        @if(isResendingOTP) {
+          <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <span>Sending...</span>
+        } @else {
+          <span>Resend via Email</span>
+        }
+      </button>
+      }
+      
+      @if(isPhone(loginForm.get('login')?.value)) {
+      <button 
+        type="button" 
+        [disabled]="isResendingOTP"
+        class="resend-btn" 
+        (click)="resendOTP('whatsapp')"
+      >
+        @if(isResendingOTP) {
+          <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <span>Sending...</span>
+        } @else {
+          <span>Resend via SMS</span>
+        }
+      </button>
+      }
+    </div>
+    }
+
+    <!-- Modal Actions -->
+    <div class="modal-actions">
+      <div class="btn">
+        <button class="cancel-btn" (click)="closeOTPModal()">Cancel</button>
+      </div>
+      <div class="btn">
+        <button class="verify-btn" (click)="verifyOTP()" [disabled]="otpForm.invalid || isVerifying">
+          @if(isVerifying) {
+            <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+          } @else {
+            Verify
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+}
+
+
+</div>
+<!-- Forgot Password Modal -->
+@if(showForgotPasswordModal) {
+<div class="fixed inset-0 z-50 bg-gray bg-opacity-50 backdrop-blur-sm flex items-center justify-center">
+  <div class="bg-white rounded-xl shadow-lg w-full max-w-sm p-6">
+    <div class="text-center mb-6">
+      <h2 class="text-lg font-semibold text-gray-800">🔒 Forgot Password</h2>
+      <p class="text-sm text-gray-600 mt-2">Enter your email or phone number to reset your password</p>
+    </div>
+
+    <form [formGroup]="forgotPasswordForm" (ngSubmit)="requestPasswordReset()">
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700">Email or Phone Number</label>
+        <input
+          type="text"
+          class="w-full mt-1 px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 placeholder-gray-400"
+          placeholder="Email or phone number"
+          formControlName="login"
+          required
+        />
+        @if(forgotPasswordForm.get('login')?.invalid && forgotPasswordForm.get('login')?.touched) {
+        <p class="text-sm text-red-600 mt-1">
+          Please enter a valid email or phone number
+        </p>
+        }
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700">Verification Method</label>
+        <select
+          class="w-full mt-1 px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+          formControlName="method"
+        >
+          <option value="whatsapp">WhatsApp</option>
+          <option value="sms">SMS</option>
+          <option value="email">Email</option>
+        </select>
+      </div>
+
+      @if(message) {
+      <div class="mb-4 p-3 rounded-lg text-sm" 
+           [class.bg-green-100]="!loginError"
+           [class.bg-red-100]="loginError"
+           [class.text-green-800]="!loginError"
+           [class.text-red-800]="loginError">
+        {{ message }}
+      </div>
+      }
+
+      <div class="flex space-x-3">
+        <button
+          type="button"
+          (click)="closeForgotPasswordModal()"
+          class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-lg border border-gray-300"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          [disabled]="forgotPasswordForm.invalid"
+          class="flex-1 bg-red-500 hover:bg-red-600 disabled:bg-gray-300 text-white font-semibold py-2 px-4 rounded-lg"
+        >
+          Continue
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+}
+
+<!-- Reset Password Modal -->
+@if(showResetPasswordModal) {
+<div class="fixed inset-0 z-50 bg-gray bg-opacity-50 backdrop-blur-sm flex items-center justify-center">
+  <div class="bg-white rounded-xl shadow-lg w-full max-w-sm p-6">
+    <div class="text-center mb-6">
+      <h2 class="text-lg font-semibold text-gray-800">🔑 Reset Password</h2>
+      <p class="text-sm text-gray-600 mt-2">Enter the OTP code sent to your WhatsApp and your new password</p>
+    </div>
+
+    <form [formGroup]="resetPasswordForm" (ngSubmit)="resetPassword()">
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700">OTP Code</label>
+        <input
+          type="text"
+          class="w-full mt-1 px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 placeholder-gray-400"
+          placeholder="Enter OTP code"
+          formControlName="code"
+          required
+        />
+        @if(resetPasswordForm.get('code')?.invalid && resetPasswordForm.get('code')?.touched) {
+        <p class="text-sm text-red-600 mt-1">
+          Please enter a valid OTP code
+        </p>
+        }
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700">New Password</label>
+        <input
+          type="password"
+          class="w-full mt-1 px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 placeholder-gray-400"
+          placeholder="Enter new password"
+          formControlName="password"
+          required
+        />
+        @if(resetPasswordForm.get('password')?.invalid && resetPasswordForm.get('password')?.touched) {
+        <p class="text-sm text-red-600 mt-1">
+          Password must be at least 6 characters
+        </p>
+        }
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700">Confirm Password</label>
+        <input
+          type="password"
+          class="w-full mt-1 px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 placeholder-gray-400"
+          placeholder="Confirm new password"
+          formControlName="password_confirmation"
+          required
+        />
+        @if(resetPasswordForm.hasError('mismatch')) {
+        <p class="text-sm text-red-600 mt-1">
+          Passwords do not match
+        </p>
+        }
+      </div>
+
+      @if(message) {
+      <div class="mb-4 p-3 rounded-lg text-sm" 
+           [class.bg-green-100]="!loginError"
+           [class.bg-red-100]="loginError"
+           [class.text-green-800]="!loginError"
+           [class.text-red-800]="loginError">
+        {{ message }}
+      </div>
+      }
+
+      @if(!otpResendEnabled && !otpExpired) {
+      <div class="mb-4 text-center">
+        <p class="text-sm text-gray-600">Didn't receive code? Resend in {{ resendCountdown }}s</p>
+      </div>
+      }
+
+      @if(otpExpired) {
+      <div class="mb-4 text-center">
+        <button 
+          type="button" 
+          [disabled]="!otpResendEnabled || isResendingOTP"
+          class="text-sm text-blue-600 hover:text-blue-800 disabled:text-gray-400" 
+          (click)="requestPasswordReset()"
+        >
+          {{ isResendingOTP ? 'Sending...' : 'Resend OTP' }}
+        </button>
+      </div>
+      }
+
+      <div class="flex space-x-3">
+        <button
+          type="button"
+          (click)="closeResetPasswordModal()"
+          class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-lg border border-gray-300"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          [disabled]="resetPasswordForm.invalid"
+          class="flex-1 bg-red-500 hover:bg-red-600 disabled:bg-gray-300 text-white font-semibold py-2 px-4 rounded-lg"
+        >
+          Reset Password
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+}
+
+
+<style>
+  /* Add to your component's CSS file */
+input[type="text"].w-12 {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input[type="text"].w-12:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+input[type="text"].border-green-500 {
+  animation: pulse-green 0.3s ease-in-out;
+}
+
+@keyframes pulse-green {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+</style>
+
+
+
+
+
+<!-- 
+<div class="modal-content">
+  <div class="otp-check-container">
+    <div class="svg-logo">
+      <svg xmlns="http://www.w3.org/2000/svg" width="62" height="53" viewBox="0 0 62 53" fill="none">
+  <path d="M0.954102 8.95846C4.4701 18.5855 6.7591 28.8035 7.6441 39.4205L61.3381 52.7045C61.3681 51.5795 61.3861 50.4605 61.3861 49.3295C59.8441 -1.10054 47.3881 -7.31954 0.954102 8.95846ZM15.8131 32.2775C14.9971 26.2145 13.7431 20.2295 12.0661 14.3705C20.4781 11.7155 29.2201 10.2425 38.1211 10.0175C42.4291 10.0535 46.1971 12.8135 47.5621 16.8695L39.4681 18.0065L26.0491 19.8935C26.7271 21.9275 27.2071 24.0515 27.4741 26.2385L42.6751 29.9735L51.1201 32.0465C51.6061 35.1005 51.9661 38.1815 52.1911 41.2805L15.8101 32.2775H15.8131Z" fill="#F03D24"/>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="72" height="18" viewBox="0 0 72 18" fill="none">
+  <path d="M0.954102 1.06836H6.32347C10.3012 1.06836 12.6087 3.58538 12.6087 7.17963C12.6087 10.7739 10.362 13.5654 6.26688 13.5654H0.954102V1.06836ZM4.61961 10.9143H6.02168C8.00847 10.9143 8.82372 9.52061 8.82372 7.17963C8.82372 5.1111 8.06506 3.7216 6.06569 3.7216H4.61961V10.9143Z" fill="#F03D24"/>
+  <path d="M23.0302 10.7447C23.0302 11.8177 23.0847 13.247 23.1455 13.5656H19.8803C19.8069 13.3707 19.7461 12.9201 19.7335 12.6874C19.2809 13.2784 18.5809 13.7961 17.0489 13.7961C14.9154 13.7961 13.7627 12.4548 13.7627 10.7635C13.7627 8.52733 15.5546 7.56117 18.4593 7.56117H19.6267V7.03514C19.6267 6.42527 19.4108 5.97887 18.5578 5.97887C17.7572 5.97887 17.5477 6.34563 17.4638 6.95969H14.1986C14.3244 5.37109 15.2675 3.81184 18.6479 3.82232C21.7664 3.83489 23.0302 5.03577 23.0302 7.33064V10.7447ZM19.6288 9.34468H18.8449C17.6252 9.34468 17.2249 9.77221 17.2249 10.4743C17.2249 11.0339 17.556 11.4824 18.2602 11.4824C19.459 11.4824 19.6288 10.6608 19.6288 9.63808V9.34468Z" fill="#F03D24"/>
+  <path d="M25.0703 0.419922H28.6079V4.89649C29.0397 4.35997 29.7962 3.82346 31.2067 3.82346C33.5644 3.82346 35.0147 5.72223 35.0147 8.62697C35.0147 11.5317 33.5141 13.7951 30.8944 13.7951C29.5783 13.7951 28.9915 13.3823 28.5576 12.7996C28.5514 13.0344 28.5094 13.3487 28.4612 13.5646H25.0493C25.0682 12.5859 25.0682 11.5275 25.0682 10.5174V0.419922H25.0703ZM31.4163 8.71918C31.4163 7.20394 31.0034 6.31533 29.9555 6.31533C28.8322 6.31533 28.4759 7.08867 28.4759 8.86379C28.4759 10.3497 28.784 11.3473 29.9325 11.3473C30.9426 11.3473 31.4184 10.3644 31.4184 8.71918H31.4163Z" fill="#F03D24"/>
+  <path d="M39.9102 11.1344L39.1871 13.5654H35.6201L39.5686 1.06836H44.3092L48.4148 13.5654H44.59L43.8314 11.1344H39.9102ZM43.19 8.42032C42.6032 6.45659 42.1233 4.71081 41.8383 3.49317H41.788C41.4988 4.84075 41.0209 6.62215 40.5137 8.42032H43.188H43.19Z" fill="#F03D24"/>
+  <path d="M53.1744 12.8989V17.0506H49.6556V6.61579C49.6556 5.75862 49.6556 4.72121 49.6367 4.05475H53.078C53.1199 4.29786 53.1681 4.83857 53.1681 5.11731C53.5432 4.55145 54.3082 3.82422 55.836 3.82422C57.8396 3.82422 59.5602 5.48197 59.5602 8.58162C59.5602 12.1004 57.5755 13.798 55.3833 13.798C54.2097 13.798 53.5453 13.383 53.1744 12.901V12.8989ZM55.9534 8.71994C55.9534 6.96159 55.4211 6.314 54.5157 6.314C53.4049 6.314 53.0591 7.07476 53.0591 8.85198C53.0591 10.493 53.4049 11.3459 54.4381 11.3459C55.4713 11.3459 55.9534 10.5454 55.9534 8.71994Z" fill="#F03D24"/>
+  <path d="M64.6597 12.8989V17.0506H61.1409V6.61579C61.1409 5.75862 61.1409 4.72121 61.1221 4.05475H64.5633C64.6052 4.29786 64.6534 4.83857 64.6534 5.11731C65.0286 4.55145 65.7935 3.82422 67.3214 3.82422C69.3249 3.82422 71.0456 5.48197 71.0456 8.58162C71.0456 12.1004 69.0609 13.798 66.8687 13.798C65.695 13.798 65.0307 13.383 64.6597 12.901V12.8989ZM67.4387 8.71994C67.4387 6.96159 66.9064 6.314 66.001 6.314C64.8903 6.314 64.5445 7.07476 64.5445 8.85198C64.5445 10.493 64.8903 11.3459 65.9235 11.3459C66.9567 11.3459 67.4387 10.5454 67.4387 8.71994Z" fill="#F03D24"/>
+</svg>
+    </div>
+    <div class="supporting-text">
+      <span class="text">Please check your phone</span>
+      <span class="message-display">We've sent a code to ++966 431994319</span>
+
+    </div>
+    <div class="otp-numbers">
+
+    </div>
+
+  </div>
+      <div class="otp-expired">OTP will expire in 00:53</div>
+      <div class="modal-actions">
+        <div class="btn">
+          <button class="cancel-btn" >Cancel</button>
+
+        </div>
+        <div class="btn">
+                    <button class="verify-btn" >Verify</button>
+
+        </div>
+
+
+      </div>
+  
+</div> -->

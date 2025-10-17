@@ -2,7 +2,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Component, Inject, PLATFORM_ID } from '@angular/core';
 import { ListingByCatService } from '../../services/listingsByCategory/listing-by-cat.service';
 import { Router } from '@angular/router';
-import { LoginModalComponent } from '../login-modal.component';
+import { LoginModalComponent } from '../login-modal/login-modal.component';
 import { AuthService } from '../../services/auth.service';
 
 

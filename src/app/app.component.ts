@@ -6,7 +6,7 @@ import { SubNavComponent } from './components/sub-nav/sub-nav.component';
 import { AuthService } from './services/auth.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { LoginModalComponent } from './components/login-modal.component';
+import { LoginModalComponent } from './components/login-modal/login-modal.component';
 // import { SidebarComponent } from './components/sidebar/sidebar.component';
 // import { ProductsComponent } from './components/products/products.component';
 // import { ProductCardComponent } from './components/product-card/product-card.component';

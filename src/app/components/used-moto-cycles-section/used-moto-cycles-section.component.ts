@@ -5,7 +5,7 @@ import { ListingByCatService } from '../../services/listingsByCategory/listing-b
 import { LocationSService } from '../../services/location-s.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../services/auth.service';
-import { LoginModalComponent } from '../login-modal.component';
+import { LoginModalComponent } from '../login-modal/login-modal.component';
 import { TimeAgoPipe } from '../../pipe/timeAgoPipe';
 
 
