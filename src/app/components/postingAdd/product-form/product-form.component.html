@@ -76,7 +76,16 @@
     <div [ngSwitch]="selectedVehicleType">
       <!-- Motorcycle Form -->
       <form *ngSwitchCase="1" [formGroup]="vehicleForm">
-        <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+        <div class=" p-6 " style="
+    width: 1000px;
+    max-width: 14400px;
+
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--sds-size-space-1200);
+    border-radius: 24px;
+    border: 1px solid var(--Gray-200, #E4E7EC);
+    background: var(--sds-color-background-default-default);">
           <!-- <h3 class="text-lg font-semibold mb-6">Bike Details</h3> -->
           <h3 class="text-lg font-semibold mb-6">{{ 'FORM.BIKE_DETAILS' | translate }}</h3>
 
@@ -117,8 +126,7 @@
             </p>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <!-- Brand Select with Search -->
+          <!-- <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
    
             <div>
   <label class="block font-medium">{{ 'FORM.BRAND' | translate }}</label>
@@ -139,7 +147,6 @@
       </svg>
     </div>
 
-    <!-- Dropdown Options -->
     <div
       *ngIf="showBrandDropdown && filteredBrands.length > 0"
       class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto"
@@ -163,7 +170,6 @@
 </div>
 
 
-            <!-- Model Select with Search -->
             <div>
               <label class="block font-medium">{{ 'FORM.MODEL' | translate}}</label>
               <div class="relative mt-4">
@@ -188,7 +194,6 @@
               </div>
             </div>
 
-            <!-- Year Select with Search -->
             <div>
               <label class="block font-medium">Year</label>
               <div class="relative mt-4">
@@ -211,7 +216,166 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+  <!-- Brand Select with Search -->
+  <div class="brand-search-container">
+    <label class="block font-medium">{{ 'FORM.BRAND' | translate }}</label>
+    <div class="relative mt-4">
+      <input
+        type="text"
+        [(ngModel)]="brandSearchTerm"
+        [ngModelOptions]="{ standalone: true }"
+        (input)="filterBrands()"
+        (focus)="onBrandFocus()"
+        [placeholder]="'FORM.SELECT_BRAND' | translate"
+        class="w-full border border-gray-300 rounded-md px-3 py-2 pr-8 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all"
+        autocomplete="off"
+      />
+
+      <div class="absolute right-2 top-2 pointer-events-none">
+        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </div>
+
+      <!-- Dropdown Options -->
+      <div
+        *ngIf="showBrandDropdown && filteredBrands.length > 0"
+        class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto"
+      >
+        <div
+          *ngFor="let brand of filteredBrands"
+          (click)="selectBrand(brand)"
+          class="px-3 py-2 hover:bg-red-50 cursor-pointer transition-colors"
+        >
+          {{ brand.name }}
+        </div>
+      </div>
+
+      <!-- No results message -->
+      <div
+        *ngIf="showBrandDropdown && brandSearchTerm && filteredBrands.length === 0"
+        class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg p-3"
+      >
+        <p class="text-gray-500 text-sm text-center">No brands found</p>
+      </div>
+    </div>
+
+    <div
+      *ngIf="vehicleForm.get('brand_id')?.touched && vehicleForm.get('brand_id')?.invalid"
+      class="text-red-500 text-sm mt-1"
+    >
+      Brand is required.
+    </div>
+  </div>
+
+  <!-- Model Select with Search -->
+  <div class="model-search-container">
+    <label class="block font-medium">{{ 'FORM.MODEL' | translate }}</label>
+    <div class="relative mt-4">
+      <input
+        type="text"
+        [(ngModel)]="modelSearchTerm"
+        [ngModelOptions]="{ standalone: true }"
+        (input)="filterModels()"
+        (focus)="onModelFocus()"
+        [placeholder]="'FORM.SELECT_MODEL' | translate"
+        [disabled]="models.length === 0"
+        class="w-full border border-gray-300 rounded-md px-3 py-2 pr-8 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
+        autocomplete="off"
+      />
+
+      <div class="absolute right-2 top-2 pointer-events-none">
+        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </div>
+
+      <!-- Dropdown Options -->
+      <div
+        *ngIf="showModelDropdown && filteredModels.length > 0"
+        class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto"
+      >
+        <div
+          *ngFor="let model of filteredModels"
+          (click)="selectModel(model)"
+          class="px-3 py-2 hover:bg-red-50 cursor-pointer transition-colors"
+        >
+          {{ model.name }}
+        </div>
+      </div>
+
+      <!-- No results message -->
+      <div
+        *ngIf="showModelDropdown && modelSearchTerm && filteredModels.length === 0"
+        class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg p-3"
+      >
+        <p class="text-gray-500 text-sm text-center">No models found</p>
+      </div>
+    </div>
+
+    <div
+      *ngIf="vehicleForm.get('model_id')?.touched && vehicleForm.get('model_id')?.invalid"
+      class="text-red-500 text-sm mt-1"
+    >
+      Model is required.
+    </div>
+  </div>
+
+  <!-- Year Select with Search -->
+  <div class="year-search-container">
+    <label class="block font-medium">Year</label>
+    <div class="relative mt-4">
+      <input
+        type="text"
+        [(ngModel)]="yearSearchTerm"
+        [ngModelOptions]="{ standalone: true }"
+        (input)="filterYears()"
+        (focus)="onYearFocus()"
+        placeholder="Select a year"
+        [disabled]="years.length === 0"
+        class="w-full border border-gray-300 rounded-md px-3 py-2 pr-8 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
+        autocomplete="off"
+      />
+
+      <div class="absolute right-2 top-2 pointer-events-none">
+        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </div>
+
+      <!-- Dropdown Options -->
+      <div
+        *ngIf="showYearDropdown && filteredYears.length > 0"
+        class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto"
+      >
+        <div
+          *ngFor="let year of filteredYears"
+          (click)="selectYear(year)"
+          class="px-3 py-2 hover:bg-red-50 cursor-pointer transition-colors"
+        >
+          {{ year.year }}
+        </div>
+      </div>
+
+      <!-- No results message -->
+      <div
+        *ngIf="showYearDropdown && yearSearchTerm && filteredYears.length === 0"
+        class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg p-3"
+      >
+        <p class="text-gray-500 text-sm text-center">No years found</p>
+      </div>
+    </div>
+
+    <div
+      *ngIf="vehicleForm.get('year_id')?.touched && vehicleForm.get('year_id')?.invalid"
+      class="text-red-500 text-sm mt-1"
+    >
+      Year is required.
+    </div>
+  </div>
+</div>
           <div class="mb-6">
             <label class="block mb-2 font-medium">Vehicle Body Condition</label>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -442,7 +606,8 @@
 
       <!-- Bike Part Form -->
       <form *ngSwitchCase="2" [formGroup]="bikeForm">
-        <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+        <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200" style="width: 1000px;
+    max-width: 14400px;">
           <h3 class="text-lg font-semibold mb-6">Part Details</h3>
 
           <div class="mb-6">
@@ -509,8 +674,7 @@
 
           </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-  <!-- Informational paragraph about bike part compatibility -->
+        <!-- <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
   <div class="md:col-span-3">
     <div class="flex items-start">
       <p class="text-sm" style="color: #F03D24;">
@@ -519,7 +683,6 @@
     </div>
   </div>
   
-  <!-- Brand Select with Search -->
   <div>
     <label class="block font-medium">{{ 'FORM.BRAND' | translate}}</label>
     <div class="relative mt-4">
@@ -533,7 +696,6 @@
         </svg>
       </div>
 
-      <!-- Dropdown Options -->
       <div *ngIf="showBrandDropdown && filteredBrands.length > 0"
         class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
         <div *ngFor="let brand of filteredBrands" (click)="selectBrand(brand)"
@@ -551,7 +713,6 @@
     </div>
   </div>
 
-  <!-- Model Select with Search -->
   <div>
     <label class="block font-medium">{{ 'FORM.MODEL' | translate}}</label>
     <div class="relative mt-4">
@@ -576,7 +737,6 @@
     </div>
   </div>
   
-  <!-- Year Select with Search -->
   <div>
     <label class="block font-medium">Year</label>
     <div class="relative mt-4">
@@ -599,7 +759,190 @@
       </div>
     </div>
   </div>
+</div> -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+
+  <!-- Compatibility Info -->
+  <div class="md:col-span-3">
+    <div class="flex items-start">
+      <p class="text-sm text-red-600">
+        <span class="font-medium">Compatibility Information:</span>
+        Please choose the brand compatible with this part.
+      </p>
+    </div>
+  </div>
+
+  <!-- BRAND -->
+  <div>
+    <label class="block font-medium">{{ 'FORM.BRAND' | translate }}</label>
+    <div class="relative mt-4">
+      <input
+        type="text"
+        [(ngModel)]="brandSearchTerm"
+        [ngModelOptions]="{ standalone: true }"
+        (input)="filterBrands()"
+        (focus)="onBrandFocus()"
+        [placeholder]="'FORM.SELECT_BRAND' | translate"
+        class="w-full border border-gray-300 rounded-md px-3 py-2 pr-8 
+               focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all"
+        autocomplete="off"
+      />
+
+      <div class="absolute right-2 top-2 pointer-events-none">
+        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </div>
+
+      <!-- Dropdown -->
+      <div
+        *ngIf="showBrandDropdown && filteredBrands.length > 0"
+        class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg 
+               max-h-60 overflow-auto"
+      >
+        <div
+          *ngFor="let brand of filteredBrands"
+          (click)="selectBrand(brand)"
+          class="px-3 py-2 hover:bg-red-50 cursor-pointer transition-colors"
+        >
+          {{ brand.name }}
+        </div>
+      </div>
+
+      <!-- No Results -->
+      <div
+        *ngIf="showBrandDropdown && brandSearchTerm && filteredBrands.length === 0"
+        class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg p-3"
+      >
+        <p class="text-gray-500 text-sm text-center">No brands found</p>
+      </div>
+    </div>
+
+    <div
+      *ngIf="vehicleForm.get('brand_id')?.touched && vehicleForm.get('brand_id')?.invalid"
+      class="text-red-500 text-sm mt-1"
+    >
+      Brand is required.
+    </div>
+  </div>
+
+  <!-- MODEL -->
+  <div>
+    <label class="block font-medium">{{ 'FORM.MODEL' | translate }}</label>
+    <div class="relative mt-4">
+      <input
+        type="text"
+        [(ngModel)]="modelSearchTerm"
+        [ngModelOptions]="{ standalone: true }"
+        (input)="filterModels()"
+        (focus)="onModelFocus()"
+        [placeholder]="'FORM.SELECT_MODEL' | translate"
+        [disabled]="models.length === 0"
+        class="w-full border border-gray-300 rounded-md px-3 py-2 pr-8
+               focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all
+               disabled:bg-gray-100 disabled:cursor-not-allowed"
+        autocomplete="off"
+      />
+
+      <div class="absolute right-2 top-2 pointer-events-none">
+        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </div>
+
+      <!-- Dropdown -->
+      <div
+        *ngIf="showModelDropdown && filteredModels.length > 0"
+        class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg 
+               max-h-60 overflow-auto"
+      >
+        <div
+          *ngFor="let model of filteredModels"
+          (click)="selectModel(model)"
+          class="px-3 py-2 hover:bg-red-50 cursor-pointer transition-colors"
+        >
+          {{ model.name }}
+        </div>
+      </div>
+
+      <!-- No Results -->
+      <div
+        *ngIf="showModelDropdown && modelSearchTerm && filteredModels.length === 0"
+        class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg p-3"
+      >
+        <p class="text-gray-500 text-sm text-center">No models found</p>
+      </div>
+    </div>
+
+    <div
+      *ngIf="vehicleForm.get('model_id')?.touched && vehicleForm.get('model_id')?.invalid"
+      class="text-red-500 text-sm mt-1"
+    >
+      Model is required.
+    </div>
+  </div>
+
+  <!-- YEAR -->
+  <div>
+    <label class="block font-medium">Year</label>
+    <div class="relative mt-4">
+      <input
+        type="text"
+        [(ngModel)]="yearSearchTerm"
+        [ngModelOptions]="{ standalone: true }"
+        (input)="filterYears()"
+        (focus)="onYearFocus()"
+        placeholder="Select a year"
+        [disabled]="years.length === 0"
+        class="w-full border border-gray-300 rounded-md px-3 py-2 pr-8
+               focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all
+               disabled:bg-gray-100 disabled:cursor-not-allowed"
+        autocomplete="off"
+      />
+
+      <div class="absolute right-2 top-2 pointer-events-none">
+        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </div>
+
+      <!-- Dropdown -->
+      <div
+        *ngIf="showYearDropdown && filteredYears.length > 0"
+        class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg 
+               max-h-60 overflow-auto"
+      >
+        <div
+          *ngFor="let year of filteredYears"
+          (click)="selectYear(year)"
+          class="px-3 py-2 hover:bg-red-50 cursor-pointer transition-colors"
+        >
+          {{ year.year }}
+        </div>
+      </div>
+
+      <!-- No Results -->
+      <div
+        *ngIf="showYearDropdown && yearSearchTerm && filteredYears.length === 0"
+        class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg p-3"
+      >
+        <p class="text-gray-500 text-sm text-center">No years found</p>
+      </div>
+    </div>
+
+    <div
+      *ngIf="vehicleForm.get('year_id')?.touched && vehicleForm.get('year_id')?.invalid"
+      class="text-red-500 text-sm mt-1"
+    >
+      Year is required.
+    </div>
+  </div>
+
 </div>
+
           <div class="mb-6">
             <label class="block mb-2 font-medium">Condition</label>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -657,151 +1000,157 @@
       </form>
 
 
-      <form *ngSwitchCase="3" [formGroup]="platesForm">
-        <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
-          <h3 class="text-lg font-semibold mb-6">License Plate Details</h3>
+   <form *ngSwitchCase="3" [formGroup]="platesForm">
+  <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200" style="width: 1000px; max-width: 14400px;">
+    <h3 class="text-lg font-semibold mb-6">License Plate Details</h3>
 
-          <!-- Country Selection -->
-          <div class="mb-6">
-            <label class="block mb-2 font-medium">Country</label>
-            <select formControlName="country_id_lp"
-              class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition">
-              <option value="" disabled>Select the country</option>
-              <option *ngFor="let country of countries" [value]="country.id">
-                {{ country.name }}
-              </option>
-            </select>
-            <div *ngIf="platesForm.get('country_id_lp')?.invalid && platesForm.get('country_id_lp')?.touched"
-              class="text-red-500 text-sm mt-1">
-              Country is required
+    <!-- Country Selection -->
+    <div class="mb-6">
+      <label class="block mb-2 font-medium">Country</label>
+      <select formControlName="country_id_lp"
+        class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition">
+        <option value="" disabled>Select the country</option>
+        <option *ngFor="let country of countries" [value]="country.id">
+          {{ country.name }}
+        </option>
+      </select>
+      <div *ngIf="platesForm.get('country_id_lp')?.invalid && platesForm.get('country_id_lp')?.touched"
+        class="text-red-500 text-sm mt-1">
+        Country is required
+      </div>
+    </div>
+
+    <!-- City Selection -->
+    <div class="mb-6">
+      <label for="city" class="block text-sm font-medium text-gray-700 mb-2">City</label>
+      <div class="relative">
+        <select id="city" formControlName="city_id_lp"
+          class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+          [disabled]="!filteredCities.length">
+          <option value="" disabled>Select a City</option>
+          <option *ngFor="let city of filteredCities" [value]="city.id">
+            {{ city.name }}
+          </option>
+        </select>
+      </div>
+      <div *ngIf="platesForm.get('city_id_lp')?.invalid && platesForm.get('city_id_lp')?.touched"
+        class="text-red-500 text-sm mt-1">
+        City is required
+      </div>
+    </div>
+
+    <!-- Dynamic Fields -->
+    <div *ngIf="dynamicFields.length > 0" class="mb-6">
+      <h4 class="font-medium mb-4">Plate Information</h4>
+      <div class="grid grid-cols-1 gap-4">
+        <div *ngFor="let field of dynamicFields" class="mb-4">
+          <label [for]="field.controlName" class="block text-sm font-medium text-gray-700 mb-2">
+            {{ field.field_name | formatFieldName }}
+            <span *ngIf="field.is_required" class="text-red-500">*</span>
+            <span class="text-xs text-gray-500 ml-2">({{ field.writing_system === 'latin' ? 'English' : 'Arabic' }})</span>
+          </label>
+
+          <!-- Number input - English/Latin -->
+          <div *ngIf="field.character_type === 'digit' && field.writing_system === 'latin'">
+            <input
+              [id]="field.controlName"
+              [formControlName]="field.controlName"
+              type="text"
+              pattern="[0-9]+"
+              [placeholder]="'Enter ' + (field.field_name | formatFieldName) + ' (0-9)'"
+              [attr.maxlength]="field.max_length"
+              inputmode="numeric"
+              (input)="onEnglishNumberInput($event, field)"
+              (keypress)="allowOnlyDigits($event, 'latin')"
+              class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+            />
+            <div class="text-xs text-green-600 mt-1">
+              ✓ Type English numbers (0-9)
             </div>
           </div>
 
-          <!-- City Selection -->
-          <div class="mb-6">
-            <label for="city" class="block text-sm font-medium text-gray-700 mb-2">City</label>
-            <div class="relative">
-              <select id="city" formControlName="city_id_lp"
-                class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
-                [disabled]="!filteredCities.length">
-                <option value="" disabled>Select a City</option>
-                <option *ngFor="let city of filteredCities" [value]="city.id">
-                  {{ city.name }}
-                </option>
-              </select>
-            </div>
-            <div *ngIf="platesForm.get('city_id_lp')?.invalid && platesForm.get('city_id_lp')?.touched"
-              class="text-red-500 text-sm mt-1">
-              City is required
+          <!-- Number input - Arabic (Auto-filled, read-only) -->
+          <div *ngIf="field.character_type === 'digit' && field.writing_system === 'arabic'">
+            <input
+              [id]="field.controlName"
+              [formControlName]="field.controlName"
+              type="text"
+              pattern="[\u0660-\u0669\u06F0-\u06F9]+"
+              [placeholder]="'Auto-filled from English (٠-٩)'"
+              [attr.maxlength]="field.max_length"
+              readonly
+              class="w-full border border-gray-300 rounded-lg p-3 bg-gray-50 text-gray-700 cursor-not-allowed outline-none transition"
+            />
+            <div class="text-xs text-blue-600 mt-1">
+              ℹ Auto-filled from English input
             </div>
           </div>
 
-          <!-- Dynamic Fields -->
-          <div *ngIf="dynamicFields.length > 0" class="mb-6">
-            <h4 class="font-medium mb-4">Plate Information</h4>
-            <div class="grid grid-cols-1 gap-4">
-              <div *ngFor="let field of dynamicFields" class="mb-4">
-                <label [for]="field.controlName" class="block text-sm font-medium text-gray-700 mb-2">
-                  {{ field.field_name | formatFieldName }}
-                  <span *ngIf="field.is_required" class="text-red-500">*</span>
-                </label>
-
-                <!-- Number input -->
-                <!-- <input 
-            *ngIf="field.character_type === 'digit'"
-            (keypress)="allowOnlyDigits($event, field.writing_system)"
-            [id]="field.controlName"
-            [formControlName]="field.controlName"
-            type="text"
-            pattern="[0-9٠-٩]+"
-            [placeholder]="'Enter ' + (field.field_name | formatFieldName)"
-            [attr.maxlength]="field.max_length"
-            inputmode="numeric"
-
-            class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
-          /> -->
-                <!-- <input 
-  *ngIf="field.character_type === 'digit'"
-  (keypress)="allowOnlyDigits($event, field.writing_system)"
-  [id]="field.controlName"
-  [formControlName]="field.controlName"
-  type="text"
-  [pattern]="field.writing_system === 'arabic' ? '[\u0660-\u0669\u06F0-\u06F90-9]+' : '[0-9]+'"
-  [placeholder]="'Enter ' + (field.field_name | formatFieldName)"
-  [attr.maxlength]="field.max_length"
-  inputmode="numeric"
-  class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
-/> -->
-                <input *ngIf="field.character_type === 'digit'"
-                  (keypress)="allowOnlyDigits($event, field.writing_system)" [id]="field.controlName"
-                  [formControlName]="field.controlName" type="text"
-                  [pattern]="field.writing_system === 'arabic' ? '[\u0660-\u0669\u06F0-\u06F90-9]+' : '[0-9]+'"
-                  [placeholder]="'Enter ' + (field.field_name | formatFieldName)" [attr.maxlength]="field.max_length"
-                  inputmode="numeric"
-                  class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition" />
-
-                <!-- Text input -->
-                <!-- <input 
-            *ngIf="field.character_type === 'letter'"
-            [id]="field.controlName"
-            [formControlName]="field.controlName"
-            type="text"
-            [placeholder]="'Enter ' + (field.field_name | formatFieldName)"
-            [attr.maxlength]="field.max_length"
-            class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
-            (keypress)="allowOnlyLetters($event)"
-          /> -->
-                <input *ngIf="field.character_type === 'letter'" [id]="field.controlName"
-                  [formControlName]="field.controlName" type="text"
-                  [placeholder]="'Enter ' + (field.field_name | formatFieldName)" [attr.maxlength]="field.max_length"
-                  class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition placeholder-gray-400"
-                  (keypress)="allowOnlyLetters($event, field.writing_system)" />
-
-
-                <!-- Error messages -->
-
-
-                <!-- Helper text -->
-                <div class="text-xs text-gray-500 mt-1">
-                  Position: {{ field.position | formatFieldName }} |
-                  Type: {{ field.character_type === 'digit' ? 'Numbers' : 'Letters' }} |
-                  Length: {{ field.min_length }}-{{ field.max_length }} characters
-                </div>
-              </div>
+          <!-- Letter input - English/Latin -->
+          <div *ngIf="field.character_type === 'letter' && field.writing_system === 'latin'">
+            <input
+              [id]="field.controlName"
+              [formControlName]="field.controlName"
+              type="text"
+              [placeholder]="'Enter ' + (field.field_name | formatFieldName) + ' (A-Z)'"
+              [attr.maxlength]="field.max_length"
+              (input)="onEnglishLetterInput($event, field)"
+              (keypress)="allowOnlyLetters($event, 'latin')"
+              class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition placeholder-gray-400"
+            />
+            <div class="text-xs text-green-600 mt-1">
+              ✓ Type English letters (A-Z)
             </div>
           </div>
 
-          <!-- Loading/No format messages -->
-          <div *ngIf="platesForm.get('city_id_lp')?.value && !dynamicFields.length && !selectedPlateFormat"
-            class="text-center py-4">
-            <div class="text-gray-500">Loading plate format...</div>
+          <!-- Letter input - Arabic (Auto-filled, read-only) -->
+          <div *ngIf="field.character_type === 'letter' && field.writing_system === 'arabic'">
+            <input
+              [id]="field.controlName"
+              [formControlName]="field.controlName"
+              type="text"
+              [placeholder]="'Auto-filled from English (ا-ي)'"
+              [attr.maxlength]="field.max_length"
+              readonly
+              class="w-full border border-gray-300 rounded-lg p-3 bg-gray-50 text-gray-700 cursor-not-allowed outline-none transition placeholder-gray-400"
+            />
+            <div class="text-xs text-blue-600 mt-1">
+              ℹ Auto-filled from English input
+            </div>
           </div>
-          <div *ngIf="platesForm.get('city_id_lp')?.value && dynamicFields.length === 0 && selectedPlateFormat === null"
-            class="text-center py-4">
-            <div class="text-gray-500">No plate format available for selected city</div>
+
+          <!-- Helper text -->
+          <div class="text-xs text-gray-500 mt-1 pt-1 border-t border-gray-100">
+            Position: {{ field.position | formatFieldName }} |
+            Type: {{ field.character_type === 'digit' ? 'Numbers' : 'Letters' }} |
+            Length: {{ field.min_length }}-{{ field.max_length }} characters |
+            Script: {{ field.writing_system }}
           </div>
         </div>
+      </div>
+    </div>
 
-        <!-- Navigation buttons -->
-        <!-- <div class="flex justify-between mt-6">
-    <button type="button" 
-            class="px-6 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition"
-            [disabled]="!platesForm.valid" 
-            (click)="goToNextStep()">
+    <!-- Loading/No format messages -->
+    <div *ngIf="platesForm.get('city_id_lp')?.value && !dynamicFields.length && !selectedPlateFormat"
+      class="text-center py-4">
+      <div class="text-gray-500">Loading plate format...</div>
+    </div>
+    <div *ngIf="platesForm.get('city_id_lp')?.value && dynamicFields.length === 0 && selectedPlateFormat === null"
+      class="text-center py-4">
+      <div class="text-gray-500">No plate format available for selected city</div>
+    </div>
+  </div>
+
+  <!-- Navigation buttons -->
+  <div class="flex justify-end mt-6">
+    <button 
+      type="button" 
+      class="px-6 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:opacity-50"
+      (click)="goToNextStep()">
       Next
     </button>
-  </div> -->
-        <div class="flex justify-end mt-6">
-          <button 
-          type="button" class="px-6 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:opacity-50"
-            (click)="goToNextStep()">
-            Next
-          </button>
-          <!-- <button type="button" (click)="logFormValues()" class="mt-4 p-2 bg-blue-100">
-            Debug Form Values
-          </button> -->
-        </div>
-      </form>
+  </div>
+</form>
       <!-- Default case if no vehicle type is selected -->
       <div *ngSwitchDefault class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
         <p class="text-center text-gray-500">
@@ -812,7 +1161,14 @@
   </div>
 
   <!-- Step 2: Contact details (placeholder for next step) -->
-  <div *ngIf="currentStep === 2" class="mb-8">
+  <div *ngIf="currentStep === 2" class="mt-8" style="    width: 1000px;
+    max-width: 14400px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--sds-size-space-1200);
+    border-radius: 24px;
+    border: 1px solid var(--Gray-200, #E4E7EC);
+    background: var(--sds-color-background-default-default);">
     <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
       <h2 class="text-xl text-blue-600 font-medium mb-6">2. {{ 'FORM.AD_DETAILS' | translate }}</h2>
 
@@ -918,60 +1274,57 @@
 
         <div class="mb-6">
           <label class="block mb-2 font-medium">{{ 'FORM.CONTACT_CHANNELS' | translate }}</label>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <!-- Phone Option -->
-            <div class="block">
-              <div [ngClass]="{
-        'border-red-500 bg-red-50': adDetailsForm.get('contacting_channel')?.value === 'phone',
-        'border-gray-200': adDetailsForm.get('contacting_channel')?.value !== 'phone',
-        'opacity-50 cursor-not-allowed': isSoomSelected(),
-        'cursor-pointer': !isSoomSelected()
-      }" (click)="!isSoomSelected() && adDetailsForm.get('contacting_channel')?.setValue('phone')"
-                class="border-2 rounded-lg p-4 transition-colors h-full">
-                <div class="flex items-center justify-between h-full">
-                  <span class="text-gray-700" [ngClass]="{'text-gray-400': isSoomSelected()}">{{ 'FORM.PHONE' |
-                    translate }}</span>
-                  <div *ngIf="adDetailsForm.get('contacting_channel')?.value === 'phone' && !isSoomSelected()"
-                    class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
-                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                  </div>
-                  <div *ngIf="adDetailsForm.get('contacting_channel')?.value !== 'phone' || isSoomSelected()"
-                    class="w-6 h-6 border-2 rounded-full"
-                    [ngClass]="{'border-gray-300': !isSoomSelected(), 'border-gray-200': isSoomSelected()}"></div>
-                </div>
-              </div>
-            </div>
+         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <!-- Phone Option -->
+  <div class="block">
+    <div [ngClass]="{
+      'border-red-500 bg-red-50': isChannelSelected('phone'),
+      'border-gray-200': !isChannelSelected('phone'),
+      'opacity-50 cursor-not-allowed': isSoomSelected(),
+      'cursor-pointer': !isSoomSelected()
+    }" (click)="!isSoomSelected() && toggleContactChannel('phone')"
+      class="border-2 rounded-lg p-4 transition-colors h-full">
+      <div class="flex items-center justify-between h-full">
+        <span class="text-gray-700" [ngClass]="{'text-gray-400': isSoomSelected()}">{{ 'FORM.PHONE' | translate }}</span>
+        <div *ngIf="isChannelSelected('phone') && !isSoomSelected()"
+          class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+        </div>
+        <div *ngIf="!isChannelSelected('phone') || isSoomSelected()"
+          class="w-6 h-6 border-2 rounded-full"
+          [ngClass]="{'border-gray-300': !isSoomSelected(), 'border-gray-200': isSoomSelected()}"></div>
+      </div>
+    </div>
+  </div>
 
-            <!-- WhatsApp Option -->
-            <div class="block">
-              <div [ngClass]="{
-        'border-red-500 bg-red-50': adDetailsForm.get('contacting_channel')?.value === 'whatsapp',
-        'border-gray-200': adDetailsForm.get('contacting_channel')?.value !== 'whatsapp',
-        'opacity-50 cursor-not-allowed': isSoomSelected(),
-        'cursor-pointer': !isSoomSelected()
-      }" (click)="!isSoomSelected() && adDetailsForm.get('contacting_channel')?.setValue('whatsapp')"
-                class="border-2 rounded-lg p-4 transition-colors h-full">
-                <div class="flex items-center justify-between h-full">
-                  <span class="text-gray-700" [ngClass]="{'text-gray-400': isSoomSelected()}">{{ 'FORM.WHATSAPP' |
-                    translate }}</span>
-                  <div *ngIf="adDetailsForm.get('contacting_channel')?.value === 'whatsapp' && !isSoomSelected()"
-                    class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
-                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                  </div>
-                  <div *ngIf="adDetailsForm.get('contacting_channel')?.value !== 'whatsapp' || isSoomSelected()"
-                    class="w-6 h-6 border-2 rounded-full"
-                    [ngClass]="{'border-gray-300': !isSoomSelected(), 'border-gray-200': isSoomSelected()}"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-
+  <!-- WhatsApp Option -->
+  <div class="block">
+    <div [ngClass]="{
+      'border-red-500 bg-red-50': isChannelSelected('whatsapp'),
+      'border-gray-200': !isChannelSelected('whatsapp'),
+      'opacity-50 cursor-not-allowed': isSoomSelected(),
+      'cursor-pointer': !isSoomSelected()
+    }" (click)="!isSoomSelected() && toggleContactChannel('whatsapp')"
+      class="border-2 rounded-lg p-4 transition-colors h-full">
+      <div class="flex items-center justify-between h-full">
+        <span class="text-gray-700" [ngClass]="{'text-gray-400': isSoomSelected()}">{{ 'FORM.WHATSAPP' | translate }}</span>
+        <div *ngIf="isChannelSelected('whatsapp') && !isSoomSelected()"
+          class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+        </div>
+        <div *ngIf="!isChannelSelected('whatsapp') || isSoomSelected()"
+          class="w-6 h-6 border-2 rounded-full"
+          [ngClass]="{'border-gray-300': !isSoomSelected(), 'border-gray-200': isSoomSelected()}"></div>
+      </div>
+    </div>
+  </div>
+</div>
           <!-- Soom Settings Section -->
           <div *ngIf="isSoomSelected()" class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-md">
             <h4 class="text-sm font-medium text-blue-900 mb-2">{{ 'FORM.SOOM_SETTINGS' | translate }}</h4>
@@ -1055,7 +1408,7 @@
     </select>
   </div>
 </div>
-
+<!-- 
         <div class="mb-6">
           <label class="block text-sm font-medium text-gray-700 mb-3">{{ 'FORM.SELLER_TYPE' | translate }}</label>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1071,7 +1424,55 @@
                 class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300" />
             </div>
           </div>
+        </div> -->
+        <div class="mb-6">
+  <label class="block text-sm font-medium text-gray-700 mb-3">{{ 'FORM.SELLER_TYPE' | translate }}</label>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <!-- Middleman Option -->
+    <div class="block">
+      <div [ngClass]="{
+        'border-red-500 bg-red-50': adDetailsForm.get('seller_type')?.value === 'middleman',
+        'border-gray-200': adDetailsForm.get('seller_type')?.value !== 'middleman'
+      }" (click)="adDetailsForm.get('seller_type')?.setValue('middleman')"
+        class="border-2 rounded-lg p-4 transition-colors h-full cursor-pointer">
+        <div class="flex items-center justify-between h-full">
+          <span class="text-gray-700">{{ 'FORM.MIDDLEMAN' | translate }}</span>
+          <div *ngIf="adDetailsForm.get('seller_type')?.value === 'middleman'"
+            class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
+            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+          </div>
+          <div *ngIf="adDetailsForm.get('seller_type')?.value !== 'middleman'"
+            class="w-6 h-6 border-2 border-gray-300 rounded-full"></div>
         </div>
+      </div>
+    </div>
+
+    <!-- Owner Option -->
+    <div class="block">
+      <div [ngClass]="{
+        'border-red-500 bg-red-50': adDetailsForm.get('seller_type')?.value === 'owner',
+        'border-gray-200': adDetailsForm.get('seller_type')?.value !== 'owner'
+      }" (click)="adDetailsForm.get('seller_type')?.setValue('owner')"
+        class="border-2 rounded-lg p-4 transition-colors h-full cursor-pointer">
+        <div class="flex items-center justify-between h-full">
+          <span class="text-gray-700">{{ 'FORM.OWNER' | translate }}</span>
+          <div *ngIf="adDetailsForm.get('seller_type')?.value === 'owner'"
+            class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
+            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+          </div>
+          <div *ngIf="adDetailsForm.get('seller_type')?.value !== 'owner'"
+            class="w-6 h-6 border-2 border-gray-300 rounded-full"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
         <div class="flex justify-between mt-8">
           <button (click)="previousStep()" *ngIf="currentStep > 1" type="button"

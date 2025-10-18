@@ -9,11 +9,10 @@ interface GarageItem {
   brand_id: number;
   model_id: number;
   year_id: number;
-  type_id: number;
   title: string | null;
   description: string | null;
   picture: string | null;
-  is_default: boolean; // Add this
+  is_default: boolean;
   created_at: string;
   updated_at: string;
   brand: {
@@ -28,10 +27,6 @@ interface GarageItem {
     id: number;
     year: number;
   };
-  type: {
-    id: number;
-    name: string;
-  };
 }
 
 @Component({
@@ -45,14 +40,13 @@ export class MyGarageComponent implements OnInit {
   vehicleForm: FormGroup;
   garageItems: GarageItem[] = [];
   showAddForm: boolean = false;
-  isEditMode: boolean = false; // Track if we're editing
-  editingItemId: number | null = null; // Track which item is being edited
+  isEditMode: boolean = false;
+  editingItemId: number | null = null;
 
   // Data arrays
   brands: Array<{ id: number; name: string }> = [];
   models: Array<{ id: number; name: string }> = [];
   years: Array<{ id: number; year: number }> = [];
-  types: Array<{ id: number; name: string; description: string | null }> = [];
 
   // Search properties
   brandSearchTerm: string = '';
@@ -69,12 +63,13 @@ export class MyGarageComponent implements OnInit {
   showModelDropdown: boolean = false;
   showYearDropdown: boolean = false;
 
+   isLoading: boolean = true; // Add loading state
+
   constructor(
     private listingService: ListingService, 
     private fb: FormBuilder
   ) {
     this.vehicleForm = this.fb.group({
-      type_id: ['', Validators.required],
       brand_id: ['', Validators.required],
       model_id: ['', Validators.required],
       year_id: ['', Validators.required]
@@ -84,13 +79,6 @@ export class MyGarageComponent implements OnInit {
   ngOnInit() {
     this.loadBrands();
     this.getMyGarage();
-    this.getTypes();
-  }
-
-  getTypes() {
-    this.listingService.getTypes().subscribe((res) => {
-      this.types = res.motorcycle_types; 
-    });
   }
 
   loadBrands() {
@@ -244,13 +232,17 @@ export class MyGarageComponent implements OnInit {
   }
 
   getMyGarage() {
+      this.isLoading = true; 
     this.listingService.getMyGarage().subscribe({
       next: (res) => {
         console.log('My Garage:', res);
         this.garageItems = res.data;
+        console.log(' this.garageItems : ',  this.garageItems.length );
+          this.isLoading = false; 
       },
       error: (err) => {
         console.error('Error fetching garage:', err);
+          this.isLoading = false; 
       }
     });
   }
@@ -260,7 +252,7 @@ export class MyGarageComponent implements OnInit {
       this.listingService.deleteGarageItem(id).subscribe({
         next: (res) => {
           console.log('Vehicle deleted:', res);
-          this.getMyGarage(); // Refresh the list
+          this.getMyGarage();
           alert('Vehicle deleted successfully!');
         },
         error: (err) => {
@@ -285,7 +277,6 @@ export class MyGarageComponent implements OnInit {
       
       // Set form values
       this.vehicleForm.patchValue({
-        type_id: item.type_id,
         brand_id: item.brand_id,
         model_id: item.model_id,
         year_id: item.year_id
@@ -301,7 +292,7 @@ export class MyGarageComponent implements OnInit {
     this.listingService.setDefaultGarageItem(id).subscribe({
       next: (res) => {
         console.log('Set as default:', res);
-        this.getMyGarage(); // Refresh to show updated default status
+        this.getMyGarage();
         alert('Vehicle set as default successfully!');
       },
       error: (err) => {

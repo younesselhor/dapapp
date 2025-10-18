@@ -23,9 +23,9 @@ export class AccountTabsComponent {
   { label: 'SOOM Box', route: 'soom-box' },
   { label: 'My Ads', route: 'my-ads' },
   {label : 'My Garage', route: 'my-garage'},
-  { label: 'Orders', route: 'orders' },
+  // { label: 'Orders', route: 'orders' },
   { label: 'Payment Information', route: 'payment-info' },
-  { label: 'Addresses', route: 'addresses' },
+  // { label: 'Addresses', route: 'addresses' },
   // { label: 'My Garage', route: 'garage' },
   { label: 'Wishlist', route: 'wishlist' },
   { label: 'Draft Posting Add', route: 'draft' }

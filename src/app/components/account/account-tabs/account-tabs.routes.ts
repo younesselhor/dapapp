@@ -1,3 +1,4 @@
+// account-tabs.routes.ts
 import { Routes } from '@angular/router';
 import { ProfileCardComponent } from '../home-tab/profile-card/profile-card.component';
 import { SettingsComponent } from '../home-tab/settings/settings.component';
@@ -5,7 +6,6 @@ import { PaymentCardUserComponent } from '../home-tab/payment-card-user/payment-
 import { SoomBoxComponent } from '../home-tab/soom-box/soom-box.component';
 import { SavedVehiclesComponent } from '../home-tab/saved-vehicles/saved-vehicles.component';
 import { DraftProductComponent } from '../home-tab/draft-product/draft-product.component';
-import path from 'path';
 import { MyGarageComponent } from '../home-tab/my-garage/my-garage.component';
 
 export const accountTabsRoutes: Routes = [
@@ -15,7 +15,6 @@ export const accountTabsRoutes: Routes = [
   { path: 'payment-info', component: PaymentCardUserComponent },
   { path: 'wishlist', component: SavedVehiclesComponent },
   { path: 'draft', component: DraftProductComponent },
-{path: 'my-garage', component: MyGarageComponent},
-  // redirect default
+  { path: 'my-garage', component: MyGarageComponent },
   { path: '', redirectTo: 'account-home', pathMatch: 'full' }
 ];

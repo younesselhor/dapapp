@@ -15,7 +15,8 @@ button:hover {
  .main-container{
   /* display: flex; */
 padding: 32px 80px;
-    min-width: 1683px;
+    min-width: auto;
+    max-width: 1440px;
 flex-direction: column;
 align-items: flex-start;
 gap: 50px;

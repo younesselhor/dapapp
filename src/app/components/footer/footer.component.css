@@ -8,7 +8,10 @@ flex-direction: column;
 align-items: center;
 gap: 10px;
 background: var(--Primary---Navy, #032C40);
-
+margin-top: 40px;
+ position: sticky;
+  bottom: 0;
+  z-index: 10; /* keep it above other content */
 }
 
 .footer-content{
@@ -102,14 +105,14 @@ gap: 24px;
 
 
 /* ===== BASE STYLES (Mobile First) ===== */
-.main-footer {
+/* .main-footer {
   display: flex;
   padding: 24px 16px;
   flex-direction: column;
   align-items: center;
   gap: 24px;
   background: var(--Primary---Navy, #032C40);
-}
+} */
 
 .footer-content {
   display: flex;

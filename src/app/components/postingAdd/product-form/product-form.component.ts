@@ -1,4 +1,4 @@
-import { Component, ElementRef, Inject, Input, OnInit, PLATFORM_ID, ViewChild } from '@angular/core';
+import { Component, ElementRef, Inject, Input, OnInit, PLATFORM_ID, ViewChild,HostListener } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -17,6 +17,9 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FormatFieldNamePipe } from './FormatFieldNamePipe';
 import { ActivatedRoute, Route, Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
+
+
+
 
 interface UploadedImage {
   preview: string;  // taswira 9bl ma tuploadi
@@ -233,6 +236,55 @@ showAddCardForm = false;
   showBrandDropdown: boolean = false;
   showModelDropdown: boolean = false;
   showYearDropdown: boolean = false;
+
+
+  selectedContactChannels: string[] = [];
+
+
+  // English to Arabic number mapping
+private englishToArabicNumbers: { [key: string]: string } = {
+  '0': '٠',
+  '1': '١',
+  '2': '٢',
+  '3': '٣',
+  '4': '٤',
+  '5': '٥',
+  '6': '٦',
+  '7': '٧',
+  '8': '٨',
+  '9': '٩'
+};
+
+// English to Arabic letter mapping
+private englishToArabicLetters: { [key: string]: string } = {
+  'A': 'أ', 'a': 'أ',
+  'B': 'ب', 'b': 'ب',
+  'C': 'ث', 'c': 'ث',
+  'D': 'د', 'd': 'د',
+  'E': 'ه', 'e': 'ه',
+  'F': 'ف', 'f': 'ف',
+  'G': 'ج', 'g': 'ج',
+  'H': 'ح', 'h': 'ح',
+  'I': 'ي', 'i': 'ي',
+  'J': 'ج', 'j': 'ج',
+  'K': 'ك', 'k': 'ك',
+  'L': 'ل', 'l': 'ل',
+  'M': 'م', 'm': 'م',
+  'N': 'ن', 'n': 'ن',
+  'O': 'و', 'o': 'و',
+  'P': 'ب', 'p': 'ب',
+  'Q': 'ق', 'q': 'ق',
+  'R': 'ر', 'r': 'ر',
+  'S': 'س', 's': 'س',
+  'T': 'ت', 't': 'ت',
+  'U': 'ع', 'u': 'ع',
+  'V': 'ف', 'v': 'ف',
+  'W': 'و', 'w': 'و',
+  'X': 'كس', 'x': 'كس',
+  'Y': 'ي', 'y': 'ي',
+  'Z': 'ز', 'z': 'ز'
+};
+
   constructor(
     private fb: FormBuilder,
     private listingService: ListingService,
@@ -328,9 +380,22 @@ ngOnInit(): void {
 //       this.adDetailsForm.get('contacting_channel')?.setValue('');
 //     }
 //   });
+//  this.adDetailsForm.get('allow_submission')?.valueChanges.subscribe(allowSubmission => {
+//     if (allowSubmission === 'true') {
+//       // When Soom is selected, clear the contact channel and remove validation
+//       this.adDetailsForm.get('contacting_channel')?.setValue('');
+//       this.adDetailsForm.get('contacting_channel')?.clearValidators();
+//       this.adDetailsForm.get('contacting_channel')?.updateValueAndValidity();
+//     } else {
+//       // When Direct is selected, add back the required validation
+//       this.adDetailsForm.get('contacting_channel')?.setValidators([Validators.required]);
+//       this.adDetailsForm.get('contacting_channel')?.updateValueAndValidity();
+//     }
+//   });
  this.adDetailsForm.get('allow_submission')?.valueChanges.subscribe(allowSubmission => {
     if (allowSubmission === 'true') {
-      // When Soom is selected, clear the contact channel and remove validation
+      // When Soom is selected, clear the contact channels
+      this.selectedContactChannels = [];
       this.adDetailsForm.get('contacting_channel')?.setValue('');
       this.adDetailsForm.get('contacting_channel')?.clearValidators();
       this.adDetailsForm.get('contacting_channel')?.updateValueAndValidity();
@@ -340,6 +405,8 @@ ngOnInit(): void {
       this.adDetailsForm.get('contacting_channel')?.updateValueAndValidity();
     }
   });
+
+
   this.userService.userProfile$.subscribe(profile => {
   if (profile) {
     this.user = profile.user; // ✅ profile.user has first_name, last_name, etc.
@@ -372,17 +439,267 @@ this.platesForm.get('city_id_lp')?.valueChanges.subscribe((cityId) => {
 
 }
 
+
+ @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    
+    // Close dropdowns if click is outside
+    if (!target.closest('.brand-search-container')) {
+      this.showBrandDropdown = false;
+    }
+    if (!target.closest('.model-search-container')) {
+      this.showModelDropdown = false;
+    }
+    if (!target.closest('.year-search-container')) {
+      this.showYearDropdown = false;
+    }
+  }
+
+
+
+
+  // Enhanced filter methods
+  filterBrands() {
+    const searchTerm = this.brandSearchTerm.toLowerCase().trim();
+    
+    if (!searchTerm) {
+      this.filteredBrands = this.brands;
+    } else {
+      this.filteredBrands = this.brands.filter(brand =>
+        brand.name.toLowerCase().includes(searchTerm)
+      );
+    }
+    this.showBrandDropdown = true;
+  }
+
+  filterModels() {
+    const searchTerm = this.modelSearchTerm.toLowerCase().trim();
+    
+    if (!searchTerm) {
+      this.filteredModels = this.models;
+    } else {
+      this.filteredModels = this.models.filter(model =>
+        model.name.toLowerCase().includes(searchTerm)
+      );
+    }
+    this.showModelDropdown = true;
+  }
+
+  filterYears() {
+    const searchTerm = this.yearSearchTerm.trim();
+    
+    if (!searchTerm) {
+      this.filteredYears = this.years;
+    } else {
+      this.filteredYears = this.years.filter(year =>
+        year.year.toString().includes(searchTerm)
+      );
+    }
+    this.showYearDropdown = true;
+  }
+
+  // Focus handlers to show all options
+  onBrandFocus() {
+    this.filteredBrands = this.brands;
+    this.showBrandDropdown = true;
+  }
+
+  onModelFocus() {
+    if (this.models.length > 0) {
+      this.filteredModels = this.models;
+      this.showModelDropdown = true;
+    }
+  }
+
+  onYearFocus() {
+    if (this.years.length > 0) {
+      this.filteredYears = this.years;
+      this.showYearDropdown = true;
+    }
+  }
+
+  // Selection methods
+  selectBrand(brand: any) {
+    this.brandSearchTerm = brand.name;
+    this.vehicleForm.patchValue({ brand_id: brand.id });
+    this.bikeForm.patchValue({ brand_id: brand.id });
+    this.showBrandDropdown = false;
+    this.onBrandChange(brand.id);
+  }
+
+  selectModel(model: any) {
+    this.modelSearchTerm = model.name;
+    this.vehicleForm.patchValue({ model_id: model.id });
+    this.bikeForm.patchValue({ model_id: model.id });
+    this.showModelDropdown = false;
+    this.onModelChange(model.id);
+  }
+
+  selectYear(year: any) {
+    this.yearSearchTerm = year.year.toString();
+    this.vehicleForm.patchValue({ year_id: year.id });
+    this.bikeForm.patchValue({ year_id: year.id });
+    this.showYearDropdown = false;
+  }
+
+  // Updated existing methods
+  onBrandChange(brandId: number) {
+    this.models = [];
+    this.years = [];
+    this.modelSearchTerm = '';
+    this.yearSearchTerm = '';
+    this.filteredModels = [];
+    this.filteredYears = [];
+    
+    this.vehicleForm.patchValue({ model_id: '', year_id: '' });
+    this.bikeForm.patchValue({ model_id: '', year_id: '' });
+
+    if (brandId) {
+      this.listingService.getMotorcycleModels(brandId).subscribe((res) => {
+        this.models = res.data;
+        this.filteredModels = res.data;
+      });
+    }
+  }
+
+  onModelChange(modelId: number) {
+    this.years = [];
+    this.yearSearchTerm = '';
+    this.filteredYears = [];
+    
+    this.vehicleForm.patchValue({ year_id: '' });
+    this.bikeForm.patchValue({ year_id: '' });
+
+    if (modelId) {
+      this.listingService.getMotorcycleYears(modelId).subscribe((res) => {
+        this.years = res.data;
+        this.filteredYears = res.data;
+      });
+    }
+  }
+
+// Convert English numbers to Arabic numbers
+private convertEnglishToArabicNumbers(englishNumber: string): string {
+  return englishNumber.split('').map(char => 
+    this.englishToArabicNumbers[char] || char
+  ).join('');
+}
+
+// Convert English letters to Arabic letters
+private convertEnglishToArabicLetters(englishText: string): string {
+  return englishText.split('').map(char => 
+    this.englishToArabicLetters[char] || char
+  ).join('');
+}
+
+// Handle English number input and auto-fill Arabic field
+onEnglishNumberInput(event: any, field: any): void {
+  const englishValue = event.target.value;
+  const cleanedValue = englishValue.replace(/[^0-9]/g, '');
+  
+  this.platesForm.get(field.controlName)?.setValue(cleanedValue, { emitEvent: false });
+  
+  console.log('🔢 English Number Input:', {
+    field: field.field_name,
+    value: cleanedValue
+  });
+  
+  // Find the Arabic number field (there should only be one)
+  const arabicField = this.dynamicFields.find(f => 
+    f.character_type === 'digit' && 
+    f.writing_system === 'arabic'
+  );
+  
+  if (arabicField) {
+    const arabicValue = this.convertEnglishToArabicNumbers(cleanedValue);
+    console.log('✅ Auto-filling Arabic number:', arabicValue);
+    this.platesForm.get(arabicField.controlName)?.setValue(arabicValue, { emitEvent: false });
+  } else {
+    console.warn('⚠️ No Arabic digit field found');
+  }
+}
+
+// Handle English letter input and auto-fill Arabic field
+onEnglishLetterInput(event: any, field: any): void {
+  const englishValue = event.target.value.toUpperCase();
+  const cleanedValue = englishValue.replace(/[^A-Za-z]/g, '');
+  
+  this.platesForm.get(field.controlName)?.setValue(cleanedValue, { emitEvent: false });
+  
+  console.log('🔤 English Letter Input:', {
+    field: field.field_name,
+    value: cleanedValue
+  });
+  
+  // Find the Arabic letter field (there should only be one)
+  const arabicField = this.dynamicFields.find(f => 
+    f.character_type === 'letter' && 
+    f.writing_system === 'arabic'
+  );
+  
+  if (arabicField) {
+    const arabicValue = this.convertEnglishToArabicLetters(cleanedValue);
+    console.log('✅ Auto-filling Arabic letter:', arabicValue);
+    this.platesForm.get(arabicField.controlName)?.setValue(arabicValue, { emitEvent: false });
+  } else {
+    console.warn('⚠️ No Arabic letter field found');
+  }
+}
+
+
+toggleContactChannel(channel: string): void {
+  if (this.isSoomSelected()) {
+    return;
+  }
+
+  const index = this.selectedContactChannels.indexOf(channel);
+  
+  if (index > -1) {
+    // Remove if already selected
+    this.selectedContactChannels.splice(index, 1);
+  } else {
+    // Add if not selected
+    this.selectedContactChannels.push(channel);
+  }
+
+  // Update form control with comma-separated values or array (depending on your API)
+  const value = this.selectedContactChannels.join(','); // or just use the array
+  this.adDetailsForm.get('contacting_channel')?.setValue(value);
+}
+
+isChannelSelected(channel: string): boolean {
+  return this.selectedContactChannels.includes(channel);
+}
+
+
+// private validateContactChannelForDirect(): boolean {
+//   const allowSubmission = this.adDetailsForm.get('allow_submission')?.value;
+//   const contactingChannel = this.adDetailsForm.get('contacting_channel')?.value;
+  
+//   // If Soom is selected, contact channel is not required
+//   if (allowSubmission === 'true') {
+//     return true;
+//   }
+  
+//   // If Direct is selected, contact channel is required
+//   if (allowSubmission === 'false' && !contactingChannel) {
+//     this.adDetailsForm.get('contacting_channel')?.setErrors({ required: true });
+//     return false;
+//   }
+  
+//   return true;
+// }
 private validateContactChannelForDirect(): boolean {
   const allowSubmission = this.adDetailsForm.get('allow_submission')?.value;
-  const contactingChannel = this.adDetailsForm.get('contacting_channel')?.value;
   
   // If Soom is selected, contact channel is not required
   if (allowSubmission === 'true') {
     return true;
   }
   
-  // If Direct is selected, contact channel is required
-  if (allowSubmission === 'false' && !contactingChannel) {
+  // If Direct is selected, at least one contact channel is required
+  if (allowSubmission === 'false' && this.selectedContactChannels.length === 0) {
     this.adDetailsForm.get('contacting_channel')?.setErrors({ required: true });
     return false;
   }
@@ -631,18 +948,33 @@ this.uploadedImageUrls = draft.images.map((img: any) => img.image_url);
 
 
       // ✅ 4. Handle Ad Details (Step 2)
+      // this.adDetailsForm.patchValue({
+      //   title: draft.title,
+      //   description: draft.description,
+      //   price: draft.price,
+      //   city: draft.city_id,
+      //   country: draft.country_id,
+      //   listing_type_id: draft.listing_type_id,
+      //   contacting_channel: draft.contacting_channel,
+      //   seller_type: draft.seller_type,
+      //   allow_submission: draft.allow_submission ? 'true' : 'false',
+      //   minimum_bid: draft.minimum_bid
+      // });
       this.adDetailsForm.patchValue({
-        title: draft.title,
-        description: draft.description,
-        price: draft.price,
-        city: draft.city_id,
-        country: draft.country_id,
-        listing_type_id: draft.listing_type_id,
-        contacting_channel: draft.contacting_channel,
-        seller_type: draft.seller_type,
-        allow_submission: draft.allow_submission ? 'true' : 'false',
-        minimum_bid: draft.minimum_bid
-      });
+  title: draft.title,
+  description: draft.description,
+  price: draft.price,
+  city: draft.city_id,
+  country: draft.country_id,
+  listing_type_id: draft.listing_type_id,
+  contacting_channel: draft.contacting_channel,
+  seller_type: draft.seller_type,
+  allow_submission: draft.allow_submission ? 'true' : 'false',
+  minimum_bid: draft.minimum_bid
+});
+if (draft.contacting_channel) {
+  this.selectedContactChannels = draft.contacting_channel.split(',');
+}
 
 this.uploadedImages = (draft.images || []).map((img: any) => ({
   preview: img.image_url,
@@ -679,21 +1011,57 @@ initForm(): void {
     // type_id: [1, Validators.required]
   });
 }
+
+// allowOnlyDigits(event: KeyboardEvent, writingSystem: string = 'latin'): void {
+//   const inputChar = event.key;
+
+//   if (writingSystem === 'arabic') {
+//     const arabicDigitRegex = /^[\u0660-\u0669]+$/; // Arabic-Indic ٠-٩
+//     if (!arabicDigitRegex.test(inputChar)) {
+//       event.preventDefault();
+//     }
+//   } else {
+//     const latinDigitRegex = /^[0-9]+$/;
+//     if (!latinDigitRegex.test(inputChar)) {
+//       event.preventDefault();
+//     }
+//   }
+// }
+// allowOnlyLetters(event: KeyboardEvent, writingSystem: string = 'latin'): void {
+//   const inputChar = event.key;
+
+//   if (writingSystem === 'arabic') {
+//     const arabicLetterRegex = /^[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\s]+$/;
+//     if (!arabicLetterRegex.test(inputChar)) {
+//       event.preventDefault();
+//     }
+//   } else {
+//     // Default to Latin letters only
+//     const latinRegex = /^[a-zA-Z\s]+$/;
+//     if (!latinRegex.test(inputChar)) {
+//       event.preventDefault();
+//     }
+//   }
+// }
+
+// Update allowOnlyDigits method
 allowOnlyDigits(event: KeyboardEvent, writingSystem: string = 'latin'): void {
   const inputChar = event.key;
 
   if (writingSystem === 'arabic') {
-    const arabicDigitRegex = /^[\u0660-\u0669]+$/; // Arabic-Indic ٠-٩
+    const arabicDigitRegex = /^[\u0660-\u0669]+$/;
     if (!arabicDigitRegex.test(inputChar)) {
       event.preventDefault();
     }
-  } else {
+  } else if (writingSystem === 'latin') {
     const latinDigitRegex = /^[0-9]+$/;
     if (!latinDigitRegex.test(inputChar)) {
       event.preventDefault();
     }
   }
 }
+
+// Update allowOnlyLetters method
 allowOnlyLetters(event: KeyboardEvent, writingSystem: string = 'latin'): void {
   const inputChar = event.key;
 
@@ -702,8 +1070,7 @@ allowOnlyLetters(event: KeyboardEvent, writingSystem: string = 'latin'): void {
     if (!arabicLetterRegex.test(inputChar)) {
       event.preventDefault();
     }
-  } else {
-    // Default to Latin letters only
+  } else if (writingSystem === 'latin') {
     const latinRegex = /^[a-zA-Z\s]+$/;
     if (!latinRegex.test(inputChar)) {
       event.preventDefault();
@@ -750,10 +1117,92 @@ logFormStatus(): void {
     // Create a unique control name using field ID to avoid conflicts
     return `${field.field_name}_${field.id}`;
   }
+
+  
+// getValidatorsForField(field: any): ValidatorFn[] {
+//   const validators: ValidatorFn[] = [];
+
+//   if (field.is_required) {
+//     validators.push(Validators.required);
+//   }
+
+//   if (field.min_length) {
+//     validators.push(Validators.minLength(field.min_length));
+//   }
+
+//   if (field.max_length) {
+//     validators.push(Validators.maxLength(field.max_length));
+//   }
+
+
+//   if (field.character_type === 'letter') {
+//   if (field.writing_system === 'latin') {
+//     validators.push(Validators.pattern(/^[a-zA-Z]+$/)); // على الأقل حرف واحد
+//   } else if (field.writing_system === 'arabic') {
+//     validators.push(Validators.pattern(/^[\u0600-\u06FF\s]+$/)); // حروف عربية ومسافات
+//   }
+// } else if (field.character_type === 'digit') {
+//   if (field.writing_system === 'latin') {
+//     validators.push(Validators.pattern(/^[0-9]+$/)); // أرقام لاتينية
+//   } else if (field.writing_system === 'arabic') {
+//     validators.push(Validators.pattern(/^[\u0660-\u0669]+$/)); // أرقام عربية هندية (٠-٩)
+//   }
+// }
+
+
+//   // Add custom regex if provided by the API
+//   if (field.validation_pattern) {
+//     validators.push(Validators.pattern(field.validation_pattern));
+//   }
+
+//   return validators;
+// }
+
+// getValidatorsForField(field: any): ValidatorFn[] {
+//   const validators: ValidatorFn[] = [];
+
+//   // Only add required validator for English fields
+//   // Arabic fields are auto-filled, so they don't need to be required
+//   if (field.is_required && field.writing_system === 'english') {
+//     validators.push(Validators.required);
+//   }
+
+//   if (field.min_length) {
+//     validators.push(Validators.minLength(field.min_length));
+//   }
+
+//   if (field.max_length) {
+//     validators.push(Validators.maxLength(field.max_length));
+//   }
+
+//   if (field.character_type === 'letter') {
+//     if (field.writing_system === 'english') {
+//       validators.push(Validators.pattern(/^[a-zA-Z]+$/));
+//     } else if (field.writing_system === 'arabic') {
+//       validators.push(Validators.pattern(/^[\u0600-\u06FF\s]+$/));
+//     }
+//   } else if (field.character_type === 'digit') {
+//     if (field.writing_system === 'english') {
+//       validators.push(Validators.pattern(/^[0-9]+$/));
+//     } else if (field.writing_system === 'arabic') {
+//       validators.push(Validators.pattern(/^[\u0660-\u0669]+$/));
+//     }
+//   }
+
+//   // Add custom regex if provided by the API
+//   if (field.validation_pattern) {
+//     validators.push(Validators.pattern(field.validation_pattern));
+//   }
+
+//   return validators;
+// }
+
+
 getValidatorsForField(field: any): ValidatorFn[] {
   const validators: ValidatorFn[] = [];
 
-  if (field.is_required) {
+  // Only add required validator for Latin (English) fields
+  if (field.is_required && field.writing_system === 'latin') {
     validators.push(Validators.required);
   }
 
@@ -765,23 +1214,20 @@ getValidatorsForField(field: any): ValidatorFn[] {
     validators.push(Validators.maxLength(field.max_length));
   }
 
-
   if (field.character_type === 'letter') {
-  if (field.writing_system === 'latin') {
-    validators.push(Validators.pattern(/^[a-zA-Z]+$/)); // على الأقل حرف واحد
-  } else if (field.writing_system === 'arabic') {
-    validators.push(Validators.pattern(/^[\u0600-\u06FF\s]+$/)); // حروف عربية ومسافات
+    if (field.writing_system === 'latin') {
+      validators.push(Validators.pattern(/^[a-zA-Z]+$/));
+    } else if (field.writing_system === 'arabic') {
+      validators.push(Validators.pattern(/^[\u0600-\u06FF\s]+$/));
+    }
+  } else if (field.character_type === 'digit') {
+    if (field.writing_system === 'latin') {
+      validators.push(Validators.pattern(/^[0-9]+$/));
+    } else if (field.writing_system === 'arabic') {
+      validators.push(Validators.pattern(/^[\u0660-\u0669]+$/));
+    }
   }
-} else if (field.character_type === 'digit') {
-  if (field.writing_system === 'latin') {
-    validators.push(Validators.pattern(/^[0-9]+$/)); // أرقام لاتينية
-  } else if (field.writing_system === 'arabic') {
-    validators.push(Validators.pattern(/^[\u0660-\u0669]+$/)); // أرقام عربية هندية (٠-٩)
-  }
-}
 
-
-  // Add custom regex if provided by the API
   if (field.validation_pattern) {
     validators.push(Validators.pattern(field.validation_pattern));
   }
@@ -978,11 +1424,11 @@ loadPlateForm(fields: any[]) {
 
   this.platesForm = new FormGroup(group);
 }
-onBrandFocus() {
-  // when clicking on input: show all brands if not filtered yet
-  this.filteredBrands = this.brands;
-  this.showBrandDropdown = true;
-}
+// onBrandFocus() {
+//   // when clicking on input: show all brands if not filtered yet
+//   this.filteredBrands = this.brands;
+//   this.showBrandDropdown = true;
+// }
 
 
   getBrandPartList(){
@@ -1043,86 +1489,86 @@ loadBrands() {
 }
 
 
- filterBrands() {
-    this.filteredBrands = this.brands.filter(brand =>
-      brand.name.toLowerCase().includes(this.brandSearchTerm.toLowerCase())
-    );
-    this.showBrandDropdown = true;
-  }
+//  filterBrands() {
+//     this.filteredBrands = this.brands.filter(brand =>
+//       brand.name.toLowerCase().includes(this.brandSearchTerm.toLowerCase())
+//     );
+//     this.showBrandDropdown = true;
+//   }
 
-  filterModels() {
-    this.filteredModels = this.models.filter(model =>
-      model.name.toLowerCase().includes(this.modelSearchTerm.toLowerCase())
-    );
-    this.showModelDropdown = true;
-  }
+//   filterModels() {
+//     this.filteredModels = this.models.filter(model =>
+//       model.name.toLowerCase().includes(this.modelSearchTerm.toLowerCase())
+//     );
+//     this.showModelDropdown = true;
+//   }
 
-  filterYears() {
-    this.filteredYears = this.years.filter(year =>
-      year.year.toString().includes(this.yearSearchTerm)
-    );
-    this.showYearDropdown = true;
-  }
+//   filterYears() {
+//     this.filteredYears = this.years.filter(year =>
+//       year.year.toString().includes(this.yearSearchTerm)
+//     );
+//     this.showYearDropdown = true;
+//   }
 
-   // Selection methods
-  selectBrand(brand: any) {
-    this.brandSearchTerm = brand.name;
-    this.vehicleForm.patchValue({ brand_id: brand.id });
-    this.bikeForm.patchValue({ brand_id: brand.id });
-    this.showBrandDropdown = false;
-    this.onBrandChange(brand.id);
-  }
+//    // Selection methods
+//   selectBrand(brand: any) {
+//     this.brandSearchTerm = brand.name;
+//     this.vehicleForm.patchValue({ brand_id: brand.id });
+//     this.bikeForm.patchValue({ brand_id: brand.id });
+//     this.showBrandDropdown = false;
+//     this.onBrandChange(brand.id);
+//   }
 
-  selectModel(model: any) {
-    this.modelSearchTerm = model.name;
-    this.vehicleForm.patchValue({ model_id: model.id });
-    this.bikeForm.patchValue({ model_id: model.id });
-    this.showModelDropdown = false;
-    this.onModelChange(model.id);
-  }
+//   selectModel(model: any) {
+//     this.modelSearchTerm = model.name;
+//     this.vehicleForm.patchValue({ model_id: model.id });
+//     this.bikeForm.patchValue({ model_id: model.id });
+//     this.showModelDropdown = false;
+//     this.onModelChange(model.id);
+//   }
 
-  selectYear(year: any) {
-    this.yearSearchTerm = year.year.toString();
-    this.vehicleForm.patchValue({ year_id: year.id });
-    this.bikeForm.patchValue({ year_id: year.id });
-    this.showYearDropdown = false;
-  }
+//   selectYear(year: any) {
+//     this.yearSearchTerm = year.year.toString();
+//     this.vehicleForm.patchValue({ year_id: year.id });
+//     this.bikeForm.patchValue({ year_id: year.id });
+//     this.showYearDropdown = false;
+//   }
 
-  // Updated existing methods
-  onBrandChange(brandId: number) {
-    this.models = [];
-    this.years = [];
-    this.modelSearchTerm = '';
-    this.yearSearchTerm = '';
-    this.filteredModels = [];
-    this.filteredYears = [];
+//   // Updated existing methods
+//   onBrandChange(brandId: number) {
+//     this.models = [];
+//     this.years = [];
+//     this.modelSearchTerm = '';
+//     this.yearSearchTerm = '';
+//     this.filteredModels = [];
+//     this.filteredYears = [];
     
-    this.vehicleForm.patchValue({ model_id: '', year_id: '' });
-    this.bikeForm.patchValue({ model_id: '', year_id: '' });
+//     this.vehicleForm.patchValue({ model_id: '', year_id: '' });
+//     this.bikeForm.patchValue({ model_id: '', year_id: '' });
 
-    if (brandId) {
-      this.listingService.getMotorcycleModels(brandId).subscribe((res) => {
-        this.models = res.data;
-        this.filteredModels = res.data;
-      });
-    }
-  }
+//     if (brandId) {
+//       this.listingService.getMotorcycleModels(brandId).subscribe((res) => {
+//         this.models = res.data;
+//         this.filteredModels = res.data;
+//       });
+//     }
+//   }
 
-  onModelChange(modelId: number) {
-    this.years = [];
-    this.yearSearchTerm = '';
-    this.filteredYears = [];
+//   onModelChange(modelId: number) {
+//     this.years = [];
+//     this.yearSearchTerm = '';
+//     this.filteredYears = [];
     
-    this.vehicleForm.patchValue({ year_id: '' });
-    this.bikeForm.patchValue({ year_id: '' });
+//     this.vehicleForm.patchValue({ year_id: '' });
+//     this.bikeForm.patchValue({ year_id: '' });
 
-    if (modelId) {
-      this.listingService.getMotorcycleYears(modelId).subscribe((res) => {
-        this.years = res.data;
-        this.filteredYears = res.data;
-      });
-    }
-  }
+//     if (modelId) {
+//       this.listingService.getMotorcycleYears(modelId).subscribe((res) => {
+//         this.years = res.data;
+//         this.filteredYears = res.data;
+//       });
+//     }
+//   }
 
 // onBrandChange(brandId: number) {
 //   this.models = [];
@@ -1376,11 +1822,11 @@ async goToNextStep() {
   }
 }
 
-logFormValues() {
-  this.dynamicFields.forEach(field => {
-    const value = this.platesForm.get(field.controlName)?.value;
-  });
-}
+// logFormValues() {
+//   this.dynamicFields.forEach(field => {
+//     const value = this.platesForm.get(field.controlName)?.value;
+//   });
+// }
 
 private async handleStep1() {
   if (!this.validateStep1()) return;
@@ -1403,8 +1849,110 @@ private async handleStep1() {
   }
 }
 
-private validateStep1(): boolean {
+// private validateStep1(): boolean {
 
+//   // Type-specific form validation
+//   switch (this.selectedVehicleType) {
+//     case 1: 
+//       if (!this.vehicleForm.valid) {
+//         this.vehicleForm.markAllAsTouched();
+//         return false;
+//       }
+//       break;
+      
+//     case 2:
+//       if (!this.bikeForm.valid) {
+//         this.bikeForm.markAllAsTouched();
+//         return false;
+//       }
+//       break;
+      
+//     case 3:
+//       if (!this.platesForm.valid) {
+//         this.platesForm.markAllAsTouched();
+//         this.logFormErrors(this.platesForm);
+//         return false;
+//       }
+//       break;
+//   }
+
+//   return true;
+// }
+
+
+
+// private prepareStep1Data(): any {
+//   switch (this.selectedVehicleType) {
+//     case 1: // Motorcycle
+//       return {
+//         category_id: 1,
+//         step: 1,
+//         vehicleType: 'motorcycle',
+//         brand_id: parseInt(this.vehicleForm.value.brand_id),
+//         model_id: parseInt(this.vehicleForm.value.model_id),
+//         year_id: parseInt(this.vehicleForm.value.year_id),
+//         engine: `${this.vehicleForm.value.engine}cc`,
+//         mileage: parseInt(this.vehicleForm.value.mileage),
+//         body_condition: this.vehicleForm.value.body_condition,
+//         modified: this.vehicleForm.value.modified === 'Yes',
+//         insurance: this.vehicleForm.value.insurance === 'Yes',
+//         general_condition: this.vehicleForm.value.general_condition,
+//         vehicle_care: this.vehicleForm.value.vehicle_care,
+//         transmission: this.vehicleForm.value.transmission,
+//         images: this.uploadedImageUrls.filter(url => url !== null)
+//       };
+
+//     case 2: // Bike Part
+//       return {
+//         step: 1,
+//         category_id: 2,
+//         bike_part_brand_id: Number(this.bikeForm.value.bike_part_brand_id),
+//         bike_part_category_id: Number(this.bikeForm.value.bike_part_category_id),
+//         motorcycles: [{
+//           brand_id: parseInt(this.bikeForm.value.brand_id),
+//           model_id: parseInt(this.bikeForm.value.model_id),
+//           year_id: parseInt(this.bikeForm.value.year_id)
+//         }],
+//         condition: this.bikeForm.value.condition,
+//         description: this.bikeForm.value.description,
+//         images: this.uploadedImageUrls.filter(url => url !== null)
+//       };
+
+//       case 3: // License Plate
+//       const dynamicFieldValues = this.dynamicFields.map(field => {
+//         // Get the raw value from the form control
+//         const rawValue = this.platesForm.get(field.controlName)?.value;
+        
+//         // Convert to string and handle null/undefined
+//         let fieldValue = rawValue !== null && rawValue !== undefined 
+//           ? String(rawValue) 
+//           : '';
+
+//         return {
+//           field_id: field.id,
+//           value: fieldValue
+//         };
+//       });
+
+//       return {
+//         category_id: 3,
+//         step: 1,
+//         type_id: this.platesForm.value.type_id,
+//         plate_format_id: this.selectedPlateFormat?.id,
+//         country_id_lp: Number(this.platesForm.value.country_id_lp),
+//         city_id_lp: Number(this.platesForm.value.city_id_lp),
+//         fields: dynamicFieldValues
+//       };
+//     default:
+//       console.error('Unknown vehicle type:', this.selectedVehicleType);
+//       return null;
+//   }
+
+
+// }
+
+
+private validateStep1(): boolean {
   // Type-specific form validation
   switch (this.selectedVehicleType) {
     case 1: 
@@ -1421,17 +1969,79 @@ private validateStep1(): boolean {
       }
       break;
       
-    case 3:
-      if (!this.platesForm.valid) {
-        this.platesForm.markAllAsTouched();
-        this.logFormErrors(this.platesForm);
-        return false;
+      case 3:
+  if (!this.platesForm.get('country_id_lp')?.valid || 
+      !this.platesForm.get('city_id_lp')?.valid) {
+    this.platesForm.markAllAsTouched();
+    return false;
+  }
+
+  // Check if all LATIN (English) required fields are filled
+  const latinFieldsValid = this.dynamicFields
+    .filter(field => field.writing_system === 'latin' && field.is_required) // ✅ Changed to 'latin'
+    .every(field => {
+      const value = this.platesForm.get(field.controlName)?.value;
+      const isValid = value !== null && value !== undefined && value !== '';
+      if (!isValid) {
+        console.log(`❌ Latin field ${field.field_name} is empty`);
+        this.platesForm.get(field.controlName)?.markAsTouched();
       }
-      break;
+      return isValid;
+    });
+
+  if (!latinFieldsValid) {
+    alert('Please fill all required English fields');
+    return false;
+  }
+  break;
+    // case 3:
+    //   // Check if base fields are valid
+    //   if (!this.platesForm.get('country_id_lp')?.valid || 
+    //       !this.platesForm.get('city_id_lp')?.valid) {
+    //     this.platesForm.markAllAsTouched();
+    //     return false;
+    //   }
+
+    //   // Check if all ENGLISH required fields are filled
+    //   const englishFieldsValid = this.dynamicFields
+    //     .filter(field => field.writing_system === 'english' && field.is_required)
+    //     .every(field => {
+    //       const value = this.platesForm.get(field.controlName)?.value;
+    //       const isValid = value !== null && value !== undefined && value !== '';
+    //       if (!isValid) {
+    //         console.log(`❌ English field ${field.field_name} is empty`);
+    //         this.platesForm.get(field.controlName)?.markAsTouched();
+    //       }
+    //       return isValid;
+    //     });
+
+    //   if (!englishFieldsValid) {
+    //     alert('Please fill all required English fields');
+    //     return false;
+    //   }
+    //   break;
   }
 
   return true;
 }
+
+logFormValues() {
+  console.log('🔍 All Dynamic Fields:');
+  this.dynamicFields.forEach(field => {
+    const value = this.platesForm.get(field.controlName)?.value;
+    console.log(`${field.field_name} (${field.writing_system}):`, value);
+  });
+  
+  console.log('\n📤 English Fields Only (what will be sent):');
+  this.dynamicFields
+    .filter(field => field.writing_system === 'english')
+    .forEach(field => {
+      const value = this.platesForm.get(field.controlName)?.value;
+      console.log(`${field.field_name}:`, value);
+    });
+}
+
+
 private prepareStep1Data(): any {
   switch (this.selectedVehicleType) {
     case 1: // Motorcycle
@@ -1468,47 +2078,91 @@ private prepareStep1Data(): any {
         description: this.bikeForm.value.description,
         images: this.uploadedImageUrls.filter(url => url !== null)
       };
-
       case 3: // License Plate
-      const dynamicFieldValues = this.dynamicFields.map(field => {
-        // Get the raw value from the form control
-        const rawValue = this.platesForm.get(field.controlName)?.value;
-        
-        // Convert to string and handle null/undefined
-        let fieldValue = rawValue !== null && rawValue !== undefined 
-          ? String(rawValue) 
-          : '';
+  // ✅ ONLY send Latin (English) fields to the backend
+  const dynamicFieldValues = this.dynamicFields
+    .filter(field => field.writing_system === 'latin') // ✅ CORRECT
+    .map(field => {
+      const rawValue = this.platesForm.get(field.controlName)?.value;
+      let fieldValue = rawValue !== null && rawValue !== undefined 
+        ? String(rawValue).trim() 
+        : '';
 
-        return {
-          field_id: field.id,
-          value: fieldValue
-        };
-      });
+      console.log(`📝 Field ${field.field_name} (${field.writing_system}):`, fieldValue);
 
       return {
-        category_id: 3,
-        step: 1,
-        type_id: this.platesForm.value.type_id,
-        plate_format_id: this.selectedPlateFormat?.id,
-        country_id_lp: Number(this.platesForm.value.country_id_lp),
-        city_id_lp: Number(this.platesForm.value.city_id_lp),
-        fields: dynamicFieldValues
+        field_id: field.id,
+        value: fieldValue
       };
+    });
+
+  console.log('📤 Sending license plate data:', {
+    category_id: 3,
+    step: 1,
+    type_id: this.platesForm.value.type_id,
+    plate_format_id: this.selectedPlateFormat?.id,
+    country_id_lp: Number(this.platesForm.value.country_id_lp),
+    city_id_lp: Number(this.platesForm.value.city_id_lp),
+    fields: dynamicFieldValues
+  });
+
+  return {
+    category_id: 3,
+    step: 1,
+    type_id: this.platesForm.value.type_id,
+    plate_format_id: this.selectedPlateFormat?.id,
+    country_id_lp: Number(this.platesForm.value.country_id_lp),
+    city_id_lp: Number(this.platesForm.value.city_id_lp),
+    fields: dynamicFieldValues // Only Latin fields
+  };
+
+    // case 3: // License Plate
+    //   // ✅ ONLY send English fields to the backend
+    //   const dynamicFieldValues = this.dynamicFields
+    //     .filter(field => field.writing_system === 'english') // Only English fields
+    //     .map(field => {
+    //       const rawValue = this.platesForm.get(field.controlName)?.value;
+    //       let fieldValue = rawValue !== null && rawValue !== undefined 
+    //         ? String(rawValue).trim() 
+    //         : '';
+
+    //       return {
+    //         field_id: field.id,
+    //         value: fieldValue
+    //       };
+    //     });
+
+    //   console.log('📤 Sending license plate data:', {
+    //     category_id: 3,
+    //     step: 1,
+    //     type_id: this.platesForm.value.type_id,
+    //     plate_format_id: this.selectedPlateFormat?.id,
+    //     country_id_lp: Number(this.platesForm.value.country_id_lp),
+    //     city_id_lp: Number(this.platesForm.value.city_id_lp),
+    //     fields: dynamicFieldValues
+    //   });
+
+    //   return {
+    //     category_id: 3,
+    //     step: 1,
+    //     type_id: this.platesForm.value.type_id,
+    //     plate_format_id: this.selectedPlateFormat?.id,
+    //     country_id_lp: Number(this.platesForm.value.country_id_lp),
+    //     city_id_lp: Number(this.platesForm.value.city_id_lp),
+    //     fields: dynamicFieldValues // Only English fields
+    //   };
+      
     default:
       console.error('Unknown vehicle type:', this.selectedVehicleType);
       return null;
   }
-
-
 }
-
 private async handleStep2() {
   if (!this.adDetailsForm.valid || !this.validateContactChannelForDirect()) {
     this.adDetailsForm.markAllAsTouched();
     return;
   }
 
-  // Only include minimum_bid if Soom is selected
   const isSoomSelected = this.adDetailsForm.value.allow_submission === 'true';
   
   const step2Data: any = {
@@ -1518,7 +2172,7 @@ private async handleStep2() {
     description: this.adDetailsForm.value.description,
     price: parseFloat(this.adDetailsForm.value.price),
     allow_submission: isSoomSelected,
-    contacting_channel: this.adDetailsForm.value.contacting_channel,
+    contacting_channel: this.adDetailsForm.value.contacting_channel, // This now contains comma-separated values or array
     country_id: Number(this.adDetailsForm.value.country),
     city_id: parseInt(this.adDetailsForm.value.city),
     seller_type: this.adDetailsForm.value.seller_type,
@@ -1526,7 +2180,6 @@ private async handleStep2() {
     auction_enabled: isSoomSelected,
   };
 
-  // Only add minimum_bid if Soom is selected
   if (isSoomSelected) {
     step2Data.minimum_bid = this.adDetailsForm.value.minimum_bid || 0;
   }
@@ -1546,6 +2199,8 @@ private async handleStep2() {
     alert('Failed to save ad details. Please try again.');
   }
 }
+
+
 // private async handleStep2() {
 //   // if (!this.adDetailsForm.valid) {
 //    if (!this.adDetailsForm.valid || !this.validateContactChannelForDirect()) {

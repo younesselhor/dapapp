@@ -88,11 +88,12 @@ export const routes: Routes = [
 
 
 
-  {
-  path: 'account',
-  component: AccountTabsComponent,
-  children: accountTabsRoutes
-},
+ {
+    path: 'account',
+    component: AccountTabsComponent,
+    canActivateChild: [AuthGuard], // ✅ Protect all child routes
+    children: accountTabsRoutes,
+  },
   {
     path: 'add-product',
     loadComponent: () => import('./components/postingAdd/product-form/product-form.component').then(m => m.ProductFormComponent),

@@ -112,12 +112,11 @@
           Sign Up
         </button>
 
-        <button
+        <!-- <button
           type="button"
           class="w-full bg-white border border-gray-300 text-gray-800 hover:bg-gray-100 py-2 px-4 rounded-lg flex items-center justify-center gap-2"
           [disabled]="isSigningInWithGoogle"
         >
-          <!-- Google Icon SVG -->
           <svg class="w-5 h-5" viewBox="0 0 533.5 544.3" xmlns="http://www.w3.org/2000/svg">
             <path fill="#4285f4" d="M533.5 278.4c0-17.4-1.6-34.1-4.6-50.4H272v95.3h146.9c-6.3 34-25.1 62.8-53.4 82.1v68h86.4c50.6-46.7 81.6-115.5 81.6-194.9z"/>
             <path fill="#34a853" d="M272 544.3c72.6 0 133.6-24 178.2-65.2l-86.4-68c-24 16-54.8 25.5-91.8 25.5-70.6 0-130.4-47.7-151.8-111.7h-89v69.9c44.5 88.1 136.3 149.5 240.8 149.5z"/>
@@ -125,7 +124,7 @@
             <path fill="#ea4335" d="M272 107.7c39.5 0 75 13.6 102.9 40.3l77.3-77.3C405.5 24 344.6 0 272 0c-104.5 0-196.3 61.4-240.8 149.5l89 69.9c21.3-64 81.1-111.7 151.8-111.7z"/>
           </svg>
           <span class="font-medium">Continue with Google</span>
-        </button>
+        </button> -->
 
         <button
           (click)="closeModal()"
@@ -184,10 +183,10 @@
   </div>
   }
 
-  <!-- OTP Modal -->
+
 <!-- OTP Modal -->
 @if(showOTPModal) {
-<div class="fixed inset-0 z-50  flex items-center justify-center p-4">
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4">
   <div class="modal-content">
     <div class="otp-check-container">
       <!-- Logo SVG -->
@@ -207,8 +206,13 @@
 
       <!-- Supporting Text -->
       <div class="supporting-text">
-        <span class="text">Please check your phone</span>
-        <span class="message-display">We've sent a code to {{ phoneNumber || userLogin }}</span>
+        @if(isPhone(loginForm.get('login')?.value)) {
+          <span class="text">Please check your WhatsApp</span>
+          <span class="message-display">We've sent a verification code to your WhatsApp</span>
+        } @else {
+          <span class="text">Please check your Email</span>
+          <span class="message-display">We've sent a verification code to your Email</span>
+        }
       </div>
 
       <!-- OTP Numbers Input -->
@@ -308,42 +312,49 @@
     @if(otpExpired || otpResendEnabled) {
     <div class="flex flex-col gap-2 w-full">
       <p class="text-center message-display mb-2">Didn't receive the code?</p>
-      @if(isEmail(loginForm.get('login')?.value)) {
-      <button 
-        type="button" 
-        [disabled]="isResendingOTP"
-        class="resend-btn" 
-        (click)="resendOTP('email')"
-      >
-        @if(isResendingOTP) {
-          <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
-          <span>Sending...</span>
-        } @else {
-          <span>Resend via Email</span>
-        }
-      </button>
-      }
       
       @if(isPhone(loginForm.get('login')?.value)) {
-      <button 
-        type="button" 
-        [disabled]="isResendingOTP"
-        class="resend-btn" 
-        (click)="resendOTP('whatsapp')"
-      >
-        @if(isResendingOTP) {
-          <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
-          <span>Sending...</span>
-        } @else {
-          <span>Resend via SMS</span>
-        }
-      </button>
+        <button 
+          type="button" 
+          [disabled]="isResendingOTP"
+          class="resend-btn" 
+          (click)="resendOTP('whatsapp')"
+        >
+          @if(isResendingOTP) {
+            <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>Sending...</span>
+          } @else {
+            <svg class="w-4 h-4 inline-block mr-2" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+            <span>Resend via WhatsApp</span>
+          }
+        </button>
+      }
+
+      @if(isEmail(loginForm.get('login')?.value)) {
+        <button 
+          type="button" 
+          [disabled]="isResendingOTP"
+          class="resend-btn" 
+          (click)="resendOTP('email')"
+        >
+          @if(isResendingOTP) {
+            <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>Sending...</span>
+          } @else {
+            <svg class="w-4 h-4 inline-block mr-2" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+            </svg>
+            <span>Resend via Email</span>
+          }
+        </button>
       }
     </div>
     }
@@ -369,12 +380,10 @@
   </div>
 </div>
 }
-
-
 </div>
 <!-- Forgot Password Modal -->
 @if(showForgotPasswordModal) {
-<div class="fixed inset-0 z-50 bg-gray bg-opacity-50 backdrop-blur-sm flex items-center justify-center">
+<div class="fixed inset-0 z-50  flex items-center justify-center">
   <div class="bg-white rounded-xl shadow-lg w-full max-w-sm p-6">
     <div class="text-center mb-6">
       <h2 class="text-lg font-semibold text-gray-800">🔒 Forgot Password</h2>
@@ -443,7 +452,7 @@
 
 <!-- Reset Password Modal -->
 @if(showResetPasswordModal) {
-<div class="fixed inset-0 z-50 bg-gray bg-opacity-50 backdrop-blur-sm flex items-center justify-center">
+<div class="fixed inset-0 z-50  flex items-center justify-center">
   <div class="bg-white rounded-xl shadow-lg w-full max-w-sm p-6">
     <div class="text-center mb-6">
       <h2 class="text-lg font-semibold text-gray-800">🔑 Reset Password</h2>

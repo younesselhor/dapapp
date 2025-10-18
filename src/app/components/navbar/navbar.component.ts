@@ -259,14 +259,72 @@ openLoginModal() {
 onModalClose() {
   this.showLoginModal = false;
 }
+// logout(): void {
+//   this.auth.logout().subscribe({
+//     next: () => {
+//       this.cookieService.delete('token', '/');
+//       localStorage.clear();
+//       sessionStorage.clear();
+//       this.isLoggedIn = false;
+//       this.showLoginModal = true; // show modal after logout
+//     }
+//   });
+// }
+
+// logout(): void {
+//   this.auth.logout().subscribe({
+//     next: () => {
+//       this.cookieService.delete('token', '/');
+//       localStorage.clear();
+//       sessionStorage.clear();
+//       this.isLoggedIn = false;
+//       this.showLoginModal = true;
+
+//       // ✅ redirect to home
+//       this.router.navigate(['/home']);
+//     },
+//     error: (err) => {
+//       console.error('Logout error:', err);
+//       // even if API fails, still clear and redirect
+//       this.cookieService.delete('token', '/');
+//       localStorage.clear();
+//       sessionStorage.clear();
+//       this.isLoggedIn = false;
+//       this.router.navigate(['/home']);
+//     }
+//   });
+// }
 logout(): void {
   this.auth.logout().subscribe({
     next: () => {
+      // Delete token cookie from all paths
       this.cookieService.delete('token', '/');
+      this.cookieService.delete('refresh_token', '/');
+this.cookieService.delete('token', '/account');
+
+
+      // Clear any saved data
       localStorage.clear();
       sessionStorage.clear();
+
+      // Update UI state
       this.isLoggedIn = false;
-      this.showLoginModal = true; // show modal after logout
+      this.showLoginModal = true; // optional — show modal after logout
+
+      // Redirect to home page
+      this.router.navigate(['/home']);
+    },
+    error: (err) => {
+      console.error('Logout error:', err);
+
+      // Even if backend fails, still clear everything locally
+      this.cookieService.delete('token', '/');
+      this.cookieService.delete('refresh_token', '/');
+      localStorage.clear();
+      sessionStorage.clear();
+
+      this.isLoggedIn = false;
+      this.router.navigate(['/home']);
     }
   });
 }

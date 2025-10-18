@@ -395,7 +395,7 @@ export class LoginModalComponent implements OnDestroy, OnInit {
 
   startOTPCountdown() {
     this.otpResendEnabled = false;
-    this.resendCountdown = 60;
+    this.resendCountdown = 60; // 5 minutes = 300 seconds
 
     this.countdownInterval = setInterval(() => {
       this.resendCountdown--;

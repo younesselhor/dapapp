@@ -31,6 +31,7 @@
                             <th class="header-text">Ad Name</th>
                             <th class="header-text text-right">Country</th>
                             <th class="header-text text-right">Amount</th>
+                            <th class="header-text text-right">Status</th>
                             <th class="header-text text-right">Action</th>
                         </tr>
                     </thead>
@@ -52,24 +53,16 @@
                                                 Expires in {{ getDaysLeft(soom.submission_date) }} day
                                             </small>
                                         </ng-container>
-
-                                        <ng-container *ngIf="isExpired(soom.submission_date)">
-                                            <button class="btn-soom">
-                                                Submit another Soom
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                                    viewBox="0 0 20 20" fill="none">
-                                                    <path
-                                                        d="M4.16602 10.0001H15.8327M15.8327 10.0001L9.99935 4.16675M15.8327 10.0001L9.99935 15.8334"
-                                                        stroke="#1852F1" stroke-width="1.67" stroke-linecap="round"
-                                                        stroke-linejoin="round" />
-                                                </svg>
-                                            </button>
+                                         <ng-container *ngIf="getDaysLeft(soom.submission_date) <= 0">
+                                            <small class="expired">
+                                                Expired
+                                            </small>
                                         </ng-container>
                                     </div>
                                 </td>
 
                                 <td class="table-cell-content country-cell text-right">
-                                    {{ soom.listing.country?.code || "N/A" }}
+                                    {{ soom.listing.city?.name || "N/A" }}
                                 </td>
 
                                 <td class="table-cell-content price-cell text-right">
@@ -83,7 +76,19 @@
                                     <span *ngIf="soom.status === 'rejected'" class="rejected">
                                         Rejected
                                     </span>
+                                    <span *ngIf="soom.status === 'pending'" class="status-pending">
+                                        Pending
+                                    </span>
+                                    <span *ngIf="soom.listing.listing_status === 'sold'" class="status-sold">
+                                        Sold
+                                    </span>
+                                    <span *ngIf="soom.listing.listing_status === 'closed'" class="status-closed">
+                                        Closed
+                                    </span>
+                                </td>
 
+                                <td class="table-cell-content text-right">
+                                    <!-- Pending: Show Accept/Reject buttons -->
                                     <div *ngIf="soom.status === 'pending'" class="action">
                                         <button (click)="rejectSoom(soom)" class="action-btn reject-btn" title="Reject">
                                             ✗
@@ -92,11 +97,45 @@
                                             ✓
                                         </button>
                                     </div>
+
+                                    <!-- Accepted: Show sale action buttons -->
+                                    <div *ngIf="soom.status === 'accepted' && !soom.sale_validated" class="action-buttons">
+                                        <button (click)="validateSale(soom)" class="validate-sale-btn" title="Validate Sale">
+                                            Validate Sale
+                                        </button>
+                                    </div>
+
+                                    <!-- After validate sale: Show Mark as Sold and Close -->
+                                    <div *ngIf="soom.status === 'accepted' && soom.sale_validated && soom.listing.listing_status !== 'sold' && soom.listing.listing_status !== 'closed'" class="action-buttons-group">
+                                        <button (click)="markAsSold(soom)" class="mark-sold-btn" title="Mark as Sold">
+                                            Mark as Sold
+                                        </button>
+                                        <button (click)="closeListing(soom)" class="close-btn-action" title="Close">
+                                            Close
+                                        </button>
+                                    </div>
+
+                                    <!-- After mark as sold: Show only Close -->
+                                    <div *ngIf="soom.listing.listing_status === 'sold'" class="action-buttons">
+                                        <button (click)="closeListing(soom)" class="close-btn-action" title="Close">
+                                            Close
+                                        </button>
+                                    </div>
+
+                                    <!-- After close: Show Reopen -->
+                                    <div *ngIf="soom.listing.listing_status === 'closed'" class="action-buttons">
+                                        <button (click)="reopenListing(soom)" class="reopen-btn" title="Reopen">
+                                            Reopen
+                                        </button>
+                                    </div>
+
+                                    <!-- Rejected: Show dash -->
+                                    <span *ngIf="soom.status === 'rejected'">-</span>
                                 </td>
                             </tr>
 
                             <tr *ngIf="!last" class="divider-row">
-                                <td colspan="4">
+                                <td colspan="5">
                                     <div class="divider"></div>
                                 </td>
                             </tr>
@@ -106,7 +145,7 @@
             </div>
         </div>
 
-        <!-- Sent Tab Content -->
+        <!-- Sent Tab Content (unchanged) -->
         <div *ngIf="currentView === 'sent'">
             <div class="table-wrapper">
                 <table>
@@ -154,7 +193,7 @@
                                 </td>
 
                                 <td class="table-cell-content country-cell text-right">
-                                    {{ soom.listing.country?.code || "N/A" }}
+                                    {{ soom.listing.city?.name || "N/A" }}
                                 </td>
 
                                 <td class="table-cell-content price-cell text-right">
@@ -250,7 +289,7 @@
     </div>
 </div>
 
-<!-- Accept Confirmation Modal -->
+<!-- Accept Confirmation Modal (unchanged) -->
 <div class="modal-backdrop" *ngIf="showAcceptModal" (click)="closeModal()">
     <div class="modal" (click)="$event.stopPropagation()">
         <div class="top-content-modal">
@@ -309,7 +348,7 @@
     </div>
 </div>
 
-<!-- Accepted Confirmation Modal -->
+<!-- Accepted Confirmation Modal (unchanged) -->
 <div class="modal-backdrop" *ngIf="showAcceptedModal" (click)="closeAcceptedModal()">
     <div class="modal" (click)="$event.stopPropagation()">
         <div class="top-content-modal">

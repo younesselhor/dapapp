@@ -1,23 +1,34 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router, UrlTree } from '@angular/router';
-import { Observable } from 'rxjs';
-import { AuthService } from '../services/auth.service';
+import {
+  CanActivate,
+  CanActivateChild,
+  Router,
+  UrlTree
+} from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class AuthGuard implements CanActivate {
-  constructor(private authService: AuthService, private router: Router) {}
+@Injectable({ providedIn: 'root' })
+export class AuthGuard implements CanActivate, CanActivateChild {
 
-  canActivate(): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
-    const token = this.authService.getToken();
+  constructor(private router: Router, private cookieService: CookieService) {}
 
-    if (token) {
-      return true; // ✅ user is logged in
+  private checkLogin(): boolean | UrlTree {
+    const token = this.cookieService.get('token');
+
+    if (!token) {
+      // 🚫 No token → redirect to home
+      return this.router.createUrlTree(['/home']);
     }
 
-    // ❌ not logged in → show login modal and block access
-    this.authService.triggerLoginModal();
-    return this.router.parseUrl('/');
+    // ✅ Logged in
+    return true;
+  }
+
+  canActivate(): boolean | UrlTree {
+    return this.checkLogin();
+  }
+
+  canActivateChild(): boolean | UrlTree {
+    return this.checkLogin();
   }
 }

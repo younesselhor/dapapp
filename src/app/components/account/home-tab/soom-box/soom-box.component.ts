@@ -2,6 +2,44 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 
+// export interface SoomSubmission {
+//   id: number;
+//   listing_id: number;
+//   user: {
+//     first_name: string;
+//     last_name: string;
+//     email: string;
+//   };
+//   listing: {
+//     title: string;
+//     description: string;
+//     id: number;
+//     country?: {
+//       id: number;
+//       code: string;
+//       name: string;
+//     };
+//     city?: {
+//       id: number;
+//       name: string;
+//       country_id: number;
+//     };
+//     images: {
+//       id: number;
+//       image_url: string;
+//       listing_id: number;
+//       created_at: string;
+//       updated_at: string;
+//     }[];
+//   };
+//   first_image?: string;
+//   amount: string;
+//   status: string;
+//   submission_date: string;
+//   min_soom: string;
+// }
+
+
 export interface SoomSubmission {
   id: number;
   listing_id: number;
@@ -14,10 +52,16 @@ export interface SoomSubmission {
     title: string;
     description: string;
     id: number;
+    listing_status?: 'active' | 'sold' | 'closed';
     country?: {
       id: number;
       code: string;
       name: string;
+    };
+    city?: {
+      id: number;
+      name: string;
+      country_id: number;
     };
     images: {
       id: number;
@@ -32,8 +76,8 @@ export interface SoomSubmission {
   status: string;
   submission_date: string;
   min_soom: string;
+  sale_validated?: boolean;
 }
-
 @Component({
   selector: 'app-soom-box',
   standalone: true,
@@ -136,6 +180,87 @@ export class SoomBoxComponent implements OnInit {
           this.receivedSooms = this.receivedSooms.map(item =>
             item.id === submissionId ? { ...item, status: 'rejected' } : item
           );
+        }
+      });
+  }
+
+    // Validate sale
+  validateSale(soom: SoomSubmission) {
+    const submissionId = soom.id;
+    
+    this.http.post(`https://be.dabapp.co/api/submissions/${submissionId}/validate-sale`, {})
+      .subscribe({
+        next: () => {
+          this.receivedSooms = this.receivedSooms.map(item =>
+            item.id === submissionId ? { ...item, sale_validated: true } : item
+          );
+          console.log('Sale validated successfully');
+        },
+        error: (error) => {
+          console.error('Error validating sale:', error);
+          alert('Failed to validate sale. Please try again.');
+        }
+      });
+  }
+
+  // Mark listing as sold
+  markAsSold(soom: SoomSubmission) {
+    const listingId = soom.listing_id;
+    
+    this.http.patch(`https://be.dabapp.co/api/listings/${listingId}/mark-as-sold`, {})
+      .subscribe({
+        next: () => {
+          this.receivedSooms = this.receivedSooms.map(item =>
+            item.listing_id === listingId 
+              ? { ...item, listing: { ...item.listing, listing_status: 'sold' } } 
+              : item
+          );
+          console.log('Listing marked as sold successfully');
+        },
+        error: (error) => {
+          console.error('Error marking listing as sold:', error);
+          alert('Failed to mark listing as sold. Please try again.');
+        }
+      });
+  }
+
+  // Close listing
+  closeListing(soom: SoomSubmission) {
+    const listingId = soom.listing_id;
+    
+    this.http.patch(`https://be.dabapp.co/api/listings/${listingId}/close`, {})
+      .subscribe({
+        next: () => {
+          this.receivedSooms = this.receivedSooms.map(item =>
+            item.listing_id === listingId 
+              ? { ...item, listing: { ...item.listing, listing_status: 'closed' } } 
+              : item
+          );
+          console.log('Listing closed successfully');
+        },
+        error: (error) => {
+          console.error('Error closing listing:', error);
+          alert('Failed to close listing. Please try again.');
+        }
+      });
+  }
+
+  reopenListing(soom: SoomSubmission) {
+    const listingId = soom.listing_id;
+    
+    this.http.patch(`https://be.dabapp.co/api/listings/${listingId}/reopen`, {})
+      .subscribe({
+        next: () => {
+          this.receivedSooms = this.receivedSooms.map(item =>
+            item.listing_id === listingId 
+              ? { ...item, listing: { ...item.listing, listing_status: 'active' } } 
+              : item
+          );
+          console.log('Listing reopened successfully');
+        },
+        error: (error) => {
+          console.error('Error reopening listing:', error);
+          alert('Failed to reopen listing. Please try again.');
         }
       });
   }
